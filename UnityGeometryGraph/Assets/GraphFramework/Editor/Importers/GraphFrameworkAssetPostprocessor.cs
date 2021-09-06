@@ -14,8 +14,8 @@ namespace GraphFramework.Editor {
 
         private static void DisplayDeletionDialog(string[] deletedAssets) {
             var affectedWindows = Resources.FindObjectsOfTypeAll<GraphFrameworkEditorWindow>().Where(window => {
-                var assetGuid = AssetDatabase.AssetPathToGUID(window.SelectedAssetGuid);
-                return deletedAssets.Contains(assetGuid);
+                var assetPath = AssetDatabase.GUIDToAssetPath(window.SelectedAssetGuid);
+                return deletedAssets.Contains(assetPath);
             });
             
             foreach (var window in affectedWindows) {
