@@ -1,0 +1,25 @@
+using UnityEditor;
+using UnityEditor.ProjectWindowCallback;
+using UnityEngine;
+
+namespace GraphFramework.Editor {
+    internal class CreateGraphObject : EndNameEditAction {
+        [MenuItem("Assets/Create/Graph Framework/Empty Graph", false, 1)]
+        public static void CreateObject()
+        {
+            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, CreateInstance<CreateGraphObject>(),
+                $"New Graph.{GraphFrameworkImporter.Extension}", Resources.Load<Texture2D>(GraphFrameworkResources.IconBig), null);
+        }
+        
+        public override void Action(int instanceId, string pathName, string resourceFile) {
+            var graphData = new GraphFrameworkData();
+            var graphObject = CreateInstance<GraphFrameworkObject>();
+            graphObject.Initialize(graphData);
+            graphObject.GraphData.AssetGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(instanceId));
+            graphObject.GraphData.GraphVersion = GraphFrameworkVersion.Version.GetValue();
+            graphObject.AssetGuid = graphObject.GraphData.AssetGuid;
+            GraphFrameworkUtility.CreateFile(pathName, graphObject, false);
+            AssetDatabase.ImportAsset(pathName);
+        }
+    }
+}

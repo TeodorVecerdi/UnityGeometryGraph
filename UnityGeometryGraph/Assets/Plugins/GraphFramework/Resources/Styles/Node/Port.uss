@@ -1,0 +1,22 @@
+.optional #connector {
+    border-radius: 2px;
+}
+
+.optional #connector #cap {
+    border-radius: 1px;
+}
+#connector #cap {
+    border-width: 1px;
+    margin: -1px;
+}
+GraphFrameworkPort.input {
+    margin-left: -12px;
+}
+
+GraphFrameworkPort.check-port {
+    margin-left: -16px;
+}
+
+GraphFrameworkPort.output {
+    margin-right: -12px;
+}

@@ -40,6 +40,19 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0"
-  }
+    "com.unity.modules.xr": "1.0.0",
+    "com.dbrizov.naughtyattributes": "2.1.0",
+    "jillejr.newtonsoft.json-for-unity.converters": "1.1.1"
+  },
+  "scopedRegistries": [
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.dbrizov.naughtyattributes",
+        "com.openupm",
+        "jillejr.newtonsoft.json-for-unity.converters"
+      ]
+    }
+  ]
 }

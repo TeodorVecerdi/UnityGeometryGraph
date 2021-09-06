@@ -1,0 +1,182 @@
+/*
+ * @section Misc
+ */
+
+.d-none {
+    display: none;
+}
+.unity-base-field> Label.unity-label.unity-base-field__label {
+    min-width: 0;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.unity-base-field.unity-base-text-field > #unity-text-input.unity-base-text-field__input {
+    min-width: 64px;
+}
+
+EnumField > .unity-text-element.unity-label.unity-enum-field__label.unity-base-field__label {
+    padding-right: 12px;
+}
+EnumField .unity-enum-field__input {
+    min-width: 96px;
+}
+
+FloatInputNode.collapsed #title {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+FloatInputNode #title #title-button-container {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+FloatInputNode.port-backing-field {
+    margin-left: 2px;
+}
+
+FloatInputNode.port-backing-field Label {
+    height: 16px;
+    align-self: center;
+    -unity-text-align: middle-left;
+    padding-top: 0;
+}
+
+Vector3Field.port-backing-field .unity-vector3-field__input {
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+Vector3Field.port-backing-field .unity-vector3-field__input FloatField {
+    flex-shrink: 1;
+    flex-grow: 0;
+    flex-basis: auto;
+    margin-top: 2px;
+}
+
+Vector3Field.port-backing-field .unity-vector3-field__input FloatField.unity-composite-field__field--first {
+    margin-top: 0;
+}
+
+Vector3Field.port-backing-field .unity-vector3-field__input FloatField.unity-composite-field__field > FloatInput#unity-text-input {
+    min-width: 48px;
+    /*font-size: 8px;*/
+}
+
+Vector3Field.port-backing-field .unity-vector3-field__input FloatField Label {
+    margin-left: 6px;
+    /*font-size: 8px;*/
+}
+
+/*
+.node > #node-border > #contents, .node > #node-border > #contents > #top, 
+.node > #node-border > #contents > #top > #input {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.node > #node-border > #contents > #top {
+    flex-direction: column-reverse;
+}
+*/
+
+/*
+ * @section General Node
+ */
+
+#node-border {
+    overflow: visible;
+    border-width: 0;
+}
+#selection-border {
+    margin: 2px;
+    border-radius: 6px;
+    border-width: 1px;
+    border-color: #191919;
+}
+
+.node:checked #selection-border, .node:hover:checked #selection-border {
+    border-width: 3px;
+    margin: 1px;
+}
+
+#title {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+PropertyNode #title, #collapsible-area {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#title-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+#title-label {
+    -unity-font-style: bold;
+    color: #e2e2e2;
+    margin-left: 16px;
+}
+
+PropertyNode #title-label {
+    margin-left: 6px;
+    /*margin-right: -4px;*/
+}
+
+PropertyNode #collapse-button {
+    display: none;
+}
+
+PropertyNode #title {
+    align-items: center;
+}
+
+PropertyNode #title.property-port-input #title-label {
+    margin-left: 0px;
+    margin-right: 6px;
+}
+
+/*
+ * @section Misc
+ */
+.flex-break {
+    height: 0;
+    flex-basis: 100%;
+}
+
+#divider.horizontal-divider {
+    margin-bottom: 6px;
+    margin-top: 4px;
+}
+
+/*
+ * @section Specific node styling
+ */
+.node {
+
+    --property-selection: #d5293d;
+    --property-node: #8d131a;
+    --property-collapse: rgba(107, 10, 16, 255);
+    
+    --extension-padding: 4px 4px;
+}
+
+.node #collapsible-area {
+    background-color: #212121;
+}
+.node #extension {
+    padding: var(--extension-padding);
+}
+
+PropertyNode #title {
+    background-color: var(--property-node);
+}
+PropertyNode:checked #selection-border, PropertyNode:hover #selection-border, PropertyNode:checked:hover #selection-border  {
+    border-color: var(--property-selection);
+}
