@@ -393,6 +393,7 @@ MonoBehaviour:
   source: {fileID: 1422124532}
   gizmoType: 3
   handleSize: 0.1
+  showFaceNormals: 1
   data:
     Vertices:
     - {x: 0.5, y: -0.5, z: 0.5}
@@ -419,31 +420,6 @@ MonoBehaviour:
     - {x: 0.5, y: 0.5, z: -0.5}
     - {x: 0.5, y: 0.5, z: 0.5}
     - {x: 0.5, y: -0.5, z: 0.5}
-    Normals:
-    - {x: 0, y: 0, z: 1}
-    - {x: 0, y: 0, z: 1}
-    - {x: 0, y: 0, z: 1}
-    - {x: 0, y: 0, z: 1}
-    - {x: 0, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 0, y: 0, z: -1}
-    - {x: 0, y: 0, z: -1}
-    - {x: 0, y: 1, z: 0}
-    - {x: 0, y: 1, z: 0}
-    - {x: 0, y: 0, z: -1}
-    - {x: 0, y: 0, z: -1}
-    - {x: 0, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: 0, y: -1, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: -1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
-    - {x: 1, y: 0, z: 0}
     Triangles: 0000000002000000030000000000000003000000010000000800000004000000050000000800000005000000090000000a00000006000000070000000a000000070000000b0000000c0000000d0000000e0000000c0000000e0000000f000000100000001100000012000000100000001200000013000000140000001500000016000000140000001600000017000000
     Metadata:
       owner:
@@ -525,7 +501,7 @@ MonoBehaviour:
       - VertA: 0
         VertB: 2
         VertC: 3
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 0, y: 0, z: 1}
         EdgeA:
           id: 1
         EdgeB:
@@ -535,7 +511,7 @@ MonoBehaviour:
       - VertA: 0
         VertB: 3
         VertC: 1
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 0, y: 0, z: 1}
         EdgeA:
           id: 4
         EdgeB:
@@ -545,7 +521,7 @@ MonoBehaviour:
       - VertA: 8
         VertB: 4
         VertC: 5
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 0, y: 1, z: 0}
         EdgeA:
           id: 7
         EdgeB:
@@ -555,7 +531,7 @@ MonoBehaviour:
       - VertA: 8
         VertB: 5
         VertC: 9
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 0, y: 1, z: 0}
         EdgeA:
           id: 10
         EdgeB:
@@ -565,7 +541,7 @@ MonoBehaviour:
       - VertA: 10
         VertB: 6
         VertC: 7
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 0, y: 0, z: -1}
         EdgeA:
           id: 13
         EdgeB:
@@ -575,7 +551,7 @@ MonoBehaviour:
       - VertA: 10
         VertB: 7
         VertC: 11
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 0, y: 0, z: -1}
         EdgeA:
           id: 16
         EdgeB:
@@ -585,7 +561,7 @@ MonoBehaviour:
       - VertA: 12
         VertB: 13
         VertC: 14
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 0, y: -1, z: 0}
         EdgeA:
           id: 19
         EdgeB:
@@ -595,7 +571,7 @@ MonoBehaviour:
       - VertA: 12
         VertB: 14
         VertC: 15
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 0, y: -1, z: 0}
         EdgeA:
           id: 22
         EdgeB:
@@ -605,7 +581,7 @@ MonoBehaviour:
       - VertA: 16
         VertB: 17
         VertC: 18
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: -1, y: 0, z: 0}
         EdgeA:
           id: 25
         EdgeB:
@@ -615,7 +591,7 @@ MonoBehaviour:
       - VertA: 16
         VertB: 18
         VertC: 19
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: -1, y: 0, z: 0}
         EdgeA:
           id: 28
         EdgeB:
@@ -625,7 +601,7 @@ MonoBehaviour:
       - VertA: 20
         VertB: 21
         VertC: 22
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 1, y: 0, z: 0}
         EdgeA:
           id: 31
         EdgeB:
@@ -635,7 +611,7 @@ MonoBehaviour:
       - VertA: 20
         VertB: 22
         VertC: 23
-        FaceNormal: {x: 0, y: 0, z: 0}
+        FaceNormal: {x: 1, y: 0, z: 0}
         EdgeA:
           id: 34
         EdgeB:
@@ -672,31 +648,6 @@ MonoBehaviour:
         - {x: 0.5, y: 0.5, z: -0.5}
         - {x: 0.5, y: 0.5, z: 0.5}
         - {x: 0.5, y: -0.5, z: 0.5}
-        Normals:
-        - {x: 0, y: 0, z: 1}
-        - {x: 0, y: 0, z: 1}
-        - {x: 0, y: 0, z: 1}
-        - {x: 0, y: 0, z: 1}
-        - {x: 0, y: 1, z: 0}
-        - {x: 0, y: 1, z: 0}
-        - {x: 0, y: 0, z: -1}
-        - {x: 0, y: 0, z: -1}
-        - {x: 0, y: 1, z: 0}
-        - {x: 0, y: 1, z: 0}
-        - {x: 0, y: 0, z: -1}
-        - {x: 0, y: 0, z: -1}
-        - {x: 0, y: -1, z: 0}
-        - {x: 0, y: -1, z: 0}
-        - {x: 0, y: -1, z: 0}
-        - {x: 0, y: -1, z: 0}
-        - {x: -1, y: 0, z: 0}
-        - {x: -1, y: 0, z: 0}
-        - {x: -1, y: 0, z: 0}
-        - {x: -1, y: 0, z: 0}
-        - {x: 1, y: 0, z: 0}
-        - {x: 1, y: 0, z: 0}
-        - {x: 1, y: 0, z: 0}
-        - {x: 1, y: 0, z: 0}
         Triangles: 0000000002000000030000000000000003000000010000000800000004000000050000000800000005000000090000000a00000006000000070000000a000000070000000b0000000c0000000d0000000e0000000c0000000e0000000f000000100000001100000012000000100000001200000013000000140000001500000016000000140000001600000017000000
         Metadata:
           owner:
@@ -778,7 +729,7 @@ MonoBehaviour:
           - VertA: 0
             VertB: 2
             VertC: 3
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 0, y: 0, z: 1}
             EdgeA:
               id: 1
             EdgeB:
@@ -788,7 +739,7 @@ MonoBehaviour:
           - VertA: 0
             VertB: 3
             VertC: 1
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 0, y: 0, z: 1}
             EdgeA:
               id: 4
             EdgeB:
@@ -798,7 +749,7 @@ MonoBehaviour:
           - VertA: 8
             VertB: 4
             VertC: 5
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 0, y: 1, z: 0}
             EdgeA:
               id: 7
             EdgeB:
@@ -808,7 +759,7 @@ MonoBehaviour:
           - VertA: 8
             VertB: 5
             VertC: 9
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 0, y: 1, z: 0}
             EdgeA:
               id: 10
             EdgeB:
@@ -818,7 +769,7 @@ MonoBehaviour:
           - VertA: 10
             VertB: 6
             VertC: 7
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 0, y: 0, z: -1}
             EdgeA:
               id: 13
             EdgeB:
@@ -828,7 +779,7 @@ MonoBehaviour:
           - VertA: 10
             VertB: 7
             VertC: 11
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 0, y: 0, z: -1}
             EdgeA:
               id: 16
             EdgeB:
@@ -838,7 +789,7 @@ MonoBehaviour:
           - VertA: 12
             VertB: 13
             VertC: 14
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 0, y: -1, z: 0}
             EdgeA:
               id: 19
             EdgeB:
@@ -848,7 +799,7 @@ MonoBehaviour:
           - VertA: 12
             VertB: 14
             VertC: 15
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 0, y: -1, z: 0}
             EdgeA:
               id: 22
             EdgeB:
@@ -858,7 +809,7 @@ MonoBehaviour:
           - VertA: 16
             VertB: 17
             VertC: 18
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: -1, y: 0, z: 0}
             EdgeA:
               id: 25
             EdgeB:
@@ -868,7 +819,7 @@ MonoBehaviour:
           - VertA: 16
             VertB: 18
             VertC: 19
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: -1, y: 0, z: 0}
             EdgeA:
               id: 28
             EdgeB:
@@ -878,7 +829,7 @@ MonoBehaviour:
           - VertA: 20
             VertB: 21
             VertC: 22
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 1, y: 0, z: 0}
             EdgeA:
               id: 31
             EdgeB:
@@ -888,7 +839,7 @@ MonoBehaviour:
           - VertA: 20
             VertB: 22
             VertC: 23
-            FaceNormal: {x: 0, y: 0, z: 0}
+            FaceNormal: {x: 1, y: 0, z: 0}
             EdgeA:
               id: 34
             EdgeB:

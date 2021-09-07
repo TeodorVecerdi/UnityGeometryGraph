@@ -5,23 +5,20 @@ using UnityEngine;
 [Serializable]
 public class GeometryData {
     [SerializeField] public List<Vector3> Vertices;
-    [SerializeField] public List<Vector3> Normals;
     [SerializeField] public List<int> Triangles;
     [SerializeField] public GeometryMetadata Metadata;
 
     public GeometryData(Mesh mesh) {
         Vertices = new List<Vector3>();
-        Normals = new List<Vector3>();
         Triangles = new List<int>();
         
         mesh.GetVertices(Vertices);
-        mesh.GetNormals(Normals);
         mesh.GetTriangles(Triangles, 0);
 
-        BuildMetadata();
+        BuildMetadata(mesh.normals);
     }
 
-    private void BuildMetadata() {
+    private void BuildMetadata(Vector3[] normals) {
         Metadata = new GeometryMetadata(this);
 
         for (var i = 0; i < Triangles.Count; i+=3) {
@@ -29,7 +26,7 @@ public class GeometryData {
             var idxB = Triangles[i + 1];
             var idxC = Triangles[i + 2];
 
-            var faceNormal = Normals[idxA] + Normals[idxB] + Normals[idxC];
+            var faceNormal = normals[idxA] + normals[idxB] + normals[idxC];
             
             var face = new Face(idxA, idxB, idxC, faceNormal / 3.0f);
             var edgeA = face.EdgeA = new Edge(idxA, idxB);
