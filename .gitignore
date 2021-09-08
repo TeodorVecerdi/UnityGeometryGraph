@@ -166,3 +166,7 @@ sysinfo.txt
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all,unity
+
+UnityGeometryGraph/Assets/Plugins/Sirenix/
+
+UnityGeometryGraph/Assets/Plugins/Sirenix.meta
