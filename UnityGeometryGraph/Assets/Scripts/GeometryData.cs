@@ -8,30 +8,29 @@ using UnityEngine;
 [Serializable]
 public class GeometryData {
     [SerializeField] public List<Vector3> Vertices;
-    [SerializeField] public List<int> Triangles;
     [SerializeField] public GeometryMetadata Metadata;
 
     public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
         Vertices = new List<Vector3>();
-        Triangles = new List<int>();
         
         mesh.GetVertices(Vertices);
-        mesh.GetTriangles(Triangles, 0);
 
-        BuildMetadata(mesh.normals, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+        var triangles = new List<int>();
+        mesh.GetTriangles(triangles, 0);
+        BuildMetadata(mesh.normals, triangles, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
     }
 
-    private void BuildMetadata(Vector3[] normals, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+    private void BuildMetadata(Vector3[] normals, List<int> triangles, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
         Metadata = new GeometryMetadata(this);
-        BuildElements(normals);
+        BuildElements(normals, triangles);
         RemoveDuplicates(normals, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
     }
 
-    private void BuildElements(Vector3[] normals) {
-        for (var i = 0; i < Triangles.Count; i += 3) {
-            var idxA = Triangles[i];
-            var idxB = Triangles[i + 1];
-            var idxC = Triangles[i + 2];
+    private void BuildElements(Vector3[] normals, List<int> triangles) {
+        for (var i = 0; i < triangles.Count; i += 3) {
+            var idxA = triangles[i];
+            var idxB = triangles[i + 1];
+            var idxC = triangles[i + 2];
 
             var faceNormal = normals[idxA] + normals[idxB] + normals[idxC];
 
@@ -77,12 +76,21 @@ public class GeometryData {
         // Find real duplicates based on the face normal angle
         var actualDuplicates = new List<(int, int, BitArray)>();
         foreach (var potentialDuplicate in potentialDuplicates) {
-            var faceA = Metadata.Edges[potentialDuplicate.Item1].FaceA;
-            var faceB = Metadata.Edges[potentialDuplicate.Item2].FaceA;
+            var edgeA = Metadata.Edges[potentialDuplicate.Item1];
+            var edgeB = Metadata.Edges[potentialDuplicate.Item2];
+            var faceA = edgeA.FaceA;
+            var faceB = edgeB.FaceA;
             var normalAngle = Vector3.Angle(faceA.FaceNormal, faceB.FaceNormal);
+
+            if (normalAngle > duplicateNormalAngleThreshold) continue;
             
-            if(normalAngle < duplicateNormalAngleThreshold) 
-                actualDuplicates.Add(potentialDuplicate);
+            actualDuplicates.Add(potentialDuplicate);
+            edgeA.FaceB = faceB;
+            
+            // Remap face edges
+            if (faceB.EdgeA == edgeB) faceB.EdgeA = edgeA;
+            else if (faceB.EdgeB == edgeB) faceB.EdgeB = edgeA;
+            else if (faceB.EdgeC == edgeB) faceB.EdgeC = edgeA;
         }
         potentialDuplicates.Clear();
         Debug.Log($"Of which {actualDuplicates.Count} are actual duplicates");
@@ -140,15 +148,20 @@ public class GeometryData {
         // Remove trivial invalid entries (key==contents)
         var removalList = new List<int>();
         foreach (var pair in vertexRemap) {
-            pair.Value.Remove(pair.Key);
+            pair.Value.RemoveAll(value => value == pair.Key);
             if(pair.Value.Count == 0) removalList.Add(pair.Key);
         }
         removalList.ForEach(key => vertexRemap.Remove(key));
         removalList.Clear();
 
+        foreach (var keyValuePair in vertexRemap) {
+            Debug.LogWarning($"Vertex {{{keyValuePair.Key}}} has duplicates {keyValuePair.Value.ToListString()}");
+        }
+
         // Remove remaining invalid entries
         var sortedKeys = vertexRemap.Keys.QuickSorted().ToList();
         var actualMap = new Dictionary<int, HashSet<int>>();
+        var reverseDuplicateMap = new Dictionary<int, int>();
         foreach (var sortedKey in sortedKeys) {
             var alreadyExistsKey = -1;
             foreach (var pair in actualMap) {
@@ -160,9 +173,15 @@ public class GeometryData {
 
             if (alreadyExistsKey != -1) {
                 actualMap[alreadyExistsKey].AddRange(vertexRemap[sortedKey]);
+                foreach (var duplicate in vertexRemap[sortedKey]) {
+                    reverseDuplicateMap[duplicate] = alreadyExistsKey;
+                }
             } else {
                 actualMap.Add(sortedKey, new HashSet<int>());
                 actualMap[sortedKey].AddRange(vertexRemap[sortedKey]);
+                foreach (var duplicate in vertexRemap[sortedKey]) {
+                    reverseDuplicateMap[duplicate] = sortedKey;
+                }
             }
         }
         
@@ -172,7 +191,64 @@ public class GeometryData {
         foreach (var pair in actualMap) {
             Debug.Log($"Unique vertex {{{pair.Key}}} has duplicates {pair.Value.ToListString()}");
         }
+        Debug.Log($"Reverse duplicate map:\n{reverseDuplicateMap.ToListString()}");
+        
+        // Remap the vertex indices for faces and edges
+        foreach (var face in Metadata.Faces) {
+            RemapFace(face, reverseDuplicateMap);
+        }
+
+        // Remove duplicate edges
+        foreach (var edge in actualDuplicates.Select(tuple => Metadata.Edges[tuple.Item2]).ToList()) {
+            Metadata.Edges.Remove(edge);
+        }
+
+        // Remove duplicate vertices
+        var sortedDuplicateVertices = reverseDuplicateMap.Keys.QuickSorted().Reverse().ToList();
+        foreach (var vertexIndex in sortedDuplicateVertices) {
+            Vertices.RemoveAt(vertexIndex);
+        }
+
+        // Check if there are any invalid faces
+        for (var i = 0; i < Metadata.Faces.Count; i++) {
+            var face = Metadata.Faces[i];
+            if (!Metadata.Edges.Contains(face.EdgeA) || !Metadata.Edges.Contains(face.EdgeB) || !Metadata.Edges.Contains(face.EdgeC)) {
+                Debug.LogError($"Face at index {i} contains invalid edges");
+            }
+        }
+        
+        for (var i = 0; i < Metadata.Edges.Count; i++) {
+            var edge = Metadata.Edges[i];
+            if (edge.FaceA == null || edge.FaceB == null) {
+                Debug.LogError($"Edge at index {i} doesn't have all faces assigned");
+            }
+        }
     }
+
+    private void RemapFace(Face face, Dictionary<int, int> reverseDuplicateMap) {
+        if (reverseDuplicateMap.ContainsKey(face.VertA)) {
+            face.VertA = reverseDuplicateMap[face.VertA];
+        }
+        if (reverseDuplicateMap.ContainsKey(face.VertB)) {
+            face.VertB = reverseDuplicateMap[face.VertB];
+        }
+        if (reverseDuplicateMap.ContainsKey(face.VertC)) {
+            face.VertC = reverseDuplicateMap[face.VertC];
+        }
+        
+        RemapEdge(face.EdgeA, reverseDuplicateMap);
+        RemapEdge(face.EdgeB, reverseDuplicateMap);
+        RemapEdge(face.EdgeC, reverseDuplicateMap);
+    }
+
+    private void RemapEdge(Edge edge, Dictionary<int, int> reverseDuplicateMap) {
+        if (reverseDuplicateMap.ContainsKey(edge.VertA)) {
+            edge.VertA = reverseDuplicateMap[edge.VertA];
+        }
+        if (reverseDuplicateMap.ContainsKey(edge.VertB)) {
+            edge.VertB = reverseDuplicateMap[edge.VertB];
+        }
+    } 
 
     [Serializable]
     public class GeometryMetadata {

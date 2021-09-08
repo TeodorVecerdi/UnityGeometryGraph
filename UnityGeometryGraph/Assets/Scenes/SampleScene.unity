@@ -306,6 +306,7 @@ GameObject:
   - component: {fileID: 1422124534}
   - component: {fileID: 1422124532}
   - component: {fileID: 1422124533}
+  - component: {fileID: 1422124536}
   - component: {fileID: 1422124535}
   m_Layer: 0
   m_Name: Cube
@@ -321,7 +322,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422124531}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 2042604515}
 --- !u!23 &1422124533
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -391,127 +392,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 1422124532}
+  duplicateDistanceThreshold: 0.01
+  duplicateNormalAngleThreshold: 180
   gizmoType: 3
-  handleSize: 0.1
+  handleSize: 0.05
   showFaceNormals: 1
-  showByElement: 1
-  index: 6
+  showByElement: 0
+  index: 0
   data:
     Vertices:
-    - {x: 0.5, y: -0.5, z: 0.5}
-    - {x: -0.5, y: -0.5, z: 0.5}
-    - {x: 0.5, y: 0.5, z: 0.5}
-    - {x: -0.5, y: 0.5, z: 0.5}
-    - {x: 0.5, y: 0.5, z: -0.5}
-    - {x: -0.5, y: 0.5, z: -0.5}
-    - {x: 0.5, y: -0.5, z: -0.5}
-    - {x: -0.5, y: -0.5, z: -0.5}
-    - {x: 0.5, y: 0.5, z: 0.5}
-    - {x: -0.5, y: 0.5, z: 0.5}
-    - {x: 0.5, y: 0.5, z: -0.5}
-    - {x: -0.5, y: 0.5, z: -0.5}
-    - {x: 0.5, y: -0.5, z: -0.5}
-    - {x: 0.5, y: -0.5, z: 0.5}
-    - {x: -0.5, y: -0.5, z: 0.5}
-    - {x: -0.5, y: -0.5, z: -0.5}
-    - {x: -0.5, y: -0.5, z: 0.5}
-    - {x: -0.5, y: 0.5, z: 0.5}
-    - {x: -0.5, y: 0.5, z: -0.5}
-    - {x: -0.5, y: -0.5, z: -0.5}
-    - {x: 0.5, y: -0.5, z: -0.5}
-    - {x: 0.5, y: 0.5, z: -0.5}
-    - {x: 0.5, y: 0.5, z: 0.5}
-    - {x: 0.5, y: -0.5, z: 0.5}
-    Triangles: 0000000002000000030000000000000003000000010000000800000004000000050000000800000005000000090000000a00000006000000070000000a000000070000000b0000000c0000000d0000000e0000000c0000000e0000000f000000100000001100000012000000100000001200000013000000140000001500000016000000140000001600000017000000
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: 1, y: 1, z: 0}
     Metadata:
       owner:
         id: 0
       Edges:
       - VertA: 0
         VertB: 2
+        FaceA:
+          id: 1
+        FaceB:
+          id: 2
       - VertA: 2
-        VertB: 3
-      - VertA: 3
-        VertB: 0
-      - VertA: 0
-        VertB: 3
-      - VertA: 3
         VertB: 1
+        FaceA:
+          id: 1
+        FaceB:
+          id: 3
       - VertA: 1
         VertB: 0
-      - VertA: 8
-        VertB: 4
-      - VertA: 4
-        VertB: 5
-      - VertA: 5
-        VertB: 8
-      - VertA: 8
-        VertB: 5
-      - VertA: 5
-        VertB: 9
-      - VertA: 9
-        VertB: 8
-      - VertA: 10
-        VertB: 6
-      - VertA: 6
-        VertB: 7
-      - VertA: 7
-        VertB: 10
-      - VertA: 10
-        VertB: 7
-      - VertA: 7
-        VertB: 11
-      - VertA: 11
-        VertB: 10
-      - VertA: 12
-        VertB: 13
-      - VertA: 13
-        VertB: 14
-      - VertA: 14
-        VertB: 12
-      - VertA: 12
-        VertB: 14
-      - VertA: 14
-        VertB: 15
-      - VertA: 15
-        VertB: 12
-      - VertA: 16
-        VertB: 17
-      - VertA: 17
-        VertB: 18
-      - VertA: 18
-        VertB: 16
-      - VertA: 16
-        VertB: 18
-      - VertA: 18
-        VertB: 19
-      - VertA: 19
-        VertB: 16
-      - VertA: 20
-        VertB: 21
-      - VertA: 21
-        VertB: 22
-      - VertA: 22
-        VertB: 20
-      - VertA: 20
-        VertB: 22
-      - VertA: 22
-        VertB: 23
-      - VertA: 23
-        VertB: 20
+        FaceA:
+          id: 1
+        FaceB:
+          id: 2
+      - VertA: 2
+        VertB: 3
+        FaceA:
+          id: 3
+        FaceB:
+          id: 2
+      - VertA: 3
+        VertB: 1
+        FaceA:
+          id: 3
+        FaceB:
+          id: 2
       Faces:
       - VertA: 0
         VertB: 2
-        VertC: 3
-        FaceNormal: {x: 0, y: 0, z: 1}
-        EdgeA:
-          id: 1
-        EdgeB:
-          id: 2
-        EdgeC:
-          id: 3
-      - VertA: 0
-        VertB: 3
         VertC: 1
         FaceNormal: {x: 0, y: 0, z: 1}
         EdgeA:
@@ -520,226 +450,63 @@ MonoBehaviour:
           id: 5
         EdgeC:
           id: 6
-      - VertA: 8
-        VertB: 4
-        VertC: 5
-        FaceNormal: {x: 0, y: 1, z: 0}
+      - VertA: 2
+        VertB: 3
+        VertC: 1
+        FaceNormal: {x: 0, y: 0, z: 1}
         EdgeA:
           id: 7
         EdgeB:
           id: 8
         EdgeC:
-          id: 9
-      - VertA: 8
-        VertB: 5
-        VertC: 9
-        FaceNormal: {x: 0, y: 1, z: 0}
-        EdgeA:
-          id: 10
-        EdgeB:
-          id: 11
-        EdgeC:
-          id: 12
-      - VertA: 10
-        VertB: 6
-        VertC: 7
-        FaceNormal: {x: 0, y: 0, z: -1}
-        EdgeA:
-          id: 13
-        EdgeB:
-          id: 14
-        EdgeC:
-          id: 15
-      - VertA: 10
-        VertB: 7
-        VertC: 11
-        FaceNormal: {x: 0, y: 0, z: -1}
-        EdgeA:
-          id: 16
-        EdgeB:
-          id: 17
-        EdgeC:
-          id: 18
-      - VertA: 12
-        VertB: 13
-        VertC: 14
-        FaceNormal: {x: 0, y: -1, z: 0}
-        EdgeA:
-          id: 19
-        EdgeB:
-          id: 20
-        EdgeC:
-          id: 21
-      - VertA: 12
-        VertB: 14
-        VertC: 15
-        FaceNormal: {x: 0, y: -1, z: 0}
-        EdgeA:
-          id: 22
-        EdgeB:
-          id: 23
-        EdgeC:
-          id: 24
-      - VertA: 16
-        VertB: 17
-        VertC: 18
-        FaceNormal: {x: -1, y: 0, z: 0}
-        EdgeA:
-          id: 25
-        EdgeB:
-          id: 26
-        EdgeC:
-          id: 27
-      - VertA: 16
-        VertB: 18
-        VertC: 19
-        FaceNormal: {x: -1, y: 0, z: 0}
-        EdgeA:
-          id: 28
-        EdgeB:
-          id: 29
-        EdgeC:
-          id: 30
-      - VertA: 20
-        VertB: 21
-        VertC: 22
-        FaceNormal: {x: 1, y: 0, z: 0}
-        EdgeA:
-          id: 31
-        EdgeB:
-          id: 32
-        EdgeC:
-          id: 33
-      - VertA: 20
-        VertB: 22
-        VertC: 23
-        FaceNormal: {x: 1, y: 0, z: 0}
-        EdgeA:
-          id: 34
-        EdgeB:
-          id: 35
-        EdgeC:
-          id: 36
+          id: 5
   references:
     version: 1
     00000000:
       type: {class: GeometryData, ns: , asm: Assembly-CSharp}
       data:
         Vertices:
-        - {x: 0.5, y: -0.5, z: 0.5}
-        - {x: -0.5, y: -0.5, z: 0.5}
-        - {x: 0.5, y: 0.5, z: 0.5}
-        - {x: -0.5, y: 0.5, z: 0.5}
-        - {x: 0.5, y: 0.5, z: -0.5}
-        - {x: -0.5, y: 0.5, z: -0.5}
-        - {x: 0.5, y: -0.5, z: -0.5}
-        - {x: -0.5, y: -0.5, z: -0.5}
-        - {x: 0.5, y: 0.5, z: 0.5}
-        - {x: -0.5, y: 0.5, z: 0.5}
-        - {x: 0.5, y: 0.5, z: -0.5}
-        - {x: -0.5, y: 0.5, z: -0.5}
-        - {x: 0.5, y: -0.5, z: -0.5}
-        - {x: 0.5, y: -0.5, z: 0.5}
-        - {x: -0.5, y: -0.5, z: 0.5}
-        - {x: -0.5, y: -0.5, z: -0.5}
-        - {x: -0.5, y: -0.5, z: 0.5}
-        - {x: -0.5, y: 0.5, z: 0.5}
-        - {x: -0.5, y: 0.5, z: -0.5}
-        - {x: -0.5, y: -0.5, z: -0.5}
-        - {x: 0.5, y: -0.5, z: -0.5}
-        - {x: 0.5, y: 0.5, z: -0.5}
-        - {x: 0.5, y: 0.5, z: 0.5}
-        - {x: 0.5, y: -0.5, z: 0.5}
-        Triangles: 0000000002000000030000000000000003000000010000000800000004000000050000000800000005000000090000000a00000006000000070000000a000000070000000b0000000c0000000d0000000e0000000c0000000e0000000f000000100000001100000012000000100000001200000013000000140000001500000016000000140000001600000017000000
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 1, z: 0}
+        - {x: 1, y: 0, z: 0}
+        - {x: 1, y: 1, z: 0}
         Metadata:
           owner:
             id: 0
           Edges:
           - VertA: 0
             VertB: 2
+            FaceA:
+              id: 1
+            FaceB:
+              id: 2
           - VertA: 2
-            VertB: 3
-          - VertA: 3
-            VertB: 0
-          - VertA: 0
-            VertB: 3
-          - VertA: 3
             VertB: 1
+            FaceA:
+              id: 1
+            FaceB:
+              id: 3
           - VertA: 1
             VertB: 0
-          - VertA: 8
-            VertB: 4
-          - VertA: 4
-            VertB: 5
-          - VertA: 5
-            VertB: 8
-          - VertA: 8
-            VertB: 5
-          - VertA: 5
-            VertB: 9
-          - VertA: 9
-            VertB: 8
-          - VertA: 10
-            VertB: 6
-          - VertA: 6
-            VertB: 7
-          - VertA: 7
-            VertB: 10
-          - VertA: 10
-            VertB: 7
-          - VertA: 7
-            VertB: 11
-          - VertA: 11
-            VertB: 10
-          - VertA: 12
-            VertB: 13
-          - VertA: 13
-            VertB: 14
-          - VertA: 14
-            VertB: 12
-          - VertA: 12
-            VertB: 14
-          - VertA: 14
-            VertB: 15
-          - VertA: 15
-            VertB: 12
-          - VertA: 16
-            VertB: 17
-          - VertA: 17
-            VertB: 18
-          - VertA: 18
-            VertB: 16
-          - VertA: 16
-            VertB: 18
-          - VertA: 18
-            VertB: 19
-          - VertA: 19
-            VertB: 16
-          - VertA: 20
-            VertB: 21
-          - VertA: 21
-            VertB: 22
-          - VertA: 22
-            VertB: 20
-          - VertA: 20
-            VertB: 22
-          - VertA: 22
-            VertB: 23
-          - VertA: 23
-            VertB: 20
+            FaceA:
+              id: 1
+            FaceB:
+              id: 2
+          - VertA: 2
+            VertB: 3
+            FaceA:
+              id: 3
+            FaceB:
+              id: 2
+          - VertA: 3
+            VertB: 1
+            FaceA:
+              id: 3
+            FaceB:
+              id: 2
           Faces:
           - VertA: 0
             VertB: 2
-            VertC: 3
-            FaceNormal: {x: 0, y: 0, z: 1}
-            EdgeA:
-              id: 1
-            EdgeB:
-              id: 2
-            EdgeC:
-              id: 3
-          - VertA: 0
-            VertB: 3
             VertC: 1
             FaceNormal: {x: 0, y: 0, z: 1}
             EdgeA:
@@ -748,286 +515,102 @@ MonoBehaviour:
               id: 5
             EdgeC:
               id: 6
-          - VertA: 8
-            VertB: 4
-            VertC: 5
-            FaceNormal: {x: 0, y: 1, z: 0}
+          - VertA: 2
+            VertB: 3
+            VertC: 1
+            FaceNormal: {x: 0, y: 0, z: 1}
             EdgeA:
               id: 7
             EdgeB:
               id: 8
             EdgeC:
-              id: 9
-          - VertA: 8
-            VertB: 5
-            VertC: 9
-            FaceNormal: {x: 0, y: 1, z: 0}
-            EdgeA:
-              id: 10
-            EdgeB:
-              id: 11
-            EdgeC:
-              id: 12
-          - VertA: 10
-            VertB: 6
-            VertC: 7
-            FaceNormal: {x: 0, y: 0, z: -1}
-            EdgeA:
-              id: 13
-            EdgeB:
-              id: 14
-            EdgeC:
-              id: 15
-          - VertA: 10
-            VertB: 7
-            VertC: 11
-            FaceNormal: {x: 0, y: 0, z: -1}
-            EdgeA:
-              id: 16
-            EdgeB:
-              id: 17
-            EdgeC:
-              id: 18
-          - VertA: 12
-            VertB: 13
-            VertC: 14
-            FaceNormal: {x: 0, y: -1, z: 0}
-            EdgeA:
-              id: 19
-            EdgeB:
-              id: 20
-            EdgeC:
-              id: 21
-          - VertA: 12
-            VertB: 14
-            VertC: 15
-            FaceNormal: {x: 0, y: -1, z: 0}
-            EdgeA:
-              id: 22
-            EdgeB:
-              id: 23
-            EdgeC:
-              id: 24
-          - VertA: 16
-            VertB: 17
-            VertC: 18
-            FaceNormal: {x: -1, y: 0, z: 0}
-            EdgeA:
-              id: 25
-            EdgeB:
-              id: 26
-            EdgeC:
-              id: 27
-          - VertA: 16
-            VertB: 18
-            VertC: 19
-            FaceNormal: {x: -1, y: 0, z: 0}
-            EdgeA:
-              id: 28
-            EdgeB:
-              id: 29
-            EdgeC:
-              id: 30
-          - VertA: 20
-            VertB: 21
-            VertC: 22
-            FaceNormal: {x: 1, y: 0, z: 0}
-            EdgeA:
-              id: 31
-            EdgeB:
-              id: 32
-            EdgeC:
-              id: 33
-          - VertA: 20
-            VertB: 22
-            VertC: 23
-            FaceNormal: {x: 1, y: 0, z: 0}
-            EdgeA:
-              id: 34
-            EdgeB:
-              id: 35
-            EdgeC:
-              id: 36
+              id: 5
     00000001:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
+      type: {class: GeometryData/Face, ns: , asm: Assembly-CSharp}
       data:
         VertA: 0
         VertB: 2
+        VertC: 1
+        FaceNormal: {x: 0, y: 0, z: 1}
+        EdgeA:
+          id: 4
+        EdgeB:
+          id: 5
+        EdgeC:
+          id: 6
     00000002:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
+      type: {class: , ns: , asm: }
+    00000003:
+      type: {class: GeometryData/Face, ns: , asm: Assembly-CSharp}
       data:
         VertA: 2
         VertB: 3
-    00000003:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 3
-        VertB: 0
+        VertC: 1
+        FaceNormal: {x: 0, y: 0, z: 1}
+        EdgeA:
+          id: 7
+        EdgeB:
+          id: 8
+        EdgeC:
+          id: 5
     00000004:
       type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
       data:
         VertA: 0
-        VertB: 3
+        VertB: 2
+        FaceA:
+          id: 1
+        FaceB:
+          id: 2
     00000005:
       type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
       data:
-        VertA: 3
+        VertA: 2
         VertB: 1
+        FaceA:
+          id: 1
+        FaceB:
+          id: 3
     00000006:
       type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
       data:
         VertA: 1
         VertB: 0
+        FaceA:
+          id: 1
+        FaceB:
+          id: 2
     00000007:
       type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
       data:
-        VertA: 8
-        VertB: 4
+        VertA: 2
+        VertB: 3
+        FaceA:
+          id: 3
+        FaceB:
+          id: 2
     00000008:
       type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
       data:
-        VertA: 4
-        VertB: 5
-    00000009:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 5
-        VertB: 8
-    0000000A:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 8
-        VertB: 5
-    0000000B:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 5
-        VertB: 9
-    0000000C:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 9
-        VertB: 8
-    0000000D:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 10
-        VertB: 6
-    0000000E:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 6
-        VertB: 7
-    0000000F:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 7
-        VertB: 10
-    00000010:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 10
-        VertB: 7
-    00000011:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 7
-        VertB: 11
-    00000012:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 11
-        VertB: 10
-    00000013:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 12
-        VertB: 13
-    00000014:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 13
-        VertB: 14
-    00000015:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 14
-        VertB: 12
-    00000016:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 12
-        VertB: 14
-    00000017:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 14
-        VertB: 15
-    00000018:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 15
-        VertB: 12
-    00000019:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 16
-        VertB: 17
-    0000001A:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 17
-        VertB: 18
-    0000001B:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 18
-        VertB: 16
-    0000001C:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 16
-        VertB: 18
-    0000001D:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 18
-        VertB: 19
-    0000001E:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 19
-        VertB: 16
-    0000001F:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 20
-        VertB: 21
-    00000020:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 21
-        VertB: 22
-    00000021:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 22
-        VertB: 20
-    00000022:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 20
-        VertB: 22
-    00000023:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 22
-        VertB: 23
-    00000024:
-      type: {class: GeometryData/Edge, ns: , asm: Assembly-CSharp}
-      data:
-        VertA: 23
-        VertB: 20
+        VertA: 3
+        VertB: 1
+        FaceA:
+          id: 3
+        FaceB:
+          id: 2
+--- !u!114 &1422124536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422124531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0b015603174587a94c8dc430662d7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1422124532}
 --- !u!1 &1687258581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1174,6 +757,170 @@ Transform:
   m_Father: {fileID: 615472187}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!43 &2042604515
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: $$_Double Quad
+  serializedVersion: 10
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 6
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 4
+    localAABB:
+      m_Center: {x: 0.5, y: 0.5, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 000002000100020003000100
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 4
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 24
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 160
+    _typelessdata: 00000000000000000000000000000000000000000000803f0000803f00000000000000000000803f000000000000803f0000000000000000000000000000803f0000803f00000000000000000000803f0000803f000000000000000000000000000000000000803f0000803f00000000000000000000803f0000803f0000803f0000000000000000000000000000803f0000803f00000000000000000000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0.5, y: 0.5, z: 0}
+    m_Extent: {x: 0.5, y: 0.5, z: 0}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
 --- !u!1 &2138677391
 GameObject:
   m_ObjectHideFlags: 0
