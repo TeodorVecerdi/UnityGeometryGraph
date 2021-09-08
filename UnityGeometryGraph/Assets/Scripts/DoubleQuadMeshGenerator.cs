@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
@@ -30,17 +30,17 @@ public class DoubleQuadMeshGenerator : MonoBehaviour {
         triangles.Add(1);
 
         if (doubleSided) {
-        // Back
-        vertices.Add(v0);
-        vertices.Add(v1);
-        vertices.Add(v2);
-        vertices.Add(v3);
-        triangles.Add(0);
-        triangles.Add(1);
-        triangles.Add(2);
-        triangles.Add(2);
-        triangles.Add(1);
-        triangles.Add(3);
+            // Back
+            vertices.Add(v0);
+            vertices.Add(v1);
+            vertices.Add(v2);
+            vertices.Add(v3);
+            triangles.Add(0 + 4);
+            triangles.Add(1 + 4);
+            triangles.Add(2 + 4);
+            triangles.Add(2 + 4);
+            triangles.Add(1 + 4);
+            triangles.Add(3 + 4);
         }
 
         var mesh = new Mesh {name = "$$_Double Quad"};
