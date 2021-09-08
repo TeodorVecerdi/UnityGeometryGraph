@@ -394,6 +394,8 @@ MonoBehaviour:
   gizmoType: 3
   handleSize: 0.1
   showFaceNormals: 1
+  showByElement: 1
+  index: 6
   data:
     Vertices:
     - {x: 0.5, y: -0.5, z: 0.5}
