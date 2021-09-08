@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Unity.Jobs;
+using Unity.Jobs.LowLevel.Unsafe;
 using UnityCommons;
 using UnityEngine;
+using UnityEngine.Profiling;
+using Debug = UnityEngine.Debug;
 
 [Serializable]
 public class GeometryData {
@@ -12,6 +17,9 @@ public class GeometryData {
     [SerializeField] public List<Face> Faces;
 
     public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+        // Profiler.BeginSample("Geometry Data");
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
         Vertices = new List<Vector3>();
 
         mesh.GetVertices(Vertices);
@@ -19,16 +27,23 @@ public class GeometryData {
         var triangles = new List<int>();
         mesh.GetTriangles(triangles, 0);
         BuildMetadata(triangles, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+        var elapsed = stopwatch.Elapsed;
+        Debug.Log(elapsed.TotalMilliseconds);
+        stopwatch.Stop();
+        // Profiler.EndSample();
     }
 
     private void BuildMetadata(List<int> triangles, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
-        Edges = new List<Edge>();
-        Faces = new List<Face>();
+        // Profiler.BeginSample("Build Metadata");
+        Edges = new List<Edge>(triangles.Count);
+        Faces = new List<Face>(triangles.Count / 3);
         BuildElements(triangles);
         RemoveDuplicates(duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+        // Profiler.EndSample();
     }
 
     private void BuildElements(List<int> triangles) {
+        // Profiler.BeginSample("Build Elements");
         for (var i = 0; i < triangles.Count; i += 3) {
             var idxA = triangles[i];
             var idxB = triangles[i + 1];
@@ -55,50 +70,73 @@ public class GeometryData {
             Edges.Add(edgeB);
             Edges.Add(edgeC);
         }
+        // Profiler.EndSample();
     }
 
     private void RemoveDuplicates(float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+        // Profiler.BeginSample("Remove Duplicates");
+        // Profiler.BeginSample("Get Duplicate Edges");
         var duplicates = GetDuplicateEdges(duplicateDistanceThreshold * duplicateDistanceThreshold, duplicateNormalAngleThreshold);
-        var vertexDuplicatesMap = GetVertexDuplicatesMap(duplicates);
-        var reverseDuplicatesMap = RemoveInvalidDuplicates(vertexDuplicatesMap);
+        // Profiler.EndSample();
+        // Profiler.BeginSample("Get Duplicate Vertices Map");
+        var duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
+        // Profiler.EndSample();
+        // Profiler.BeginSample("Remove Invalid Duplicates");
+        var reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
+        // Profiler.EndSample();
 
+        // Profiler.BeginSample("Remap Duplicates");
         RemapDuplicates(duplicates, reverseDuplicatesMap);
+        // Profiler.EndSample();
+        // Profiler.BeginSample("Remove Duplicates");
         RemoveDuplicates(duplicates, reverseDuplicatesMap);
+        // Profiler.EndSample();
 
+        // Profiler.BeginSample("Check For Errors");
         CheckForErrors();
+        // Profiler.EndSample();
+        // Profiler.EndSample();
     }
     
-    private List<(int, int, BitArray)> GetDuplicateEdges(float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
-        var potentialDuplicates = new List<(int, int, BitArray)>();
-        
+    private List<(int, int, bool)> GetDuplicateEdges(float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
+        var potentialDuplicates = new List<(int, int, bool)>();
         // Find potential duplicate edges
         for (var i = 0; i < Edges.Count - 1; i++) {
             for (var j = i + 1; j < Edges.Count; j++) {
                 var edgeA = Edges[i];
                 var edgeB = Edges[j];
-                
-                var checkA = (Vertices[edgeA.VertA] - Vertices[edgeB.VertA]).sqrMagnitude < sqrDistanceThreshold ? 1 : 0;
-                var checkB = (Vertices[edgeA.VertA] - Vertices[edgeB.VertB]).sqrMagnitude < sqrDistanceThreshold ? 1 : 0;
-                var checkC = (Vertices[edgeA.VertB] - Vertices[edgeB.VertA]).sqrMagnitude < sqrDistanceThreshold ? 1 : 0;
-                var checkD = (Vertices[edgeA.VertB] - Vertices[edgeB.VertB]).sqrMagnitude < sqrDistanceThreshold ? 1 : 0;
-                var total = checkA + checkB + checkC + checkD;
+                var edgeAVertA = Vertices[edgeA.VertA];
+                var edgeAVertB = Vertices[edgeA.VertB];
+                var edgeBVertA = Vertices[edgeB.VertA];
+                var edgeBVertB = Vertices[edgeB.VertB];
 
-                // Two pairs of vertices are identical
-                if (total < 2) continue;
+                // var checkA = VectorUtilities.DistanceSqr(edgeAVertA, edgeBVertA) < sqrDistanceThreshold ? 1 : 0;
+                // var checkB = VectorUtilities.DistanceSqr(edgeAVertA, edgeBVertB) < sqrDistanceThreshold ? 1 : 0;
+                // var checkC = VectorUtilities.DistanceSqr(edgeAVertB, edgeBVertA) < sqrDistanceThreshold ? 1 : 0;
+                // var checkD = VectorUtilities.DistanceSqr(edgeAVertB, edgeBVertB) < sqrDistanceThreshold ? 1 : 0;
+                // var total = checkA + checkB + checkC + checkD;
+                //
+                // // Two pairs of vertices are identical
+                // if (total < 2) continue;
+                //
+                // potentialDuplicates.Add((i, j, checkA == 1));
                 
-                // Used to remap vertices later without checking again for which vertices are identical
-                var matchBitArray = new BitArray(4) { [0] = checkA != 0, [1] = checkB != 0, [2] = checkC != 0, [3] = checkD != 0 };
-                potentialDuplicates.Add((i, j, matchBitArray));
+                var checkA = edgeAVertA == edgeBVertA && edgeAVertB == edgeBVertB;
+                var checkB = edgeAVertA == edgeBVertB && edgeAVertB == edgeBVertA;
+                if (!checkA && !checkB) continue;
+                
+                potentialDuplicates.Add((i, j, checkA));
+                break;
             }
         }
 
-        // Debug.Log($"Found {potentialDuplicates.Count} potential duplicates");
-
         // Find real duplicates based on the face normal angle
-        var actualDuplicates = new List<(int, int, BitArray)>();
+        var actualDuplicates = new List<(int, int, bool)>();
         foreach (var potentialDuplicate in potentialDuplicates) {
-            var edgeA = Edges[potentialDuplicate.Item1];
-            var edgeB = Edges[potentialDuplicate.Item2];
+            var edgeAIndex = potentialDuplicate.Item1;
+            var edgeBIndex = potentialDuplicate.Item2;
+            var edgeA = Edges[edgeAIndex];
+            var edgeB = Edges[edgeBIndex];
             var faceA = Faces[edgeA.FaceA];
             var faceB = Faces[edgeB.FaceA];
             var normalAngle = Vector3.Angle(faceA.FaceNormal, faceB.FaceNormal);
@@ -109,84 +147,69 @@ public class GeometryData {
             edgeA.FaceB = edgeB.FaceA;
 
             // Remap face edges
-            if (faceB.EdgeA == potentialDuplicate.Item2) faceB.EdgeA = potentialDuplicate.Item1;
-            else if (faceB.EdgeB == potentialDuplicate.Item2) faceB.EdgeB = potentialDuplicate.Item1;
-            else if (faceB.EdgeC == potentialDuplicate.Item2) faceB.EdgeC = potentialDuplicate.Item1;
+            if (faceB.EdgeA == edgeBIndex) faceB.EdgeA = edgeAIndex;
+            else if (faceB.EdgeB == edgeBIndex) faceB.EdgeB = edgeAIndex;
+            else if (faceB.EdgeC == edgeBIndex) faceB.EdgeC = edgeAIndex;
         }
 
         potentialDuplicates.Clear();
 
-
         return actualDuplicates;
     }
 
-    private Dictionary<int, List<int>> GetVertexDuplicatesMap(List<(int, int, BitArray)> actualDuplicates) {
+    private Dictionary<int, List<int>> GetDuplicateVerticesMap(List<(int, int, bool)> duplicates) {
         // Make a dictionary of (UniqueVertex => [Duplicates])
-        var vertexRemap = new Dictionary<int, List<int>>();
-        foreach (var actualDuplicate in actualDuplicates) {
-            var edgeA = Edges[actualDuplicate.Item1];
-            var edgeB = Edges[actualDuplicate.Item2];
-            var bitset = actualDuplicate.Item3;
+        var duplicateVerticesMap = new Dictionary<int, List<int>>();
+        foreach (var duplicate in duplicates) {
+            var edgeA = Edges[duplicate.Item1];
+            var edgeB = Edges[duplicate.Item2];
 
             // Check which vertices in each edge are duplicates
             int edgeAVertA = -1, edgeAVertB = -1, edgeBVertA = -1, edgeBVertB = -1;
-            if (bitset[0]) {
+            if (duplicate.Item3) {
                 edgeAVertA = edgeA.VertA;
                 edgeBVertA = edgeB.VertA;
-            }
-
-            if (bitset[1]) {
-                edgeAVertA = edgeA.VertA;
-                edgeBVertA = edgeB.VertB;
-            }
-
-            if (bitset[2]) {
-                edgeAVertB = edgeA.VertB;
-                edgeBVertB = edgeB.VertA;
-            }
-
-            if (bitset[3]) {
                 edgeAVertB = edgeA.VertB;
                 edgeBVertB = edgeB.VertB;
-            }
-
-            // Sanity check that nothing went wrong
-            if (edgeAVertA < 0 || edgeAVertB < 0 || edgeBVertA < 0 || edgeBVertB < 0) {
-                throw new Exception("Duplicate edge vertices were somehow uninitialized.");
+            } else {
+                edgeAVertA = edgeA.VertA;
+                edgeBVertA = edgeB.VertB;
+                edgeAVertB = edgeA.VertB;
+                edgeBVertB = edgeB.VertA;
             }
 
             // sort as (lower num, bigger num)
             if (edgeAVertA > edgeBVertA) (edgeAVertA, edgeBVertA) = (edgeBVertA, edgeAVertA);
             if (edgeAVertB > edgeBVertB) (edgeAVertB, edgeBVertB) = (edgeBVertB, edgeAVertB);
 
-            if (!vertexRemap.ContainsKey(edgeAVertA)) {
-                vertexRemap[edgeAVertA] = new List<int>();
+            if (!duplicateVerticesMap.ContainsKey(edgeAVertA)) {
+                duplicateVerticesMap[edgeAVertA] = new List<int>();
             }
 
-            vertexRemap[edgeAVertA].Add(edgeBVertA);
+            duplicateVerticesMap[edgeAVertA].Add(edgeBVertA);
 
-            if (!vertexRemap.ContainsKey(edgeAVertB)) {
-                vertexRemap[edgeAVertB] = new List<int>();
+            if (!duplicateVerticesMap.ContainsKey(edgeAVertB)) {
+                duplicateVerticesMap[edgeAVertB] = new List<int>();
             }
 
-            vertexRemap[edgeAVertB].Add(edgeBVertB);
+            duplicateVerticesMap[edgeAVertB].Add(edgeBVertB);
         }
 
-        return vertexRemap;
+        return duplicateVerticesMap;
     }
 
-    private Dictionary<int, int> RemoveInvalidDuplicates(Dictionary<int, List<int>> vertexDuplicatesMap) {
+    private Dictionary<int, int> RemoveInvalidDuplicates(Dictionary<int, List<int>> duplicateVerticesMap) {
         // Remove trivial invalid entries
         var removalList = new List<int>();
-        foreach (var pair in vertexDuplicatesMap) {
+        foreach (var pair in duplicateVerticesMap) {
             pair.Value.RemoveAll(value => value == pair.Key);
             if (pair.Value.Count == 0) removalList.Add(pair.Key);
         }
 
-        removalList.ForEach(key => vertexDuplicatesMap.Remove(key));
+        removalList.ForEach(key => duplicateVerticesMap.Remove(key));
         
         // Remove remaining invalid entries
-        var sortedKeys = vertexDuplicatesMap.Keys.QuickSorted().ToList();
+        var sortedKeys = duplicateVerticesMap.Keys.QuickSorted();
         var actualMap = new Dictionary<int, HashSet<int>>();
         var reverseDuplicateMap = new Dictionary<int, int>();
         
@@ -201,14 +224,14 @@ public class GeometryData {
             }
 
             if (alreadyExistsKey != -1) {
-                actualMap[alreadyExistsKey].AddRange(vertexDuplicatesMap[sortedKey]);
-                foreach (var duplicate in vertexDuplicatesMap[sortedKey]) {
+                actualMap[alreadyExistsKey].AddRange(duplicateVerticesMap[sortedKey]);
+                foreach (var duplicate in duplicateVerticesMap[sortedKey]) {
                     reverseDuplicateMap[duplicate] = alreadyExistsKey;
                 }
             } else {
                 actualMap.Add(sortedKey, new HashSet<int>());
-                actualMap[sortedKey].AddRange(vertexDuplicatesMap[sortedKey]);
-                foreach (var duplicate in vertexDuplicatesMap[sortedKey]) {
+                actualMap[sortedKey].AddRange(duplicateVerticesMap[sortedKey]);
+                foreach (var duplicate in duplicateVerticesMap[sortedKey]) {
                     reverseDuplicateMap[duplicate] = sortedKey;
                 }
             }
@@ -217,14 +240,14 @@ public class GeometryData {
         return reverseDuplicateMap;
     }
 
-    private void RemapDuplicates(List<(int, int, BitArray)> actualDuplicates, Dictionary<int, int> reverseDuplicatesMap) {
+    private void RemapDuplicates(List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
         // Remap the vertex indices for faces and edges
         var edgeReverseMap = new Dictionary<int, int>();
-        foreach (var duplicate in actualDuplicates) {
+        foreach (var duplicate in duplicates) {
             edgeReverseMap[duplicate.Item2] = duplicate.Item1;
         }
 
-        var sortedEdgeRemapKeys = actualDuplicates.Select(tuple => tuple.Item1).QuickSorted().ToList();
+        var sortedEdgeRemapKeys = duplicates.Select(tuple => tuple.Item1).QuickSorted();
         var edgeRemap = new Dictionary<int, int>();
         var remapIndex = 0;
         foreach (var sortedKey in sortedEdgeRemapKeys) {
@@ -283,9 +306,9 @@ public class GeometryData {
         }
     }
    
-    private void RemoveDuplicates(List<(int, int, BitArray)> actualDuplicates, Dictionary<int, int> reverseDuplicatesMap) {
+    private void RemoveDuplicates(List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
         // Remove duplicate edges
-        foreach (var edge in actualDuplicates.Select(tuple => Edges[tuple.Item2]).ToList()) {
+        foreach (var edge in duplicates.Select(tuple => Edges[tuple.Item2]).ToList()) {
             Edges.Remove(edge);
         }
 
