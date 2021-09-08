@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 
 public class DoubleQuadMeshGenerator : MonoBehaviour {
     [SerializeField] private MeshFilter target;
+    [SerializeField] private bool doubleSided;
 
     [Button]
     private void Generate() {
@@ -27,7 +28,8 @@ public class DoubleQuadMeshGenerator : MonoBehaviour {
         triangles.Add(2);
         triangles.Add(3);
         triangles.Add(1);
-        
+
+        if (doubleSided) {
         // Back
         vertices.Add(v0);
         vertices.Add(v1);
@@ -39,6 +41,7 @@ public class DoubleQuadMeshGenerator : MonoBehaviour {
         triangles.Add(2);
         triangles.Add(1);
         triangles.Add(3);
+        }
 
         var mesh = new Mesh {name = "$$_Double Quad"};
         mesh.SetVertices(vertices);
