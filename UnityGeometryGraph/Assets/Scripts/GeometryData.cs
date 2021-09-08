@@ -223,11 +223,11 @@ public class GeometryData {
         // Debug.Log($"Edge Index Remap:\n{edgeRemap.ToListString()}");
         // Debug.Log($"Edge Reverse Map:\n{edgeReverseMap.ToListString()}");
         foreach (var face in Faces) {
-            RemapFace(face, reverseDuplicateMap, edgeReverseMap, edgeRemap);
-            
             RemapEdge(face.EdgeA, reverseDuplicateMap);
             RemapEdge(face.EdgeB, reverseDuplicateMap);
             RemapEdge(face.EdgeC, reverseDuplicateMap);
+            
+            RemapFace(face, reverseDuplicateMap, edgeReverseMap, edgeRemap);
         }
 
         // Remove duplicate edges
@@ -240,12 +240,23 @@ public class GeometryData {
         foreach (var vertexIndex in sortedDuplicateVertices) {
             Vertices.RemoveAt(vertexIndex);
         }
+        
+        // Check if there are any invalid edges
+        for (var i = 0; i < Edges.Count; i++) {
+            var edge = Edges[i];
+            if (edge.VertA >= Vertices.Count || edge.VertB >= Vertices.Count) {
+                Debug.LogError($"Edge at index {i} contains invalid vertices");
+            }
+        }
 
         // Check if there are any invalid faces
         for (var i = 0; i < Faces.Count; i++) {
             var face = Faces[i];
             if (face.EdgeA >= Edges.Count || face.EdgeB >= Edges.Count || face.EdgeC >= Edges.Count) {
                 Debug.LogError($"Face at index {i} contains invalid edges");
+            }
+            if (face.VertA >= Vertices.Count || face.VertB >= Vertices.Count || face.VertC >= Vertices.Count) {
+                Debug.LogError($"Face at index {i} contains invalid vertices");
             }
         }
     }
