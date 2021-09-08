@@ -49,7 +49,7 @@ public class GeometryData {
             face.EdgeA = Edges.Count;
             face.EdgeB = Edges.Count + 1;
             face.EdgeC = Edges.Count + 2;
-            
+
             Faces.Add(face);
             Edges.Add(edgeA);
             Edges.Add(edgeB);
@@ -220,10 +220,14 @@ public class GeometryData {
             edgeRemap[sortedKey] = remapIndex++;
         }
 
-        Debug.Log($"Edge Index Remap:\n{edgeRemap.ToListString()}");
-        Debug.Log($"Edge Reverse Map:\n{edgeReverseMap.ToListString()}");
+        // Debug.Log($"Edge Index Remap:\n{edgeRemap.ToListString()}");
+        // Debug.Log($"Edge Reverse Map:\n{edgeReverseMap.ToListString()}");
         foreach (var face in Faces) {
             RemapFace(face, reverseDuplicateMap, edgeReverseMap, edgeRemap);
+            
+            RemapEdge(face.EdgeA, reverseDuplicateMap);
+            RemapEdge(face.EdgeB, reverseDuplicateMap);
+            RemapEdge(face.EdgeC, reverseDuplicateMap);
         }
 
         // Remove duplicate edges
@@ -261,25 +265,21 @@ public class GeometryData {
 
         if (edgeReverseMap.ContainsKey(face.EdgeA)) {
             face.EdgeA = edgeIndexRemap[edgeReverseMap[face.EdgeA]];
-        } else {
+        } else if (edgeIndexRemap.ContainsKey(face.EdgeA)) {
             face.EdgeA = edgeIndexRemap[face.EdgeA];
         }
-        
+
         if (edgeReverseMap.ContainsKey(face.EdgeB)) {
             face.EdgeB = edgeIndexRemap[edgeReverseMap[face.EdgeB]];
-        } else {
+        } else if (edgeIndexRemap.ContainsKey(face.EdgeB)) {
             face.EdgeB = edgeIndexRemap[face.EdgeB];
         }
-        
+
         if (edgeReverseMap.ContainsKey(face.EdgeC)) {
             face.EdgeC = edgeIndexRemap[edgeReverseMap[face.EdgeC]];
-        } else {
+        } else if (edgeIndexRemap.ContainsKey(face.EdgeC)) {
             face.EdgeC = edgeIndexRemap[face.EdgeC];
         }
-
-        RemapEdge(face.EdgeA, reverseDuplicateMap);
-        RemapEdge(face.EdgeB, reverseDuplicateMap);
-        RemapEdge(face.EdgeC, reverseDuplicateMap);
     }
 
     private void RemapEdge(int edgeIndex, Dictionary<int, int> reverseDuplicateMap) {
