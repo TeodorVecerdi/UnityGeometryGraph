@@ -32,9 +32,15 @@ public class GeometryData {
             var idxB = triangles[i + 1];
             var idxC = triangles[i + 2];
 
-            var faceNormal = normals[idxA] + normals[idxB] + normals[idxC];
+            var vertA = Vertices[idxA];
+            var vertB = Vertices[idxB];
+            var vertC = Vertices[idxC];
 
-            var face = new Face(idxA, idxB, idxC, faceNormal / 3.0f);
+            var AB = vertB - vertA;
+            var AC = vertC - vertA;
+            var faceNormal = Vector3.Cross(AB, AC).normalized;
+
+            var face = new Face(idxA, idxB, idxC, faceNormal);
             var edgeA = face.EdgeA = new Edge(idxA, idxB) {FaceA = face};
             var edgeB = face.EdgeB = new Edge(idxB, idxC) {FaceA = face};
             var edgeC = face.EdgeC = new Edge(idxC, idxA) {FaceA = face};
