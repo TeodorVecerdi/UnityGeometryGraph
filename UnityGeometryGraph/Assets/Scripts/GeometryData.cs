@@ -9,14 +9,16 @@ using Debug = UnityEngine.Debug;
 [Serializable]
 public class GeometryData {
     [SerializeField] public List<Vector3> Vertices;
+    // note: will rename when implementing attributes and getting rid of the Vertices list
+    [SerializeField] public List<Vertex> VertexList;
     [SerializeField] public List<Edge> Edges;
     [SerializeField] public List<Face> Faces;
 
     public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
         var stopwatch = new Stopwatch();
         stopwatch.Start();
+        
         Vertices = new List<Vector3>();
-
         mesh.GetVertices(Vertices);
 
         var triangles = new List<int>();
@@ -32,6 +34,13 @@ public class GeometryData {
         Faces = new List<Face>(triangles.Count / 3);
         BuildElements(triangles);
         RemoveDuplicates(duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+
+        VertexList = new List<Vertex>(Vertices.Count);
+        for (var i = 0; i < Vertices.Count; i++) {
+            VertexList.Add(new Vertex());
+        }
+
+        FillElementMetadata();
     }
 
     private void BuildElements(List<int> triangles) {
@@ -73,7 +82,15 @@ public class GeometryData {
 
         CheckForErrors();
     }
-    
+
+    private void FillElementMetadata() {
+        // Vertex Metadata ==> Edges, Faces
+        FillVertexMetadata();
+        
+        // Face Metadata ==> Adjacent faces
+        FillFaceMetadata();
+    }
+
     private List<(int, int, bool)> GetDuplicateEdges(float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
         var potentialDuplicates = new List<(int, int, bool)>();
         // Find potential duplicate edges
@@ -318,6 +335,54 @@ public class GeometryData {
         }
     }
     
+    private void FillVertexMetadata() {
+        // Edges
+        for (var i = 0; i < Edges.Count; i++) {
+            var edge = Edges[i];
+            VertexList[edge.VertA].Edges.Add(i);
+            VertexList[edge.VertB].Edges.Add(i);
+        }
+
+        //Faces
+        for (var i = 0; i < Faces.Count; i++) {
+            var face = Faces[i];
+            VertexList[face.VertA].Faces.Add(i);
+            VertexList[face.VertB].Faces.Add(i);
+            VertexList[face.VertC].Faces.Add(i);
+        }
+
+        // Cleanup
+        foreach (var vertex in VertexList) {
+            vertex.Edges.RemoveDuplicates();
+            vertex.Faces.RemoveDuplicates();
+        }
+    }
+
+    private void FillFaceMetadata() {
+        for (var i = 0; i < Faces.Count; i++) {
+            var face = Faces[i];
+            var edgeA = Edges[face.EdgeA];
+            var edgeB = Edges[face.EdgeB];
+            var edgeC = Edges[face.EdgeC];
+            face.AdjacentFaces.AddRange(new[] { edgeA.FaceA, edgeA.FaceB, edgeB.FaceA, edgeB.FaceB, edgeC.FaceA, edgeC.FaceB });
+
+            // Cleanup
+            face.AdjacentFaces.RemoveDuplicates();
+            face.AdjacentFaces.RemoveAll(adjacentIndex => adjacentIndex == i);
+        }
+    }
+
+    [Serializable]
+    public class Vertex {
+        public List<int> Edges;
+        public List<int> Faces;
+
+        public Vertex() {
+            Edges = new List<int>();
+            Faces = new List<int>();
+        }
+    }
+    
     [Serializable]
     public class Edge {
         public int VertA;
@@ -342,11 +407,15 @@ public class GeometryData {
         public int EdgeB;
         public int EdgeC;
 
+        public List<int> AdjacentFaces;
+
         public Face(int vertA, int vertB, int vertC, Vector3 faceNormal) {
             VertA = vertA;
             VertB = vertB;
             VertC = vertC;
             FaceNormal = faceNormal;
+
+            AdjacentFaces = new List<int>();
         }
     }
 }
