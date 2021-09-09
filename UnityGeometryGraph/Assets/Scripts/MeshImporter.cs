@@ -23,6 +23,7 @@ public class MeshImporter : MonoBehaviour {
             ElementGizmoType.Vertices => data.Vertices.Count - 1,
             ElementGizmoType.Edges => data.Edges.Count - 1,
             ElementGizmoType.Faces => data.Faces.Count - 1,
+            ElementGizmoType.FaceEdges => data.Faces.Count - 1,
             _ => 0
         };
 
@@ -125,6 +126,48 @@ public class MeshImporter : MonoBehaviour {
                     }
                 }
             }
+        } else if (gizmoType == ElementGizmoType.FaceEdges) {
+            if (showByElement) {
+                var face = data.Faces[index];
+                
+                var e0v0 = data.Vertices[data.Edges[face.EdgeA].VertA];
+                var e0v1 = data.Vertices[data.Edges[face.EdgeA].VertB];
+                var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                Gizmos.color = UnityEditor.Handles.color = color;
+                UnityEditor.Handles.DrawAAPolyLine(4.0f, e0v0, e0v1);
+                
+                var e1v0 = data.Vertices[data.Edges[face.EdgeB].VertA];
+                var e1v1 = data.Vertices[data.Edges[face.EdgeB].VertB];
+                color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                Gizmos.color = UnityEditor.Handles.color = color;
+                UnityEditor.Handles.DrawAAPolyLine(4.0f, e1v0, e1v1);
+                
+                var e2v0 = data.Vertices[data.Edges[face.EdgeC].VertA];
+                var e2v1 = data.Vertices[data.Edges[face.EdgeC].VertB];
+                color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                Gizmos.color = UnityEditor.Handles.color = color;
+                UnityEditor.Handles.DrawAAPolyLine(4.0f, e2v0, e2v1);
+            } else {
+                foreach (var face in data.Faces) {
+                    var e0v0 = data.Vertices[data.Edges[face.EdgeA].VertA];
+                    var e0v1 = data.Vertices[data.Edges[face.EdgeA].VertB];
+                    var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                    Gizmos.color = UnityEditor.Handles.color = color;
+                    UnityEditor.Handles.DrawAAPolyLine(4.0f, e0v0, e0v1);
+                
+                    var e1v0 = data.Vertices[data.Edges[face.EdgeB].VertA];
+                    var e1v1 = data.Vertices[data.Edges[face.EdgeB].VertB];
+                    color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                    Gizmos.color = UnityEditor.Handles.color = color;
+                    UnityEditor.Handles.DrawAAPolyLine(4.0f, e1v0, e1v1);
+                
+                    var e2v0 = data.Vertices[data.Edges[face.EdgeC].VertA];
+                    var e2v1 = data.Vertices[data.Edges[face.EdgeC].VertB];
+                    color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                    Gizmos.color = UnityEditor.Handles.color = color;
+                    UnityEditor.Handles.DrawAAPolyLine(4.0f, e2v0, e2v1);
+                }
+            }
         }
         UnityEditor.Handles.zTest = zTest;
 #endif
@@ -136,4 +179,5 @@ public enum ElementGizmoType {
     Vertices,
     Edges,
     Faces,
+    FaceEdges,
 }
