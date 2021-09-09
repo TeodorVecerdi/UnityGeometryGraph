@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Unity.Jobs;
-using Unity.Jobs.LowLevel.Unsafe;
 using UnityCommons;
 using UnityEngine;
-using UnityEngine.Profiling;
 using Debug = UnityEngine.Debug;
 
 [Serializable]
@@ -17,7 +13,6 @@ public class GeometryData {
     [SerializeField] public List<Face> Faces;
 
     public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
-        // Profiler.BeginSample("Geometry Data");
         var stopwatch = new Stopwatch();
         stopwatch.Start();
         Vertices = new List<Vector3>();
@@ -30,20 +25,16 @@ public class GeometryData {
         var elapsed = stopwatch.Elapsed;
         Debug.Log(elapsed.TotalMilliseconds);
         stopwatch.Stop();
-        // Profiler.EndSample();
     }
 
     private void BuildMetadata(List<int> triangles, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
-        // Profiler.BeginSample("Build Metadata");
         Edges = new List<Edge>(triangles.Count);
         Faces = new List<Face>(triangles.Count / 3);
         BuildElements(triangles);
         RemoveDuplicates(duplicateDistanceThreshold, duplicateNormalAngleThreshold);
-        // Profiler.EndSample();
     }
 
     private void BuildElements(List<int> triangles) {
-        // Profiler.BeginSample("Build Elements");
         for (var i = 0; i < triangles.Count; i += 3) {
             var idxA = triangles[i];
             var idxB = triangles[i + 1];
@@ -70,32 +61,17 @@ public class GeometryData {
             Edges.Add(edgeB);
             Edges.Add(edgeC);
         }
-        // Profiler.EndSample();
     }
 
     private void RemoveDuplicates(float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
-        // Profiler.BeginSample("Remove Duplicates");
-        // Profiler.BeginSample("Get Duplicate Edges");
         var duplicates = GetDuplicateEdges(duplicateDistanceThreshold * duplicateDistanceThreshold, duplicateNormalAngleThreshold);
-        // Profiler.EndSample();
-        // Profiler.BeginSample("Get Duplicate Vertices Map");
         var duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
-        // Profiler.EndSample();
-        // Profiler.BeginSample("Remove Invalid Duplicates");
         var reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
-        // Profiler.EndSample();
 
-        // Profiler.BeginSample("Remap Duplicates");
         RemapDuplicates(duplicates, reverseDuplicatesMap);
-        // Profiler.EndSample();
-        // Profiler.BeginSample("Remove Duplicates");
         RemoveDuplicates(duplicates, reverseDuplicatesMap);
-        // Profiler.EndSample();
 
-        // Profiler.BeginSample("Check For Errors");
         CheckForErrors();
-        // Profiler.EndSample();
-        // Profiler.EndSample();
     }
     
     private List<(int, int, bool)> GetDuplicateEdges(float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
@@ -145,11 +121,12 @@ public class GeometryData {
 
             actualDuplicates.Add(potentialDuplicate);
             edgeA.FaceB = edgeB.FaceA;
-
-            // Remap face edges
-            if (faceB.EdgeA == edgeBIndex) faceB.EdgeA = edgeAIndex;
-            else if (faceB.EdgeB == edgeBIndex) faceB.EdgeB = edgeAIndex;
-            else if (faceB.EdgeC == edgeBIndex) faceB.EdgeC = edgeAIndex;
+            
+            // TODO: Was there a reason I did this in the first place?
+            // // Remap face edges
+            // if (faceB.EdgeA == edgeBIndex) faceB.EdgeA = edgeAIndex;
+            // else if (faceB.EdgeB == edgeBIndex) faceB.EdgeB = edgeAIndex;
+            // else if (faceB.EdgeC == edgeBIndex) faceB.EdgeC = edgeAIndex;
         }
 
         potentialDuplicates.Clear();
@@ -247,10 +224,10 @@ public class GeometryData {
             edgeReverseMap[duplicate.Item2] = duplicate.Item1;
         }
 
-        var sortedEdgeRemapKeys = duplicates.Select(tuple => tuple.Item1).QuickSorted();
+        var allEdgeIndices = Faces.SelectMany(face => new[] { face.EdgeA, face.EdgeB, face.EdgeC }).Distinct().Except(edgeReverseMap.Keys).QuickSorted();
         var edgeRemap = new Dictionary<int, int>();
         var remapIndex = 0;
-        foreach (var sortedKey in sortedEdgeRemapKeys) {
+        foreach (var sortedKey in allEdgeIndices) {
             edgeRemap[sortedKey] = remapIndex++;
         }
 
