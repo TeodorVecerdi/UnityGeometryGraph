@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Attributes {
+namespace Attribute {
     public class Vector2Attribute : BaseAttribute<Vector2> {
         protected internal override AttributeType Type => AttributeType.Vector2;
 

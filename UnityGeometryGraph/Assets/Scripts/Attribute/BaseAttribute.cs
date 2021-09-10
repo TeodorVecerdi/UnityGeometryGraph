@@ -6,7 +6,7 @@ using System.Text;
 using UnityCommons;
 using UnityEngine;
 
-namespace Attributes {
+namespace Attribute {
     [Serializable]
     public abstract class BaseAttribute {
         protected internal string Name;

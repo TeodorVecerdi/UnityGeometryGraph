@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityCommons;
 
-namespace Attributes.Test {
+namespace Attribute.Test {
     public class FloatAttribute : BaseAttribute<float> {
         protected internal override AttributeType Type => AttributeType.Float;
    

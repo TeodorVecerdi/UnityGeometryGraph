@@ -1,5 +1,5 @@
 ﻿using System;
-using Attributes;
+using Attribute;
 using UnityEngine;
 
 namespace Geometry {
@@ -7,10 +7,10 @@ namespace Geometry {
 
     [Serializable]
     public class AttributeManager {
-        [SerializeField, HideInInspector] private AttributeDictionary vertexAttributes;
-        [SerializeField, HideInInspector] private AttributeDictionary edgeAttributes;
-        [SerializeField, HideInInspector] private AttributeDictionary faceAttributes;
-        [SerializeField, HideInInspector] private AttributeDictionary faceCornerAttributes;
+        [SerializeField] private AttributeDictionary vertexAttributes;
+        [SerializeField] private AttributeDictionary edgeAttributes;
+        [SerializeField] private AttributeDictionary faceAttributes;
+        [SerializeField] private AttributeDictionary faceCornerAttributes;
 
         public AttributeManager() {
             vertexAttributes = new AttributeDictionary();

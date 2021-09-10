@@ -2,7 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Attributes.Test {
+namespace Attribute.Test {
     public class AttributeTest : MonoBehaviour {
         [ResponsiveButtonGroup("TestsA", UniformLayout = true, DefaultButtonSize = ButtonSizes.Gigantic), Button(ButtonHeight = 48, Name = "[Simple]\nSame length, Same type")]
         private void TestSimple() {

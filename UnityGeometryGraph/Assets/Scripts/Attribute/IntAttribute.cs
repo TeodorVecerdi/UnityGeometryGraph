@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Attributes.Test {
+namespace Attribute.Test {
     public class IntAttribute : BaseAttribute<int> {
         protected internal override AttributeType Type => AttributeType.Integer;
         

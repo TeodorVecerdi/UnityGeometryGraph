@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace Attributes.Test {
+namespace Attribute.Test {
     public class BoolAttribute : BaseAttribute<bool> {
         protected internal override AttributeType Type => AttributeType.Boolean;
         

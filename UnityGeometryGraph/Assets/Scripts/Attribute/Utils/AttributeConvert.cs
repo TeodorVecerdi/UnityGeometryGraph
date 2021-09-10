@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityCommons;
 using UnityEngine;
 
-namespace Attributes {
+namespace Attribute {
     internal static class AttributeConvert {
         
         internal static bool TryGetType(object value, out AttributeType type) {

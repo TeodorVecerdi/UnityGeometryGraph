@@ -1,4 +1,4 @@
-﻿namespace Attributes {
+﻿namespace Attribute {
     public enum AttributeDomain {
         Vertex,
         Edge,
