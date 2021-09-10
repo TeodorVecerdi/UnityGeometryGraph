@@ -3,7 +3,8 @@
         Vertex,
         Edge,
         Face,
-        FaceCorner
+        FaceCorner,
+        Spline, // Unused yet
     }
     
     public enum AttributeType {
