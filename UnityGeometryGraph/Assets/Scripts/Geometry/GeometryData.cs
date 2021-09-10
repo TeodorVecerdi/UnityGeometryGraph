@@ -51,7 +51,7 @@ public class GeometryData {
 
         attributeManager.Store(new float[edges.Count].Into<ClampedFloatAttribute>("crease", AttributeDomain.Edge));
 
-        if (uvs.Count > 0) attributeManager.Store(uvs.Into<Vector2Attribute>("uvs", AttributeDomain.FaceCorner));
+        if (uvs.Count > 0) attributeManager.Store(uvs.Into<Vector2Attribute>("uv", AttributeDomain.FaceCorner));
     }
 
     private IEnumerable<float3> BuildMetadata(List<float3> vertices, List<int> triangles, List<float2> uvs, List<float2> correctUvs, float duplicateDistanceThreshold,
