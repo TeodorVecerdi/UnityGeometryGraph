@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Attribute;
 using Geometry;
+using Unity.Mathematics;
 using UnityCommons;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -18,8 +19,11 @@ public class GeometryData {
     public IReadOnlyList<Edge> Edges => edges.AsReadOnly();
     public IReadOnlyList<Face> Faces => faces.AsReadOnly();
 
+    public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+        var vertices = new List<float3>(mesh.vertices.Select(vertex => new float3(vertex.x, vertex.y, vertex.z)));
         var triangles = new List<int>();
         mesh.GetTriangles(triangles, 0);
+        
         var faceNormals = BuildMetadata(vertices, triangles, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
         
         attributeManager = new AttributeManager();
@@ -34,7 +38,7 @@ public class GeometryData {
         return (TAttribute) attributeManager.Request(name, domain);
     }
 
-    private void FillBuiltinAttributes(IEnumerable<Vector3> vertices, IEnumerable<Vector3> faceNormals) {
+    private void FillBuiltinAttributes(IEnumerable<float3> vertices, IEnumerable<float3> faceNormals) {
         attributeManager.Store(vertices.Into<Vector3Attribute>("position", AttributeDomain.Vertex));
         
         attributeManager.Store(faceNormals.Into<Vector3Attribute>("normal", AttributeDomain.Face));
@@ -44,7 +48,7 @@ public class GeometryData {
         attributeManager.Store(new float[edges.Count].Into<ClampedFloatAttribute>("crease", AttributeDomain.Edge));
     }
     
-    private IEnumerable<Vector3> BuildMetadata(List<Vector3> vertices, List<int> triangles, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+    private IEnumerable<float3> BuildMetadata(List<float3> vertices, List<int> triangles, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
         edges = new List<Edge>(triangles.Count);
         faces = new List<Face>(triangles.Count / 3);
         var faceNormals = BuildElements(vertices, triangles).ToList();
@@ -60,7 +64,7 @@ public class GeometryData {
         return faceNormals;
     }
 
-    private IEnumerable<Vector3> BuildElements(List<Vector3> vertices, List<int> triangles) {
+    private IEnumerable<float3> BuildElements(List<float3> vertices, List<int> triangles) {
         for (var i = 0; i < triangles.Count; i += 3) {
             var idxA = triangles[i];
             var idxB = triangles[i + 1];
@@ -72,7 +76,7 @@ public class GeometryData {
 
             var AB = vertB - vertA;
             var AC = vertC - vertA;
-            yield return Vector3.Cross(AB, AC).normalized;
+            yield return math.normalize(math.cross(AB, AC));
 
             var face = new Face(idxA, idxB, idxC);
             var edgeA = new Edge(idxA, idxB) { FaceA = faces.Count };
@@ -108,7 +112,7 @@ public class GeometryData {
         FillFaceMetadata();
     }
 
-    private List<(int, int, bool)> GetDuplicateEdges(List<Vector3> vertices, List<Vector3> faceNormals, float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
+    private List<(int, int, bool)> GetDuplicateEdges(List<float3> vertices, List<float3> faceNormals, float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
         var potentialDuplicates = new List<(int, int, bool)>();
         // Find potential duplicate edges
         for (var i = 0; i < edges.Count - 1; i++) {
@@ -131,8 +135,8 @@ public class GeometryData {
                 //
                 // potentialDuplicates.Add((i, j, checkA == 1));
                 
-                var checkA = edgeAVertA == edgeBVertA && edgeAVertB == edgeBVertB;
-                var checkB = edgeAVertA == edgeBVertB && edgeAVertB == edgeBVertA;
+                var checkA = edgeAVertA.Equals(edgeBVertA) && edgeAVertB.Equals(edgeBVertB);
+                var checkB = edgeAVertA.Equals(edgeBVertB) && edgeAVertB.Equals(edgeBVertA);
                 if (!checkA && !checkB) continue;
                 
                 potentialDuplicates.Add((i, j, checkA));
@@ -147,7 +151,7 @@ public class GeometryData {
             var edgeBIndex = potentialDuplicate.Item2;
             var edgeA = edges[edgeAIndex];
             var edgeB = edges[edgeBIndex];
-            var normalAngle = Vector3.Angle(faceNormals[edgeA.FaceA], faceNormals[edgeB.FaceA]);
+            var normalAngle = math_util.angle(faceNormals[edgeA.FaceA], faceNormals[edgeB.FaceA]);
 
             if (normalAngle > duplicateNormalAngleThreshold) continue;
 
@@ -315,7 +319,7 @@ public class GeometryData {
         }
     }
    
-    private void RemoveDuplicateElements(List<Vector3> vertices, List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
+    private void RemoveDuplicateElements(List<float3> vertices, List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
         // Remove duplicate edges
         foreach (var edge in duplicates.Select(tuple => edges[tuple.Item2]).ToList()) {
             edges.Remove(edge);
@@ -328,7 +332,7 @@ public class GeometryData {
         }
     }
     
-    private void CheckForErrors(List<Vector3> vertices) {
+    private void CheckForErrors(List<float3> vertices) {
         // Check if there are any invalid edges
         for (var i = 0; i < edges.Count; i++) {
             var edge = edges[i];

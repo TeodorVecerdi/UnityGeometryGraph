@@ -276,7 +276,7 @@ MonoBehaviour:
   showByElement: 0
   index: 0
   data:
-    Vertices:
+    vertices:
     - Edges: 000000000200000003000000
       Faces: 0000000001000000
     - Edges: 0100000002000000
@@ -285,7 +285,7 @@ MonoBehaviour:
       Faces: 01000000
     - Edges: 000000000100000004000000
       Faces: 0000000001000000
-    Edges:
+    edges:
     - VertA: 0
       VertB: 3
       FaceA: 0
@@ -293,34 +293,34 @@ MonoBehaviour:
     - VertA: 3
       VertB: 1
       FaceA: 0
-      FaceB: 0
+      FaceB: -1
     - VertA: 1
       VertB: 0
       FaceA: 0
-      FaceB: 0
+      FaceB: -1
     - VertA: 0
       VertB: 2
       FaceA: 1
-      FaceB: 0
+      FaceB: -1
     - VertA: 2
       VertB: 3
       FaceA: 1
-      FaceB: 0
-    Faces:
+      FaceB: -1
+    faces:
     - VertA: 0
       VertB: 3
       VertC: 1
       EdgeA: 0
       EdgeB: 1
       EdgeC: 2
-      AdjacentFaces: 01000000
+      AdjacentFaces: 01000000ffffffff
     - VertA: 3
       VertB: 0
       VertC: 2
       EdgeA: 0
       EdgeB: 3
       EdgeC: 4
-      AdjacentFaces: 00000000
+      AdjacentFaces: 00000000ffffffff
     attributeManager:
       dirty: 0
       serializedVertexAttributes:
@@ -328,7 +328,7 @@ MonoBehaviour:
         - position
         values:
         - Type: Attribute.Vector3Attribute
-          ValueType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+          ValueType: Unity.Mathematics.float3, Unity.Mathematics, Version=1.0.0.0,
             Culture=neutral, PublicKeyToken=null
           Data: '{"n":"position","d":0,"v":"[{\"x\":-0.5,\"y\":-0.5,\"z\":-3.0616168E-17},{\"x\":0.5,\"y\":-0.5,\"z\":-3.0616168E-17},{\"x\":-0.5,\"y\":0.5,\"z\":3.0616168E-17},{\"x\":0.5,\"y\":0.5,\"z\":3.0616168E-17}]"}'
       serializedEdgeAttributes:
@@ -345,7 +345,7 @@ MonoBehaviour:
         - shade_smooth
         values:
         - Type: Attribute.Vector3Attribute
-          ValueType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+          ValueType: Unity.Mathematics.float3, Unity.Mathematics, Version=1.0.0.0,
             Culture=neutral, PublicKeyToken=null
           Data: '{"n":"normal","d":2,"v":"[{\"x\":0.0,\"y\":6.1232336E-17,\"z\":-1.0},{\"x\":0.0,\"y\":6.1232336E-17,\"z\":-1.0}]"}'
         - Type: Attribute.IntAttribute
