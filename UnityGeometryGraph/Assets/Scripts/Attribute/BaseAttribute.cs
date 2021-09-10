@@ -10,7 +10,10 @@ using UnityEngine;
 namespace Attribute {
     [Serializable]
     public abstract class BaseAttribute : IEnumerable {
+        private static readonly Type objectType = typeof(object);
+        
         public abstract AttributeType Type { get; }
+        public virtual Type ElementType => objectType;
         
         public string Name;
         public AttributeDomain Domain;
@@ -28,10 +31,6 @@ namespace Attribute {
             }
         }
 
-        private static readonly Type objectType = typeof(object);
-        public virtual Type GetElementType() {
-            return objectType;
-        }
 
         public IEnumerator GetEnumerator() {
             return Values.GetEnumerator();
@@ -41,9 +40,7 @@ namespace Attribute {
     [Serializable]
     public abstract class BaseAttribute<T> : BaseAttribute, IEnumerable<T> {
         private static readonly Type elementType = typeof(T);
-        public override Type GetElementType() {
-            return elementType;
-        }
+        public override Type ElementType => elementType;
 
         public T GetValue(int index) {
             return (T) Values[index];

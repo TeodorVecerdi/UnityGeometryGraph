@@ -16,7 +16,7 @@ namespace Attribute {
 
         public static SerializedAttribute Serialize(BaseAttribute attribute) {
             var type = attribute.GetType();
-            var valueType = attribute.GetElementType();
+            var valueType = attribute.ElementType;
             var listValueType = listType.MakeGenericType(valueType);
 
             var json = new JObject {
@@ -33,19 +33,19 @@ namespace Attribute {
         }
 
         public static BaseAttribute Deserialize(SerializedAttribute serializedAttribute) {
-            var attrType = System.Type.GetType(serializedAttribute.Type);
+            var attributeType = System.Type.GetType(serializedAttribute.Type);
             var valueType = System.Type.GetType(serializedAttribute.ValueType);
             var listValueType = listType.MakeGenericType(valueType);
             
             var json = JObject.Parse(serializedAttribute.Data);
             
             var name = json.Value<string>("n");
-            var attribute = (BaseAttribute) Activator.CreateInstance(attrType, name);
-            var values = (IEnumerable) JsonConvert.DeserializeObject(json.Value<string>("v"), listValueType, settings);
+            var attribute = (BaseAttribute) Activator.CreateInstance(attributeType!, name);
+            var values = (IEnumerable) JsonConvert.DeserializeObject(json.Value<string>("v")!, listValueType, settings);
             
             attribute.Domain = (AttributeDomain) json.Value<int>("d");
             attribute.Values = new List<object>();
-            foreach (var value in values) {
+            foreach (var value in values!) {
                 attribute.Values.Add(value);
             }
             
