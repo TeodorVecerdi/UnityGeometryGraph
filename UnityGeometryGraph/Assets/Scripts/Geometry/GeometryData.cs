@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -347,7 +347,8 @@ public class GeometryData {
         // Check if there are any invalid faces
         for (var i = 0; i < Faces.Count; i++) {
             var face = Faces[i];
-            if (face.EdgeA >= Edges.Count || face.EdgeB >= Edges.Count || face.EdgeC >= Edges.Count) {
+            if (face.EdgeA >= Edges.Count || face.EdgeB >= Edges.Count || face.EdgeC >= Edges.Count ||
+                face.EdgeA == -1 || face.EdgeB == -1 || face.EdgeC == -1) {
                 Debug.LogError($"Face at index {i} contains invalid edges");
             }
 
@@ -409,8 +410,8 @@ public class GeometryData {
     public class Edge {
         public int VertA;
         public int VertB;
-        public int FaceA;
-        public int FaceB;
+        public int FaceA = -1;
+        public int FaceB = -1;
 
         public Edge(int vertA, int vertB) {
             VertA = vertA;
@@ -424,9 +425,9 @@ public class GeometryData {
         public int VertB;
         public int VertC;
 
-        public int EdgeA;
-        public int EdgeB;
-        public int EdgeC;
+        public int EdgeA = -1;
+        public int EdgeB = -1;
+        public int EdgeC = -1;
 
         public List<int> AdjacentFaces;
 
