@@ -13,45 +13,53 @@ public class GeometryData {
     [SerializeField] private List<Vertex> vertices;
     [SerializeField] private List<Edge> edges;
     [SerializeField] private List<Face> faces;
+    [SerializeField] private List<FaceCorner> faceCorners;
     [SerializeField] private AttributeManager attributeManager;
 
     public IReadOnlyList<Vertex> Vertices => vertices.AsReadOnly();
     public IReadOnlyList<Edge> Edges => edges.AsReadOnly();
     public IReadOnlyList<Face> Faces => faces.AsReadOnly();
+    public IReadOnlyList<FaceCorner> FaceCorners => faceCorners.AsReadOnly();
 
     public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
         var vertices = new List<float3>(mesh.vertices.Select(vertex => new float3(vertex.x, vertex.y, vertex.z)));
         var triangles = new List<int>();
+        var meshUvs = new List<float2>(mesh.uv.Select(uv => new float2(uv.x, uv.y)));
+        var uvs = new List<float2>();
         mesh.GetTriangles(triangles, 0);
-        
-        var faceNormals = BuildMetadata(vertices, triangles, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
-        
+
+        var faceNormals = BuildMetadata(vertices, triangles, meshUvs, uvs, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+
         attributeManager = new AttributeManager();
-        FillBuiltinAttributes(vertices, faceNormals);
+        FillBuiltinAttributes(vertices, faceNormals, uvs);
     }
 
     public TAttribute GetAttribute<TAttribute>(string name) where TAttribute : BaseAttribute {
-        return (TAttribute) attributeManager.Request(name);
-    }
-    
-    public TAttribute GetAttribute<TAttribute>(string name, AttributeDomain domain) where TAttribute : BaseAttribute {
-        return (TAttribute) attributeManager.Request(name, domain);
+        return (TAttribute)attributeManager.Request(name);
     }
 
-    private void FillBuiltinAttributes(IEnumerable<float3> vertices, IEnumerable<float3> faceNormals) {
+    public TAttribute GetAttribute<TAttribute>(string name, AttributeDomain domain) where TAttribute : BaseAttribute {
+        return (TAttribute)attributeManager.Request(name, domain);
+    }
+
+    private void FillBuiltinAttributes(IEnumerable<float3> vertices, IEnumerable<float3> faceNormals, List<float2> uvs) {
         attributeManager.Store(vertices.Into<Vector3Attribute>("position", AttributeDomain.Vertex));
-        
+
         attributeManager.Store(faceNormals.Into<Vector3Attribute>("normal", AttributeDomain.Face));
         attributeManager.Store(new int[faces.Count].Into<IntAttribute>("material_index", AttributeDomain.Face));
         attributeManager.Store(new bool[faces.Count].Into<BoolAttribute>("shade_smooth", AttributeDomain.Face));
-        
+
         attributeManager.Store(new float[edges.Count].Into<ClampedFloatAttribute>("crease", AttributeDomain.Edge));
+
+        if (uvs.Count > 0) attributeManager.Store(uvs.Into<Vector2Attribute>("uvs", AttributeDomain.FaceCorner));
     }
-    
-    private IEnumerable<float3> BuildMetadata(List<float3> vertices, List<int> triangles, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+
+    private IEnumerable<float3> BuildMetadata(List<float3> vertices, List<int> triangles, List<float2> uvs, List<float2> correctUvs, float duplicateDistanceThreshold,
+                                              float duplicateNormalAngleThreshold) {
         edges = new List<Edge>(triangles.Count);
         faces = new List<Face>(triangles.Count / 3);
-        var faceNormals = BuildElements(vertices, triangles).ToList();
+        faceCorners = new List<FaceCorner>(triangles.Count);
+        var faceNormals = BuildElements(vertices, triangles, uvs, correctUvs).ToList();
         RemoveDuplicates(vertices, faceNormals, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
         this.vertices = new List<Vertex>(vertices.Count);
@@ -60,11 +68,11 @@ public class GeometryData {
         }
 
         FillElementMetadata();
-        
+
         return faceNormals;
     }
 
-    private IEnumerable<float3> BuildElements(List<float3> vertices, List<int> triangles) {
+    private IEnumerable<float3> BuildElements(List<float3> vertices, List<int> triangles, List<float2> uvs, List<float2> correctUvs) {
         for (var i = 0; i < triangles.Count; i += 3) {
             var idxA = triangles[i];
             var idxB = triangles[i + 1];
@@ -78,18 +86,33 @@ public class GeometryData {
             var AC = vertC - vertA;
             yield return math.normalize(math.cross(AB, AC));
 
-            var face = new Face(idxA, idxB, idxC);
+            var face = new Face(
+                idxA, idxB, idxC,
+                faceCorners.Count, faceCorners.Count + 1, faceCorners.Count + 2,
+                edges.Count, edges.Count + 1, edges.Count + 2
+            );
+
             var edgeA = new Edge(idxA, idxB) { FaceA = faces.Count };
             var edgeB = new Edge(idxB, idxC) { FaceA = faces.Count };
             var edgeC = new Edge(idxC, idxA) { FaceA = faces.Count };
-            face.EdgeA = edges.Count;
-            face.EdgeB = edges.Count + 1;
-            face.EdgeC = edges.Count + 2;
+
+            var faceCornerA = new FaceCorner(faces.Count);
+            var faceCornerB = new FaceCorner(faces.Count);
+            var faceCornerC = new FaceCorner(faces.Count);
 
             faces.Add(face);
             edges.Add(edgeA);
             edges.Add(edgeB);
             edges.Add(edgeC);
+            faceCorners.Add(faceCornerA);
+            faceCorners.Add(faceCornerB);
+            faceCorners.Add(faceCornerC);
+
+            if (uvs.Count > 0) {
+                correctUvs.Add(uvs[idxA]);
+                correctUvs.Add(uvs[idxB]);
+                correctUvs.Add(uvs[idxC]);
+            }
         }
     }
 
@@ -107,9 +130,12 @@ public class GeometryData {
     private void FillElementMetadata() {
         // Vertex Metadata ==> Edges, Faces
         FillVertexMetadata();
-        
+
         // Face Metadata ==> Adjacent faces
         FillFaceMetadata();
+
+        // Face Corner Metadata ==> Backing Vertex
+        FillFaceCornerMetadata();
     }
 
     private List<(int, int, bool)> GetDuplicateEdges(List<float3> vertices, List<float3> faceNormals, float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
@@ -134,11 +160,11 @@ public class GeometryData {
                 // if (total < 2) continue;
                 //
                 // potentialDuplicates.Add((i, j, checkA == 1));
-                
+
                 var checkA = edgeAVertA.Equals(edgeBVertA) && edgeAVertB.Equals(edgeBVertB);
                 var checkB = edgeAVertA.Equals(edgeBVertB) && edgeAVertB.Equals(edgeBVertA);
                 if (!checkA && !checkB) continue;
-                
+
                 potentialDuplicates.Add((i, j, checkA));
                 break;
             }
@@ -157,7 +183,7 @@ public class GeometryData {
 
             actualDuplicates.Add(potentialDuplicate);
             edgeA.FaceB = edgeB.FaceA;
-            
+
             // TODO: Was there a reason I did this in the first place?
             // // Remap face edges
             // if (faceB.EdgeA == edgeBIndex) faceB.EdgeA = edgeAIndex;
@@ -220,18 +246,18 @@ public class GeometryData {
         }
 
         removalList.ForEach(key => duplicateVerticesMap.Remove(key));
-        
+
         // Remove remaining invalid entries
         var sortedKeys = duplicateVerticesMap.Keys.QuickSorted();
         var actualMap = new Dictionary<int, HashSet<int>>();
         var reverseDuplicateMap = new Dictionary<int, int>();
-        
+
         foreach (var sortedKey in sortedKeys) {
             var alreadyExistsKey = -1;
-            
+
             foreach (var pair in actualMap) {
                 if (!pair.Value.Contains(sortedKey)) continue;
-                
+
                 alreadyExistsKey = pair.Key;
                 break;
             }
@@ -318,7 +344,7 @@ public class GeometryData {
             edge.VertB = reverseDuplicateMap[edge.VertB];
         }
     }
-   
+
     private void RemoveDuplicateElements(List<float3> vertices, List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
         // Remove duplicate edges
         foreach (var edge in duplicates.Select(tuple => edges[tuple.Item2]).ToList()) {
@@ -331,7 +357,7 @@ public class GeometryData {
             vertices.RemoveAt(vertexIndex);
         }
     }
-    
+
     private void CheckForErrors(List<float3> vertices) {
         // Check if there are any invalid edges
         for (var i = 0; i < edges.Count; i++) {
@@ -354,7 +380,7 @@ public class GeometryData {
             }
         }
     }
-    
+
     private void FillVertexMetadata() {
         // Edges
         for (var i = 0; i < edges.Count; i++) {
@@ -392,6 +418,18 @@ public class GeometryData {
         }
     }
 
+    private void FillFaceCornerMetadata() {
+        foreach (var face in faces) {
+            var fcA = faceCorners[face.FaceCornerA];
+            var fcB = faceCorners[face.FaceCornerB];
+            var fcC = faceCorners[face.FaceCornerC];
+
+            fcA.Vert = face.VertA;
+            fcB.Vert = face.VertB;
+            fcC.Vert = face.VertC;
+        }
+    }
+
     [Serializable]
     public class Vertex {
         public List<int> Edges;
@@ -402,7 +440,7 @@ public class GeometryData {
             Faces = new List<int>();
         }
     }
-    
+
     [Serializable]
     public class Edge {
         public int VertA;
@@ -422,18 +460,40 @@ public class GeometryData {
         public int VertB;
         public int VertC;
 
+        public int FaceCornerA;
+        public int FaceCornerB;
+        public int FaceCornerC;
+
         public int EdgeA = -1;
         public int EdgeB = -1;
         public int EdgeC = -1;
 
         public List<int> AdjacentFaces;
 
-        public Face(int vertA, int vertB, int vertC) {
+        public Face(int vertA, int vertB, int vertC, int faceCornerA, int faceCornerB, int faceCornerC, int edgeA, int edgeB, int edgeC) {
             VertA = vertA;
             VertB = vertB;
             VertC = vertC;
 
+            FaceCornerA = faceCornerA;
+            FaceCornerB = faceCornerB;
+            FaceCornerC = faceCornerC;
+
+            EdgeA = edgeA;
+            EdgeB = edgeB;
+            EdgeC = edgeC;
+
             AdjacentFaces = new List<int>();
+        }
+    }
+
+    [Serializable]
+    public class FaceCorner {
+        public int Vert = -1;
+        public int Face = -1;
+
+        public FaceCorner(int face) {
+            Face = face;
         }
     }
 }

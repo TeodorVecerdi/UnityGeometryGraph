@@ -310,6 +310,9 @@ MonoBehaviour:
     - VertA: 0
       VertB: 3
       VertC: 1
+      FaceCornerA: 0
+      FaceCornerB: 1
+      FaceCornerC: 2
       EdgeA: 0
       EdgeB: 1
       EdgeC: 2
@@ -317,10 +320,26 @@ MonoBehaviour:
     - VertA: 3
       VertB: 0
       VertC: 2
+      FaceCornerA: 3
+      FaceCornerB: 4
+      FaceCornerC: 5
       EdgeA: 0
       EdgeB: 3
       EdgeC: 4
       AdjacentFaces: 00000000ffffffff
+    faceCorners:
+    - Vert: 0
+      Face: 0
+    - Vert: 3
+      Face: 0
+    - Vert: 1
+      Face: 0
+    - Vert: 3
+      Face: 1
+    - Vert: 0
+      Face: 1
+    - Vert: 2
+      Face: 1
     attributeManager:
       dirty: 0
       serializedVertexAttributes:
@@ -356,8 +375,13 @@ MonoBehaviour:
             PublicKeyToken=b77a5c561934e089
           Data: '{"n":"shade_smooth","d":2,"v":"[false,false]"}'
       serializedFaceCornerAttributes:
-        keys: []
-        values: []
+        keys:
+        - uvs
+        values:
+        - Type: Attribute.Vector2Attribute
+          ValueType: Unity.Mathematics.float2, Unity.Mathematics, Version=1.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          Data: '{"n":"uvs","d":3,"v":"[{\"x\":0.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":1.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":0.0,\"y\":0.0},{\"x\":0.0,\"y\":1.0}]"}'
 --- !u!114 &1422124536
 MonoBehaviour:
   m_ObjectHideFlags: 0
