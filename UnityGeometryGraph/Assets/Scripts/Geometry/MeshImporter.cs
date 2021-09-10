@@ -1,8 +1,10 @@
+using System.Diagnostics;
 using Attribute;
 using Sirenix.OdinInspector;
 using UnityCommons;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 public class MeshImporter : MonoBehaviour {
@@ -37,8 +39,9 @@ public class MeshImporter : MonoBehaviour {
             Debug.LogError("Source MeshFilter is null");
             return;
         }
-        
+        var stopwatch = Stopwatch.StartNew();
         data = new GeometryData(source.sharedMesh, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+        Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
     }
     
     private void OnDrawGizmosSelected() {

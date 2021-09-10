@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Attribute;
 using Geometry;
@@ -16,9 +15,6 @@ public class GeometryData {
     [SerializeField] private AttributeManager attributeManager;
 
     public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
-        var stopwatch = Stopwatch.StartNew();
-        
-       
         var vertices = new List<Vector3>();
         mesh.GetVertices(vertices);
 
@@ -28,9 +24,6 @@ public class GeometryData {
         
         attributeManager = new AttributeManager();
         FillBuiltinAttributes(vertices, faceNormals);
-        
-        
-        Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
     }
 
     public TAttribute GetAttribute<TAttribute>(string name) where TAttribute : BaseAttribute {
