@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Geometry;
 using UnityCommons;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -13,17 +14,23 @@ public class GeometryData {
     [SerializeField] public List<Vertex> VertexList;
     [SerializeField] public List<Edge> Edges;
     [SerializeField] public List<Face> Faces;
+    [SerializeField] private AttributeManager attributeManager;
 
     public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
         var stopwatch = new Stopwatch();
         stopwatch.Start();
         
+       
         Vertices = new List<Vector3>();
         mesh.GetVertices(Vertices);
 
         var triangles = new List<int>();
         mesh.GetTriangles(triangles, 0);
         BuildMetadata(triangles, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+        
+        attributeManager = new AttributeManager();
+        // TODO: FillBuiltinAttributes();
+        
         var elapsed = stopwatch.Elapsed;
         Debug.Log(elapsed.TotalMilliseconds);
         stopwatch.Stop();
