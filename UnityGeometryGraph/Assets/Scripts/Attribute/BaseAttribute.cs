@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Attribute {
     [Serializable]
-    public abstract class BaseAttribute {
+    public abstract class BaseAttribute : IEnumerable {
         protected internal string Name;
         protected internal AttributeDomain Domain;
         protected internal abstract AttributeType Type { get; }
@@ -25,10 +25,14 @@ namespace Attribute {
                 Values.Add(value);
             }
         }
+
+        public IEnumerator GetEnumerator() {
+            return Values.GetEnumerator();
+        }
     }
     
     [Serializable]
-    public abstract class BaseAttribute<T> : BaseAttribute {
+    public abstract class BaseAttribute<T> : BaseAttribute, IEnumerable<T> {
         public T GetValue(int index) {
             return (T) Values[index];
         }
@@ -90,27 +94,37 @@ namespace Attribute {
         protected BaseAttribute(string name, IEnumerable<T> values) : base(name) {
             Fill(values);
         }
+
+        public IEnumerator<T> GetEnumerator() {
+            return (IEnumerator<T>)base.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
     }
 
     public static class AttributeExtensions {
-        public static BaseAttribute Into(this IEnumerable values, string name, Type attributeType) {
+        public static BaseAttribute Into(this IEnumerable values, string name, AttributeDomain domain, Type attributeType) {
             var attribute = (BaseAttribute) Activator.CreateInstance(attributeType, name);
+            attribute.Domain = domain;
             attribute.Fill(values);
             return attribute;
         }
 
-        public static BaseAttribute Into(this BaseAttribute attribute, string name, Type attributeType) {
+        public static BaseAttribute Into(this BaseAttribute attribute, string name, AttributeDomain? domain, Type attributeType) {
             var otherAttribute = (BaseAttribute) Activator.CreateInstance(attributeType, name);
+            otherAttribute.Domain = domain ?? attribute.Domain;
             otherAttribute.Fill(attribute.Values.Select(val => AttributeConvert.ConvertType<object>(val, attribute.Type, otherAttribute.Type)));
             return otherAttribute;
         }
 
-        public static TAttribute Into<TAttribute>(this BaseAttribute attribute, string name) where TAttribute : BaseAttribute {
-            return (TAttribute)Into(attribute, name, typeof(TAttribute));
+        public static TAttribute Into<TAttribute>(this BaseAttribute attribute, string name, AttributeDomain? domain = null) where TAttribute : BaseAttribute {
+            return (TAttribute)Into(attribute, name, new AttributeDomain?(domain ?? attribute.Domain) , typeof(TAttribute));
         }
 
-        public static TAttribute Into<TAttribute>(this IEnumerable values, string name) where TAttribute : BaseAttribute {
-            return (TAttribute)Into(values, name, typeof(TAttribute));
+        public static TAttribute Into<TAttribute>(this IEnumerable values, string name, AttributeDomain domain) where TAttribute : BaseAttribute {
+            return (TAttribute)Into(values, name, domain, typeof(TAttribute));
         }
 
         public static BaseAttribute Into(this IEnumerable values, BaseAttribute otherAttribute) {
