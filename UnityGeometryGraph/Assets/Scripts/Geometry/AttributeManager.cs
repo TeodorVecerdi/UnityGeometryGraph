@@ -10,10 +10,10 @@ namespace Geometry {
 
     [Serializable]
     public class AttributeManager : ISerializationCallbackReceiver {
-        [ShowInInspector, ReadOnly] private AttributeDictionary vertexAttributes;
-        [ShowInInspector, ReadOnly] private AttributeDictionary edgeAttributes;
-        [ShowInInspector, ReadOnly] private AttributeDictionary faceAttributes;
-        [ShowInInspector, ReadOnly] private AttributeDictionary faceCornerAttributes;
+        [ShowInInspector] private AttributeDictionary vertexAttributes;
+        [ShowInInspector] private AttributeDictionary edgeAttributes;
+        [ShowInInspector] private AttributeDictionary faceAttributes;
+        [ShowInInspector] private AttributeDictionary faceCornerAttributes;
 
         [SerializeField, HideInInspector] private bool dirty;
         [SerializeField, HideInInspector] private SerializedAttributeDictionary serializedVertexAttributes;
