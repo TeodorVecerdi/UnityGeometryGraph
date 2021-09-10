@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityCommons;
-using UnityEngine;
 
 namespace Attributes.Test {
     public class FloatAttribute : BaseAttribute<float> {
@@ -18,8 +16,8 @@ namespace Attributes.Test {
     
     public class ClampedFloatAttribute : BaseAttribute<float> {
         protected internal override AttributeType Type => AttributeType.ClampedFloat;
-
-        public override void Fill(IEnumerable values) {
+        
+        public override void Fill(IEnumerable<float> values) {
             Values.Clear();
             foreach (var value in values) {
                 Values.Add(Convert.ToSingle(value).Clamped01());

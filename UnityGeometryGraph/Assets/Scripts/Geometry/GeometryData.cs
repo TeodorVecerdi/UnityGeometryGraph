@@ -408,7 +408,7 @@ public class GeometryData {
         public int VertA;
         public int VertB;
         public int VertC;
-        public Vector3 FaceNormal;
+        public Vector3 FaceNormal; // TODO: Move out of class into attribute
 
         public int EdgeA;
         public int EdgeB;
