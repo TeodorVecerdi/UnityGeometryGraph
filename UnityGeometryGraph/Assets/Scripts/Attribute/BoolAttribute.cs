@@ -1,9 +1,10 @@
-﻿
+﻿using System;
 using System.Collections.Generic;
 
-namespace Attribute.Test {
+namespace Attribute {
+    [Serializable]
     public class BoolAttribute : BaseAttribute<bool> {
-        protected internal override AttributeType Type => AttributeType.Boolean;
+        public override AttributeType Type => AttributeType.Boolean;
         
         public BoolAttribute(string name) : base(name) {
         }

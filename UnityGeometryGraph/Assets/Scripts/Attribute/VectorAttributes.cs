@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Attribute {
+    [Serializable]
     public class Vector2Attribute : BaseAttribute<Vector2> {
-        protected internal override AttributeType Type => AttributeType.Vector2;
+        public override AttributeType Type => AttributeType.Vector2;
 
         public Vector2Attribute(string name) : base(name) {
         }
@@ -12,8 +14,9 @@ namespace Attribute {
         }
     }
 
+    [Serializable]
     public class Vector3Attribute : BaseAttribute<Vector3> {
-        protected internal override AttributeType Type => AttributeType.Vector3;
+        public override AttributeType Type => AttributeType.Vector3;
 
         public Vector3Attribute(string name) : base(name) {
         }

@@ -3,16 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sirenix.Serialization;
 using UnityCommons;
 using UnityEngine;
 
 namespace Attribute {
     [Serializable]
     public abstract class BaseAttribute : IEnumerable {
-        protected internal string Name;
-        protected internal AttributeDomain Domain;
-        protected internal abstract AttributeType Type { get; }
-        protected internal List<object> Values;
+        public abstract AttributeType Type { get; }
+        
+        public string Name;
+        public AttributeDomain Domain;
+        public List<object> Values;
 
         protected BaseAttribute(string name) {
             Name = name;
@@ -26,6 +28,11 @@ namespace Attribute {
             }
         }
 
+        private static readonly Type objectType = typeof(object);
+        public virtual Type GetElementType() {
+            return objectType;
+        }
+
         public IEnumerator GetEnumerator() {
             return Values.GetEnumerator();
         }
@@ -33,6 +40,11 @@ namespace Attribute {
     
     [Serializable]
     public abstract class BaseAttribute<T> : BaseAttribute, IEnumerable<T> {
+        private static readonly Type elementType = typeof(T);
+        public override Type GetElementType() {
+            return elementType;
+        }
+
         public T GetValue(int index) {
             return (T) Values[index];
         }
@@ -95,12 +107,32 @@ namespace Attribute {
             Fill(values);
         }
 
-        public IEnumerator<T> GetEnumerator() {
-            return (IEnumerator<T>)base.GetEnumerator();
-        }
+        public new Enumerator GetEnumerator() => new Enumerator(base.GetEnumerator());
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(base.GetEnumerator());
+        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(base.GetEnumerator());
 
-        IEnumerator IEnumerable.GetEnumerator() {
-            return GetEnumerator();
+        
+        public struct Enumerator : IEnumerator<T> {
+            private readonly IEnumerator baseEnumerator;
+            
+            public Enumerator(IEnumerator baseEnumerator) {
+                this.baseEnumerator = baseEnumerator;
+            }
+            
+            public bool MoveNext() {
+                return baseEnumerator.MoveNext();
+            }
+
+            public void Reset() {
+                baseEnumerator.Reset();
+            }
+
+            public T Current => (T) baseEnumerator.Current;
+            object IEnumerator.Current => Current;
+
+            public void Dispose() {
+                
+            }
         }
     }
 

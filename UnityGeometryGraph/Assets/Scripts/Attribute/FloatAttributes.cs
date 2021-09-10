@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityCommons;
 
-namespace Attribute.Test {
+namespace Attribute {
+    [Serializable]
     public class FloatAttribute : BaseAttribute<float> {
-        protected internal override AttributeType Type => AttributeType.Float;
+        public override AttributeType Type => AttributeType.Float;
    
         public FloatAttribute(string name) : base(name) {
         }
@@ -14,8 +15,9 @@ namespace Attribute.Test {
         }
     }
     
+    [Serializable]
     public class ClampedFloatAttribute : BaseAttribute<float> {
-        protected internal override AttributeType Type => AttributeType.ClampedFloat;
+        public override AttributeType Type => AttributeType.ClampedFloat;
         
         public override void Fill(IEnumerable<float> values) {
             Values.Clear();

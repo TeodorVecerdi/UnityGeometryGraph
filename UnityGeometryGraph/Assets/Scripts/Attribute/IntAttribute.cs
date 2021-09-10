@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Attribute.Test {
+namespace Attribute {
+    [Serializable]
     public class IntAttribute : BaseAttribute<int> {
-        protected internal override AttributeType Type => AttributeType.Integer;
+        public override AttributeType Type => AttributeType.Integer;
         
         public IntAttribute(string name) : base(name) {
         }
