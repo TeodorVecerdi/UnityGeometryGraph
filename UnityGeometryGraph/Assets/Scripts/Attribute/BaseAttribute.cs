@@ -40,6 +40,17 @@ namespace Attributes {
             }
         }
 
+        public sealed override void Fill(IEnumerable values) {
+            Fill((IEnumerable<T>)values);
+        }
+
+        public virtual void Fill(IEnumerable<T> values) {
+            Values.Clear();
+            foreach (var value in values) {
+                Values.Add(value);
+            }
+        }
+
         public IEnumerable<T> Yield(Func<T, T> action) {
             if (action == null) yield break;
 
