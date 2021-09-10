@@ -29,7 +29,7 @@ public class GeometryData {
         BuildMetadata(triangles, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
         
         attributeManager = new AttributeManager();
-        // TODO: FillBuiltinAttributes();
+        // TODO for later: FillBuiltinAttributes();
         
         var elapsed = stopwatch.Elapsed;
         Debug.Log(elapsed.TotalMilliseconds);
