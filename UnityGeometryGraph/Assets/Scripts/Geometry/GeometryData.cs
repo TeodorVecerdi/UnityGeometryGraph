@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Attribute;
-using Attribute.Test;
 using Geometry;
 using UnityCommons;
 using UnityEngine;
