@@ -9,9 +9,9 @@ namespace Attribute.Test {
             var boolA = new BoolAttribute("some_attribute", new[] { true, false, true, false }) { Domain = AttributeDomain.Vertex };
             var boolB = new BoolAttribute("some_attribute2", new[] { false, true, true, false }) { Domain = AttributeDomain.Vertex };
 
-            var boolC = boolA.YieldWithAttribute(boolB, (valueA, valueB) => valueA || valueB).Into<BoolAttribute>("other_attribute");
-            var boolD = boolA.YieldWithAttribute(boolB, (valueA, valueB) => valueA && valueB).Into<BoolAttribute>("other_attribute2");
-            var boolE = boolA.YieldWithAttribute(boolA, (b1, b2) => b1 && b2).Into<BoolAttribute>("other_attribute3");
+            var boolC = boolA.YieldWithAttribute(boolB, (valueA, valueB) => valueA || valueB).Into<BoolAttribute>("other_attribute", AttributeDomain.Vertex);
+            var boolD = boolA.YieldWithAttribute(boolB, (valueA, valueB) => valueA && valueB).Into<BoolAttribute>("other_attribute2", AttributeDomain.Vertex);
+            var boolE = boolA.YieldWithAttribute(boolA, (b1, b2) => b1 && b2).Into<BoolAttribute>("other_attribute3", AttributeDomain.Vertex);
 
             boolC.Print();
             boolD.Print();
@@ -23,8 +23,8 @@ namespace Attribute.Test {
             var boolAttr = new BoolAttribute("bool_attribute", new[] { true, false, true, false }) { Domain = AttributeDomain.Vertex };
             var floatAttr = new FloatAttribute("float_attribute", new[] { 0.0f, 1.0f, 2.0f, 3.0f }) { Domain = AttributeDomain.Vertex };
 
-            var bool2float = floatAttr.YieldWithAttribute(boolAttr, (f1, f2) => f1 + f2).Into<FloatAttribute>("bool_to_float");
-            var float2bool = boolAttr.YieldWithAttribute(floatAttr, (b1, b2) => b1 && b2).Into("float_to_bool", typeof(BoolAttribute));
+            var bool2float = floatAttr.YieldWithAttribute(boolAttr, (f1, f2) => f1 + f2).Into<FloatAttribute>("bool_to_float", AttributeDomain.Vertex);
+            var float2bool = boolAttr.YieldWithAttribute(floatAttr, (b1, b2) => b1 && b2).Into("float_to_bool", AttributeDomain.Vertex, typeof(BoolAttribute));
 
             bool2float.Print();
             float2bool.Print();
@@ -52,7 +52,7 @@ namespace Attribute.Test {
                                .Yield(value => value * 2.0f)
                                .YieldWithAttribute(floatAttr.Type, floatAttr2, (f1, f2) => f1 + f2)
                                .YieldWithAttribute(floatAttr.Type, floatAttr3, (f1, f2) => f1 * f2)
-                               .Into<FloatAttribute>("new_attribute");
+                               .Into<FloatAttribute>("new_attribute", AttributeDomain.Vertex);
 
             newFloatAttr.Print();
         }
@@ -63,9 +63,9 @@ namespace Attribute.Test {
             var floatAttr2 = new FloatAttribute("float_attribute2", new[] { 10.0f, 10.0f, 10.0f }) { Domain = AttributeDomain.Vertex };
             var floatAttr3 = new FloatAttribute("float_attribute3", Array.Empty<float>()) { Domain = AttributeDomain.Vertex };
 
-            var fA = floatAttr.YieldWithAttribute(floatAttr2, (f1, f2) => f1 + f2).Into<FloatAttribute>("new1");
-            var fB = floatAttr2.YieldWithAttribute(floatAttr, (f1, f2) => f1 - f2).Into<FloatAttribute>("new2");
-            var fC = floatAttr2.YieldWithAttribute(floatAttr3, (f1, f2) => f1 * f2).Into<FloatAttribute>("new3");
+            var fA = floatAttr.YieldWithAttribute(floatAttr2, (f1, f2) => f1 + f2).Into<FloatAttribute>("new1", AttributeDomain.Vertex);
+            var fB = floatAttr2.YieldWithAttribute(floatAttr, (f1, f2) => f1 - f2).Into<FloatAttribute>("new2", AttributeDomain.Vertex);
+            var fC = floatAttr2.YieldWithAttribute(floatAttr3, (f1, f2) => f1 * f2).Into<FloatAttribute>("new3", AttributeDomain.Vertex);
             
             fA.Print();
             fB.Print();
