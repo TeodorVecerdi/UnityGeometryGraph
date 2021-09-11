@@ -14,12 +14,16 @@ public static class MathUtilities {
 //!! Utilities for Unity.Mathematics
 // ReSharper disable InconsistentNaming
 public static class math_util {
-    public static readonly float2 one2 = new float2(1, 1);
-    public static readonly float3 one3 = new float3(1, 1, 1);
-    
     public static float angle(float3 from, float3 to) {
         var num = math.sqrt(math.lengthsq(from) * (double)math.lengthsq(to));
         return num < 1.00000000362749E-15 ? 0.0f : (float) math.acos(math.clamp(math.dot(from, to) / num, -1f, 1f)) * 57.29578f;
     }
+}
+
+public static class float3_util {
+    public static readonly float3 one = new float3(1);
+}
+public static class float2_util {
+    public static readonly float2 one = new float2(1);
 }
 // ReSharper restore InconsistentNaming
