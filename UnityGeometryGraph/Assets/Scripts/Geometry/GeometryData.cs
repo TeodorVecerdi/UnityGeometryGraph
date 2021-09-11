@@ -128,14 +128,15 @@ public class GeometryData {
     }
 
     private void FillElementMetadata() {
-        // Vertex Metadata ==> Edges, Faces
+        // Face Corner Metadata ==> Backing Vertex
+        FillFaceCornerMetadata();
+        
+        // Vertex Metadata ==> Edges, Faces, FaceCorners
         FillVertexMetadata();
 
         // Face Metadata ==> Adjacent faces
         FillFaceMetadata();
 
-        // Face Corner Metadata ==> Backing Vertex
-        FillFaceCornerMetadata();
     }
 
     private List<(int, int, bool)> GetDuplicateEdges(List<float3> vertices, List<float3> faceNormals, float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
@@ -396,11 +397,18 @@ public class GeometryData {
             vertices[face.VertB].Faces.Add(i);
             vertices[face.VertC].Faces.Add(i);
         }
+        
+        // Face Corners
+        for (var i = 0; i < faceCorners.Count; i++) {
+            var fc = faceCorners[i];
+            vertices[fc.Vert].FaceCorners.Add(i);
+        }
 
         // Cleanup
         foreach (var vertex in vertices) {
             vertex.Edges.RemoveDuplicates();
             vertex.Faces.RemoveDuplicates();
+            vertex.FaceCorners.RemoveDuplicates();
         }
     }
 
@@ -414,7 +422,7 @@ public class GeometryData {
 
             // Cleanup
             face.AdjacentFaces.RemoveDuplicates();
-            face.AdjacentFaces.RemoveAll(adjacentIndex => adjacentIndex == i);
+            face.AdjacentFaces.RemoveAll(adjacentIndex => adjacentIndex == i || adjacentIndex == -1);
         }
     }
 
@@ -434,10 +442,12 @@ public class GeometryData {
     public class Vertex {
         public List<int> Edges;
         public List<int> Faces;
+        public List<int> FaceCorners;
 
         public Vertex() {
             Edges = new List<int>();
             Faces = new List<int>();
+            FaceCorners = new List<int>();
         }
     }
 
