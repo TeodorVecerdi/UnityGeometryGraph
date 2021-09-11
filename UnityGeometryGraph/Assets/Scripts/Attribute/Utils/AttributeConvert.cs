@@ -1,6 +1,9 @@
-﻿using System;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityCommons;
 using UnityEngine;
 
@@ -53,20 +56,20 @@ namespace Attribute {
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeType.Vector2 => to switch {
-                    AttributeType.Boolean => (T)ConvertType_Vec2Bool((Vector2)value),
-                    AttributeType.Integer => (T)ConvertType_Vec2Int((Vector2)value),
-                    AttributeType.Float => (T)ConvertType_Vec2Float((Vector2)value),
-                    AttributeType.ClampedFloat => (T)ConvertType_Vec2ClampedFloat((Vector2)value),
+                    AttributeType.Boolean => (T)ConvertType_Vec2Bool((float2)value),
+                    AttributeType.Integer => (T)ConvertType_Vec2Int((float2)value),
+                    AttributeType.Float => (T)ConvertType_Vec2Float((float2)value),
+                    AttributeType.ClampedFloat => (T)ConvertType_Vec2ClampedFloat((float2)value),
                     AttributeType.Vector2 => (T)value,
-                    AttributeType.Vector3 => (T)ConvertType_Vec2Vec3((Vector2)value),
+                    AttributeType.Vector3 => (T)ConvertType_Vec2Vec3((float2)value),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeType.Vector3 => to switch {
-                    AttributeType.Boolean => (T)ConvertType_Vec3Bool((Vector3)value),
-                    AttributeType.Integer => (T)ConvertType_Vec3Int((Vector3)value),
-                    AttributeType.Float => (T)ConvertType_Vec3Float((Vector3)value),
-                    AttributeType.ClampedFloat => (T)ConvertType_Vec3ClampedFloat((Vector3)value),
-                    AttributeType.Vector2 => (T)ConvertType_Vec3Vec2((Vector3)value),
+                    AttributeType.Boolean => (T)ConvertType_Vec3Bool((float3)value),
+                    AttributeType.Integer => (T)ConvertType_Vec3Int((float3)value),
+                    AttributeType.Float => (T)ConvertType_Vec3Float((float3)value),
+                    AttributeType.ClampedFloat => (T)ConvertType_Vec3ClampedFloat((float3)value),
+                    AttributeType.Vector2 => (T)ConvertType_Vec3Vec2((float3)value),
                     AttributeType.Vector3 => (T)value,
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
@@ -78,51 +81,51 @@ namespace Attribute {
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_BoolInt(bool a) => a ? 1 : 0;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_BoolFloat(bool a) => a ? 1.0f : 0.0f;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_BoolClampedFloat(bool a) => a ? 1.0f : 0.0f;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_BoolVec2(bool a) => a ? Vector2.one : Vector2.zero;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_BoolVec3(bool a) => a ? Vector3.one : Vector3.zero;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_BoolVec2(bool a) => a ? math_util.one2 : float2.zero;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_BoolVec3(bool a) => a ? math_util.one3 : float3.zero;
 
         // Integer
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_IntBool(int a) => a != 0;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_IntFloat(int a) => a;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_IntClampedFloat(int a) => a.Clamped01();
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_IntVec2(int a) => Vector2.one * a;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_IntVec3(int a) => Vector3.one * a;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_IntVec2(int a) => math_util.one2 * a;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_IntVec3(int a) => math_util.one3 * a;
 
         // Float
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_FloatBool(float a) => a != 0.0f;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_FloatInt(float a) => (int)a;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_FloatClampedFloat(float a) => a.Clamped01();
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_FloatVec2(float a) => Vector2.one * a;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_FloatVec3(float a) => Vector3.one * a;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_FloatVec2(float a) => math_util.one2 * a;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_FloatVec3(float a) => math_util.one3 * a;
 
         // Clamped Float
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_ClampedFloatBool(float a) => a != 0.0f;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_ClampedFloatInt(float a) => Mathf.Approximately(a, 1.0f) ? 1 : 0;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_ClampedFloatFloat(float a) => a;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_ClampedFloatVec2(float a) => Vector2.one * a;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_ClampedFloatVec3(float a) => Vector3.one * a;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_ClampedFloatVec2(float a) => math_util.one2 * a;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_ClampedFloatVec3(float a) => math_util.one3 * a;
 
-        // Vector2
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Bool(Vector2 a) => a.x != 0.0f && a.y != 0.0f;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Int(Vector2 a) => (int)a.x;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Float(Vector2 a) => a.x;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2ClampedFloat(Vector2 a) => a.x.Clamped01();
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Vec3(Vector2 a) => a;
+        // float2
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Bool(float2 a) => a.x != 0.0f && a.y != 0.0f;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Int(float2 a) => (int)a.x;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Float(float2 a) => a.x;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2ClampedFloat(float2 a) => a.x.Clamped01();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Vec3(float2 a) => a;
 
-        // Vector3
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Bool(Vector3 a) => a.x != 0.0f && a.y != 0.0f;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Int(Vector3 a) => (int)a.x;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Float(Vector3 a) => a.x;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3ClampedFloat(Vector3 a) => a.x.Clamped01();
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Vec2(Vector3 a) => a;
+        // float3
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Bool(float3 a) => a.x != 0.0f && a.y != 0.0f;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Int(float3 a) => (int)a.x;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Float(float3 a) => a.x;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3ClampedFloat(float3 a) => a.x.Clamped01();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Vec2(float3 a) => a;
 
 
         private static readonly Dictionary<Type, AttributeType> typeConversionDictionary = new Dictionary<Type, AttributeType> {
             { typeof(bool), AttributeType.Boolean },
             { typeof(int), AttributeType.Integer },
             { typeof(float), AttributeType.Float },
-            { typeof(Vector2), AttributeType.Vector2 },
-            { typeof(Vector3), AttributeType.Vector3 },
+            { typeof(float2), AttributeType.Vector2 },
+            { typeof(float3), AttributeType.Vector3 },
         };
     }
 }
