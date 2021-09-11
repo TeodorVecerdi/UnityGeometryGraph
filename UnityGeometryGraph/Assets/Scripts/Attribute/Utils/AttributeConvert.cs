@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Attribute {
     // Domain conversion
     internal static partial class AttributeConvert {
-        internal static IEnumerable ConvertDomain(BaseAttribute sourceAttribute, AttributeDomain to) {
+        internal static IEnumerable ConvertDomain(GeometryData geometry, BaseAttribute sourceAttribute, AttributeDomain to) {
             if (sourceAttribute.Domain == AttributeDomain.Spline || to == AttributeDomain.Spline) {
                 Debug.LogWarning("Cannot convert from a Spline domain or into a Spline domain.");
                 return sourceAttribute;
@@ -18,41 +18,56 @@ namespace Attribute {
             
             if (sourceAttribute.Domain == to) return sourceAttribute;
 
-            switch (sourceAttribute.Domain) {
-                case AttributeDomain.Vertex:
-                    switch (to) {
-                        case AttributeDomain.Edge: return sourceAttribute;
-                        case AttributeDomain.Face: return sourceAttribute;
-                        case AttributeDomain.FaceCorner: return sourceAttribute;
-                        default: throw new ArgumentOutOfRangeException(nameof(to), to, null);
-                    }
-                case AttributeDomain.Edge:
-                    switch (to) {
-                        case AttributeDomain.Vertex: return sourceAttribute;
-                        case AttributeDomain.Face: return sourceAttribute;
-                        case AttributeDomain.FaceCorner: return sourceAttribute;
-                        default: throw new ArgumentOutOfRangeException(nameof(to), to, null);
-                    }
-                case AttributeDomain.Face:
-                    switch (to) {
-                        case AttributeDomain.Vertex: return sourceAttribute;
-                        case AttributeDomain.Edge: return sourceAttribute;
-                        case AttributeDomain.FaceCorner: return sourceAttribute;
-                        default: throw new ArgumentOutOfRangeException(nameof(to), to, null);
-                    }
-                case AttributeDomain.FaceCorner:
-                    switch (to) {
-                        case AttributeDomain.Vertex: return sourceAttribute;
-                        case AttributeDomain.Edge: return sourceAttribute;
-                        case AttributeDomain.Face: return sourceAttribute;
-                        default: throw new ArgumentOutOfRangeException(nameof(to), to, null);
-                    }
-                default: throw new ArgumentOutOfRangeException();
-            }
+            return sourceAttribute.Domain switch {
+                AttributeDomain.Vertex => to switch {
+                    AttributeDomain.Edge => ConvertDomain_VertexToEdge(geometry, sourceAttribute),
+                    AttributeDomain.Face => ConvertDomain_VertexToFace(geometry, sourceAttribute),
+                    AttributeDomain.FaceCorner => ConvertDomain_VertexToFaceCorner(geometry, sourceAttribute),
+                    _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
+                },
+                AttributeDomain.Edge => to switch {
+                    AttributeDomain.Vertex => sourceAttribute,
+                    AttributeDomain.Face => sourceAttribute,
+                    AttributeDomain.FaceCorner => sourceAttribute,
+                    _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
+                },
+                AttributeDomain.Face => to switch {
+                    AttributeDomain.Vertex => sourceAttribute,
+                    AttributeDomain.Edge => sourceAttribute,
+                    AttributeDomain.FaceCorner => sourceAttribute,
+                    _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
+                },
+                AttributeDomain.FaceCorner => to switch {
+                    AttributeDomain.Vertex => sourceAttribute,
+                    AttributeDomain.Edge => sourceAttribute,
+                    AttributeDomain.Face => sourceAttribute,
+                    _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
+                },
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
-        internal static IEnumerable<TValue> ConvertDomain<TAttribute, TValue>(TAttribute sourceAttribute, AttributeDomain to) where TAttribute : BaseAttribute {
-            return (IEnumerable<TValue>)ConvertDomain(sourceAttribute, to);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static IEnumerable<TValue> ConvertDomain<TAttribute, TValue>(GeometryData geometry, TAttribute sourceAttribute, AttributeDomain to) where TAttribute : BaseAttribute {
+            return (IEnumerable<TValue>)ConvertDomain(geometry, sourceAttribute, to);
+        }
+
+        // -------------------------------------------------------------------------------------------------------- //
+        //---------------------------------------     Vertex Conversion     --------------------------------------- //
+        // -------------------------------------------------------------------------------------------------------- //
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_VertexToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.Edges.Select(edge => Average(sourceAttribute.Type, sourceAttribute[edge.VertA], sourceAttribute[edge.VertB]));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_VertexToFace(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.Faces.Select(face => Average(sourceAttribute.Type, sourceAttribute[face.VertA], sourceAttribute[face.VertB], sourceAttribute[face.VertC]));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_VertexToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.FaceCorners.Select(faceCorner => sourceAttribute[faceCorner.Vert]);
         }
 
         // Average functions
