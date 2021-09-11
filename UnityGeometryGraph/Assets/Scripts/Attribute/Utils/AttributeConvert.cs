@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,7 +76,7 @@ namespace Attribute {
         //!! Edge Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_EdgeToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.Edges.Select(edgeIdx => sourceAttribute[edgeIdx])));
+            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.Edges.Select(sourceAttribute.GetValue)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -86,13 +86,13 @@ namespace Attribute {
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_EdgeToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Edges.Select(edgeIdx => sourceAttribute[edgeIdx])));
+            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Edges.Select(sourceAttribute.GetValue)));
         }
         
         //!! Face Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.Faces.Select(face => sourceAttribute[face])));
+            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.Faces.Select(sourceAttribute.GetValue)));
         }
 
         private static readonly List<int> edgeIndexList = new List<int>(2);
@@ -102,15 +102,15 @@ namespace Attribute {
                 edgeIndexList.Clear();
                 edgeIndexList.Add(edge.FaceA);
                 if (edge.FaceB != -1) edgeIndexList.Add(edge.FaceB);
-                return Average(sourceAttribute.Type, (object[])edgeIndexList.Select(faceIndex => sourceAttribute[faceIndex]));
+                return Average(sourceAttribute.Type, (object[])edgeIndexList.Select(sourceAttribute.GetValue));
             });
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Faces.Select(face => sourceAttribute[face])));
+            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Faces.Select(sourceAttribute.GetValue)));
         }
-
+        
         // Average functions
         private static object Average(AttributeType type, params object[] values) {
             return type switch {
@@ -237,14 +237,14 @@ namespace Attribute {
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_ClampedFloatVec2(float a) => float2_util.one * a;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_ClampedFloatVec3(float a) => float3_util.one * a;
 
-        // float2
+        // Vector2
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Bool(float2 a) => a.x != 0.0f && a.y != 0.0f;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Int(float2 a) => (int)a.x;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Float(float2 a) => a.x;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2ClampedFloat(float2 a) => a.x.Clamped01();
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec2Vec3(float2 a) => a;
 
-        // float3
+        // Vector3
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Bool(float3 a) => a.x != 0.0f && a.y != 0.0f;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Int(float3 a) => (int)a.x;
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Float(float3 a) => a.x;
