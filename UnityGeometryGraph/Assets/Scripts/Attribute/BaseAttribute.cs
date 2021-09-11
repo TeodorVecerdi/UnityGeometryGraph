@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -190,7 +190,7 @@ namespace Attribute {
         }
         
         public static IEnumerable<T> YieldWithAttribute<T>(this IEnumerable<T> enumerable, AttributeType selfType, BaseAttribute other, Func<T, T, T> action) {
-            action ??= AttributeActions.NoOp2<T>();
+            action ??= AttributeActions.NoOp<T, T>();
            
             if (other == null) {
                 foreach (var value in enumerable) {
