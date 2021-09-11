@@ -111,6 +111,18 @@ namespace Attribute {
             return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Faces.Select(sourceAttribute.GetValue)));
         }
         
+        //!! Face Corner Conversion
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_FaceCornerToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.FaceCorners.Select(sourceAttribute.GetValue)));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_FaceCornerToFace(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.Faces.Select(face => Average(sourceAttribute.Type, 
+                             sourceAttribute[face.FaceCornerA], sourceAttribute[face.FaceCornerB], sourceAttribute[face.FaceCornerC]));
+        }
+
         // Average functions
         private static object Average(AttributeType type, params object[] values) {
             return type switch {
