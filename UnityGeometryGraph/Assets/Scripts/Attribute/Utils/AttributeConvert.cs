@@ -57,9 +57,7 @@ namespace Attribute {
             return (IEnumerable<TValue>)ConvertDomain(geometry, sourceAttribute, to);
         }
 
-        // -------------------------------------------------------------------------------------------------------- //
-        // ---------                                  Vertex Conversion                                  ---------- //
-        // -------------------------------------------------------------------------------------------------------- //
+        //!! Vertex Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_VertexToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.Edges.Select(edge => Average(sourceAttribute.Type, sourceAttribute[edge.VertA], sourceAttribute[edge.VertB]));
@@ -75,9 +73,7 @@ namespace Attribute {
             return geometry.FaceCorners.Select(faceCorner => sourceAttribute[faceCorner.Vert]);
         }
 
-        // -------------------------------------------------------------------------------------------------------- //
-        // ---------                                   Edge Conversion                                   ---------- //
-        // -------------------------------------------------------------------------------------------------------- //
+        //!! Edge Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_EdgeToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.Edges.Select(edgeIdx => sourceAttribute[edgeIdx])));
@@ -92,7 +88,28 @@ namespace Attribute {
         private static IEnumerable ConvertDomain_EdgeToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Edges.Select(edgeIdx => sourceAttribute[edgeIdx])));
         }
-    
+        
+        //!! Face Conversion
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_FaceToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.Faces.Select(face => sourceAttribute[face])));
+        }
+
+        private static readonly List<int> edgeIndexList = new List<int>(2);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_FaceToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.Edges.Select(edge => {
+                edgeIndexList.Clear();
+                edgeIndexList.Add(edge.FaceA);
+                if (edge.FaceB != -1) edgeIndexList.Add(edge.FaceB);
+                return Average(sourceAttribute.Type, (object[])edgeIndexList.Select(faceIndex => sourceAttribute[faceIndex]));
+            });
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_FaceToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Faces.Select(face => sourceAttribute[face])));
+        }
 
         // Average functions
         private static object Average(AttributeType type, params object[] values) {
@@ -107,7 +124,7 @@ namespace Attribute {
             };
         }
         
-        // Note: Maybe there is a better way to 'average' boolean values but idk
+        // Note: Maybe there is a better / more correct way to 'average' boolean values but idk
         private static bool Average(params bool[] values) => values.Count(b => b) < 0.5f * values.Length;
         private static int Average(params int[] values) => (int) values.Average();
         private static float Average(params float[] values) => values.Average();
@@ -117,9 +134,14 @@ namespace Attribute {
 
     // Misc
     internal static partial class AttributeConvert {
-        internal static bool TryGetType(object value, out AttributeType type) {
+        internal static AttributeType GetType(object value) {
             var valueType = value.GetType();
-            type = typeConversionDictionary.ContainsKey(valueType) ? typeConversionDictionary[valueType] : AttributeType.Invalid;
+            var type = typeConversionDictionary.ContainsKey(valueType) ? typeConversionDictionary[valueType] : AttributeType.Invalid;
+            return type;
+        }
+        
+        internal static bool TryGetType(object value, out AttributeType type) {
+            type = GetType(value);
             return type != AttributeType.Invalid;
         }
     }
