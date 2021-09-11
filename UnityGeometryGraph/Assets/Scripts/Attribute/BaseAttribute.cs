@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -180,6 +180,15 @@ namespace Attribute {
             sb.AppendLine($"Values: {attribute.Values.ToListString()}");
             Debug.Log(sb.ToString());
         }
+        
+        public static IEnumerable Yield(this IEnumerable enumerable, Func<object, object> action) {
+            action ??= AttributeActions.NoOp<object>();
+
+            foreach (var value in enumerable) {
+                yield return action(value);
+            }
+        }
+
 
         public static IEnumerable<T> Yield<T>(this IEnumerable<T> enumerable, Func<T, T> action) {
             action ??= AttributeActions.NoOp<T>();
