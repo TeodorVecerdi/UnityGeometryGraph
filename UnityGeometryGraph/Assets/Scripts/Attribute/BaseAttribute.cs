@@ -31,6 +31,14 @@ namespace Attribute {
             }
         }
 
+        public object GetValue(int index) {
+            return Values[index];
+        }
+        
+        public object this[int index] {
+            get => GetValue(index);
+            set => Values[index] = value;
+        }
 
         public IEnumerator GetEnumerator() {
             return Values.GetEnumerator();
@@ -41,8 +49,8 @@ namespace Attribute {
     public abstract class BaseAttribute<T> : BaseAttribute, IEnumerable<T> {
         private static readonly Type elementType = typeof(T);
         public override Type ElementType => elementType;
-
-        public T GetValue(int index) {
+        
+        public new T GetValue(int index) {
             return (T) Values[index];
         }
 
@@ -92,7 +100,7 @@ namespace Attribute {
             }
         }
 
-        public T this[int index] {
+        public new T this[int index] {
             get => GetValue(index);
             set => Values[index] = value;
         }
