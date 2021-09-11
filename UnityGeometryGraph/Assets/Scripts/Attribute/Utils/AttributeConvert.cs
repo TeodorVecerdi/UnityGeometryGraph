@@ -18,7 +18,8 @@ namespace Attribute {
                 return sourceAttribute.Yield(null);
             }
 
-            if (sourceAttribute.Domain == to) return sourceAttribute.Yield(null);
+            if (sourceAttribute.Domain == to) 
+                return sourceAttribute.Yield(null);
 
             return sourceAttribute.Domain switch {
                 AttributeDomain.Vertex => to switch {
@@ -34,18 +35,18 @@ namespace Attribute {
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeDomain.Face => to switch {
-                    AttributeDomain.Vertex => sourceAttribute,
-                    AttributeDomain.Edge => sourceAttribute,
-                    AttributeDomain.FaceCorner => sourceAttribute,
+                    AttributeDomain.Vertex => ConvertDomain_FaceToVertex(geometry, sourceAttribute),
+                    AttributeDomain.Edge => ConvertDomain_FaceToEdge(geometry, sourceAttribute),
+                    AttributeDomain.FaceCorner => ConvertDomain_FaceToFaceCorner(geometry, sourceAttribute),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeDomain.FaceCorner => to switch {
-                    AttributeDomain.Vertex => sourceAttribute,
-                    AttributeDomain.Edge => sourceAttribute,
-                    AttributeDomain.Face => sourceAttribute,
+                    AttributeDomain.Vertex => ConvertDomain_FaceCornerToVertex(geometry, sourceAttribute),
+                    AttributeDomain.Edge => ConvertDomain_FaceCornerToEdge(geometry, sourceAttribute),
+                    AttributeDomain.Face => ConvertDomain_FaceCornerToFace(geometry, sourceAttribute),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(sourceAttribute.Domain), sourceAttribute.Domain, null)
             };
         }
 
