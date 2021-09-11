@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +8,40 @@ using UnityCommons;
 using UnityEngine;
 
 namespace Attribute {
-    internal static class AttributeConvert {
+    // Domain conversion
+    internal static partial class AttributeConvert {
+        // Average functions
+        private static object Average(AttributeType type, params object[] values) {
+            return type switch {
+                AttributeType.Boolean => Average((bool[])(IEnumerable)values),
+                AttributeType.Integer => Average((int[])(IEnumerable)values),
+                AttributeType.Float => Average((float[])(IEnumerable)values),
+                AttributeType.ClampedFloat => Average((float[])(IEnumerable)values).Clamped01(),
+                AttributeType.Vector2 => Average((float2[])(IEnumerable)values),
+                AttributeType.Vector3 => Average((float3[])(IEnumerable)values),
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
+        }
         
+        // Note: Maybe there is a better way to 'average' boolean values but idk
+        private static bool Average(params bool[] values) => values.Count(b => b) < 0.5f * values.Length;
+        private static int Average(params int[] values) => (int) values.Average();
+        private static float Average(params float[] values) => values.Average();
+        private static float2 Average(params float2[] values) => values.Aggregate((a, b) => a + b) / values.Length;
+        private static float3 Average(params float3[] values) => values.Aggregate((a, b) => a + b) / values.Length;
+    }
+
+    // Misc
+    internal static partial class AttributeConvert {
         internal static bool TryGetType(object value, out AttributeType type) {
             var valueType = value.GetType();
             type = typeConversionDictionary.ContainsKey(valueType) ? typeConversionDictionary[valueType] : AttributeType.Invalid;
             return type != AttributeType.Invalid;
         }
-
+    }
+    
+    // Type conversion
+    internal static partial class AttributeConvert {
         // oof sorry 
         internal static T ConvertType<T>(object value, AttributeType from, AttributeType to) {
             return from switch {
