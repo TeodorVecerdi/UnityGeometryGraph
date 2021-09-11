@@ -15,7 +15,7 @@ namespace Attribute {
                 Debug.LogWarning("Cannot convert from a Spline domain or into a Spline domain.");
                 return sourceAttribute;
             }
-            
+
             if (sourceAttribute.Domain == to) return sourceAttribute;
 
             return sourceAttribute.Domain switch {
@@ -26,9 +26,9 @@ namespace Attribute {
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeDomain.Edge => to switch {
-                    AttributeDomain.Vertex => sourceAttribute,
-                    AttributeDomain.Face => sourceAttribute,
-                    AttributeDomain.FaceCorner => sourceAttribute,
+                    AttributeDomain.Vertex => ConvertDomain_EdgeToVertex(geometry, sourceAttribute),
+                    AttributeDomain.Face => ConvertDomain_EdgeToFace(geometry, sourceAttribute),
+                    AttributeDomain.FaceCorner => ConvertDomain_EdgeToFaceCorner(geometry, sourceAttribute),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeDomain.Face => to switch {
@@ -48,12 +48,14 @@ namespace Attribute {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static IEnumerable<TValue> ConvertDomain<TAttribute, TValue>(GeometryData geometry, TAttribute sourceAttribute, AttributeDomain to) where TAttribute : BaseAttribute {
+        internal static IEnumerable<TValue> ConvertDomain<TAttribute, TValue>(GeometryData geometry, TAttribute sourceAttribute, AttributeDomain to) 
+            where TAttribute : BaseAttribute 
+        {
             return (IEnumerable<TValue>)ConvertDomain(geometry, sourceAttribute, to);
         }
 
         // -------------------------------------------------------------------------------------------------------- //
-        //---------------------------------------     Vertex Conversion     --------------------------------------- //
+        // ---------                                  Vertex Conversion                                  ---------- //
         // -------------------------------------------------------------------------------------------------------- //
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_VertexToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
@@ -69,6 +71,25 @@ namespace Attribute {
         private static IEnumerable ConvertDomain_VertexToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.FaceCorners.Select(faceCorner => sourceAttribute[faceCorner.Vert]);
         }
+
+        // -------------------------------------------------------------------------------------------------------- //
+        // ---------                                   Edge Conversion                                   ---------- //
+        // -------------------------------------------------------------------------------------------------------- //
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_EdgeToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.Edges.Select(edgeIdx => sourceAttribute[edgeIdx])));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_EdgeToFace(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.Faces.Select(face => Average(sourceAttribute.Type, sourceAttribute[face.EdgeA], sourceAttribute[face.EdgeB], sourceAttribute[face.EdgeC]));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_EdgeToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Edges.Select(edgeIdx => sourceAttribute[edgeIdx])));
+        }
+    
 
         // Average functions
         private static object Average(AttributeType type, params object[] values) {
