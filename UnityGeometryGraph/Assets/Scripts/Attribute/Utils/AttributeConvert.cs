@@ -10,6 +10,51 @@ using UnityEngine;
 namespace Attribute {
     // Domain conversion
     internal static partial class AttributeConvert {
+        internal static IEnumerable ConvertDomain(BaseAttribute sourceAttribute, AttributeDomain to) {
+            if (sourceAttribute.Domain == AttributeDomain.Spline || to == AttributeDomain.Spline) {
+                Debug.LogWarning("Cannot convert from a Spline domain or into a Spline domain.");
+                return sourceAttribute;
+            }
+            
+            if (sourceAttribute.Domain == to) return sourceAttribute;
+
+            switch (sourceAttribute.Domain) {
+                case AttributeDomain.Vertex:
+                    switch (to) {
+                        case AttributeDomain.Edge: return sourceAttribute;
+                        case AttributeDomain.Face: return sourceAttribute;
+                        case AttributeDomain.FaceCorner: return sourceAttribute;
+                        default: throw new ArgumentOutOfRangeException(nameof(to), to, null);
+                    }
+                case AttributeDomain.Edge:
+                    switch (to) {
+                        case AttributeDomain.Vertex: return sourceAttribute;
+                        case AttributeDomain.Face: return sourceAttribute;
+                        case AttributeDomain.FaceCorner: return sourceAttribute;
+                        default: throw new ArgumentOutOfRangeException(nameof(to), to, null);
+                    }
+                case AttributeDomain.Face:
+                    switch (to) {
+                        case AttributeDomain.Vertex: return sourceAttribute;
+                        case AttributeDomain.Edge: return sourceAttribute;
+                        case AttributeDomain.FaceCorner: return sourceAttribute;
+                        default: throw new ArgumentOutOfRangeException(nameof(to), to, null);
+                    }
+                case AttributeDomain.FaceCorner:
+                    switch (to) {
+                        case AttributeDomain.Vertex: return sourceAttribute;
+                        case AttributeDomain.Edge: return sourceAttribute;
+                        case AttributeDomain.Face: return sourceAttribute;
+                        default: throw new ArgumentOutOfRangeException(nameof(to), to, null);
+                    }
+                default: throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        internal static IEnumerable<TValue> ConvertDomain<TAttribute, TValue>(TAttribute sourceAttribute, AttributeDomain to) where TAttribute : BaseAttribute {
+            return (IEnumerable<TValue>)ConvertDomain(sourceAttribute, to);
+        }
+
         // Average functions
         private static object Average(AttributeType type, params object[] values) {
             return type switch {
