@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,6 +115,32 @@ namespace Attribute {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceCornerToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.FaceCorners.Select(sourceAttribute.GetValue)));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable ConvertDomain_FaceCornerToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
+            return geometry.Edges.Select(edge => {
+                // Faces
+                edgeIndexList.Clear();
+                edgeIndexList.Add(edge.FaceA);
+                if (edge.FaceB != -1) edgeIndexList.Add(edge.FaceB);
+
+                return Average(
+                    sourceAttribute.Type,(object[])
+                    edgeIndexList
+                    // Get all face corners on faces that neighbour the edge
+                    .SelectMany(faceIndex => {
+                        var face = geometry.Faces[faceIndex];
+                        return new[] { face.FaceCornerA, face.FaceCornerB, face.FaceCornerC };
+                    })
+                    // Filter out any face corner that isn't on the edge
+                    .Where(faceCornerIndex => {
+                        var faceCorner = geometry.FaceCorners[faceCornerIndex];
+                        return edge.VertA == faceCorner.Vert || edge.VertB == faceCorner.Vert;
+                    })
+                    // Get attribute value
+                    .Select(sourceAttribute.GetValue));
+            });
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
