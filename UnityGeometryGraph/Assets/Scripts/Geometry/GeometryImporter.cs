@@ -16,9 +16,12 @@ namespace Geometry {
                 Debug.LogError("Source MeshFilter is null");
                 return;
             }
+
+            
             var stopwatch = Stopwatch.StartNew();
             geometryData = new GeometryData(geometrySource.sharedMesh, 0.0f, 179.9f);
-            Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
+            var elapsed = stopwatch.Elapsed;
+            Debug.Log($"{elapsed.TotalMilliseconds}ms / {elapsed.Ticks * 0.1f}µs");
         }
     }
 }
