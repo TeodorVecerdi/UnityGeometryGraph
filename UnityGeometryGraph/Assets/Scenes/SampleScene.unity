@@ -123,6 +123,328 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &465368519
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.16
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.78
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.99
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+      propertyPath: m_Name
+      value: SmoothFlatTest
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+--- !u!1 &465368520 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+  m_PrefabInstance: {fileID: 465368519}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &465368521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465368520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690dec9fc3ff4e04aba37f9b579a61b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  geometrySource: {fileID: 465368522}
+  geometryData:
+    vertices:
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    edges:
+    - VertA: 0
+      VertB: 1
+      FaceA: 0
+      FaceB: 1
+    - VertA: 1
+      VertB: 2
+      FaceA: 0
+      FaceB: 7
+    - VertA: 2
+      VertB: 0
+      FaceA: 0
+      FaceB: 4
+    - VertA: 0
+      VertB: 3
+      FaceA: 1
+      FaceB: 5
+    - VertA: 3
+      VertB: 1
+      FaceA: 1
+      FaceB: 6
+    - VertA: 4
+      VertB: 5
+      FaceA: 2
+      FaceB: 3
+    - VertA: 5
+      VertB: 3
+      FaceA: 2
+      FaceB: 6
+    - VertA: 3
+      VertB: 4
+      FaceA: 2
+      FaceB: 5
+    - VertA: 4
+      VertB: 2
+      FaceA: 3
+      FaceB: 4
+    - VertA: 2
+      VertB: 5
+      FaceA: 3
+      FaceB: 7
+    - VertA: 4
+      VertB: 0
+      FaceA: 4
+      FaceB: 5
+    - VertA: 5
+      VertB: 1
+      FaceA: 6
+      FaceB: 7
+    faces:
+    - VertA: 0
+      VertB: 1
+      VertC: 2
+      FaceCornerA: 0
+      FaceCornerB: 1
+      FaceCornerC: 2
+      EdgeA: 0
+      EdgeB: 1
+      EdgeC: 2
+      AdjacentFaces: 
+    - VertA: 0
+      VertB: 3
+      VertC: 1
+      FaceCornerA: 3
+      FaceCornerB: 4
+      FaceCornerC: 5
+      EdgeA: 3
+      EdgeB: 4
+      EdgeC: 0
+      AdjacentFaces: 
+    - VertA: 4
+      VertB: 5
+      VertC: 3
+      FaceCornerA: 6
+      FaceCornerB: 7
+      FaceCornerC: 8
+      EdgeA: 5
+      EdgeB: 6
+      EdgeC: 7
+      AdjacentFaces: 
+    - VertA: 4
+      VertB: 2
+      VertC: 5
+      FaceCornerA: 9
+      FaceCornerB: 10
+      FaceCornerC: 11
+      EdgeA: 8
+      EdgeB: 9
+      EdgeC: 5
+      AdjacentFaces: 
+    - VertA: 4
+      VertB: 0
+      VertC: 2
+      FaceCornerA: 12
+      FaceCornerB: 13
+      FaceCornerC: 14
+      EdgeA: 10
+      EdgeB: 2
+      EdgeC: 8
+      AdjacentFaces: 
+    - VertA: 4
+      VertB: 3
+      VertC: 0
+      FaceCornerA: 15
+      FaceCornerB: 16
+      FaceCornerC: 17
+      EdgeA: 7
+      EdgeB: 3
+      EdgeC: 10
+      AdjacentFaces: 
+    - VertA: 3
+      VertB: 5
+      VertC: 1
+      FaceCornerA: 18
+      FaceCornerB: 19
+      FaceCornerC: 20
+      EdgeA: 6
+      EdgeB: 11
+      EdgeC: 4
+      AdjacentFaces: 
+    - VertA: 5
+      VertB: 2
+      VertC: 1
+      FaceCornerA: 21
+      FaceCornerB: 22
+      FaceCornerC: 23
+      EdgeA: 9
+      EdgeB: 1
+      EdgeC: 11
+      AdjacentFaces: 
+    faceCorners:
+    - Vert: -1
+      Face: 0
+    - Vert: -1
+      Face: 0
+    - Vert: -1
+      Face: 0
+    - Vert: -1
+      Face: 1
+    - Vert: -1
+      Face: 1
+    - Vert: -1
+      Face: 1
+    - Vert: -1
+      Face: 2
+    - Vert: -1
+      Face: 2
+    - Vert: -1
+      Face: 2
+    - Vert: -1
+      Face: 3
+    - Vert: -1
+      Face: 3
+    - Vert: -1
+      Face: 3
+    - Vert: -1
+      Face: 4
+    - Vert: -1
+      Face: 4
+    - Vert: -1
+      Face: 4
+    - Vert: -1
+      Face: 5
+    - Vert: -1
+      Face: 5
+    - Vert: -1
+      Face: 5
+    - Vert: -1
+      Face: 6
+    - Vert: -1
+      Face: 6
+    - Vert: -1
+      Face: 6
+    - Vert: -1
+      Face: 7
+    - Vert: -1
+      Face: 7
+    - Vert: -1
+      Face: 7
+    attributeManager:
+      dirty: 0
+      serializedVertexAttributes:
+        keys:
+        - position
+        values:
+        - Type: Attribute.Vector3Attribute
+          ValueType: Unity.Mathematics.float3, Unity.Mathematics, Version=1.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          Data: '{"n":"position","d":0,"v":"[{\"x\":-1.0,\"y\":1.62920685E-07,\"z\":1.0},{\"x\":0.0,\"y\":1.5,\"z\":-2.44381027E-07},{\"x\":-1.0,\"y\":-1.62920685E-07,\"z\":-1.0},{\"x\":1.0,\"y\":1.62920685E-07,\"z\":1.0},{\"x\":0.0,\"y\":-1.5,\"z\":2.44381027E-07},{\"x\":1.0,\"y\":-1.62920685E-07,\"z\":-1.0}]"}'
+      serializedEdgeAttributes:
+        keys:
+        - crease
+        values:
+        - Type: Attribute.ClampedFloatAttribute
+          ValueType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+          Data: '{"n":"crease","d":1,"v":"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]"}'
+      serializedFaceAttributes:
+        keys:
+        - normal
+        - material_index
+        - shade_smooth
+        values:
+        - Type: Attribute.Vector3Attribute
+          ValueType: Unity.Mathematics.float3, Unity.Mathematics, Version=1.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          Data: '{"n":"normal","d":2,"v":"[{\"x\":-0.8320503,\"y\":0.5547002,\"z\":-9.037213E-08},{\"x\":0.0,\"y\":0.554700255,\"z\":0.832050145},{\"x\":0.8320503,\"y\":-0.5547002,\"z\":6.61254163E-08},{\"x\":0.0,\"y\":-0.554700255,\"z\":-0.832050145},{\"x\":-0.8320503,\"y\":-0.5547002,\"z\":6.61254163E-08},{\"x\":0.0,\"y\":-0.5547001,\"z\":0.8320504},{\"x\":0.8320503,\"y\":0.5547002,\"z\":-9.037213E-08},{\"x\":0.0,\"y\":0.5547001,\"z\":-0.8320504}]"}'
+        - Type: Attribute.IntAttribute
+          ValueType: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+          Data: '{"n":"material_index","d":2,"v":"[0,0,0,0,0,0,0,0]"}'
+        - Type: Attribute.BoolAttribute
+          ValueType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+          Data: '{"n":"shade_smooth","d":2,"v":"[false,false,false,false,false,false,false,false]"}'
+      serializedFaceCornerAttributes:
+        keys:
+        - uv
+        values:
+        - Type: Attribute.Vector2Attribute
+          ValueType: Unity.Mathematics.float2, Unity.Mathematics, Version=1.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          Data: '{"n":"uv","d":3,"v":"[{\"x\":0.375,\"y\":0.75},{\"x\":0.625,\"y\":0.75},{\"x\":0.375,\"y\":0.5},{\"x\":0.375,\"y\":0.75},{\"x\":0.375,\"y\":1.0},{\"x\":0.625,\"y\":1.0},{\"x\":0.24728027,\"y\":0.6277197},{\"x\":0.125,\"y\":0.5},{\"x\":0.125,\"y\":0.75},{\"x\":0.247280255,\"y\":0.62228024},{\"x\":0.375,\"y\":0.5},{\"x\":0.125,\"y\":0.5},{\"x\":0.2527197,\"y\":0.62228024},{\"x\":0.375,\"y\":0.75},{\"x\":0.375,\"y\":0.5},{\"x\":0.25271973,\"y\":0.62771976},{\"x\":0.125,\"y\":0.75},{\"x\":0.375,\"y\":0.75},{\"x\":0.375,\"y\":0.0},{\"x\":0.375,\"y\":0.25},{\"x\":0.625,\"y\":0.25},{\"x\":0.375,\"y\":0.25},{\"x\":0.375,\"y\":0.5},{\"x\":0.625,\"y\":0.25}]"}'
+    submeshCount: 1
+--- !u!33 &465368522 stripped
+MeshFilter:
+  m_CorrespondingSourceObject: {fileID: -5754084199372789682, guid: 255b83bee3adffb43b91944282167ef3, type: 3}
+  m_PrefabInstance: {fileID: 465368519}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &653260035
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,200 +493,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &661957507
-Mesh:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: $$_Double Quad
-  serializedVersion: 10
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 3
-    topology: 0
-    baseVertex: 0
-    firstVertex: 0
-    vertexCount: 3
-    localAABB:
-      m_Center: {x: 0.5, y: 0.5, z: 0}
-      m_Extent: {x: 0.5, y: 0.5, z: 0}
-  - serializedVersion: 2
-    firstByte: 6
-    indexCount: 3
-    topology: 0
-    baseVertex: 0
-    firstVertex: 1
-    vertexCount: 3
-    localAABB:
-      m_Center: {x: 0.5, y: 0.5, z: 0}
-      m_Extent: {x: 0.5, y: 0.5, z: 0}
-  - serializedVersion: 2
-    firstByte: 12
-    indexCount: 3
-    topology: 0
-    baseVertex: 0
-    firstVertex: 4
-    vertexCount: 3
-    localAABB:
-      m_Center: {x: 0.5, y: 0.5, z: 0}
-      m_Extent: {x: 0.5, y: 0.5, z: 0}
-  - serializedVersion: 2
-    firstByte: 18
-    indexCount: 3
-    topology: 0
-    baseVertex: 0
-    firstVertex: 5
-    vertexCount: 3
-    localAABB:
-      m_Center: {x: 0.5, y: 0.5, z: 0}
-      m_Extent: {x: 0.5, y: 0.5, z: 0}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexFormat: 0
-  m_IndexBuffer: 000002000100020003000100040005000600060005000700
-  m_VertexData:
-    serializedVersion: 3
-    m_VertexCount: 8
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 24
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 320
-    _typelessdata: 00000000000000000000000000000000000000000000803f0000803f00000000000000000000803f000000000000803f0000000000000000000000000000803f0000803f00000000000000000000803f0000803f000000000000000000000000000000000000803f0000803f00000000000000000000803f0000803f0000803f0000000000000000000000000000803f0000803f00000000000000000000803f0000000000000000000000000000000000000000000080bf0000803f00000000000000000000803f000000000000803f000000000000000000000000000080bf0000803f00000000000000000000803f0000803f00000000000000000000000000000000000080bf0000803f00000000000000000000803f0000803f0000803f000000000000000000000000000080bf0000803f00000000000000000000803f
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0.5, y: 0.5, z: 0}
-    m_Extent: {x: 0.5, y: 0.5, z: 0}
-  m_MeshUsageFlags: 0
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  m_MeshMetrics[0]: 1
-  m_MeshMetrics[1]: 1
-  m_MeshOptimizationFlags: 1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
 --- !u!1 &1422124531
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,7 +520,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422124531}
-  m_Mesh: {fileID: 661957507}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1422124533
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -467,74 +595,42 @@ MonoBehaviour:
   geometrySource: {fileID: 1422124532}
   geometryData:
     vertices:
-    - Edges: 0000000002000000
-      Faces: 00000000
-      FaceCorners: 00000000
-    - Edges: 010000000200000004000000
-      Faces: 0000000001000000
-      FaceCorners: 0200000005000000
-    - Edges: 000000000100000003000000
-      Faces: 0000000001000000
-      FaceCorners: 0100000003000000
-    - Edges: 0300000004000000
-      Faces: 01000000
-      FaceCorners: 04000000
-    - Edges: 0500000007000000
-      Faces: 02000000
-      FaceCorners: 06000000
-    - Edges: 050000000600000008000000
-      Faces: 0200000003000000
-      FaceCorners: 070000000a000000
-    - Edges: 060000000700000009000000
-      Faces: 0200000003000000
-      FaceCorners: 0800000009000000
-    - Edges: 0800000009000000
-      Faces: 03000000
-      FaceCorners: 0b000000
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
     edges:
     - VertA: 0
-      VertB: 2
-      FaceA: 0
-      FaceB: -1
-    - VertA: 2
-      VertB: 1
+      VertB: 3
       FaceA: 0
       FaceB: 1
+    - VertA: 3
+      VertB: 1
+      FaceA: 0
+      FaceB: -1
     - VertA: 1
       VertB: 0
       FaceA: 0
+      FaceB: -1
+    - VertA: 0
+      VertB: 2
+      FaceA: 1
       FaceB: -1
     - VertA: 2
       VertB: 3
       FaceA: 1
       FaceB: -1
-    - VertA: 3
-      VertB: 1
-      FaceA: 1
-      FaceB: -1
-    - VertA: 4
-      VertB: 5
-      FaceA: 2
-      FaceB: -1
-    - VertA: 5
-      VertB: 6
-      FaceA: 2
-      FaceB: 3
-    - VertA: 6
-      VertB: 4
-      FaceA: 2
-      FaceB: -1
-    - VertA: 5
-      VertB: 7
-      FaceA: 3
-      FaceB: -1
-    - VertA: 7
-      VertB: 6
-      FaceA: 3
-      FaceB: -1
     faces:
     - VertA: 0
-      VertB: 2
+      VertB: 3
       VertC: 1
       FaceCornerA: 0
       FaceCornerB: 1
@@ -542,62 +638,30 @@ MonoBehaviour:
       EdgeA: 0
       EdgeB: 1
       EdgeC: 2
-      AdjacentFaces: 01000000
-    - VertA: 2
-      VertB: 3
-      VertC: 1
+      AdjacentFaces: 
+    - VertA: 3
+      VertB: 0
+      VertC: 2
       FaceCornerA: 3
       FaceCornerB: 4
       FaceCornerC: 5
-      EdgeA: 3
-      EdgeB: 4
-      EdgeC: 1
-      AdjacentFaces: 00000000
-    - VertA: 4
-      VertB: 5
-      VertC: 6
-      FaceCornerA: 6
-      FaceCornerB: 7
-      FaceCornerC: 8
-      EdgeA: 5
-      EdgeB: 6
-      EdgeC: 7
-      AdjacentFaces: 03000000
-    - VertA: 6
-      VertB: 5
-      VertC: 7
-      FaceCornerA: 9
-      FaceCornerB: 10
-      FaceCornerC: 11
-      EdgeA: 6
-      EdgeB: 8
-      EdgeC: 9
-      AdjacentFaces: 02000000
+      EdgeA: 0
+      EdgeB: 3
+      EdgeC: 4
+      AdjacentFaces: 
     faceCorners:
-    - Vert: 0
+    - Vert: -1
       Face: 0
-    - Vert: 2
+    - Vert: -1
       Face: 0
-    - Vert: 1
+    - Vert: -1
       Face: 0
-    - Vert: 2
+    - Vert: -1
       Face: 1
-    - Vert: 3
+    - Vert: -1
       Face: 1
-    - Vert: 1
+    - Vert: -1
       Face: 1
-    - Vert: 4
-      Face: 2
-    - Vert: 5
-      Face: 2
-    - Vert: 6
-      Face: 2
-    - Vert: 6
-      Face: 3
-    - Vert: 5
-      Face: 3
-    - Vert: 7
-      Face: 3
     attributeManager:
       dirty: 0
       serializedVertexAttributes:
@@ -607,14 +671,14 @@ MonoBehaviour:
         - Type: Attribute.Vector3Attribute
           ValueType: Unity.Mathematics.float3, Unity.Mathematics, Version=1.0.0.0,
             Culture=neutral, PublicKeyToken=null
-          Data: '{"n":"position","d":0,"v":"[{\"x\":0.0,\"y\":0.0,\"z\":0.0},{\"x\":0.0,\"y\":1.0,\"z\":0.0},{\"x\":1.0,\"y\":0.0,\"z\":0.0},{\"x\":1.0,\"y\":1.0,\"z\":0.0},{\"x\":0.0,\"y\":0.0,\"z\":0.0},{\"x\":0.0,\"y\":1.0,\"z\":0.0},{\"x\":1.0,\"y\":0.0,\"z\":0.0},{\"x\":1.0,\"y\":1.0,\"z\":0.0}]"}'
+          Data: '{"n":"position","d":0,"v":"[{\"x\":-0.5,\"y\":-0.5,\"z\":-3.0616168E-17},{\"x\":0.5,\"y\":-0.5,\"z\":-3.0616168E-17},{\"x\":-0.5,\"y\":0.5,\"z\":3.0616168E-17},{\"x\":0.5,\"y\":0.5,\"z\":3.0616168E-17}]"}'
       serializedEdgeAttributes:
         keys:
         - crease
         values:
         - Type: Attribute.ClampedFloatAttribute
           ValueType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"crease","d":1,"v":"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]"}'
+          Data: '{"n":"crease","d":1,"v":"[0.0,0.0,0.0,0.0,0.0]"}'
       serializedFaceAttributes:
         keys:
         - normal
@@ -624,18 +688,23 @@ MonoBehaviour:
         - Type: Attribute.Vector3Attribute
           ValueType: Unity.Mathematics.float3, Unity.Mathematics, Version=1.0.0.0,
             Culture=neutral, PublicKeyToken=null
-          Data: '{"n":"normal","d":2,"v":"[{\"x\":0.0,\"y\":0.0,\"z\":1.0},{\"x\":0.0,\"y\":0.0,\"z\":1.0},{\"x\":0.0,\"y\":0.0,\"z\":-1.0},{\"x\":0.0,\"y\":0.0,\"z\":-1.0}]"}'
+          Data: '{"n":"normal","d":2,"v":"[{\"x\":0.0,\"y\":6.1232336E-17,\"z\":-1.0},{\"x\":0.0,\"y\":6.1232336E-17,\"z\":-1.0}]"}'
         - Type: Attribute.IntAttribute
           ValueType: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"material_index","d":2,"v":"[0,1,2,3]"}'
+          Data: '{"n":"material_index","d":2,"v":"[0,0]"}'
         - Type: Attribute.BoolAttribute
           ValueType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"shade_smooth","d":2,"v":"[false,false,false,false]"}'
+          Data: '{"n":"shade_smooth","d":2,"v":"[false,false]"}'
       serializedFaceCornerAttributes:
-        keys: []
-        values: []
-    submeshCount: 4
+        keys:
+        - uv
+        values:
+        - Type: Attribute.Vector2Attribute
+          ValueType: Unity.Mathematics.float2, Unity.Mathematics, Version=1.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          Data: '{"n":"uv","d":3,"v":"[{\"x\":0.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":1.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":0.0,\"y\":0.0},{\"x\":0.0,\"y\":1.0}]"}'
+    submeshCount: 1
 --- !u!114 &1422124536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -852,12 +921,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0e2375bcf54b06bffa67b4c9ce6dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gizmoType: 1
+  gizmoType: 3
   handleSize: 0.1
   showFaceNormals: 1
   showByElement: 0
-  index: 0
-  source: {fileID: 1422124535}
+  index: 7
+  source: {fileID: 465368521}
 --- !u!4 &2072458331
 Transform:
   m_ObjectHideFlags: 0

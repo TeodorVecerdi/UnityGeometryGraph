@@ -70,7 +70,7 @@ namespace Geometry {
                 this.vertices.Add(new Vertex());
             }
 
-            FillElementMetadata();
+            // FillElementMetadata();
 
             return faceNormals;
         }
@@ -129,10 +129,8 @@ namespace Geometry {
             var duplicates = GetDuplicateEdges(vertices, faceNormals, duplicateDistanceThreshold * duplicateDistanceThreshold, duplicateNormalAngleThreshold);
             var duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
             var reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
-
-            RemapDuplicateElements(duplicates, reverseDuplicatesMap);
+            RemapDuplicateElements(duplicates, reverseDuplicatesMap, duplicateVerticesMap);
             RemoveDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
-
             CheckForErrors(vertices);
         }
 
@@ -258,18 +256,31 @@ namespace Geometry {
             removalList.ForEach(key => duplicateVerticesMap.Remove(key));
 
             // Remove remaining invalid entries
-            var sortedKeys = duplicateVerticesMap.Keys.QuickSorted();
+            var sortedKeys = duplicateVerticesMap.Keys.QuickSorted().ToList();
             var actualMap = new Dictionary<int, HashSet<int>>();
             var reverseDuplicateMap = new Dictionary<int, int>();
 
             foreach (var sortedKey in sortedKeys) {
                 var alreadyExistsKey = -1;
+                var alreadyExistsValue = -1;
 
                 foreach (var pair in actualMap) {
-                    if (!pair.Value.Contains(sortedKey)) continue;
+                    if (pair.Value.Contains(sortedKey)) {
+                        alreadyExistsKey = pair.Key;
+                        break;                        
+                    }
 
-                    alreadyExistsKey = pair.Key;
-                    break;
+                    if (pair.Value.Any(value => duplicateVerticesMap[sortedKey].Contains(value))) {
+                        alreadyExistsValue = pair.Key;
+                        if (!actualMap.ContainsKey(pair.Key)) actualMap[pair.Key] = new HashSet<int>();
+                        actualMap[pair.Key].AddRange(duplicateVerticesMap[sortedKey]);
+                        actualMap[pair.Key].Add(sortedKey);
+                        
+                        reverseDuplicateMap[sortedKey] = pair.Key;
+                        foreach (var duplicateVertex in duplicateVerticesMap[sortedKey]) {
+                            reverseDuplicateMap[duplicateVertex] = pair.Key;
+                        }
+                    }
                 }
 
                 if (alreadyExistsKey != -1) {
@@ -277,7 +288,7 @@ namespace Geometry {
                     foreach (var duplicate in duplicateVerticesMap[sortedKey]) {
                         reverseDuplicateMap[duplicate] = alreadyExistsKey;
                     }
-                } else {
+                } else if (alreadyExistsValue == -1) {
                     actualMap.Add(sortedKey, new HashSet<int>());
                     actualMap[sortedKey].AddRange(duplicateVerticesMap[sortedKey]);
                     foreach (var duplicate in duplicateVerticesMap[sortedKey]) {
@@ -285,11 +296,17 @@ namespace Geometry {
                     }
                 }
             }
+            
+            // Copy actualMap to duplicateVerticesMap
+            duplicateVerticesMap.Clear();
+            foreach (var pair in actualMap) {
+                duplicateVerticesMap[pair.Key] = new List<int>(pair.Value);
+            }
 
             return reverseDuplicateMap;
         }
 
-        private void RemapDuplicateElements(List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
+        private void RemapDuplicateElements(List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap, Dictionary<int, List<int>> duplicateVerticesMap) {
             // Remap the vertex indices for faces and edges
             var edgeReverseMap = new Dictionary<int, int>();
             foreach (var duplicate in duplicates) {
@@ -303,26 +320,39 @@ namespace Geometry {
                 edgeRemap[sortedKey] = remapIndex++;
             }
 
-            foreach (var face in faces) {
-                RemapEdge(face.EdgeA, reverseDuplicatesMap);
-                RemapEdge(face.EdgeB, reverseDuplicatesMap);
-                RemapEdge(face.EdgeC, reverseDuplicatesMap);
+            var allVertexIndices = duplicateVerticesMap.Keys.QuickSorted();
+            var vertexRemap = new Dictionary<int, int>();
+            remapIndex = 0;
+            foreach (var key in allVertexIndices) {
+                vertexRemap[key] = remapIndex++;
+            }
 
-                RemapFace(face, reverseDuplicatesMap, edgeReverseMap, edgeRemap);
+            foreach (var face in faces) {
+                RemapEdge(face.EdgeA, reverseDuplicatesMap, vertexRemap);
+                RemapEdge(face.EdgeB, reverseDuplicatesMap, vertexRemap);
+                RemapEdge(face.EdgeC, reverseDuplicatesMap, vertexRemap);
+
+                RemapFace(face, reverseDuplicatesMap, edgeReverseMap, edgeRemap, vertexRemap);
             }
         }
 
-        private void RemapFace(Face face, Dictionary<int, int> reverseDuplicateMap, Dictionary<int, int> edgeReverseMap, Dictionary<int, int> edgeIndexRemap) {
+        private void RemapFace(Face face, Dictionary<int, int> reverseDuplicateMap, Dictionary<int, int> edgeReverseMap, Dictionary<int, int> edgeIndexRemap, Dictionary<int, int> vertexIndexRemap) {
             if (reverseDuplicateMap.ContainsKey(face.VertA)) {
-                face.VertA = reverseDuplicateMap[face.VertA];
+                face.VertA = vertexIndexRemap[reverseDuplicateMap[face.VertA]];
+            } else if (vertexIndexRemap.ContainsKey(face.VertA)) {
+                face.VertA = vertexIndexRemap[face.VertA];
             }
 
             if (reverseDuplicateMap.ContainsKey(face.VertB)) {
-                face.VertB = reverseDuplicateMap[face.VertB];
+                face.VertB = vertexIndexRemap[reverseDuplicateMap[face.VertB]];
+            } else if (vertexIndexRemap.ContainsKey(face.VertB)) {
+                face.VertB = vertexIndexRemap[face.VertB];
             }
 
             if (reverseDuplicateMap.ContainsKey(face.VertC)) {
-                face.VertC = reverseDuplicateMap[face.VertC];
+                face.VertC = vertexIndexRemap[reverseDuplicateMap[face.VertC]];
+            } else if (vertexIndexRemap.ContainsKey(face.VertC)) {
+                face.VertC = vertexIndexRemap[face.VertC];
             }
 
             if (edgeReverseMap.ContainsKey(face.EdgeA)) {
@@ -344,14 +374,18 @@ namespace Geometry {
             }
         }
 
-        private void RemapEdge(int edgeIndex, Dictionary<int, int> reverseDuplicateMap) {
+        private void RemapEdge(int edgeIndex, Dictionary<int, int> reverseDuplicateMap, Dictionary<int, int> vertexRemap) {
             var edge = edges[edgeIndex];
             if (reverseDuplicateMap.ContainsKey(edge.VertA)) {
-                edge.VertA = reverseDuplicateMap[edge.VertA];
+                edge.VertA = vertexRemap[reverseDuplicateMap[edge.VertA]];
+            } else if (vertexRemap.ContainsKey(edge.VertA)) {
+                edge.VertA = vertexRemap[edge.VertA];
             }
 
             if (reverseDuplicateMap.ContainsKey(edge.VertB)) {
-                edge.VertB = reverseDuplicateMap[edge.VertB];
+                edge.VertB = vertexRemap[reverseDuplicateMap[edge.VertB]];
+            } else if (vertexRemap.ContainsKey(edge.VertB)) {
+                edge.VertB = vertexRemap[edge.VertB];
             }
         }
 
