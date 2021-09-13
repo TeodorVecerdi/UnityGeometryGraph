@@ -62,7 +62,7 @@ namespace Attribute {
         }
 
         public sealed override void Fill(IEnumerable values) {
-            Fill((IEnumerable<T>)values);
+            Fill(values.Cast<T>());
         }
 
         public virtual void Fill(IEnumerable<T> values) {
