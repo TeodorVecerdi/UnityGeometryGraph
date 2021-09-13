@@ -96,13 +96,13 @@ namespace Attribute {
             return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, vertex.Faces.Select(sourceAttribute.GetValue)));
         }
 
-        private static readonly int[] edgeIndexList = { -1, -1 };
+        private static readonly List<int> edgeIndexList = new List<int>();
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.Edges.Select(edge => {
-                edgeIndexList[1] = -1;
-                edgeIndexList[0] = edge.FaceA;
-                if (edge.FaceB != -1) edgeIndexList[1] = edge.FaceB;
+                edgeIndexList.Clear();
+                edgeIndexList.Add(edge.FaceA);
+                if (edge.FaceB != -1) edgeIndexList.Add(edge.FaceB);
                 return Average(sourceAttribute.Type, edgeIndexList.Select(sourceAttribute.GetValue));
             });
         }
@@ -122,9 +122,9 @@ namespace Attribute {
         private static IEnumerable ConvertDomain_FaceCornerToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.Edges.Select(edge => {
                 // Faces
-                edgeIndexList[1] = -1;
-                edgeIndexList[0] = edge.FaceA;
-                if (edge.FaceB != -1) edgeIndexList[1] = edge.FaceB;
+                edgeIndexList.Clear();
+                edgeIndexList.Add(edge.FaceA);
+                if (edge.FaceB != -1) edgeIndexList.Add(edge.FaceB);
 
                 return Average(
                     sourceAttribute.Type,
