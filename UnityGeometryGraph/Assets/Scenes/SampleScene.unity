@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!43 &61386163
+--- !u!43 &314238365
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,41 +134,11 @@ Mesh:
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
-    indexCount: 3
+    indexCount: 12
     topology: 0
     baseVertex: 0
     firstVertex: 0
-    vertexCount: 3
-    localAABB:
-      m_Center: {x: 0.5, y: 0.5, z: 0}
-      m_Extent: {x: 0.5, y: 0.5, z: 0}
-  - serializedVersion: 2
-    firstByte: 6
-    indexCount: 3
-    topology: 0
-    baseVertex: 0
-    firstVertex: 1
-    vertexCount: 3
-    localAABB:
-      m_Center: {x: 0.5, y: 0.5, z: 0}
-      m_Extent: {x: 0.5, y: 0.5, z: 0}
-  - serializedVersion: 2
-    firstByte: 12
-    indexCount: 3
-    topology: 0
-    baseVertex: 0
-    firstVertex: 4
-    vertexCount: 3
-    localAABB:
-      m_Center: {x: 0.5, y: 0.5, z: 0}
-      m_Extent: {x: 0.5, y: 0.5, z: 0}
-  - serializedVersion: 2
-    firstByte: 18
-    indexCount: 3
-    topology: 0
-    baseVertex: 0
-    firstVertex: 5
-    vertexCount: 3
+    vertexCount: 8
     localAABB:
       m_Center: {x: 0.5, y: 0.5, z: 0}
       m_Extent: {x: 0.5, y: 0.5, z: 0}
@@ -392,7 +362,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422124531}
-  m_Mesh: {fileID: 61386163}
+  m_Mesh: {fileID: 314238365}
 --- !u!23 &1422124533
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -470,27 +440,27 @@ MonoBehaviour:
     - Edges: 0000000002000000
       Faces: 00000000
       FaceCorners: 00000000
-    - Edges: 0100000002000000
-      Faces: 00000000
-      FaceCorners: 02000000
-    - Edges: 0000000001000000
-      Faces: 00000000
-      FaceCorners: 01000000
-    - Edges: 
-      Faces: 
-      FaceCorners: 
-    - Edges: 
-      Faces: 
-      FaceCorners: 
-    - Edges: 
-      Faces: 
-      FaceCorners: 
-    - Edges: 
-      Faces: 
-      FaceCorners: 
-    - Edges: 
-      Faces: 
-      FaceCorners: 
+    - Edges: 010000000200000004000000
+      Faces: 0000000001000000
+      FaceCorners: 0200000005000000
+    - Edges: 000000000100000003000000
+      Faces: 0000000001000000
+      FaceCorners: 0100000003000000
+    - Edges: 0300000004000000
+      Faces: 01000000
+      FaceCorners: 04000000
+    - Edges: 0500000007000000
+      Faces: 02000000
+      FaceCorners: 06000000
+    - Edges: 050000000600000008000000
+      Faces: 0200000003000000
+      FaceCorners: 070000000a000000
+    - Edges: 060000000700000009000000
+      Faces: 0200000003000000
+      FaceCorners: 0800000009000000
+    - Edges: 0800000009000000
+      Faces: 03000000
+      FaceCorners: 0b000000
     edges:
     - VertA: 0
       VertB: 2
@@ -499,10 +469,38 @@ MonoBehaviour:
     - VertA: 2
       VertB: 1
       FaceA: 0
-      FaceB: -1
+      FaceB: 1
     - VertA: 1
       VertB: 0
       FaceA: 0
+      FaceB: -1
+    - VertA: 2
+      VertB: 3
+      FaceA: 1
+      FaceB: -1
+    - VertA: 3
+      VertB: 1
+      FaceA: 1
+      FaceB: -1
+    - VertA: 4
+      VertB: 5
+      FaceA: 2
+      FaceB: -1
+    - VertA: 5
+      VertB: 6
+      FaceA: 2
+      FaceB: 3
+    - VertA: 6
+      VertB: 4
+      FaceA: 2
+      FaceB: -1
+    - VertA: 5
+      VertB: 7
+      FaceA: 3
+      FaceB: -1
+    - VertA: 7
+      VertB: 6
+      FaceA: 3
       FaceB: -1
     faces:
     - VertA: 0
@@ -514,7 +512,37 @@ MonoBehaviour:
       EdgeA: 0
       EdgeB: 1
       EdgeC: 2
-      AdjacentFaces: 
+      AdjacentFaces: 01000000
+    - VertA: 2
+      VertB: 3
+      VertC: 1
+      FaceCornerA: 3
+      FaceCornerB: 4
+      FaceCornerC: 5
+      EdgeA: 3
+      EdgeB: 4
+      EdgeC: 1
+      AdjacentFaces: 00000000
+    - VertA: 4
+      VertB: 5
+      VertC: 6
+      FaceCornerA: 6
+      FaceCornerB: 7
+      FaceCornerC: 8
+      EdgeA: 5
+      EdgeB: 6
+      EdgeC: 7
+      AdjacentFaces: 03000000
+    - VertA: 6
+      VertB: 5
+      VertC: 7
+      FaceCornerA: 9
+      FaceCornerB: 10
+      FaceCornerC: 11
+      EdgeA: 6
+      EdgeB: 8
+      EdgeC: 9
+      AdjacentFaces: 02000000
     faceCorners:
     - Vert: 0
       Face: 0
@@ -522,6 +550,24 @@ MonoBehaviour:
       Face: 0
     - Vert: 1
       Face: 0
+    - Vert: 2
+      Face: 1
+    - Vert: 3
+      Face: 1
+    - Vert: 1
+      Face: 1
+    - Vert: 4
+      Face: 2
+    - Vert: 5
+      Face: 2
+    - Vert: 6
+      Face: 2
+    - Vert: 6
+      Face: 3
+    - Vert: 5
+      Face: 3
+    - Vert: 7
+      Face: 3
     attributeManager:
       dirty: 0
       serializedVertexAttributes:
@@ -538,7 +584,7 @@ MonoBehaviour:
         values:
         - Type: Attribute.ClampedFloatAttribute
           ValueType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"crease","d":1,"v":"[0.0,0.0,0.0]"}'
+          Data: '{"n":"crease","d":1,"v":"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]"}'
       serializedFaceAttributes:
         keys:
         - normal
@@ -548,14 +594,14 @@ MonoBehaviour:
         - Type: Attribute.Vector3Attribute
           ValueType: Unity.Mathematics.float3, Unity.Mathematics, Version=1.0.0.0,
             Culture=neutral, PublicKeyToken=null
-          Data: '{"n":"normal","d":2,"v":"[{\"x\":0.0,\"y\":0.0,\"z\":1.0}]"}'
+          Data: '{"n":"normal","d":2,"v":"[{\"x\":0.0,\"y\":0.0,\"z\":1.0},{\"x\":0.0,\"y\":0.0,\"z\":1.0},{\"x\":0.0,\"y\":0.0,\"z\":-1.0},{\"x\":0.0,\"y\":0.0,\"z\":-1.0}]"}'
         - Type: Attribute.IntAttribute
           ValueType: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"material_index","d":2,"v":"[0]"}'
+          Data: '{"n":"material_index","d":2,"v":"[0,0,0,0]"}'
         - Type: Attribute.BoolAttribute
           ValueType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"shade_smooth","d":2,"v":"[false]"}'
+          Data: '{"n":"shade_smooth","d":2,"v":"[false,false,false,false]"}'
       serializedFaceCornerAttributes:
         keys: []
         values: []
@@ -775,9 +821,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0e2375bcf54b06bffa67b4c9ce6dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gizmoType: 3
+  gizmoType: 1
   handleSize: 0.1
-  showFaceNormals: 0
+  showFaceNormals: 1
   showByElement: 0
   index: 0
   source: {fileID: 1422124535}

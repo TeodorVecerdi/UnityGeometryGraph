@@ -23,15 +23,15 @@ public class GeometryData {
 
     public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
         var vertices = new List<float3>(mesh.vertices.Select(vertex => new float3(vertex.x, vertex.y, vertex.z)));
-        var triangles = new List<int>();
         var meshUvs = new List<float2>(mesh.uv.Select(uv => new float2(uv.x, uv.y)));
-        var uvs = new List<float2>();
-        mesh.GetTriangles(triangles, 0);
 
-        var faceNormals = BuildMetadata(vertices, triangles, meshUvs, uvs, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+        var uvs = new List<float2>();
+        var faceMaterialIndices = new List<int>();
+
+        var faceNormals = BuildMetadata(mesh, vertices, meshUvs, uvs, faceMaterialIndices, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
         attributeManager = new AttributeManager();
-        FillBuiltinAttributes(vertices, faceNormals, uvs);
+        FillBuiltinAttributes(vertices, uvs, faceNormals, faceMaterialIndices);
     }
 
     public TAttribute GetAttribute<TAttribute>(string name) where TAttribute : BaseAttribute {
@@ -42,11 +42,11 @@ public class GeometryData {
         return (TAttribute)attributeManager.Request(name, domain);
     }
 
-    private void FillBuiltinAttributes(IEnumerable<float3> vertices, IEnumerable<float3> faceNormals, List<float2> uvs) {
+    private void FillBuiltinAttributes(IEnumerable<float3> vertices, List<float2> uvs, IEnumerable<float3> faceNormals, IEnumerable<int> faceMaterialIndices) {
         attributeManager.Store(vertices.Into<Vector3Attribute>("position", AttributeDomain.Vertex));
 
         attributeManager.Store(faceNormals.Into<Vector3Attribute>("normal", AttributeDomain.Face));
-        attributeManager.Store(new int[faces.Count].Into<IntAttribute>("material_index", AttributeDomain.Face));
+        attributeManager.Store(faceMaterialIndices.Into<IntAttribute>("material_index", AttributeDomain.Face));
         attributeManager.Store(new bool[faces.Count].Into<BoolAttribute>("shade_smooth", AttributeDomain.Face));
 
         attributeManager.Store(new float[edges.Count].Into<ClampedFloatAttribute>("crease", AttributeDomain.Edge));
@@ -54,12 +54,12 @@ public class GeometryData {
         if (uvs.Count > 0) attributeManager.Store(uvs.Into<Vector2Attribute>("uv", AttributeDomain.FaceCorner));
     }
 
-    private IEnumerable<float3> BuildMetadata(List<float3> vertices, List<int> triangles, List<float2> uvs, List<float2> correctUvs, float duplicateDistanceThreshold,
-                                              float duplicateNormalAngleThreshold) {
-        edges = new List<Edge>(triangles.Count);
-        faces = new List<Face>(triangles.Count / 3);
-        faceCorners = new List<FaceCorner>(triangles.Count);
-        var faceNormals = BuildElements(vertices, triangles, uvs, correctUvs).ToList();
+    private IEnumerable<float3> BuildMetadata(Mesh mesh, List<float3> vertices, List<float2> uvs, List<float2> correctUvs, List<int> faceMaterialIndices, 
+                                              float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+        edges = new List<Edge>(mesh.triangles.Length);
+        faces = new List<Face>(mesh.triangles.Length / 3);
+        faceCorners = new List<FaceCorner>(mesh.triangles.Length);
+        var faceNormals = BuildElements(mesh, vertices, uvs, correctUvs, faceMaterialIndices).ToList();
         RemoveDuplicates(vertices, faceNormals, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
         this.vertices = new List<Vertex>(vertices.Count);
@@ -72,46 +72,52 @@ public class GeometryData {
         return faceNormals;
     }
 
-    private IEnumerable<float3> BuildElements(List<float3> vertices, List<int> triangles, List<float2> uvs, List<float2> correctUvs) {
-        for (var i = 0; i < triangles.Count; i += 3) {
-            var idxA = triangles[i];
-            var idxB = triangles[i + 1];
-            var idxC = triangles[i + 2];
+    private IEnumerable<float3> BuildElements(Mesh mesh, List<float3> vertices, List<float2> uvs, List<float2> correctUvs, List<int> materialIndices) {
+        for (var submesh = 0; submesh < mesh.subMeshCount; submesh++) {
+            var triangles = mesh.GetTriangles(submesh);
+            var length = triangles.Length;
+            
+            for (var i = 0; i < length; i += 3) {
+                var idxA = triangles[i];
+                var idxB = triangles[i + 1];
+                var idxC = triangles[i + 2];
 
-            var vertA = vertices[idxA];
-            var vertB = vertices[idxB];
-            var vertC = vertices[idxC];
+                var vertA = vertices[idxA];
+                var vertB = vertices[idxB];
+                var vertC = vertices[idxC];
 
-            var AB = vertB - vertA;
-            var AC = vertC - vertA;
-            yield return math.normalize(math.cross(AB, AC));
+                var AB = vertB - vertA;
+                var AC = vertC - vertA;
+                yield return math.normalize(math.cross(AB, AC));
+                materialIndices.Add(submesh);
 
-            var face = new Face(
-                idxA, idxB, idxC,
-                faceCorners.Count, faceCorners.Count + 1, faceCorners.Count + 2,
-                edges.Count, edges.Count + 1, edges.Count + 2
-            );
+                var face = new Face(
+                    idxA, idxB, idxC,
+                    faceCorners.Count, faceCorners.Count + 1, faceCorners.Count + 2,
+                    edges.Count, edges.Count + 1, edges.Count + 2
+                );
 
-            var edgeA = new Edge(idxA, idxB) { FaceA = faces.Count };
-            var edgeB = new Edge(idxB, idxC) { FaceA = faces.Count };
-            var edgeC = new Edge(idxC, idxA) { FaceA = faces.Count };
+                var edgeA = new Edge(idxA, idxB) { FaceA = faces.Count };
+                var edgeB = new Edge(idxB, idxC) { FaceA = faces.Count };
+                var edgeC = new Edge(idxC, idxA) { FaceA = faces.Count };
 
-            var faceCornerA = new FaceCorner(faces.Count);
-            var faceCornerB = new FaceCorner(faces.Count);
-            var faceCornerC = new FaceCorner(faces.Count);
+                var faceCornerA = new FaceCorner(faces.Count);
+                var faceCornerB = new FaceCorner(faces.Count);
+                var faceCornerC = new FaceCorner(faces.Count);
 
-            faces.Add(face);
-            edges.Add(edgeA);
-            edges.Add(edgeB);
-            edges.Add(edgeC);
-            faceCorners.Add(faceCornerA);
-            faceCorners.Add(faceCornerB);
-            faceCorners.Add(faceCornerC);
+                faces.Add(face);
+                edges.Add(edgeA);
+                edges.Add(edgeB);
+                edges.Add(edgeC);
+                faceCorners.Add(faceCornerA);
+                faceCorners.Add(faceCornerB);
+                faceCorners.Add(faceCornerC);
 
-            if (uvs.Count > 0) {
-                correctUvs.Add(uvs[idxA]);
-                correctUvs.Add(uvs[idxB]);
-                correctUvs.Add(uvs[idxC]);
+                if (uvs.Count > 0) {
+                    correctUvs.Add(uvs[idxA]);
+                    correctUvs.Add(uvs[idxB]);
+                    correctUvs.Add(uvs[idxC]);
+                }
             }
         }
     }
