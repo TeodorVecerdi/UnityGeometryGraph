@@ -430,7 +430,7 @@ MonoBehaviour:
         - Type: Attribute.BoolAttribute
           ValueType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"shade_smooth","d":2,"v":"[false,false,false,false,false,false,false,false]"}'
+          Data: '{"n":"shade_smooth","d":2,"v":"[true,true,false,false,false,false,true,true]"}'
       serializedFaceCornerAttributes:
         keys:
         - uv
@@ -493,6 +493,200 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!43 &1046035843
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: $$_Double Quad
+  serializedVersion: 10
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 3
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 3
+    localAABB:
+      m_Center: {x: 0.5, y: 0.5, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0}
+  - serializedVersion: 2
+    firstByte: 6
+    indexCount: 3
+    topology: 0
+    baseVertex: 0
+    firstVertex: 1
+    vertexCount: 3
+    localAABB:
+      m_Center: {x: 0.5, y: 0.5, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0}
+  - serializedVersion: 2
+    firstByte: 12
+    indexCount: 3
+    topology: 0
+    baseVertex: 0
+    firstVertex: 4
+    vertexCount: 3
+    localAABB:
+      m_Center: {x: 0.5, y: 0.5, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0}
+  - serializedVersion: 2
+    firstByte: 18
+    indexCount: 3
+    topology: 0
+    baseVertex: 0
+    firstVertex: 5
+    vertexCount: 3
+    localAABB:
+      m_Center: {x: 0.5, y: 0.5, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 000002000100020003000100040005000600060005000700
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 24
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 320
+    _typelessdata: 00000000000000000000000000000000000000000000803f0000803f00000000000000000000803f000000000000803f0000000000000000000000000000803f0000803f00000000000000000000803f0000803f000000000000000000000000000000000000803f0000803f00000000000000000000803f0000803f0000803f0000000000000000000000000000803f0000803f00000000000000000000803f0000000000000000000000000000000000000000000080bf0000803f00000000000000000000803f000000000000803f000000000000000000000000000080bf0000803f00000000000000000000803f0000803f00000000000000000000000000000000000080bf0000803f00000000000000000000803f0000803f0000803f000000000000000000000000000080bf0000803f00000000000000000000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0.5, y: 0.5, z: 0}
+    m_Extent: {x: 0.5, y: 0.5, z: 0}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
 --- !u!1 &1422124531
 GameObject:
   m_ObjectHideFlags: 0
@@ -520,7 +714,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422124531}
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 1046035843}
 --- !u!23 &1422124533
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -607,30 +801,62 @@ MonoBehaviour:
     - Edges: 
       Faces: 
       FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
+    - Edges: 
+      Faces: 
+      FaceCorners: 
     edges:
     - VertA: 0
-      VertB: 3
-      FaceA: 0
-      FaceB: 1
-    - VertA: 3
-      VertB: 1
+      VertB: 2
       FaceA: 0
       FaceB: -1
+    - VertA: 2
+      VertB: 1
+      FaceA: 0
+      FaceB: 1
     - VertA: 1
       VertB: 0
       FaceA: 0
-      FaceB: -1
-    - VertA: 0
-      VertB: 2
-      FaceA: 1
       FaceB: -1
     - VertA: 2
       VertB: 3
       FaceA: 1
       FaceB: -1
+    - VertA: 3
+      VertB: 1
+      FaceA: 1
+      FaceB: -1
+    - VertA: 4
+      VertB: 5
+      FaceA: 2
+      FaceB: -1
+    - VertA: 5
+      VertB: 6
+      FaceA: 2
+      FaceB: 3
+    - VertA: 6
+      VertB: 4
+      FaceA: 2
+      FaceB: -1
+    - VertA: 5
+      VertB: 7
+      FaceA: 3
+      FaceB: -1
+    - VertA: 7
+      VertB: 6
+      FaceA: 3
+      FaceB: -1
     faces:
     - VertA: 0
-      VertB: 3
+      VertB: 2
       VertC: 1
       FaceCornerA: 0
       FaceCornerB: 1
@@ -639,15 +865,35 @@ MonoBehaviour:
       EdgeB: 1
       EdgeC: 2
       AdjacentFaces: 
-    - VertA: 3
-      VertB: 0
-      VertC: 2
+    - VertA: 2
+      VertB: 3
+      VertC: 1
       FaceCornerA: 3
       FaceCornerB: 4
       FaceCornerC: 5
-      EdgeA: 0
-      EdgeB: 3
-      EdgeC: 4
+      EdgeA: 3
+      EdgeB: 4
+      EdgeC: 1
+      AdjacentFaces: 
+    - VertA: 4
+      VertB: 5
+      VertC: 6
+      FaceCornerA: 6
+      FaceCornerB: 7
+      FaceCornerC: 8
+      EdgeA: 5
+      EdgeB: 6
+      EdgeC: 7
+      AdjacentFaces: 
+    - VertA: 6
+      VertB: 5
+      VertC: 7
+      FaceCornerA: 9
+      FaceCornerB: 10
+      FaceCornerC: 11
+      EdgeA: 6
+      EdgeB: 8
+      EdgeC: 9
       AdjacentFaces: 
     faceCorners:
     - Vert: -1
@@ -662,6 +908,18 @@ MonoBehaviour:
       Face: 1
     - Vert: -1
       Face: 1
+    - Vert: -1
+      Face: 2
+    - Vert: -1
+      Face: 2
+    - Vert: -1
+      Face: 2
+    - Vert: -1
+      Face: 3
+    - Vert: -1
+      Face: 3
+    - Vert: -1
+      Face: 3
     attributeManager:
       dirty: 0
       serializedVertexAttributes:
@@ -671,14 +929,14 @@ MonoBehaviour:
         - Type: Attribute.Vector3Attribute
           ValueType: Unity.Mathematics.float3, Unity.Mathematics, Version=1.0.0.0,
             Culture=neutral, PublicKeyToken=null
-          Data: '{"n":"position","d":0,"v":"[{\"x\":-0.5,\"y\":-0.5,\"z\":-3.0616168E-17},{\"x\":0.5,\"y\":-0.5,\"z\":-3.0616168E-17},{\"x\":-0.5,\"y\":0.5,\"z\":3.0616168E-17},{\"x\":0.5,\"y\":0.5,\"z\":3.0616168E-17}]"}'
+          Data: '{"n":"position","d":0,"v":"[{\"x\":0.0,\"y\":0.0,\"z\":0.0},{\"x\":0.0,\"y\":1.0,\"z\":0.0},{\"x\":1.0,\"y\":0.0,\"z\":0.0},{\"x\":1.0,\"y\":1.0,\"z\":0.0},{\"x\":0.0,\"y\":0.0,\"z\":0.0},{\"x\":0.0,\"y\":1.0,\"z\":0.0},{\"x\":1.0,\"y\":0.0,\"z\":0.0},{\"x\":1.0,\"y\":1.0,\"z\":0.0}]"}'
       serializedEdgeAttributes:
         keys:
         - crease
         values:
         - Type: Attribute.ClampedFloatAttribute
           ValueType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"crease","d":1,"v":"[0.0,0.0,0.0,0.0,0.0]"}'
+          Data: '{"n":"crease","d":1,"v":"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]"}'
       serializedFaceAttributes:
         keys:
         - normal
@@ -688,23 +946,18 @@ MonoBehaviour:
         - Type: Attribute.Vector3Attribute
           ValueType: Unity.Mathematics.float3, Unity.Mathematics, Version=1.0.0.0,
             Culture=neutral, PublicKeyToken=null
-          Data: '{"n":"normal","d":2,"v":"[{\"x\":0.0,\"y\":6.1232336E-17,\"z\":-1.0},{\"x\":0.0,\"y\":6.1232336E-17,\"z\":-1.0}]"}'
+          Data: '{"n":"normal","d":2,"v":"[{\"x\":0.0,\"y\":0.0,\"z\":1.0},{\"x\":0.0,\"y\":0.0,\"z\":1.0},{\"x\":0.0,\"y\":0.0,\"z\":-1.0},{\"x\":0.0,\"y\":0.0,\"z\":-1.0}]"}'
         - Type: Attribute.IntAttribute
           ValueType: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"material_index","d":2,"v":"[0,0]"}'
+          Data: '{"n":"material_index","d":2,"v":"[0,1,2,3]"}'
         - Type: Attribute.BoolAttribute
           ValueType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
-          Data: '{"n":"shade_smooth","d":2,"v":"[false,false]"}'
+          Data: '{"n":"shade_smooth","d":2,"v":"[false,false,false,false]"}'
       serializedFaceCornerAttributes:
-        keys:
-        - uv
-        values:
-        - Type: Attribute.Vector2Attribute
-          ValueType: Unity.Mathematics.float2, Unity.Mathematics, Version=1.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          Data: '{"n":"uv","d":3,"v":"[{\"x\":0.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":1.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":0.0,\"y\":0.0},{\"x\":0.0,\"y\":1.0}]"}'
-    submeshCount: 1
+        keys: []
+        values: []
+    submeshCount: 4
 --- !u!114 &1422124536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -921,7 +1174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0e2375bcf54b06bffa67b4c9ce6dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gizmoType: 3
+  gizmoType: 6
   handleSize: 0.1
   showFaceNormals: 1
   showByElement: 0

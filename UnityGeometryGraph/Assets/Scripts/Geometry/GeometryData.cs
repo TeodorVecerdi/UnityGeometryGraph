@@ -30,11 +30,13 @@ namespace Geometry {
 
             var uvs = new List<float2>();
             var faceMaterialIndices = new List<int>();
+            var faceSmoothShaded = new List<bool>();
 
-            var faceNormals = BuildMetadata(mesh, vertices, meshUvs, uvs, faceMaterialIndices, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+            var faceNormals = BuildMetadata(mesh, vertices, meshUvs, uvs, faceMaterialIndices, 
+                                            faceSmoothShaded, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
             attributeManager = new AttributeManager();
-            FillBuiltinAttributes(vertices, uvs, faceNormals, faceMaterialIndices);
+            FillBuiltinAttributes(vertices, uvs, faceNormals, faceMaterialIndices, faceSmoothShaded);
         }
 
         public TAttribute GetAttribute<TAttribute>(string name) where TAttribute : BaseAttribute {
@@ -45,24 +47,29 @@ namespace Geometry {
             return (TAttribute)attributeManager.Request(name, domain);
         }
 
-        private void FillBuiltinAttributes(IEnumerable<float3> vertices, List<float2> uvs, IEnumerable<float3> faceNormals, IEnumerable<int> faceMaterialIndices) {
+        private void FillBuiltinAttributes(
+            IEnumerable<float3> vertices, List<float2> uvs, 
+            IEnumerable<float3> faceNormals, IEnumerable<int> faceMaterialIndices, IEnumerable<bool> faceSmoothShaded
+        ) {
             attributeManager.Store(vertices.Into<Vector3Attribute>("position", AttributeDomain.Vertex));
 
             attributeManager.Store(faceNormals.Into<Vector3Attribute>("normal", AttributeDomain.Face));
             attributeManager.Store(faceMaterialIndices.Into<IntAttribute>("material_index", AttributeDomain.Face));
-            attributeManager.Store(new bool[faces.Count].Into<BoolAttribute>("shade_smooth", AttributeDomain.Face));
+            attributeManager.Store(faceSmoothShaded.Into<BoolAttribute>("shade_smooth", AttributeDomain.Face));
 
             attributeManager.Store(new float[edges.Count].Into<ClampedFloatAttribute>("crease", AttributeDomain.Edge));
 
             if (uvs.Count > 0) attributeManager.Store(uvs.Into<Vector2Attribute>("uv", AttributeDomain.FaceCorner));
         }
 
-        private IEnumerable<float3> BuildMetadata(Mesh mesh, List<float3> vertices, List<float2> uvs, List<float2> correctUvs, List<int> faceMaterialIndices, 
-                                                  float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+        private IEnumerable<float3> BuildMetadata(
+            Mesh mesh, List<float3> vertices, List<float2> uvs, List<float2> correctUvs, List<int> faceMaterialIndices, 
+            List<bool> smoothShaded, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold
+        ) {
             edges = new List<Edge>(mesh.triangles.Length);
             faces = new List<Face>(mesh.triangles.Length / 3);
             faceCorners = new List<FaceCorner>(mesh.triangles.Length);
-            var faceNormals = BuildElements(mesh, vertices, uvs, correctUvs, faceMaterialIndices).ToList();
+            var faceNormals = BuildElements(mesh, vertices, uvs, correctUvs, faceMaterialIndices, smoothShaded).ToList();
             RemoveDuplicates(vertices, faceNormals, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
             this.vertices = new List<Vertex>(vertices.Count);
@@ -75,7 +82,11 @@ namespace Geometry {
             return faceNormals;
         }
 
-        private IEnumerable<float3> BuildElements(Mesh mesh, List<float3> vertices, List<float2> uvs, List<float2> correctUvs, List<int> materialIndices) {
+        private IEnumerable<float3> BuildElements(
+            Mesh mesh, List<float3> vertices, List<float2> uvs, 
+            List<float2> correctUvs, List<int> materialIndices, List<bool> smoothShaded
+        ) {
+            var meshNormals = mesh.normals;
             for (var submesh = 0; submesh < mesh.subMeshCount; submesh++) {
                 var triangles = mesh.GetTriangles(submesh);
                 var length = triangles.Length;
@@ -91,8 +102,12 @@ namespace Geometry {
 
                     var AB = vertB - vertA;
                     var AC = vertC - vertA;
-                    yield return math.normalize(math.cross(AB, AC));
+                    var computedNormal = math.normalize(math.cross(AB, AC));
+                    var meshNormal = (float3)(meshNormals[idxA] + meshNormals[idxB] + meshNormals[idxC]) / 3.0f;
+                    yield return computedNormal;
                     materialIndices.Add(submesh);
+
+                    smoothShaded.Add(math.lengthsq(computedNormal - meshNormal) > 0.0001f); 
 
                     var face = new Face(
                         idxA, idxB, idxC,
@@ -143,7 +158,6 @@ namespace Geometry {
 
             // Face Metadata ==> Adjacent faces
             FillFaceMetadata();
-
         }
 
         private List<(int, int, bool)> GetDuplicateEdges(List<float3> vertices, List<float3> faceNormals, float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
