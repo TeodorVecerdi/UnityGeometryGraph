@@ -156,7 +156,7 @@ namespace Attribute {
         }
 
         public static TAttribute Into<TAttribute>(this BaseAttribute attribute, string name, AttributeDomain? domain = null) where TAttribute : BaseAttribute {
-            return (TAttribute)Into(attribute, name, new AttributeDomain?(domain ?? attribute.Domain) , typeof(TAttribute));
+            return (TAttribute)Into(attribute, name, new AttributeDomain?(domain ?? attribute.Domain), typeof(TAttribute));
         }
 
         public static TAttribute Into<TAttribute>(this IEnumerable values, string name, AttributeDomain domain) where TAttribute : BaseAttribute {
