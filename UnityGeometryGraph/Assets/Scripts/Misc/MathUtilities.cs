@@ -19,4 +19,11 @@ public static class math_util {
         return num < 1.00000000362749E-15 ? 0.0f : (float) math.acos(math.clamp(math.dot(from, to) / num, -1f, 1f)) * 57.29578f;
     }
 }
+
+public static class float3_util {
+    public static readonly float3 one = new float3(1);
+}
+public static class float2_util {
+    public static readonly float2 one = new float2(1);
+}
 // ReSharper restore InconsistentNaming

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Sirenix.Serialization;
 using UnityCommons;
 using UnityEngine;
 
@@ -31,6 +30,14 @@ namespace Attribute {
             }
         }
 
+        public object GetValue(int index) {
+            return Values[index];
+        }
+        
+        public object this[int index] {
+            get => GetValue(index);
+            set => Values[index] = value;
+        }
 
         public IEnumerator GetEnumerator() {
             return Values.GetEnumerator();
@@ -41,8 +48,8 @@ namespace Attribute {
     public abstract class BaseAttribute<T> : BaseAttribute, IEnumerable<T> {
         private static readonly Type elementType = typeof(T);
         public override Type ElementType => elementType;
-
-        public T GetValue(int index) {
+        
+        public new T GetValue(int index) {
             return (T) Values[index];
         }
 
@@ -54,7 +61,7 @@ namespace Attribute {
         }
 
         public sealed override void Fill(IEnumerable values) {
-            Fill((IEnumerable<T>)values);
+            Fill(values.Cast<T>());
         }
 
         public virtual void Fill(IEnumerable<T> values) {
@@ -92,7 +99,7 @@ namespace Attribute {
             }
         }
 
-        public T this[int index] {
+        public new T this[int index] {
             get => GetValue(index);
             set => Values[index] = value;
         }
@@ -172,6 +179,15 @@ namespace Attribute {
             sb.AppendLine($"Values: {attribute.Values.ToListString()}");
             Debug.Log(sb.ToString());
         }
+        
+        public static IEnumerable Yield(this IEnumerable enumerable, Func<object, object> action) {
+            action ??= AttributeActions.NoOp<object>();
+
+            foreach (var value in enumerable) {
+                yield return action(value);
+            }
+        }
+
 
         public static IEnumerable<T> Yield<T>(this IEnumerable<T> enumerable, Func<T, T> action) {
             action ??= AttributeActions.NoOp<T>();
@@ -182,7 +198,7 @@ namespace Attribute {
         }
         
         public static IEnumerable<T> YieldWithAttribute<T>(this IEnumerable<T> enumerable, AttributeType selfType, BaseAttribute other, Func<T, T, T> action) {
-            action ??= AttributeActions.NoOp2<T>();
+            action ??= AttributeActions.NoOp<T, T>();
            
             if (other == null) {
                 foreach (var value in enumerable) {
