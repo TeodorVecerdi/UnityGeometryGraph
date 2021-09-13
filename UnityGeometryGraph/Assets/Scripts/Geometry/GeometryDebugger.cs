@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Attribute;
+using Geometry;
 using Sirenix.OdinInspector;
 using UnityCommons;
 using UnityEngine;
@@ -7,10 +8,7 @@ using UnityEngine.Rendering;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
-public class MeshImporter : MonoBehaviour {
-    [SerializeField] private MeshFilter source;
-    [SerializeField, PropertyRange(0.0f, 0.1f)] private float duplicateDistanceThreshold = 0.01f;
-    [SerializeField, PropertyRange(0.0f, 180.0f)] private float duplicateNormalAngleThreshold = 5.0f;
+public class GeometryDebugger : MonoBehaviour {
     [SerializeField] private ElementGizmoType gizmoType;
     [SerializeField] private float handleSize = 0.1f;
     [SerializeField] private bool showFaceNormals;
@@ -21,34 +19,25 @@ public class MeshImporter : MonoBehaviour {
     [InlineButton("@((PropertyValueEntry<int>)$property.ValueEntry).SmartValue -= 1", "-")]
     private int index;
 
-    private int __GetMaxIndex() =>
-        gizmoType switch {
-            ElementGizmoType.Vertices => data.Vertices.Count - 1,
-            ElementGizmoType.Edges => data.Edges.Count - 1,
-            ElementGizmoType.Faces => data.Faces.Count - 1,
-            ElementGizmoType.FaceEdges => data.Faces.Count - 1,
+    private int __GetMaxIndex() {
+        if (source == null || data == null) return -1;
+        return gizmoType switch {
+            ElementGizmoType.Vertices => source.GeometryData.Vertices.Count - 1,
+            ElementGizmoType.Edges => source.GeometryData.Edges.Count - 1,
+            ElementGizmoType.Faces => source.GeometryData.Faces.Count - 1,
+            ElementGizmoType.FaceEdges => source.GeometryData.Faces.Count - 1,
             _ => 0
         };
-
-    [SerializeField] private GeometryData data;
-
-  
-    [Button]
-    private void Load() {
-        if (source == null) {
-            Debug.LogError("Source MeshFilter is null");
-            return;
-        }
-        var stopwatch = Stopwatch.StartNew();
-        data = new GeometryData(source.sharedMesh, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
-        Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
     }
-    
+
+    [SerializeField] private GeometryImporter source;
+    private GeometryData data => source?.GeometryData;
+
     private void OnDrawGizmosSelected() {
 #if UNITY_EDITOR
-        if (gizmoType == ElementGizmoType.None) return;
+        if (gizmoType == ElementGizmoType.None || source == null || data == null) return;
         
-        UnityEditor.Handles.matrix = Gizmos.matrix = transform.localToWorldMatrix;
+        UnityEditor.Handles.matrix = Gizmos.matrix = source.transform.localToWorldMatrix;
         var zTest = UnityEditor.Handles.zTest;
         UnityEditor.Handles.zTest = CompareFunction.LessEqual;
         Random.InitState(0);
