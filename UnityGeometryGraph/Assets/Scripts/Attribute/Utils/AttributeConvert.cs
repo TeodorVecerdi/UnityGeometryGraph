@@ -13,7 +13,7 @@ namespace Attribute {
         internal static IEnumerable ConvertDomain(GeometryData geometry, BaseAttribute sourceAttribute, AttributeDomain to) {
             if (sourceAttribute.Domain == AttributeDomain.Spline || to == AttributeDomain.Spline) {
                 Debug.LogWarning("Cannot convert from a Spline domain or into a Spline domain.");
-                // Note: I use .Yield() so I don't return the attribute itself, but an actual IEnumerable
+                // Note: I use .Yield() so I don't return the attribute itself, but an actual IEnumerable over the attribute values
                 // null turns the action into a NoOp
                 return sourceAttribute.Yield(null);
             }
@@ -61,12 +61,12 @@ namespace Attribute {
         //!! Vertex Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_VertexToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Edges.Select(edge => Average(sourceAttribute.Type, sourceAttribute[edge.VertA], sourceAttribute[edge.VertB]));
+            return geometry.Edges.Select(edge => AverageParams(sourceAttribute.Type, sourceAttribute[edge.VertA], sourceAttribute[edge.VertB]));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_VertexToFace(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Faces.Select(face => Average(sourceAttribute.Type, sourceAttribute[face.VertA], sourceAttribute[face.VertB], sourceAttribute[face.VertC]));
+            return geometry.Faces.Select(face => AverageParams(sourceAttribute.Type, sourceAttribute[face.VertA], sourceAttribute[face.VertB], sourceAttribute[face.VertC]));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -77,57 +77,57 @@ namespace Attribute {
         //!! Edge Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_EdgeToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.Edges.Select(sourceAttribute.GetValue)));
+            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, vertex.Edges.Select(sourceAttribute.GetValue)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_EdgeToFace(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Faces.Select(face => Average(sourceAttribute.Type, sourceAttribute[face.EdgeA], sourceAttribute[face.EdgeB], sourceAttribute[face.EdgeC]));
+            return geometry.Faces.Select(face => AverageParams(sourceAttribute.Type, sourceAttribute[face.EdgeA], sourceAttribute[face.EdgeB], sourceAttribute[face.EdgeC]));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_EdgeToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Edges.Select(sourceAttribute.GetValue)));
+            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, geometry.Vertices[faceCorner.Vert].Edges.Select(sourceAttribute.GetValue)));
         }
         
         //!! Face Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.Faces.Select(sourceAttribute.GetValue)));
+            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, vertex.Faces.Select(sourceAttribute.GetValue)));
         }
 
-        private static readonly List<int> edgeIndexList = new List<int>(2);
+        private static readonly int[] edgeIndexList = { -1, -1 };
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.Edges.Select(edge => {
-                edgeIndexList.Clear();
-                edgeIndexList.Add(edge.FaceA);
-                if (edge.FaceB != -1) edgeIndexList.Add(edge.FaceB);
-                return Average(sourceAttribute.Type, (object[])edgeIndexList.Select(sourceAttribute.GetValue));
+                edgeIndexList[1] = -1;
+                edgeIndexList[0] = edge.FaceA;
+                if (edge.FaceB != -1) edgeIndexList[1] = edge.FaceB;
+                return Average(sourceAttribute.Type, edgeIndexList.Select(sourceAttribute.GetValue));
             });
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, (object[])geometry.Vertices[faceCorner.Vert].Faces.Select(sourceAttribute.GetValue)));
+            return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, geometry.Vertices[faceCorner.Vert].Faces.Select(sourceAttribute.GetValue)));
         }
         
         //!! Face Corner Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceCornerToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, (object[])vertex.FaceCorners.Select(sourceAttribute.GetValue)));
+            return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, vertex.FaceCorners.Select(sourceAttribute.GetValue)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceCornerToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.Edges.Select(edge => {
                 // Faces
-                edgeIndexList.Clear();
-                edgeIndexList.Add(edge.FaceA);
-                if (edge.FaceB != -1) edgeIndexList.Add(edge.FaceB);
+                edgeIndexList[1] = -1;
+                edgeIndexList[0] = edge.FaceA;
+                if (edge.FaceB != -1) edgeIndexList[1] = edge.FaceB;
 
                 return Average(
-                    sourceAttribute.Type,(object[])
+                    sourceAttribute.Type,
                     edgeIndexList
                     // Get all face corners on faces that neighbour the edge
                     .SelectMany(faceIndex => {
@@ -146,29 +146,52 @@ namespace Attribute {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceCornerToFace(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Faces.Select(face => Average(sourceAttribute.Type, 
-                             sourceAttribute[face.FaceCornerA], sourceAttribute[face.FaceCornerB], sourceAttribute[face.FaceCornerC]));
+            return geometry.Faces.Select(face => AverageParams(sourceAttribute.Type, 
+                                     sourceAttribute[face.FaceCornerA], sourceAttribute[face.FaceCornerB], sourceAttribute[face.FaceCornerC]));
         }
 
+        private static object AverageParams(AttributeType type, params object[] values) {
+            return Average(type, values);
+        }
         // Average functions
-        private static object Average(AttributeType type, params object[] values) {
+        private static object Average(AttributeType type, IEnumerable values) {
             return type switch {
-                AttributeType.Boolean => Average((bool[])(IEnumerable)values),
-                AttributeType.Integer => Average((int[])(IEnumerable)values),
-                AttributeType.Float => Average((float[])(IEnumerable)values),
-                AttributeType.ClampedFloat => Average((float[])(IEnumerable)values).Clamped01(),
-                AttributeType.Vector2 => Average((float2[])(IEnumerable)values),
-                AttributeType.Vector3 => Average((float3[])(IEnumerable)values),
+                AttributeType.Boolean => Average(values.Convert(o => (bool)o)),
+                AttributeType.Integer => Average(values.Convert(o => (int)o)),
+                AttributeType.Float => Average(values.Convert(o => (float)o)),
+                AttributeType.ClampedFloat => Average(values.Convert(o => (float)o)).Clamped01(),
+                AttributeType.Vector2 => Average(values.Convert(o => (float2)o)),
+                AttributeType.Vector3 => Average(values.Convert(o => (float3)o)),
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
         }
         
         // Note: Maybe there is a better / more correct way to 'average' boolean values but idk
-        private static bool Average(params bool[] values) => values.Count(b => b) < 0.5f * values.Length;
-        private static int Average(params int[] values) => (int) values.Average();
-        private static float Average(params float[] values) => values.Average();
-        private static float2 Average(params float2[] values) => values.Aggregate((a, b) => a + b) / values.Length;
-        private static float3 Average(params float3[] values) => values.Aggregate((a, b) => a + b) / values.Length;
+        private static bool Average(IEnumerable<bool> values) {
+            var count = 0;
+            return values.Count(b => {
+                ++count;
+                return b;
+            }) < 0.5f * count;
+        }
+
+        private static int Average(IEnumerable<int> values) => (int) values.Average();
+        private static float Average(IEnumerable<float> values) => values.Average();
+        private static float2 Average(IEnumerable<float2> values) {
+            var count = 1; // 1 because Aggregate already consumes one element before beginning
+            return values.Aggregate((a, b) => {
+                ++count;
+                return a + b;
+            }) / count;
+        }
+
+        private static float3 Average(IEnumerable<float3> values) {
+            var count = 1;
+            return values.Aggregate((a, b) => {
+                ++count;
+                return a + b;
+            }) / count;
+        }
     }
 
     // Misc
