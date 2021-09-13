@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Unity.Mathematics;
 using UnityCommons;
 
-namespace Tests.Attribute.TypeConversion {
+namespace Tests.Unit.Attribute.TypeConversion {
     public class BooleanConversion {
         [Test]
         public void BooleanToInteger() {

@@ -3,7 +3,7 @@ using Attribute;
 using NUnit.Framework;
 using UnityCommons;
 
-namespace Tests.Attribute.TypeConversion {
+namespace Tests.Unit.Attribute.TypeConversion {
     public class FloatConversion {
         [Test]
         public void FloatToBoolean() {

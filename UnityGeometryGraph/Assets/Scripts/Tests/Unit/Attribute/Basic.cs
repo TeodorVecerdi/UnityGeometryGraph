@@ -3,7 +3,7 @@ using Attribute;
 using NUnit.Framework;
 using UnityCommons;
 
-namespace Tests.Attribute {
+namespace Tests.Unit.Attribute {
     public class Basic {
         [Test]
         public void ClampedFloatIsClampedOnCreation() {
