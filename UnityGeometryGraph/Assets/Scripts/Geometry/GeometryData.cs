@@ -15,13 +15,16 @@ public class GeometryData {
     [SerializeField] private List<Face> faces;
     [SerializeField] private List<FaceCorner> faceCorners;
     [SerializeField] private AttributeManager attributeManager;
+    [SerializeField] private int submeshCount;
 
     public IReadOnlyList<Vertex> Vertices => vertices.AsReadOnly();
     public IReadOnlyList<Edge> Edges => edges.AsReadOnly();
     public IReadOnlyList<Face> Faces => faces.AsReadOnly();
     public IReadOnlyList<FaceCorner> FaceCorners => faceCorners.AsReadOnly();
+    public int SubmeshCount => submeshCount;
 
     public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+        submeshCount = mesh.subMeshCount;
         var vertices = new List<float3>(mesh.vertices.Select(vertex => new float3(vertex.x, vertex.y, vertex.z)));
         var meshUvs = new List<float2>(mesh.uv.Select(uv => new float2(uv.x, uv.y)));
 
