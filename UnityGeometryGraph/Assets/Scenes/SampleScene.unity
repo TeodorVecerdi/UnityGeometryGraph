@@ -185,7 +185,7 @@ GameObject:
   - component: {fileID: 1422124536}
   - component: {fileID: 1422124535}
   m_Layer: 0
-  m_Name: Test Mesh Importer
+  m_Name: Geometry Importer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -253,7 +253,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1422124535
 MonoBehaviour:
@@ -264,27 +264,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1422124531}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf0e2375bcf54b06bffa67b4c9ce6dac, type: 3}
+  m_Script: {fileID: 11500000, guid: 690dec9fc3ff4e04aba37f9b579a61b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  source: {fileID: 1422124532}
-  duplicateDistanceThreshold: 0
-  duplicateNormalAngleThreshold: 179.9
-  gizmoType: 3
-  handleSize: 0.1
-  showFaceNormals: 0
-  showByElement: 0
-  index: 0
-  data:
+  geometrySource: {fileID: 1422124532}
+  geometryData:
     vertices:
     - Edges: 000000000200000003000000
       Faces: 0000000001000000
+      FaceCorners: 0000000004000000
     - Edges: 0100000002000000
       Faces: 00000000
+      FaceCorners: 02000000
     - Edges: 0300000004000000
       Faces: 01000000
+      FaceCorners: 05000000
     - Edges: 000000000100000004000000
       Faces: 0000000001000000
+      FaceCorners: 0100000003000000
     edges:
     - VertA: 0
       VertB: 3
@@ -316,7 +313,7 @@ MonoBehaviour:
       EdgeA: 0
       EdgeB: 1
       EdgeC: 2
-      AdjacentFaces: 01000000ffffffff
+      AdjacentFaces: 01000000
     - VertA: 3
       VertB: 0
       VertC: 2
@@ -326,7 +323,7 @@ MonoBehaviour:
       EdgeA: 0
       EdgeB: 3
       EdgeC: 4
-      AdjacentFaces: 00000000ffffffff
+      AdjacentFaces: 00000000
     faceCorners:
     - Vert: 0
       Face: 0
@@ -376,12 +373,12 @@ MonoBehaviour:
           Data: '{"n":"shade_smooth","d":2,"v":"[false,false]"}'
       serializedFaceCornerAttributes:
         keys:
-        - uvs
+        - uv
         values:
         - Type: Attribute.Vector2Attribute
           ValueType: Unity.Mathematics.float2, Unity.Mathematics, Version=1.0.0.0,
             Culture=neutral, PublicKeyToken=null
-          Data: '{"n":"uvs","d":3,"v":"[{\"x\":0.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":1.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":0.0,\"y\":0.0},{\"x\":0.0,\"y\":1.0}]"}'
+          Data: '{"n":"uv","d":3,"v":"[{\"x\":0.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":1.0,\"y\":0.0},{\"x\":1.0,\"y\":1.0},{\"x\":0.0,\"y\":0.0},{\"x\":0.0,\"y\":1.0}]"}'
 --- !u!114 &1422124536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,6 +519,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1723329648}
   - component: {fileID: 1723329649}
+  - component: {fileID: 1723329650}
   m_Layer: 0
   m_Name: Test Attributes
   m_TagString: Untagged
@@ -541,7 +539,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1723329649
 MonoBehaviour:
@@ -555,6 +553,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810c0d5c395846b4a425c789ea6a1b16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1723329650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723329647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa91fed9bd4b4aeea81146d67d0781b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  source: {fileID: 1422124535}
+--- !u!1 &2072458329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2072458331}
+  - component: {fileID: 2072458330}
+  m_Layer: 0
+  m_Name: Geometry Debugger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2072458330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072458329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf0e2375bcf54b06bffa67b4c9ce6dac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gizmoType: 3
+  handleSize: 0.1
+  showFaceNormals: 0
+  showByElement: 0
+  index: 1
+  source: {fileID: 1422124535}
+--- !u!4 &2072458331
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072458329}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2138677391
 GameObject:
   m_ObjectHideFlags: 0
