@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Attribute;
 using Sirenix.OdinInspector;
 using UnityCommons;
@@ -74,9 +76,18 @@ namespace Geometry {
                         UnityEditor.Handles.DrawAAPolyLine(4.0f, v0, v1);
                     }
                 }
-            } else if (gizmoType == ElementGizmoType.Faces) {
+            } else if (gizmoType == ElementGizmoType.Faces || gizmoType == ElementGizmoType.FacesByMaterial || gizmoType == ElementGizmoType.FacesByShadeSmooth) {
                 var dist = 0.015f * UnityEditor.HandleUtility.GetHandleSize(transform.position);
                 var faceNormals = data.GetAttribute<Vector3Attribute>("normal");
+                var faceMaterials = data.GetAttribute<IntAttribute>("material_index");
+                var faceShadeSmooth = data.GetAttribute<BoolAttribute>("shade_smooth");
+
+                List<Color> colors = null;
+                if (gizmoType == ElementGizmoType.FacesByMaterial) {
+                    colors = Enumerable.Range(0, data.SubmeshCount).Select(i => Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f)).ToList();
+                } else if (gizmoType == ElementGizmoType.FacesByShadeSmooth) {
+                    colors = Enumerable.Range(0, 2).Select(i => Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f)).ToList();
+                }
 
                 if (showByElement) {
                     var face = data.Faces[index];
@@ -84,8 +95,15 @@ namespace Geometry {
                     var v0 = vertices[face.VertA] + normal * dist;
                     var v1 = vertices[face.VertB] + normal * dist;
                     var v2 = vertices[face.VertC] + normal * dist;
-                    var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
-                    Gizmos.color = UnityEditor.Handles.color = color;
+
+                    if (gizmoType == ElementGizmoType.Faces) {
+                        Gizmos.color = UnityEditor.Handles.color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                    } else if (gizmoType == ElementGizmoType.FacesByMaterial) {
+                        Gizmos.color = UnityEditor.Handles.color = colors[faceMaterials[index]];
+                    } else if (gizmoType == ElementGizmoType.FacesByShadeSmooth) {
+                        Gizmos.color = UnityEditor.Handles.color = colors[faceShadeSmooth[index] ? 1 : 0]; 
+                    }
+                    
                     UnityEditor.Handles.DrawAAConvexPolygon(v0, v1, v2);
 
                     if (showFaceNormals) {
@@ -100,8 +118,15 @@ namespace Geometry {
                         var v0 = vertices[face.VertA] + normal * dist;
                         var v1 = vertices[face.VertB] + normal * dist;
                         var v2 = vertices[face.VertC] + normal * dist;
-                        var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
-                        Gizmos.color = UnityEditor.Handles.color = color;
+                       
+                        if (gizmoType == ElementGizmoType.Faces) {
+                            Gizmos.color = UnityEditor.Handles.color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                        } else if (gizmoType == ElementGizmoType.FacesByMaterial) {
+                            Gizmos.color = UnityEditor.Handles.color = colors[faceMaterials[i]];
+                        } else if (gizmoType == ElementGizmoType.FacesByShadeSmooth) {
+                            Gizmos.color = UnityEditor.Handles.color = colors[faceShadeSmooth[i] ? 1 : 0]; 
+                        }
+                        
                         UnityEditor.Handles.DrawAAConvexPolygon(v0, v1, v2);
                     }
 
@@ -172,5 +197,7 @@ namespace Geometry {
         Edges,
         Faces,
         FaceEdges,
+        FacesByMaterial,
+        FacesByShadeSmooth,
     }
 }
