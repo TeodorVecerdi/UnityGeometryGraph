@@ -51,8 +51,8 @@ namespace Tests.Unit.Attribute.Operations {
             var destAttribute2 = sourceValues2.Into((BaseAttribute)destAttribute);
             
             Assert.AreSame(destAttribute2, destAttribute, "destAttribute2 == destAttribute");
-            Assert.IsTrue(destAttribute2.Values.SequenceEqual(sourceValues2.ConvertAll(input => (object)input)), 
-                          "destAttribute2.SequenceEqual(sourceValues2.ConvertAll(input => (object)input))");
+            Assert.IsTrue(destAttribute2.Values.SequenceEqual(sourceValues2.Convert(input => (object)input)), 
+                          "destAttribute2.SequenceEqual(sourceValues2.Convert(input => (object)input))");
         }
     }
 }
