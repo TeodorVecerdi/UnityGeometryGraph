@@ -80,22 +80,28 @@ namespace Attribute {
         }
 
         public IEnumerable<T> YieldWithAttribute(BaseAttribute other, Func<T, T, T> action) {
-            if (action == null || other == null) yield break;
+            action ??= AttributeActions.NoOp<T, T>();
+           
+            if (other == null) {
+                foreach (var value in Values) {
+                    yield return action((T)value, default);
+                }
+                yield break;
+            }
+            
+            var otherIndex = 0;
+            foreach (var value in Values) {
+                var otherValue = AttributeConvert.ConvertType<T>(otherIndex >= other.Values.Count ? default(T) : other.Values[otherIndex], other.Type, Type);
+                yield return action((T)value, otherValue);
 
-            var count = Math.Min(Values.Count, other.Values.Count);
-            var extraSelf = Values.Count - count;
-            var extraOther = other.Values.Count - count;
-            
-            for (var i = 0; i < count; i++) {
-                yield return action((T)Values[i], AttributeConvert.ConvertType<T>(other.Values[i], other.Type, Type));
+                otherIndex++;
             }
+
+            if (otherIndex >= other.Values.Count) yield break;
             
-            // Only one of these for loops will run
-            for (var i = 0; i < extraSelf; i++) {
-                yield return action((T)Values[count + i], default);
-            }
-            for (var i = 0; i < extraOther; i++) {
-                yield return action(default, AttributeConvert.ConvertType<T>(other.Values[count + i], other.Type, Type));
+            for (var i = otherIndex; i < other.Values.Count; i++) {
+                var otherValue = AttributeConvert.ConvertType<T>(other.Values[otherIndex], other.Type, Type);
+                yield return action(default, otherValue);
             }
         }
 
