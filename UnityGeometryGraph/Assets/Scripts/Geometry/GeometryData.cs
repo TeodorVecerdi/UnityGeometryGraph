@@ -144,7 +144,7 @@ namespace Geometry {
             var duplicates = GetDuplicateEdges(vertices, faceNormals, duplicateDistanceThreshold * duplicateDistanceThreshold, duplicateNormalAngleThreshold);
             var duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
             var reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
-            RemapDuplicateElements(duplicates, reverseDuplicatesMap, duplicateVerticesMap);
+            RemapDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
             RemoveDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
             CheckForErrors(vertices);
         }
@@ -320,7 +320,7 @@ namespace Geometry {
             return reverseDuplicateMap;
         }
 
-        private void RemapDuplicateElements(List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap, Dictionary<int, List<int>> duplicateVerticesMap) {
+        private void RemapDuplicateElements(List<float3> vertices, List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
             // Remap the vertex indices for faces and edges
             var edgeReverseMap = new Dictionary<int, int>();
             foreach (var duplicate in duplicates) {
@@ -334,12 +334,19 @@ namespace Geometry {
                 edgeRemap[sortedKey] = remapIndex++;
             }
 
-            var allVertexIndices = duplicateVerticesMap.Keys.QuickSorted();
+            var allVertexIndices = Enumerable.Range(0, vertices.Count).Except(reverseDuplicatesMap.Keys);
             var vertexRemap = new Dictionary<int, int>();
             remapIndex = 0;
             foreach (var key in allVertexIndices) {
                 vertexRemap[key] = remapIndex++;
             }
+            
+            /*Debug.Log(reverseDuplicatesMap.ToListString());
+            foreach (var pair in duplicateVerticesMap) {
+                Debug.Log($"{pair.Key}: {pair.Value.ToListString()}");
+            }
+
+            Debug.Log(vertexRemap.ToListString());*/
 
             foreach (var face in faces) {
                 RemapEdge(face.EdgeA, reverseDuplicatesMap, vertexRemap);
