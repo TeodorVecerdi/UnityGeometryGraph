@@ -187,7 +187,9 @@ namespace Geometry {
             
             var otherVertex = positionAttr[otherVertexIndex];
             var otherUV = uvAttr[otherFaceCornerIndex];
-            var normal = math.normalize(geometry.Vertices[otherVertexIndex].Faces.Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
+            var normal = !shadeSmoothAttr[sharedA] 
+                ? normalAttr[sharedA]
+                : math.normalize(geometry.Vertices[otherVertexIndex].Faces.Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
 
             var submesh = submeshAttr[sharedA];
             vertices.Add(otherVertex);
