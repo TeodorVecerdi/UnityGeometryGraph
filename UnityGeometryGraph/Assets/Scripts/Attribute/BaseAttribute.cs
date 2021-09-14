@@ -72,8 +72,8 @@ namespace Attribute {
         }
 
         public IEnumerable<T> Yield(Func<T, T> action) {
-            if (action == null) yield break;
-
+            action ??= AttributeActions.NoOp<T>();
+            
             foreach (T value in Values) {
                 yield return action(value);
             }
