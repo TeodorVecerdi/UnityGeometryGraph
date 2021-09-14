@@ -150,7 +150,11 @@ namespace Attribute {
         public static BaseAttribute Into(this IEnumerable values, string name, AttributeDomain domain, Type attributeType) {
             var attribute = (BaseAttribute) Activator.CreateInstance(attributeType, name);
             attribute.Domain = domain;
-            attribute.Fill(values);
+            var valuesList = values.Convert(o => o).ToList();
+            var type = attribute.Type;
+            if (valuesList.Count > 0) type = AttributeConvert.GetType(valuesList[0]);
+            
+            attribute.Fill(valuesList.Select(val => AttributeConvert.ConvertType<object>(val, type, attribute.Type)));
             return attribute;
         }
 
@@ -170,12 +174,20 @@ namespace Attribute {
         }
 
         public static BaseAttribute Into(this IEnumerable values, BaseAttribute otherAttribute) {
-            otherAttribute.Fill(values);
+            var valuesList = values.Convert(o => o).ToList();
+            var type = otherAttribute.Type;
+            if (valuesList.Count > 0) type = AttributeConvert.GetType(valuesList[0]);
+
+            otherAttribute.Fill(valuesList.Select(val => AttributeConvert.ConvertType<object>(val, type, otherAttribute.Type)));
             return otherAttribute;
         }
         
         public static TAttribute Into<TAttribute>(this IEnumerable values, TAttribute otherAttribute) where TAttribute : BaseAttribute {
-            otherAttribute.Fill(values);
+            var valuesList = values.Convert(o => o).ToList();
+            var type = otherAttribute.Type;
+            if (valuesList.Count > 0) type = AttributeConvert.GetType(valuesList[0]);
+
+            otherAttribute.Fill(valuesList.Select(val => AttributeConvert.ConvertType<object>(val, type, otherAttribute.Type)));
             return otherAttribute;
         }
 
