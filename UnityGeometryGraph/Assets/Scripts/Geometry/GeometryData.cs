@@ -77,7 +77,7 @@ namespace Geometry {
                 this.vertices.Add(new Vertex());
             }
 
-            // FillElementMetadata();
+            FillElementMetadata();
 
             return faceNormals;
         }
