@@ -72,30 +72,36 @@ namespace Attribute {
         }
 
         public IEnumerable<T> Yield(Func<T, T> action) {
-            if (action == null) yield break;
-
+            action ??= AttributeActions.NoOp<T>();
+            
             foreach (T value in Values) {
                 yield return action(value);
             }
         }
 
         public IEnumerable<T> YieldWithAttribute(BaseAttribute other, Func<T, T, T> action) {
-            if (action == null || other == null) yield break;
+            action ??= AttributeActions.NoOp<T, T>();
+           
+            if (other == null) {
+                foreach (var value in Values) {
+                    yield return action((T)value, default);
+                }
+                yield break;
+            }
+            
+            var otherIndex = 0;
+            foreach (var value in Values) {
+                var otherValue = AttributeConvert.ConvertType<T>(otherIndex >= other.Values.Count ? default(T) : other.Values[otherIndex], other.Type, Type);
+                yield return action((T)value, otherValue);
 
-            var count = Math.Min(Values.Count, other.Values.Count);
-            var extraSelf = Values.Count - count;
-            var extraOther = other.Values.Count - count;
-            
-            for (var i = 0; i < count; i++) {
-                yield return action((T)Values[i], AttributeConvert.ConvertType<T>(other.Values[i], other.Type, Type));
+                otherIndex++;
             }
+
+            if (otherIndex >= other.Values.Count) yield break;
             
-            // Only one of these for loops will run
-            for (var i = 0; i < extraSelf; i++) {
-                yield return action((T)Values[count + i], default);
-            }
-            for (var i = 0; i < extraOther; i++) {
-                yield return action(default, AttributeConvert.ConvertType<T>(other.Values[count + i], other.Type, Type));
+            for (var i = otherIndex; i < other.Values.Count; i++) {
+                var otherValue = AttributeConvert.ConvertType<T>(other.Values[otherIndex], other.Type, Type);
+                yield return action(default, otherValue);
             }
         }
 
@@ -141,14 +147,18 @@ namespace Attribute {
     }
 
     public static class AttributeExtensions {
-        public static BaseAttribute Into(this IEnumerable values, string name, AttributeDomain domain, Type attributeType) {
+        private static BaseAttribute Into(this IEnumerable values, string name, AttributeDomain domain, Type attributeType) {
             var attribute = (BaseAttribute) Activator.CreateInstance(attributeType, name);
             attribute.Domain = domain;
-            attribute.Fill(values);
+            var valuesList = values.Convert(o => o).ToList();
+            var type = attribute.Type;
+            if (valuesList.Count > 0) type = AttributeConvert.GetType(valuesList[0]);
+            
+            attribute.Fill(valuesList.Select(val => AttributeConvert.ConvertType<object>(val, type, attribute.Type)));
             return attribute;
         }
 
-        public static BaseAttribute Into(this BaseAttribute attribute, string name, AttributeDomain? domain, Type attributeType) {
+        private static BaseAttribute Into(this BaseAttribute attribute, string name, AttributeDomain? domain, Type attributeType) {
             var otherAttribute = (BaseAttribute) Activator.CreateInstance(attributeType, name);
             otherAttribute.Domain = domain ?? attribute.Domain;
             otherAttribute.Fill(attribute.Values.Select(val => AttributeConvert.ConvertType<object>(val, attribute.Type, otherAttribute.Type)));
@@ -156,7 +166,7 @@ namespace Attribute {
         }
 
         public static TAttribute Into<TAttribute>(this BaseAttribute attribute, string name, AttributeDomain? domain = null) where TAttribute : BaseAttribute {
-            return (TAttribute)Into(attribute, name, new AttributeDomain?(domain ?? attribute.Domain) , typeof(TAttribute));
+            return (TAttribute)Into(attribute, name, new AttributeDomain?(domain ?? attribute.Domain), typeof(TAttribute));
         }
 
         public static TAttribute Into<TAttribute>(this IEnumerable values, string name, AttributeDomain domain) where TAttribute : BaseAttribute {
@@ -164,12 +174,20 @@ namespace Attribute {
         }
 
         public static BaseAttribute Into(this IEnumerable values, BaseAttribute otherAttribute) {
-            otherAttribute.Fill(values);
+            var valuesList = values.Convert(o => o).ToList();
+            var type = otherAttribute.Type;
+            if (valuesList.Count > 0) type = AttributeConvert.GetType(valuesList[0]);
+
+            otherAttribute.Fill(valuesList.Select(val => AttributeConvert.ConvertType<object>(val, type, otherAttribute.Type)));
             return otherAttribute;
         }
         
         public static TAttribute Into<TAttribute>(this IEnumerable values, TAttribute otherAttribute) where TAttribute : BaseAttribute {
-            otherAttribute.Fill(values);
+            var valuesList = values.Convert(o => o).ToList();
+            var type = otherAttribute.Type;
+            if (valuesList.Count > 0) type = AttributeConvert.GetType(valuesList[0]);
+
+            otherAttribute.Fill(valuesList.Select(val => AttributeConvert.ConvertType<object>(val, type, otherAttribute.Type)));
             return otherAttribute;
         }
 
