@@ -147,7 +147,7 @@ namespace Attribute {
     }
 
     public static class AttributeExtensions {
-        public static BaseAttribute Into(this IEnumerable values, string name, AttributeDomain domain, Type attributeType) {
+        private static BaseAttribute Into(this IEnumerable values, string name, AttributeDomain domain, Type attributeType) {
             var attribute = (BaseAttribute) Activator.CreateInstance(attributeType, name);
             attribute.Domain = domain;
             var valuesList = values.Convert(o => o).ToList();
@@ -158,7 +158,7 @@ namespace Attribute {
             return attribute;
         }
 
-        public static BaseAttribute Into(this BaseAttribute attribute, string name, AttributeDomain? domain, Type attributeType) {
+        private static BaseAttribute Into(this BaseAttribute attribute, string name, AttributeDomain? domain, Type attributeType) {
             var otherAttribute = (BaseAttribute) Activator.CreateInstance(attributeType, name);
             otherAttribute.Domain = domain ?? attribute.Domain;
             otherAttribute.Fill(attribute.Values.Select(val => AttributeConvert.ConvertType<object>(val, attribute.Type, otherAttribute.Type)));

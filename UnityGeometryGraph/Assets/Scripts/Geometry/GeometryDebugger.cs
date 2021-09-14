@@ -10,10 +10,14 @@ namespace Geometry {
     public class GeometryDebugger : MonoBehaviour {
         [SerializeField] private ElementGizmoType gizmoType;
         [SerializeField] private float handleSize = 0.1f;
+        
+        [ShowIf("@gizmoType == ElementGizmoType.Faces || gizmoType == ElementGizmoType.FacesByMaterial || gizmoType == ElementGizmoType.FacesByShadeSmooth")]
         [SerializeField] private bool showFaceNormals;
+        
+        [ShowIf("@gizmoType != ElementGizmoType.None")]
         [SerializeField] private bool showByElement;
     
-        [SerializeField, ShowIf(nameof(showByElement)), MinValue(0), MaxValue(nameof(__GetMaxIndex))]
+        [SerializeField, ShowIf("@showByElement && gizmoType != ElementGizmoType.None"), MinValue(0), MaxValue(nameof(__GetMaxIndex))]
         [InlineButton("@((PropertyValueEntry<int>)$property.ValueEntry).SmartValue += 1", "+")]
         [InlineButton("@((PropertyValueEntry<int>)$property.ValueEntry).SmartValue -= 1", "-")]
         private int index;
