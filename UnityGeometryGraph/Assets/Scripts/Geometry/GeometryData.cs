@@ -149,12 +149,16 @@ namespace Geometry {
             sw.Restart();
             var duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
             var el2 = sw.Elapsed;
-            Debug.Log(duplicateVerticesMap.Select(pair => (pair.Key, pair.Value.ToListString())).ToListString());
             // Debug.Log(duplicateVerticesMap.Count);
             sw.Restart();
-            var reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
+            var reverseDuplicatesMap2 = RemoveInvalidDuplicates(duplicateVerticesMap.ToDictionary(pair => pair.Key, pair => pair.Value));
             var el3 = sw.Elapsed;
-            Debug.Log($"GetDuplicateEdges={el1.TotalMilliseconds}; GetDuplicateVerticesMap={el2.TotalMilliseconds}; RemoveInvalidDuplicates={el3.TotalMilliseconds}");
+            sw.Restart();
+            var reverseDuplicatesMap = RemoveInvalidDuplicates2(duplicateVerticesMap);
+            var el4 = sw.Elapsed;
+            Debug.Log($"GetDuplicateEdges={el1.TotalMilliseconds}; GetDuplicateVerticesMap={el2.TotalMilliseconds}; RemoveInvalidDuplicates={el3.TotalMilliseconds}; RemoveInvalidDuplicates2={el4.TotalMilliseconds}");
+            // Debug.Log(reverseDuplicatesMap2.ToListString());
+            // Debug.Log(reverseDuplicatesMap.ToListString());
             RemapDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
             RemoveDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
             CheckForErrors(vertices);
@@ -249,6 +253,58 @@ namespace Geometry {
 
             return duplicateVerticesMap;
         }
+        
+        private Dictionary<int, int> RemoveInvalidDuplicates2(Dictionary<int, List<int>> duplicateVerticesMap) {
+            // Remove trivial invalid entries
+            var removalList = new List<int>();
+            foreach (var pair in duplicateVerticesMap) {
+                pair.Value.RemoveAll(value => value == pair.Key);
+                if (pair.Value.Count == 0) removalList.Add(pair.Key);
+            }
+
+            removalList.ForEach(key => duplicateVerticesMap.Remove(key));
+            // Debug.Log(duplicateVerticesMap.Select(pair => (pair.Key, pair.Value.ToListString())).QuickSorted((t1, t2) => t1.Key.CompareTo(t2.Key)).ToListString());
+
+            // Remove remaining invalid entries
+            var sortedKeys = duplicateVerticesMap.Keys.QuickSorted().ToList();
+            var existsMap = new Dictionary<int, int>(); // maps a vertex index to the actual map
+            var actualMap = new Dictionary<int, HashSet<int>>();
+
+            foreach (var sortedKey in sortedKeys) {
+                if (existsMap.ContainsKey(sortedKey)) {
+                    var target = existsMap[sortedKey];
+                    if (actualMap.ContainsKey(target)) {
+                        actualMap[target].AddRange(duplicateVerticesMap[sortedKey]);
+                        duplicateVerticesMap[sortedKey].ForEach(i => existsMap[i] = target);
+                        continue;
+                    }
+                }
+                
+                var valueExists = duplicateVerticesMap[sortedKey].FirstOrGivenDefault(i => existsMap.ContainsKey(i), -1);
+                if (valueExists != -1) {
+                    var target = existsMap[valueExists]; 
+                    actualMap[target].Add(sortedKey);
+                    actualMap[target].AddRange(duplicateVerticesMap[sortedKey]);
+                    existsMap[sortedKey] = target;
+                    duplicateVerticesMap[sortedKey].ForEach(i => existsMap[i] = target);
+                } else {
+                    actualMap[sortedKey] = new HashSet<int>(duplicateVerticesMap[sortedKey]);
+                    existsMap[sortedKey] = sortedKey;
+                    duplicateVerticesMap[sortedKey].ForEach(i => existsMap[i] = sortedKey);    
+                }
+            }
+            
+            // Copy actualMap to duplicateVerticesMap
+            duplicateVerticesMap.Clear();
+            foreach (var pair in actualMap) {
+                duplicateVerticesMap[pair.Key] = new List<int>(pair.Value);
+                existsMap.Remove(pair.Key);
+            }
+            // Debug.Log(duplicateVerticesMap.Select(pair => (pair.Key, pair.Value.ToListString())).ToListString());
+
+            return existsMap;
+        }
+
 
         private Dictionary<int, int> RemoveInvalidDuplicates(Dictionary<int, List<int>> duplicateVerticesMap) {
             // Remove trivial invalid entries
@@ -259,7 +315,7 @@ namespace Geometry {
             }
 
             removalList.ForEach(key => duplicateVerticesMap.Remove(key));
-            Debug.Log(duplicateVerticesMap.Select(pair => (pair.Key, pair.Value.ToListString())).ToListString());
+            // Debug.Log(duplicateVerticesMap.Select(pair => (pair.Key, pair.Value.ToListString())).ToListString());
 
             // Remove remaining invalid entries
             var sortedKeys = duplicateVerticesMap.Keys.QuickSorted().ToList();
@@ -308,6 +364,7 @@ namespace Geometry {
             foreach (var pair in actualMap) {
                 duplicateVerticesMap[pair.Key] = new List<int>(pair.Value);
             }
+            // Debug.Log(duplicateVerticesMap.Select(pair => (pair.Key, pair.Value.ToListString())).ToListString());
 
             return reverseDuplicateMap;
         }
