@@ -15,6 +15,14 @@ public static class CollectionExtensions {
             yield return converter(obj);
     }
 
+    public static T FirstOrGivenDefault<T>(this IEnumerable<T> values, Func<T, bool> predicate, T defaultValue) {
+        foreach (var value in values) {
+            if (predicate(value)) return value;
+        }
+
+        return defaultValue;
+    }
+
     public static IEnumerable<(T, T)> SubSets2<T>(this IList<T> list) {
         for (var i = 0; i < list.Count - 1; i++) {
             for (var j = i + 1; j < list.Count; j++) {
