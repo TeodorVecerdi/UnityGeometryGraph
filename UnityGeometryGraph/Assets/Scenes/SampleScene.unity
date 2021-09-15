@@ -200,50 +200,62 @@ MonoBehaviour:
       VertB: 1
       FaceA: 0
       FaceB: 1
+      SelfIndex: 0
     - VertA: 1
       VertB: 2
       FaceA: 0
       FaceB: 7
+      SelfIndex: 0
     - VertA: 2
       VertB: 0
       FaceA: 0
       FaceB: 4
+      SelfIndex: 0
     - VertA: 0
       VertB: 3
       FaceA: 1
       FaceB: 5
+      SelfIndex: 0
     - VertA: 3
       VertB: 1
       FaceA: 1
       FaceB: 6
+      SelfIndex: 0
     - VertA: 4
       VertB: 5
       FaceA: 2
       FaceB: 3
+      SelfIndex: 0
     - VertA: 5
       VertB: 3
       FaceA: 2
       FaceB: 6
+      SelfIndex: 0
     - VertA: 3
       VertB: 4
       FaceA: 2
       FaceB: 5
+      SelfIndex: 0
     - VertA: 4
       VertB: 2
       FaceA: 3
       FaceB: 4
+      SelfIndex: 0
     - VertA: 2
       VertB: 5
       FaceA: 3
       FaceB: 7
+      SelfIndex: 0
     - VertA: 4
       VertB: 0
       FaceA: 4
       FaceB: 5
+      SelfIndex: 0
     - VertA: 5
       VertB: 1
       FaceA: 6
       FaceB: 7
+      SelfIndex: 0
     faces:
     - VertA: 0
       VertB: 1
@@ -375,6 +387,20 @@ MonoBehaviour:
     - Vert: -1
       Face: 7
     attributeManager:
+      vertexAttributes:
+        keys:
+        - position
+      edgeAttributes:
+        keys:
+        - crease
+      faceAttributes:
+        keys:
+        - normal
+        - material_index
+        - shade_smooth
+      faceCornerAttributes:
+        keys:
+        - uv
       dirty: 0
       serializedVertexAttributes:
         keys:
@@ -1593,7 +1619,7 @@ GameObject:
   - component: {fileID: 1422124532}
   - component: {fileID: 1422124533}
   - component: {fileID: 1422124536}
-  - component: {fileID: 1422124535}
+  - component: {fileID: 1422124538}
   - component: {fileID: 1422124537}
   - component: {fileID: 1422124538}
   m_Layer: 0
@@ -1668,7 +1694,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1422124535
+--- !u!114 &1422124536
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1677,7 +1703,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 1422124531}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 690dec9fc3ff4e04aba37f9b579a61b6, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a0b015603174587a94c8dc430662d7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1422124532}
+  doubleSided: 1
+--- !u!114 &1422124537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422124531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf0e2375bcf54b06bffa67b4c9ce6dac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gizmoType: 3
+  handleSize: 0.1
+  showFaceNormals: 0
+  showByElement: 0
+  index: 0
+  source: {fileID: 1422124538}
+--- !u!114 &1422124538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422124531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1589c57e0deb488e8b3b8eba487a65aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   geometrySource: {fileID: 1422124532}
@@ -4694,6 +4752,7 @@ MonoBehaviour:
       VertB: 2
       FaceA: 2
       FaceB: 3
+      SelfIndex: 8
     - VertA: 5
       VertB: 2
       FaceA: 3
@@ -4718,6 +4777,7 @@ MonoBehaviour:
       VertB: 7
       FaceA: 6
       FaceB: 7
+      SelfIndex: 13
     - VertA: 7
       VertB: 6
       FaceA: 6

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Attribute;
+using Sirenix.Utilities;
 using Unity.Mathematics;
 using UnityCommons;
 using UnityEngine;
@@ -115,9 +117,9 @@ namespace Geometry {
                         edges.Count, edges.Count + 1, edges.Count + 2
                     );
 
-                    var edgeA = new Edge(idxA, idxB) { FaceA = faces.Count };
-                    var edgeB = new Edge(idxB, idxC) { FaceA = faces.Count };
-                    var edgeC = new Edge(idxC, idxA) { FaceA = faces.Count };
+                    var edgeA = new Edge(idxA, idxB, edges.Count) { FaceA = faces.Count };
+                    var edgeB = new Edge(idxB, idxC, edges.Count + 1) { FaceA = faces.Count };
+                    var edgeC = new Edge(idxC, idxA, edges.Count + 2) { FaceA = faces.Count };
 
                     var faceCornerA = new FaceCorner(faces.Count);
                     var faceCornerB = new FaceCorner(faces.Count);
@@ -141,9 +143,19 @@ namespace Geometry {
         }
 
         private void RemoveDuplicates(List<float3> vertices, List<float3> faceNormals, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+            var sw = Stopwatch.StartNew();
             var duplicates = GetDuplicateEdges(vertices, faceNormals, duplicateDistanceThreshold * duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+            var el1 = sw.Elapsed;
+            // Debug.Log(duplicates.Count);
+            sw.Restart();
             var duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
+            var el2 = sw.Elapsed;
+            Debug.Log(duplicateVerticesMap.Select(pair => (pair.Key, pair.Value.ToListString())).ToListString());
+            // Debug.Log(duplicateVerticesMap.Count);
+            sw.Restart();
             var reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
+            var el3 = sw.Elapsed;
+            Debug.Log($"GetDuplicateEdges={el1.TotalMilliseconds}; GetDuplicateVerticesMap={el2.TotalMilliseconds}; RemoveInvalidDuplicates={el3.TotalMilliseconds}");
             RemapDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
             RemoveDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
             CheckForErrors(vertices);
@@ -161,59 +173,39 @@ namespace Geometry {
         }
 
         private List<(int, int, bool)> GetDuplicateEdges(List<float3> vertices, List<float3> faceNormals, float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
-            var potentialDuplicates = new List<(int, int, bool)>();
-            // Find potential duplicate edges
-            for (var i = 0; i < edges.Count - 1; i++) {
-                for (var j = i + 1; j < edges.Count; j++) {
-                    var edgeA = edges[i];
-                    var edgeB = edges[j];
-                    var edgeAVertA = vertices[edgeA.VertA];
-                    var edgeAVertB = vertices[edgeA.VertB];
-                    var edgeBVertA = vertices[edgeB.VertA];
-                    var edgeBVertB = vertices[edgeB.VertB];
+            var equalityComparer = new EdgeEqualityComparer(vertices);
+            // NOTE: I don't actually care about the HashSet, everything I need is stored in the comparer lol
+            var _ = new HashSet<Edge>(edges, equalityComparer);
 
-                    // var checkA = VectorUtilities.DistanceSqr(edgeAVertA, edgeBVertA) < sqrDistanceThreshold ? 1 : 0;
-                    // var checkB = VectorUtilities.DistanceSqr(edgeAVertA, edgeBVertB) < sqrDistanceThreshold ? 1 : 0;
-                    // var checkC = VectorUtilities.DistanceSqr(edgeAVertB, edgeBVertA) < sqrDistanceThreshold ? 1 : 0;
-                    // var checkD = VectorUtilities.DistanceSqr(edgeAVertB, edgeBVertB) < sqrDistanceThreshold ? 1 : 0;
-                    // var total = checkA + checkB + checkC + checkD;
-                    //
-                    // // Two pairs of vertices are identical
-                    // if (total < 2) continue;
-                    //
-                    // potentialDuplicates.Add((i, j, checkA == 1));
+            IEnumerable<(int EdgeA, int EdgeB)> potentialDuplicates = equalityComparer.Duplicates
+                                                      // Convert (Key, {values}) to {Key, ...values}
+                                                      .Select(pair => pair.Value.Prepend(pair.Key).ToList()) 
+                                                      // Get all subsets of length 2, so {1,2,3} becomes {{1,2}, {1,3}, {2,3}}
+                                                      .SelectMany(values => values.SubSets2());
 
-                    var checkA = edgeAVertA.Equals(edgeBVertA) && edgeAVertB.Equals(edgeBVertB);
-                    var checkB = edgeAVertA.Equals(edgeBVertB) && edgeAVertB.Equals(edgeBVertA);
-                    if (!checkA && !checkB) continue;
-
-                    potentialDuplicates.Add((i, j, checkA));
-                    break;
-                }
-            }
-
+            var excluded = new HashSet<int>();
             // Find real duplicates based on the face normal angle
             var actualDuplicates = new List<(int, int, bool)>();
-            foreach (var potentialDuplicate in potentialDuplicates) {
-                var edgeAIndex = potentialDuplicate.Item1;
-                var edgeBIndex = potentialDuplicate.Item2;
+            foreach (var (edgeAIndex, edgeBIndex) in potentialDuplicates) {
+                if (excluded.Contains(edgeAIndex) || excluded.Contains(edgeBIndex)) continue;
+                
                 var edgeA = edges[edgeAIndex];
                 var edgeB = edges[edgeBIndex];
                 var normalAngle = math_util.angle(faceNormals[edgeA.FaceA], faceNormals[edgeB.FaceA]);
 
                 if (normalAngle > duplicateNormalAngleThreshold) continue;
 
-                actualDuplicates.Add(potentialDuplicate);
+                excluded.Add(edgeAIndex);
+                excluded.Add(edgeBIndex);
+                
+                var edgeAVertA = vertices[edgeA.VertA];
+                var edgeAVertB = vertices[edgeA.VertB];
+                var edgeBVertA = vertices[edgeB.VertA];
+                var edgeBVertB = vertices[edgeB.VertB];
+
+                actualDuplicates.Add((edgeAIndex, edgeBIndex, edgeAVertA.Equals(edgeBVertA) && edgeAVertB.Equals(edgeBVertB)));
                 edgeA.FaceB = edgeB.FaceA;
-
-                // TODO: Was there a reason I did this in the first place?
-                // // Remap face edges
-                // if (faceB.EdgeA == edgeBIndex) faceB.EdgeA = edgeAIndex;
-                // else if (faceB.EdgeB == edgeBIndex) faceB.EdgeB = edgeAIndex;
-                // else if (faceB.EdgeC == edgeBIndex) faceB.EdgeC = edgeAIndex;
             }
-
-            potentialDuplicates.Clear();
 
             return actualDuplicates;
         }
@@ -268,6 +260,7 @@ namespace Geometry {
             }
 
             removalList.ForEach(key => duplicateVerticesMap.Remove(key));
+            Debug.Log(duplicateVerticesMap.Select(pair => (pair.Key, pair.Value.ToListString())).ToListString());
 
             // Remove remaining invalid entries
             var sortedKeys = duplicateVerticesMap.Keys.QuickSorted().ToList();
@@ -501,7 +494,8 @@ namespace Geometry {
                 fcC.Vert = face.VertC;
             }
         }
-
+        
+        
         [Serializable]
         public class Vertex {
             public List<int> Edges;
@@ -522,9 +516,12 @@ namespace Geometry {
             public int FaceA = -1;
             public int FaceB = -1;
 
-            public Edge(int vertA, int vertB) {
+            public int SelfIndex;
+
+            public Edge(int vertA, int vertB, int selfIndex) {
                 VertA = vertA;
                 VertB = vertB;
+                SelfIndex = selfIndex;
             }
         }
 
