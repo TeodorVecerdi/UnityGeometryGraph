@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Attribute;
-using Sirenix.Utilities;
 using Unity.Mathematics;
 using UnityCommons;
 using UnityEngine;
