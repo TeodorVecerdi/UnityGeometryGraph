@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEngine;
 
 using Edge = Geometry.GeometryData.Edge;
 
@@ -37,9 +36,7 @@ namespace Geometry {
             return true;
         }
 
-        public override int GetHashCode(GeometryData.Edge edge) {
-            // return vertices[edge.VertA].GetHashCode() * 37 + vertices[edge.VertB].GetHashCode();
-            // return 0;
+        public override int GetHashCode(Edge edge) {
             return vertices[edge.VertA].GetHashCode() + vertices[edge.VertB].GetHashCode();
         }
     }
