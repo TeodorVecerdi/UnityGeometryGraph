@@ -35,6 +35,13 @@ namespace Geometry {
             dirty = true;
         }
 
+        public bool HasAttribute(string name) {
+            return vertexAttributes.ContainsKey(name) ||
+                   edgeAttributes.ContainsKey(name) ||
+                   faceAttributes.ContainsKey(name) ||
+                   faceCornerAttributes.ContainsKey(name);
+        }
+
         public bool HasAttribute(string name, AttributeDomain domain) {
             var searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
