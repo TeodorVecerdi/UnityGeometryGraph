@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Attribute;
 using Misc;
@@ -33,6 +33,18 @@ namespace Geometry {
             faceAttributes = new AttributeDictionary();
             faceCornerAttributes = new AttributeDictionary();
             dirty = true;
+        }
+
+        public bool HasAttribute(string name, AttributeDomain domain) {
+            var searchDict = domain switch {
+                AttributeDomain.Vertex => vertexAttributes,
+                AttributeDomain.Edge => edgeAttributes,
+                AttributeDomain.Face => faceAttributes,
+                AttributeDomain.FaceCorner => faceCornerAttributes,
+                _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
+            };
+
+            return searchDict.ContainsKey(name);
         }
 
         public bool Store(BaseAttribute attribute) {
