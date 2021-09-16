@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace GraphFramework.Editor {
-    [CreateAssetMenu(fileName = "Version", menuName = "Graph Framework/Version", order = 0)]
+    [CreateAssetMenu(fileName = "Version", menuName = "Geometry Graph/Version", order = 0)]
     public class GraphVersion : ScriptableObject {
         [SerializeField] private SemVer version;
         public SemVer Version {

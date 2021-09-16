@@ -14,7 +14,7 @@ using RuntimeProp = GraphFramework.Runtime.Property;
 namespace GraphFramework.Editor {
     [ScriptedImporter(0, Extension, 3)]
     public class GraphFrameworkImporter : ScriptedImporter {
-        public const string Extension = "graph";
+        public const string Extension = "geometrygraph";
 
         public override void OnImportAsset(AssetImportContext ctx) {
             var graphObject = GraphFrameworkUtility.LoadGraphAtPath(ctx.assetPath);
