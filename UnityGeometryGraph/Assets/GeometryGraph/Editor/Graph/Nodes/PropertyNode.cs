@@ -6,6 +6,7 @@ namespace GeometryGraph.Editor {
         private string currentType;
         private AbstractProperty property;
         private EdgeConnectorListener edgeConnectorListener;
+        private GraphFrameworkPort propertyPort;
 
         public AbstractProperty Property {
             set => property = value;
@@ -30,6 +31,9 @@ namespace GeometryGraph.Editor {
             Initialize("", EditorView.DefaultNodePosition);
             this.edgeConnectorListener = edgeConnectorListener;
             Refresh();
+        }
+
+        public override void BindPorts() {
         }
 
         public override object GetValueForPort(GraphFrameworkPort port) {
@@ -74,6 +78,8 @@ namespace GeometryGraph.Editor {
             */
             Update(property);
             Refresh();
+            
+            BindPort(propertyPort, RuntimeNode.Port);
         }
 
         public void Update(AbstractProperty property) {

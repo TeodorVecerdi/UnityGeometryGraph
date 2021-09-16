@@ -14,8 +14,8 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            
             Initialize("Float", EditorView.DefaultNodePosition);
+            
             field = new FloatField("Value");
             field.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Float Input Node value");
@@ -29,6 +29,10 @@ namespace GeometryGraph.Editor {
             titleButtonContainer.Add(valuePort);
             
             RefreshExpandedState();
+        }
+
+        public override void BindPorts() {
+            BindPort(valuePort, RuntimeNode.ValuePort);
         }
 
         public override object GetValueForPort(GraphFrameworkPort port) {

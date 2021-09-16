@@ -7,6 +7,19 @@ using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor {
     public class GraphFrameworkPort : Port {
+        public string GUID {
+            get => viewDataKey;
+            set {
+                viewDataKey = value;
+                if (node != null) {
+                    if (!node.RuntimePortDictionary.ContainsKey(this)) {
+                        Debug.LogWarning($"Port {portName} on node {node.title} is not bound to any RuntimePort");
+                    } else {
+                        node.RuntimePortDictionary[this].Guid = value;
+                    }
+                }
+            }
+        }
         public PortType Type { get; private set; }
         public new AbstractNode node => (AbstractNode)base.node;
         public event Action<Edge, GraphFrameworkPort> OnConnect;
@@ -46,7 +59,7 @@ namespace GeometryGraph.Editor {
 
             port.Type = type;
             port.portColor = PortHelper.PortColor(port);
-            port.viewDataKey = Guid.NewGuid().ToString();
+            port.GUID = Guid.NewGuid().ToString();
             port.portName = name;
 
             if (hideLabel) {

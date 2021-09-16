@@ -71,6 +71,12 @@ namespace GeometryGraph.Editor {
             
             RefreshExpandedState();
         }
+        
+        public override void BindPorts() {
+            BindPort(aPort, RuntimeNode.APort);
+            BindPort(bPort, RuntimeNode.BPort);
+            BindPort(resultPort, RuntimeNode.ResultPort);
+        }
 
         protected internal override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
             if (port == aPort) {

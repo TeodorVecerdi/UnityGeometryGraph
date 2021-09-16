@@ -21,6 +21,10 @@ namespace GeometryGraph.Editor {
             AddPort(valuePort);
         }
 
+        public override void BindPorts() {
+            BindPort(valuePort, RuntimeNode.Input);
+        }
+
         protected internal override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
             if (port != valuePort) return;
             

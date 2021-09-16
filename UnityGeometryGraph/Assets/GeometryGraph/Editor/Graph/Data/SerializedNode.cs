@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
@@ -30,6 +29,8 @@ namespace GeometryGraph.Editor {
             EditorView = editorView;
             Node = (AbstractNode) Activator.CreateInstance(System.Type.GetType(Type));
             Node.InitializeNode(edgeConnectorListener);
+            if (edgeConnectorListener != null) 
+                Node.BindPorts();
             Node.GUID = GUID;
             Node.viewDataKey = GUID;
             Node.Owner = this;
@@ -52,21 +53,21 @@ namespace GeometryGraph.Editor {
                 // GET
                 PortData = new List<string>();
                 foreach (var port in Node.Ports) {
-                    PortData.Add(port.viewDataKey);
+                    PortData.Add(port.GUID);
                 }
             } else {
                 // SET
                 if (PortData == null)
-                    throw new InvalidDataException("Serialized port data somehow ended up as null when it was not supposed to.");
+                    throw new Exception("Serialized port data somehow ended up as null when it was not supposed to.");
                 for (var i = 0; i < PortData.Count; i++) {
-                    Node.Ports[i].viewDataKey = PortData[i];
+                    Node.Ports[i].GUID = PortData[i];
                 }
             }
 
             // Build dictionary
             GuidPortDictionary = new Dictionary<string, Port>();
             foreach (var port in Node.Ports) {
-                GuidPortDictionary.Add(port.viewDataKey, port);
+                GuidPortDictionary.Add(port.GUID, port);
             }
         }
 
