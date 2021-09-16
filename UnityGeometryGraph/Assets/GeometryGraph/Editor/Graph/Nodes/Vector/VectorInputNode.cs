@@ -8,7 +8,7 @@ using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor.Vector {
     [Title("Vector", "Input")]
-    public class VectorInputNode : AbstractNode {
+    public class VectorInputNode : AbstractNode<GeometryGraph.Runtime.Graph.DisplayValueNode> {
         private float x;
         private float y;
         private float z;
@@ -72,7 +72,7 @@ namespace GeometryGraph.Editor.Vector {
             AddPort(resultPort);
         }
 
-        protected override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
+        protected internal override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
             if (port == xPort) x = GetValueFromEdge(edge, x);
             else if (port == yPort) y = GetValueFromEdge(edge, y);
             else if (port == zPort) z = GetValueFromEdge(edge, z);

@@ -9,7 +9,7 @@ using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor.Vector {
     [Title("Vector", "Split XYZ")]
-    public class SplitVectorNode : AbstractNode{
+    public class SplitVectorNode : AbstractNode<GeometryGraph.Runtime.Graph.DisplayValueNode> {
         private Vector3 input;
         private float x;
         private float y;
@@ -54,7 +54,7 @@ namespace GeometryGraph.Editor.Vector {
             RefreshExpandedState();
         }
 
-        protected override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
+        protected internal override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
             if (port != inputPort) return;
 
             var newInput = GetValueFromEdge(edge, input);

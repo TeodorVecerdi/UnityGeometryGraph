@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -11,9 +12,8 @@ namespace GeometryGraph.Editor {
         public SerializedNode Owner { get; set; }
         public string GUID;
         public readonly List<GraphFrameworkPort> Ports = new List<GraphFrameworkPort>();
-
         protected EdgeConnectorListener EdgeConnectorListener;
-
+        
         public override bool expanded {
             get => base.expanded;
             set {
@@ -23,23 +23,33 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        protected void AddPort(GraphFrameworkPort port, bool alsoAddToHierarchy = true) {
-            Ports.Add(port);
-            
-            if(!alsoAddToHierarchy) return;
-            var isInput = port.direction == Direction.Input;
-            if (isInput) {
-                base.inputContainer.Add(port);
-            } else {
-                base.outputContainer.Add(port);
-            }
-
-        }
-
         public virtual void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             EdgeConnectorListener = edgeConnectorListener;
         }
 
+        public void Refresh() {
+            RefreshPorts();
+            RefreshExpandedState();
+        }
+
+        public void SetExpandedWithoutNotify(bool value) {
+            base.expanded = value;
+        }
+        
+        public abstract object GetValueForPort(GraphFrameworkPort port);
+  
+        protected internal virtual void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {}
+        protected internal virtual void OnEdgeConnected(Edge edge, GraphFrameworkPort port) {}
+        protected internal virtual void OnEdgeDisconnected(Edge edge, GraphFrameworkPort port) {}
+        public virtual void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) { }
+        public virtual void NotifyEdgeDisconnected(Edge edge, GraphFrameworkPort port) { }
+        public virtual void OnNodeSerialized() { }
+        public virtual void OnNodeDeserialized() { }
+        public virtual void SetNodeData(JObject jsonData) { }
+        public virtual JObject GetNodeData() => new JObject();
+    }
+    
+    public abstract class AbstractNode<TRuntimeNode> : AbstractNode where TRuntimeNode : RuntimeNode {
         protected void Initialize(string nodeTitle, Rect nodePosition) {
             base.title = nodeTitle;
             base.SetPosition(nodePosition);
@@ -48,16 +58,38 @@ namespace GeometryGraph.Editor {
             this.AddStyleSheet("Styles/Node/Node");
             InjectCustomStyle();
         }
+        
+        protected virtual void InjectCustomStyle() {
+            var border = this.Q("node-border");
+            var overflowStyle = border.style.overflow;
+            overflowStyle.value = Overflow.Visible;
+            border.style.overflow = overflowStyle;
+
+            var selectionBorder = this.Q("selection-border");
+            selectionBorder.SendToBack();
+        }
+        
+        protected void AddPort(GraphFrameworkPort port, bool alsoAddToHierarchy = true) {
+            Ports.Add(port);
+            
+            if(!alsoAddToHierarchy) return;
+            var isInput = port.direction == Direction.Input;
+            if (isInput) {
+                inputContainer.Add(port);
+            } else {
+                outputContainer.Add(port);
+            }
+        }
 
         // Only input ports
-        public void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) {
+        public sealed override void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) {
             if (port.direction != Direction.Input) return;
             OnEdgeConnected(edge, port);
             OnPortValueChanged(edge, port);
         }
 
         // Both input & output ports
-        public void NotifyEdgeDisconnected(Edge edge, GraphFrameworkPort port) {
+        public sealed override void NotifyEdgeDisconnected(Edge edge, GraphFrameworkPort port) {
             OnEdgeDisconnected(edge, port);
         }
 
@@ -70,30 +102,7 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        protected virtual void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {}
-        protected virtual void OnEdgeConnected(Edge edge, GraphFrameworkPort port) {}
-        protected virtual void OnEdgeDisconnected(Edge edge, GraphFrameworkPort port) {}
-
-        protected virtual void InjectCustomStyle() {
-            var border = this.Q("node-border");
-            var overflowStyle = border.style.overflow;
-            overflowStyle.value = Overflow.Visible;
-            border.style.overflow = overflowStyle;
-
-            var selectionBorder = this.Q("selection-border");
-            selectionBorder.SendToBack();
-        }
-
-        public void Refresh() {
-            RefreshPorts();
-            RefreshExpandedState();
-        }
-
-        public void SetExpandedWithoutNotify(bool value) {
-            base.expanded = value;
-        }
-
-        public abstract object GetValueForPort(GraphFrameworkPort port);
+        public abstract override object GetValueForPort(GraphFrameworkPort port);
 
         protected T GetValueFromEdge<T>(Edge edge, T defaultValue) {
             var outputPort = edge.output as GraphFrameworkPort;
@@ -111,15 +120,5 @@ namespace GeometryGraph.Editor {
             var sourcePort = firstConnection.output as GraphFrameworkPort;
             return (T)sourcePort!.node!.GetValueForPort(sourcePort);
         }
-
-        public virtual void SetNodeData(JObject jsonData) { }
-
-        public virtual JObject GetNodeData() {
-            var root = new JObject();
-            return root;
-        }
-
-        public virtual void OnNodeSerialized() { }
-        public virtual void OnNodeDeserialized() { }
     }
 }

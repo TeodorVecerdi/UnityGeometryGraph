@@ -5,7 +5,7 @@ using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor {
     [Title("Display Value")]
-    public class DisplayValueNode : AbstractNode {
+    public class DisplayValueNode : AbstractNode<GeometryGraph.Runtime.Graph.DisplayValueNode> {
         private GraphFrameworkPort valuePort;
         private Label valueLabel;
 
@@ -21,7 +21,7 @@ namespace GeometryGraph.Editor {
             AddPort(valuePort);
         }
 
-        protected override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
+        protected internal override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
             if (port != valuePort) return;
             
             valueLabel.text = GetValueFromEdge(edge, (object)null).ToString();

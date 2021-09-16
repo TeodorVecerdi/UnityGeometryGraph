@@ -8,7 +8,7 @@ using Edge = UnityEditor.Experimental.GraphView.Edge;
 namespace GeometryGraph.Editor {
     public class GraphFrameworkPort : Port {
         public PortType Type { get; private set; }
-        public new AbstractNode node => base.node as AbstractNode;
+        public new AbstractNode node => (AbstractNode)base.node;
         public event Action<Edge, GraphFrameworkPort> OnConnect;
         public event Action<Edge, GraphFrameworkPort> OnDisconnect;
         private GraphFrameworkPort(Orientation portOrientation, Direction portDirection, Capacity portCapacity) : base(portOrientation, portDirection, portCapacity, typeof(object)) { }

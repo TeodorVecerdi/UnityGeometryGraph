@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace GeometryGraph.Editor {
     [Title("Float", "Input")]
-    public class FloatInputNode : AbstractNode {
+    public class FloatInputNode : AbstractNode<GeometryGraph.Runtime.Graph.FloatInputNode> {
         private float value;
         private GraphFrameworkPort valuePort;
 

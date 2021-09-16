@@ -10,7 +10,7 @@ using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor.Vector {
     [Title("Vector", "Vector Math")]
-    public class VectorMathNode : AbstractNode{
+    public class VectorMathNode : AbstractNode<GeometryGraph.Runtime.Graph.DisplayValueNode> {
         private Vector3 a;
         private Vector3 b;
         private Vector3 result;
@@ -72,7 +72,7 @@ namespace GeometryGraph.Editor.Vector {
             RefreshExpandedState();
         }
 
-        protected override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
+        protected internal override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
             if (port == aPort) a = GetValueFromEdge(edge, a);
             else if (port == bPort) b = GetValueFromEdge(edge, b);
 

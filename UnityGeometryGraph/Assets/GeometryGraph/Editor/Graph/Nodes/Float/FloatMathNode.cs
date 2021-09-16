@@ -8,7 +8,7 @@ using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor {
     [Title("Float", "Math")]
-    public class FloatMathNode : AbstractNode {
+    public class FloatMathNode : AbstractNode<GeometryGraph.Runtime.Graph.FloatMathNode> {
         private float a;
         private float b;
         private float result;
@@ -72,7 +72,7 @@ namespace GeometryGraph.Editor {
             RefreshExpandedState();
         }
 
-        protected override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
+        protected internal override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
             if (port == aPort) {
                 a = GetValueFromEdge(edge, a);
             } else if (port == bPort) {
