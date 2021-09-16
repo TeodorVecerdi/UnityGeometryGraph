@@ -6,9 +6,9 @@ using Unity.Mathematics;
 using UnityEngine;
 
 namespace Geometry {
-    public class GeometryExporterSmoothShaded : MonoBehaviour {
+    public class GeometryExporterSmoothShaded : SerializedMonoBehaviour {
         [SerializeField] private MeshFilter target;
-        [SerializeField] private GeometryImporter source;
+        [SerializeField, OnStateUpdate(nameof(__OnStateUpdate_GeometrySource))] private IGeometryProvider source;
 
         [SerializeField] private Mesh mesh;
         [SerializeField] private float normalAngleThreshold = 0.1f;
@@ -137,7 +137,7 @@ namespace Geometry {
         private void PrepareMesh() {
             if (mesh == null) mesh = target.sharedMesh;
             if (mesh == null) {
-                mesh = new Mesh { name = $"{source.gameObject.name} Mesh" };
+                mesh = new Mesh { name = "Exported Mesh" };
                 target.sharedMesh = mesh;
             }
 
@@ -170,7 +170,6 @@ namespace Geometry {
         }
 
         private void AddAdjacentFace(int sharedA, int vertexA, int vertexB, int triangle0, int triangle1, int triangle2) {
-            
             int otherVertexIndex;
             int otherFaceCornerIndex;
             var sharedFace = geometry.Faces[sharedA];
@@ -199,6 +198,12 @@ namespace Geometry {
             triangles[submesh].Add(triangle0);
             triangles[submesh].Add(triangle1);
             triangles[submesh].Add(triangle2);
+        }
+        
+        private void __OnStateUpdate_GeometrySource() {
+            if(source == null) return;
+            if (source != null && (Object)source == null) source = null;
+            if (!(Object)source) source = null;
         }
     }
 }

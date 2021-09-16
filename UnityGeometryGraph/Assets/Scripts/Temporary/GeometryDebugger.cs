@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Attribute;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityCommons;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -24,7 +25,7 @@ namespace Geometry {
         private int index;
 
         private int __GetMaxIndex() {
-            if (source == null || data == null) return -1;
+            if (source == null || !(bool)(Object)source || data == null) return -1;
             return gizmoType switch {
                 ElementGizmoType.Vertices => source.Geometry.Vertices.Count - 1,
                 ElementGizmoType.Edges => source.Geometry.Edges.Count - 1,
@@ -34,12 +35,18 @@ namespace Geometry {
             };
         }
 
-        [SerializeField] private IGeometryProvider source;
+        private void __OnStateUpdate_GeometrySource() {
+            if(source == null) return;
+            if (source != null && (Object)source == null) source = null;
+            if (!(Object)source) source = null;
+        }
+
+        [SerializeField, OnStateUpdate(nameof(__OnStateUpdate_GeometrySource))] private IGeometryProvider source;
         private GeometryData data => source?.Geometry;
 
         private void OnDrawGizmosSelected() {
 #if UNITY_EDITOR
-            if (gizmoType == ElementGizmoType.None || source == null || data == null) return;
+            if (gizmoType == ElementGizmoType.None || source == null || !(Object)source || data == null) return;
         
             UnityEditor.Handles.matrix = Gizmos.matrix = source.LocalToWorldMatrix;
             var zTest = UnityEditor.Handles.zTest;
