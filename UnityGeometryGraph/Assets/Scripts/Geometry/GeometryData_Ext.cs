@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Attribute;
 using UnityCommons;
@@ -29,8 +30,14 @@ namespace Geometry {
             var rhsEdgeOffset = lhs.edges.Count;
             var rhsFaceOffset = lhs.faces.Count;
             var rhsFaceCornerOffset = lhs.faceCorners.Count;
+
+            var rhsVertices = new List<Vertex>();
+            var rhsEdges = new List<Edge>();
+            var rhsFaces = new List<Face>();
+            var rhsFaceCorners = new List<FaceCorner>();
             
-            rhs.vertices.ForEach(vertex => {
+            rhs.vertices.ForEach(v => {
+                var vertex = (Vertex) v.Clone();
                 for (var i = 0; i < vertex.Edges.Count; i++) {
                     vertex.Edges[i] += rhsEdgeOffset;
                 }
@@ -42,18 +49,23 @@ namespace Geometry {
                 for (var i = 0; i < vertex.FaceCorners.Count; i++) {
                     vertex.FaceCorners[i] += rhsFaceCornerOffset;
                 }
+                rhsVertices.Add(vertex);
             });
             
-            rhs.edges.ForEach(edge => {
+            rhs.edges.ForEach(e => {
+                var edge = (Edge) e.Clone();
                 edge.VertA += rhsVertexOffset;
                 edge.VertB += rhsVertexOffset;
                 // Note: SelfIndex is no longer used after edge duplicate detection, so there really isn't any point in updating it here
                 edge.SelfIndex += rhsEdgeOffset;
                 edge.FaceA += rhsFaceOffset;
                 if(edge.FaceB != -1) edge.FaceB += rhsFaceOffset;
+                
+                rhsEdges.Add(edge);
             });
             
-            rhs.faces.ForEach(face => {
+            rhs.faces.ForEach(f => {
+                var face = (Face)f.Clone();
                 face.VertA += rhsVertexOffset;
                 face.VertB += rhsVertexOffset;
                 face.VertC += rhsVertexOffset;
@@ -66,18 +78,21 @@ namespace Geometry {
                 for (var i = 0; i < face.AdjacentFaces.Count; i++) {
                     face.AdjacentFaces[i] += rhsFaceOffset;
                 }
+                rhsFaces.Add(face);
             });
             
-            rhs.faceCorners.ForEach(faceCorner => {
+            rhs.faceCorners.ForEach(fc => {
+                var faceCorner = (FaceCorner)fc.Clone();
                 faceCorner.Face += rhsFaceOffset;
                 faceCorner.Vert += rhsVertexOffset;
+                rhsFaceCorners.Add(faceCorner);
             });
             
             //!! 2. Merge metadata into `lhs`
-            lhs.vertices.AddRange(rhs.vertices);
-            lhs.edges.AddRange(rhs.edges);
-            lhs.faces.AddRange(rhs.faces);
-            lhs.faceCorners.AddRange(rhs.faceCorners);
+            lhs.vertices.AddRange(rhsVertices);
+            lhs.edges.AddRange(rhsEdges);
+            lhs.faces.AddRange(rhsFaces);
+            lhs.faceCorners.AddRange(rhsFaceCorners);
 
             //!! 3. Update attributes on `rhs`
             var rhsMaterialIndexOffset = lhs.submeshCount;
