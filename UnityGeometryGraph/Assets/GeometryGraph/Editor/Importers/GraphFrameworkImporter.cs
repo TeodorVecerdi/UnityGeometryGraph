@@ -7,7 +7,6 @@ using UnityEditor.AssetImporters;
 using UnityEngine;
 
 // Note: Aliases for easily differentiating between runtime and editor classes 
-using RuntimeNode = GeometryGraph.Runtime.Graph.Node;
 using RuntimeEdge = GeometryGraph.Runtime.Graph.Edge;
 using RuntimeProp = GeometryGraph.Runtime.Graph.Property;
 

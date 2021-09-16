@@ -1,7 +1,9 @@
 using System;
+using GeometryGraph.Runtime.Graph;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor {
     public class GraphFrameworkPort : Port {

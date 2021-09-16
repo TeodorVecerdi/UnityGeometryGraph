@@ -1,5 +1,7 @@
-﻿using UnityEditor.Experimental.GraphView;
+﻿using GeometryGraph.Runtime.Graph;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
+using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor {
     [Title("Display Value")]

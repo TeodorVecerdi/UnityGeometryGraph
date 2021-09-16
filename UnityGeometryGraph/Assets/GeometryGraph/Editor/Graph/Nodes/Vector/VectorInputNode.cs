@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using GeometryGraph.Runtime.Graph;
+using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor.Vector {
     [Title("Vector", "Input")]
