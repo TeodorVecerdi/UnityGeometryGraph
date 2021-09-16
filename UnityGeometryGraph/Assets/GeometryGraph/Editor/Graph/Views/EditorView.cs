@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using GeometryGraph.Runtime.Graph;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.Searcher;
@@ -143,6 +144,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void BuildGraph() {
+            Debug.Log("Build graph");
             // Remove existing elements
             graphFrameworkGraphView.graphElements.ToList().OfType<Node>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
             graphFrameworkGraphView.graphElements.ToList().OfType<Edge>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
@@ -164,17 +166,43 @@ namespace GeometryGraph.Editor {
 
             
             foreach (var removedNode in graphObject.GraphData.RemovedNodes) {
+                removedNode.Node.NotifyRuntimeNodeRemoved();
                 RemoveNode(removedNode);
+                Debug.Log("Removed node");
             }
             foreach (var removedEdge in graphObject.GraphData.RemovedEdges) {
+                var inputPort = (GraphFrameworkPort)removedEdge.Edge?.input;
+                var outputPort = (GraphFrameworkPort)removedEdge.Edge?.output;
+                if (inputPort == null || outputPort == null) {
+                    Debug.Log("Removed edge with null ends");
+                } else {
+                    var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
+                    var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
+                    var runtimeConnection = new Connection {Input = inputPort.node.RuntimePortDictionary[inputPort], Output = outputPort.node.RuntimePortDictionary[outputPort]};
+                    runtimeConnection.Input.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
+                    runtimeConnection.Output.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
+                    Debug.Log($"Removed edge from {outputPort.node.title} to {inputPort.node.title}");
+                }
                 RemoveEdge(removedEdge);
             }
 
             foreach (var addedNode in graphObject.GraphData.AddedNodes) {
                 AddNode(addedNode);
+                Debug.Log("Added node");
             }
             foreach (var addedEdge in graphObject.GraphData.AddedEdges) {
                 AddEdge(addedEdge);
+                var outputPort = (GraphFrameworkPort)addedEdge.Edge?.output;
+                var inputPort = (GraphFrameworkPort)addedEdge.Edge?.input;
+                
+                if (inputPort != null && outputPort != null) {
+                    var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
+                    var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
+                    runtimeOutput.Node.OnConnectionCreated(runtimeOutput, runtimeInput);
+                    runtimeInput.Node.OnConnectionCreated(runtimeOutput, runtimeInput);
+                }
+                
+                Debug.Log("Added edge");
             }
             
             foreach (var queuedNode in graphObject.GraphData.NodeSelectionQueue) {

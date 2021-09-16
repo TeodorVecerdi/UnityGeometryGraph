@@ -60,6 +60,7 @@ namespace GeometryGraph.Editor {
         public virtual void OnNodeDeserialized() { }
         public virtual void SetNodeData(JObject jsonData) { }
         public virtual JObject GetNodeData() => new JObject();
+        public abstract void NotifyRuntimeNodeRemoved();
     }
     
     public abstract class AbstractNode<TRuntimeNode> : AbstractNode where TRuntimeNode : RuntimeNode {
@@ -84,6 +85,10 @@ namespace GeometryGraph.Editor {
         
         public abstract override object GetValueForPort(GraphFrameworkPort port);
         public abstract override void BindPorts();
+
+        public override void NotifyRuntimeNodeRemoved() {
+            RuntimeNode.OnNodeRemoved();
+        }
 
         protected void BindPort(GraphFrameworkPort graphPort, RuntimePort runtimePort) {
             RuntimePortDictionary[graphPort] = runtimePort;

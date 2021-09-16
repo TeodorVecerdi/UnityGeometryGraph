@@ -53,20 +53,33 @@ namespace GeometryGraph.Runtime.Graph {
             return (T)outputPort.Node.GetValueForPort(outputPort);
         }
 
-        public void OnConnectionCreated(Connection connection) {
-            connection.Input.Connections.Add(connection);
-            connection.Output.Connections.Add(connection);
-            
-            NotifyConnectionCreated(connection, connection.Input);
-            NotifyConnectionCreated(connection, connection.Output);
+        public void OnNodeRemoved() {
+            foreach (var port in Ports) {
+                foreach (var connection in port.Connections) {
+                    var otherPort = port.Direction == PortDirection.Input ? connection.Output : connection.Input;
+                    otherPort.Node.NotifyConnectionRemoved(connection, port);
+                    otherPort.Connections.Remove(connection);
+                }
+            }
+            Debug.Log($"Node removed {GetType()}");
         }
 
-        public void OnConnectionRemoved(Connection connection) {
-            connection.Input.Connections.Remove(connection);
-            connection.Output.Connections.Remove(connection);
-            
-            NotifyConnectionRemoved(connection, connection.Input);
-            NotifyConnectionRemoved(connection, connection.Output);
+        public void OnConnectionCreated(RuntimePort output, RuntimePort input) {
+            var selfPort = output.Node == this ? output : input;
+            var connection = new Connection {Input = input, Output = output};
+            selfPort.Connections.Add(connection);
+            NotifyConnectionCreated(connection, selfPort);
+
+            Debug.Log($"Connection created {GetType()}");
+        }
+
+        public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
+            var selfPort = output.Node == this ? output : input;
+            var index = selfPort.Connections.FindIndex(connection => connection.Output == output && connection.Input == input);
+            var connection = selfPort.Connections[index];
+            selfPort.Connections.RemoveAt(index);
+            NotifyConnectionRemoved(connection, selfPort);
+            Debug.Log($"Connection Removed {GetType()}");
         }
     }
 }
