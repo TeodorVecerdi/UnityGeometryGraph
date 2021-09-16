@@ -7,8 +7,8 @@ using UnityEditor.AssetImporters;
 using UnityEngine;
 
 // Note: Aliases for easily differentiating between runtime and editor classes 
-using RuntimeEdge = GeometryGraph.Runtime.Graph.Edge;
-using RuntimeProp = GeometryGraph.Runtime.Graph.Property;
+using RuntimeConnection = GeometryGraph.Runtime.Graph.Connection;
+using RuntimeProperty = GeometryGraph.Runtime.Graph.Property;
 
 namespace GeometryGraph.Editor {
     [ScriptedImporter(0, Extension, 3)]
@@ -36,10 +36,10 @@ namespace GeometryGraph.Editor {
             runtimeObject.name = $"{assetName} (Runtime)";
 
             // Add properties
-            runtimeObject.Properties = new List<RuntimeProp>(
+            runtimeObject.Properties = new List<RuntimeProperty>(
                 graphObject.GraphData.Properties.Select(
                     property =>
-                        new RuntimeProp {
+                        new RuntimeProperty {
                             Type = property.Type, DisplayName = property.DisplayName, ReferenceName = property.ReferenceName, Guid = property.GUID
                         }
                 )
@@ -48,25 +48,25 @@ namespace GeometryGraph.Editor {
             // Add nodes
             runtimeObject.Nodes = new List<RuntimeNode>();
             foreach (var node in graphObject.GraphData.Nodes) {
-                var nodeData = JObject.Parse(node.NodeData);
+                /*var nodeData = JObject.Parse(node.NodeData);
                 var runtimeNode = new RuntimeNode {
                     Guid = node.GUID
-                };
+                };*/
                 /*switch (node.Type) {
                     default: throw new NotSupportedException($"Invalid node type {node.Type}.");
                 }*/
 
-                runtimeObject.Nodes.Add(runtimeNode);
+                // runtimeObject.Nodes.Add(runtimeNode);
             }
 
             // Add edges
-            runtimeObject.Edges = new List<RuntimeEdge>(
-                graphObject.GraphData.Edges.Select(
+            runtimeObject.Connections = new List<RuntimeConnection>(
+                /*graphObject.GraphData.Edges.Select(
                     edge =>
                         new RuntimeEdge {
                             FromNode = edge.Output, FromPort = edge.OutputPort, ToNode = edge.Input, ToPort = edge.InputPort
                         }
-                )
+                )*/
             );
             runtimeObject.BuildGraph();
 

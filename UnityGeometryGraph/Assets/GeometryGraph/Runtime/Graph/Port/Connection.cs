@@ -1,9 +1,10 @@
 ﻿using System;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     [Serializable]
     public class Connection {
-        public RuntimePort Output;
-        public RuntimePort Input;
+        [SerializeReference] public RuntimePort Output;
+        [SerializeReference] public RuntimePort Input;
     }
 }
