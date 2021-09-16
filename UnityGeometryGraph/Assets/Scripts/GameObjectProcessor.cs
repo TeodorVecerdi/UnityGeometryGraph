@@ -5,7 +5,7 @@ public abstract class GameObjectProcessor<TChild, TProcessed> : MonoBehaviour {
     protected abstract TProcessed Processed { get; set; }
     [SerializeField, HideInInspector] protected int ChildrenHashCode = 0;
 
-    public void Process() {
+    public virtual void Process() {
         var newHashCode = ComputeChildrenHashCode(transform);
         
         if (ChildrenHashCode != newHashCode || Processed == null) {
@@ -17,7 +17,7 @@ public abstract class GameObjectProcessor<TChild, TProcessed> : MonoBehaviour {
     protected abstract TProcessed Process(List<TChild> children);
     protected abstract TChild CollectChild(Transform childTransform);
 
-    private List<TChild> CollectChildren() {
+    protected List<TChild> CollectChildren() {
         var list = new List<TChild>();
         for (var i = 0; i < transform.childCount; i++) {
             list.Add(CollectChild(transform.GetChild(i)));
