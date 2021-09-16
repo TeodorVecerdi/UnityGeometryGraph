@@ -10,7 +10,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Geometry {
     [Serializable]
-    public partial class GeometryData {
+    public partial class GeometryData : ICloneable {
         [SerializeField] private List<Vertex> vertices;
         [SerializeField] private List<Edge> edges;
         [SerializeField] private List<Face> faces;
@@ -493,6 +493,12 @@ namespace Geometry {
                 fcB.Vert = face.VertB;
                 fcC.Vert = face.VertC;
             }
+        }
+
+        public object Clone() {
+            var clone = GeometryData.Empty;
+            GeometryData.Merge(clone, this);
+            return clone;
         }
     }
 }
