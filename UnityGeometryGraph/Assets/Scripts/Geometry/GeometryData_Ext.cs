@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Attribute;
 using UnityCommons;
@@ -16,6 +16,8 @@ namespace Geometry {
     }
     
     public partial class GeometryData {
+        public static GeometryData Empty => new GeometryData();
+
         public static void Merge(GeometryData geometry, Mesh mesh) {
             var rhs = new GeometryData(mesh, 0.0f, 179.99f);
             Merge(geometry, rhs);

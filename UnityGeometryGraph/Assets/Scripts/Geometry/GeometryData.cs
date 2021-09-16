@@ -24,6 +24,15 @@ namespace Geometry {
         public IReadOnlyList<FaceCorner> FaceCorners => faceCorners.AsReadOnly();
         public int SubmeshCount => submeshCount;
 
+        private GeometryData() {
+            vertices = new List<Vertex>();
+            edges = new List<Edge>();
+            faces = new List<Face>();
+            faceCorners = new List<FaceCorner>();
+            attributeManager = new AttributeManager();
+            submeshCount = 0;
+        }
+
         public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
             using var method = Profiler.ProfileMethod();
             submeshCount = mesh.subMeshCount;
