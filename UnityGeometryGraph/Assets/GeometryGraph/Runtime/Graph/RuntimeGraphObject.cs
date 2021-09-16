@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GeometryGraph.Runtime.Graph {
     public class RuntimeGraphObject : ScriptableObject {
         // Graph data
-        [SerializeField] public List<Node> Nodes;
+        [SerializeField] public List<RuntimeNode> Nodes;
         [SerializeField] public List<Edge> Edges;
         [SerializeField] public List<Property> Properties;
 
