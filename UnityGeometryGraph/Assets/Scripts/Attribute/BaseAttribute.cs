@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Attribute {
     [Serializable]
-    public abstract class BaseAttribute : IEnumerable {
+    public abstract class BaseAttribute : IEnumerable, ICloneable {
         private static readonly Type objectType = typeof(object);
         
         public abstract AttributeType Type { get; }
@@ -41,6 +41,13 @@ namespace Attribute {
 
         public IEnumerator GetEnumerator() {
             return Values.GetEnumerator();
+        }
+
+        public object Clone() {
+            var clone = (BaseAttribute) Activator.CreateInstance(GetType(), Name);
+            clone.Domain = Domain;
+            clone.Fill(Values);
+            return clone;
         }
     }
     
