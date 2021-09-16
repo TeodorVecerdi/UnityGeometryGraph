@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Geometry {
     public partial class GeometryData {
         [Serializable]
-        public class Vertex {
+        public class Vertex : ICloneable {
             public List<int> Edges;
             public List<int> Faces;
             public List<int> FaceCorners;
@@ -14,10 +14,14 @@ namespace Geometry {
                 Faces = new List<int>();
                 FaceCorners = new List<int>();
             }
+
+            public object Clone() {
+                return new Vertex { Edges = new List<int>(Edges), Faces = new List<int>(Faces), FaceCorners = new List<int>(FaceCorners) };
+            }
         }
 
         [Serializable]
-        public class Edge {
+        public class Edge : ICloneable {
             public int VertA;
             public int VertB;
             public int FaceA = -1;
@@ -30,10 +34,14 @@ namespace Geometry {
                 VertB = vertB;
                 SelfIndex = selfIndex;
             }
+
+            public object Clone() {
+                return new Edge(VertA, VertB, SelfIndex) { FaceA = FaceA, FaceB = FaceB };
+            }
         }
 
         [Serializable]
-        public class Face {
+        public class Face : ICloneable {
             public int VertA;
             public int VertB;
             public int VertC;
@@ -42,9 +50,9 @@ namespace Geometry {
             public int FaceCornerB;
             public int FaceCornerC;
 
-            public int EdgeA = -1;
-            public int EdgeB = -1;
-            public int EdgeC = -1;
+            public int EdgeA;
+            public int EdgeB;
+            public int EdgeC;
 
             public List<int> AdjacentFaces;
 
@@ -63,15 +71,23 @@ namespace Geometry {
 
                 AdjacentFaces = new List<int>();
             }
+
+            public object Clone() {
+                return new Face(VertA, VertB, VertC, FaceCornerA, FaceCornerB, FaceCornerC, EdgeA, EdgeB, EdgeC) { AdjacentFaces = new List<int>(AdjacentFaces) };
+            }
         }
 
         [Serializable]
-        public class FaceCorner {
+        public class FaceCorner : ICloneable {
             public int Vert = -1;
             public int Face = -1;
 
             public FaceCorner(int face) {
                 Face = face;
+            }
+
+            public object Clone() {
+                return new FaceCorner(Face) { Vert = Vert };
             }
         }
     }
