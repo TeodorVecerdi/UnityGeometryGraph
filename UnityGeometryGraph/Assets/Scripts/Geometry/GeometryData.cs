@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Attribute;
+using Misc;
 using Unity.Mathematics;
 using UnityCommons;
 using UnityEngine;
@@ -24,15 +26,17 @@ namespace Geometry {
         public int SubmeshCount => submeshCount;
 
         public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+            using var method = Profiler.ProfileMethod();
             submeshCount = mesh.subMeshCount;
             var vertices = new List<float3>(mesh.vertices.Select(vertex => new float3(vertex.x, vertex.y, vertex.z)));
             var meshUvs = new List<float2>(mesh.uv.Select(uv => new float2(uv.x, uv.y)));
 
+            var faceNormals = new List<float3>();
             var uvs = new List<float2>();
             var faceMaterialIndices = new List<int>();
             var faceSmoothShaded = new List<bool>();
 
-            var faceNormals = BuildMetadata(mesh, vertices, meshUvs, uvs, faceMaterialIndices, 
+            BuildMetadata(mesh, vertices, meshUvs, faceNormals, uvs, faceMaterialIndices, 
                                             faceSmoothShaded, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
             attributeManager = new AttributeManager();
@@ -51,6 +55,7 @@ namespace Geometry {
             IEnumerable<float3> vertices, List<float2> uvs, 
             IEnumerable<float3> faceNormals, IEnumerable<int> faceMaterialIndices, IEnumerable<bool> faceSmoothShaded
         ) {
+            using var method = Profiler.ProfileMethod();
             attributeManager.Store(vertices.Into<Vector3Attribute>("position", AttributeDomain.Vertex));
 
             attributeManager.Store(faceNormals.Into<Vector3Attribute>("normal", AttributeDomain.Face));
@@ -62,14 +67,15 @@ namespace Geometry {
             if (uvs.Count > 0) attributeManager.Store(uvs.Into<Vector2Attribute>("uv", AttributeDomain.FaceCorner));
         }
 
-        private IEnumerable<float3> BuildMetadata(
-            Mesh mesh, List<float3> vertices, List<float2> uvs, List<float2> correctUvs, List<int> faceMaterialIndices, 
+        private void BuildMetadata(
+            Mesh mesh, List<float3> vertices, List<float2> uvs, List<float3> faceNormals, List<float2> correctUvs, List<int> faceMaterialIndices, 
             List<bool> smoothShaded, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold
         ) {
+            using var method = Profiler.ProfileMethod();
             edges = new List<Edge>(mesh.triangles.Length);
             faces = new List<Face>(mesh.triangles.Length / 3);
             faceCorners = new List<FaceCorner>(mesh.triangles.Length);
-            var faceNormals = BuildElements(mesh, vertices, uvs, correctUvs, faceMaterialIndices, smoothShaded).ToList();
+            BuildElements(mesh, vertices, uvs, faceNormals, correctUvs, faceMaterialIndices, smoothShaded);
             RemoveDuplicates(vertices, faceNormals, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
             this.vertices = new List<Vertex>(vertices.Count);
@@ -77,15 +83,14 @@ namespace Geometry {
                 this.vertices.Add(new Vertex());
             }
 
-            // FillElementMetadata();
-
-            return faceNormals;
+            FillElementMetadata();
         }
 
-        private IEnumerable<float3> BuildElements(
+        private void BuildElements(
             Mesh mesh, List<float3> vertices, List<float2> uvs, 
-            List<float2> correctUvs, List<int> materialIndices, List<bool> smoothShaded
+            List<float3> faceNormals, List<float2> correctUvs, List<int> materialIndices, List<bool> smoothShaded
         ) {
+            using var method = Profiler.ProfileMethod();
             var meshNormals = mesh.normals;
             for (var submesh = 0; submesh < mesh.subMeshCount; submesh++) {
                 var triangles = mesh.GetTriangles(submesh);
@@ -104,7 +109,7 @@ namespace Geometry {
                     var AC = vertC - vertA;
                     var computedNormal = math.normalize(math.cross(AB, AC));
                     var meshNormal = (float3)(meshNormals[idxA] + meshNormals[idxB] + meshNormals[idxC]) / 3.0f;
-                    yield return computedNormal;
+                    faceNormals.Add(computedNormal);
                     materialIndices.Add(submesh);
 
                     smoothShaded.Add(math.lengthsq(computedNormal - meshNormal) > 0.0001f); 
@@ -115,9 +120,9 @@ namespace Geometry {
                         edges.Count, edges.Count + 1, edges.Count + 2
                     );
 
-                    var edgeA = new Edge(idxA, idxB) { FaceA = faces.Count };
-                    var edgeB = new Edge(idxB, idxC) { FaceA = faces.Count };
-                    var edgeC = new Edge(idxC, idxA) { FaceA = faces.Count };
+                    var edgeA = new Edge(idxA, idxB, edges.Count) { FaceA = faces.Count };
+                    var edgeB = new Edge(idxB, idxC, edges.Count + 1) { FaceA = faces.Count };
+                    var edgeC = new Edge(idxC, idxA, edges.Count + 2) { FaceA = faces.Count };
 
                     var faceCornerA = new FaceCorner(faces.Count);
                     var faceCornerB = new FaceCorner(faces.Count);
@@ -141,6 +146,7 @@ namespace Geometry {
         }
 
         private void RemoveDuplicates(List<float3> vertices, List<float3> faceNormals, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
+            using var method = Profiler.ProfileMethod();
             var duplicates = GetDuplicateEdges(vertices, faceNormals, duplicateDistanceThreshold * duplicateDistanceThreshold, duplicateNormalAngleThreshold);
             var duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
             var reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
@@ -150,6 +156,7 @@ namespace Geometry {
         }
 
         private void FillElementMetadata() {
+            using var method = Profiler.ProfileMethod();
             // Face Corner Metadata ==> Backing Vertex
             FillFaceCornerMetadata();
         
@@ -161,64 +168,46 @@ namespace Geometry {
         }
 
         private List<(int, int, bool)> GetDuplicateEdges(List<float3> vertices, List<float3> faceNormals, float sqrDistanceThreshold, float duplicateNormalAngleThreshold) {
-            var potentialDuplicates = new List<(int, int, bool)>();
-            // Find potential duplicate edges
-            for (var i = 0; i < edges.Count - 1; i++) {
-                for (var j = i + 1; j < edges.Count; j++) {
-                    var edgeA = edges[i];
-                    var edgeB = edges[j];
-                    var edgeAVertA = vertices[edgeA.VertA];
-                    var edgeAVertB = vertices[edgeA.VertB];
-                    var edgeBVertA = vertices[edgeB.VertA];
-                    var edgeBVertB = vertices[edgeB.VertB];
+            using var method = Profiler.ProfileMethod();
+            var equalityComparer = new EdgeEqualityComparer(vertices);
+            // NOTE: I don't actually care about the HashSet, everything I need is stored in the comparer lol
+            var _ = new HashSet<Edge>(edges, equalityComparer);
 
-                    // var checkA = VectorUtilities.DistanceSqr(edgeAVertA, edgeBVertA) < sqrDistanceThreshold ? 1 : 0;
-                    // var checkB = VectorUtilities.DistanceSqr(edgeAVertA, edgeBVertB) < sqrDistanceThreshold ? 1 : 0;
-                    // var checkC = VectorUtilities.DistanceSqr(edgeAVertB, edgeBVertA) < sqrDistanceThreshold ? 1 : 0;
-                    // var checkD = VectorUtilities.DistanceSqr(edgeAVertB, edgeBVertB) < sqrDistanceThreshold ? 1 : 0;
-                    // var total = checkA + checkB + checkC + checkD;
-                    //
-                    // // Two pairs of vertices are identical
-                    // if (total < 2) continue;
-                    //
-                    // potentialDuplicates.Add((i, j, checkA == 1));
+            IEnumerable<(int EdgeA, int EdgeB)> potentialDuplicates = equalityComparer.Duplicates
+                                                      // Convert (Key, {values}) to {Key, ...values}
+                                                      .Select(pair => pair.Value.Prepend(pair.Key).ToList()) 
+                                                      // Get all subsets of length 2, so {1,2,3} becomes {{1,2}, {1,3}, {2,3}}
+                                                      .SelectMany(values => values.SubSets2());
 
-                    var checkA = edgeAVertA.Equals(edgeBVertA) && edgeAVertB.Equals(edgeBVertB);
-                    var checkB = edgeAVertA.Equals(edgeBVertB) && edgeAVertB.Equals(edgeBVertA);
-                    if (!checkA && !checkB) continue;
-
-                    potentialDuplicates.Add((i, j, checkA));
-                    break;
-                }
-            }
-
+            var excluded = new HashSet<int>();
             // Find real duplicates based on the face normal angle
             var actualDuplicates = new List<(int, int, bool)>();
-            foreach (var potentialDuplicate in potentialDuplicates) {
-                var edgeAIndex = potentialDuplicate.Item1;
-                var edgeBIndex = potentialDuplicate.Item2;
+            foreach (var (edgeAIndex, edgeBIndex) in potentialDuplicates) {
+                if (excluded.Contains(edgeAIndex) || excluded.Contains(edgeBIndex)) continue;
+                
                 var edgeA = edges[edgeAIndex];
                 var edgeB = edges[edgeBIndex];
                 var normalAngle = math_util.angle(faceNormals[edgeA.FaceA], faceNormals[edgeB.FaceA]);
 
                 if (normalAngle > duplicateNormalAngleThreshold) continue;
 
-                actualDuplicates.Add(potentialDuplicate);
+                excluded.Add(edgeAIndex);
+                excluded.Add(edgeBIndex);
+                
+                var edgeAVertA = vertices[edgeA.VertA];
+                var edgeAVertB = vertices[edgeA.VertB];
+                var edgeBVertA = vertices[edgeB.VertA];
+                var edgeBVertB = vertices[edgeB.VertB];
+
+                actualDuplicates.Add((edgeAIndex, edgeBIndex, edgeAVertA.Equals(edgeBVertA) && edgeAVertB.Equals(edgeBVertB)));
                 edgeA.FaceB = edgeB.FaceA;
-
-                // TODO: Was there a reason I did this in the first place?
-                // // Remap face edges
-                // if (faceB.EdgeA == edgeBIndex) faceB.EdgeA = edgeAIndex;
-                // else if (faceB.EdgeB == edgeBIndex) faceB.EdgeB = edgeAIndex;
-                // else if (faceB.EdgeC == edgeBIndex) faceB.EdgeC = edgeAIndex;
             }
-
-            potentialDuplicates.Clear();
 
             return actualDuplicates;
         }
 
         private Dictionary<int, List<int>> GetDuplicateVerticesMap(List<(int, int, bool)> duplicates) {
+            using var method = Profiler.ProfileMethod();
             // Make a dictionary of (UniqueVertex => [Duplicates])
             var duplicateVerticesMap = new Dictionary<int, List<int>>();
             foreach (var duplicate in duplicates) {
@@ -258,8 +247,9 @@ namespace Geometry {
 
             return duplicateVerticesMap;
         }
-
+        
         private Dictionary<int, int> RemoveInvalidDuplicates(Dictionary<int, List<int>> duplicateVerticesMap) {
+            using var method = Profiler.ProfileMethod();
             // Remove trivial invalid entries
             var removalList = new List<int>();
             foreach (var pair in duplicateVerticesMap) {
@@ -269,45 +259,33 @@ namespace Geometry {
 
             removalList.ForEach(key => duplicateVerticesMap.Remove(key));
 
-            // Remove remaining invalid entries
-            var sortedKeys = duplicateVerticesMap.Keys.QuickSorted().ToList();
+            // Remove remaining invalid entries by joining all duplicate entries
+            // For example (1=>{2, 3}, 3=>{7,12}, 4=>{12, 14}) becomes (1=>{2, 3, 4, 7, 8, 12, 14})
+            var sortedKeys = duplicateVerticesMap.Keys.ToList().QuickSorted();
+            var existsMap = new Dictionary<int, int>(); // maps a vertex index to the actual map
             var actualMap = new Dictionary<int, HashSet<int>>();
-            var reverseDuplicateMap = new Dictionary<int, int>();
 
             foreach (var sortedKey in sortedKeys) {
-                var alreadyExistsKey = -1;
-                var alreadyExistsValue = -1;
-
-                foreach (var pair in actualMap) {
-                    if (pair.Value.Contains(sortedKey)) {
-                        alreadyExistsKey = pair.Key;
-                        break;                        
-                    }
-
-                    if (pair.Value.Any(value => duplicateVerticesMap[sortedKey].Contains(value))) {
-                        alreadyExistsValue = pair.Key;
-                        if (!actualMap.ContainsKey(pair.Key)) actualMap[pair.Key] = new HashSet<int>();
-                        actualMap[pair.Key].AddRange(duplicateVerticesMap[sortedKey]);
-                        actualMap[pair.Key].Add(sortedKey);
-                        
-                        reverseDuplicateMap[sortedKey] = pair.Key;
-                        foreach (var duplicateVertex in duplicateVerticesMap[sortedKey]) {
-                            reverseDuplicateMap[duplicateVertex] = pair.Key;
-                        }
+                if (existsMap.ContainsKey(sortedKey)) {
+                    var target = existsMap[sortedKey];
+                    if (actualMap.ContainsKey(target)) {
+                        actualMap[target].AddRange(duplicateVerticesMap[sortedKey]);
+                        duplicateVerticesMap[sortedKey].ForEach(i => existsMap[i] = target);
+                        continue;
                     }
                 }
-
-                if (alreadyExistsKey != -1) {
-                    actualMap[alreadyExistsKey].AddRange(duplicateVerticesMap[sortedKey]);
-                    foreach (var duplicate in duplicateVerticesMap[sortedKey]) {
-                        reverseDuplicateMap[duplicate] = alreadyExistsKey;
-                    }
-                } else if (alreadyExistsValue == -1) {
-                    actualMap.Add(sortedKey, new HashSet<int>());
-                    actualMap[sortedKey].AddRange(duplicateVerticesMap[sortedKey]);
-                    foreach (var duplicate in duplicateVerticesMap[sortedKey]) {
-                        reverseDuplicateMap[duplicate] = sortedKey;
-                    }
+                
+                var valueExists = duplicateVerticesMap[sortedKey].FirstOrGivenDefault(i => existsMap.ContainsKey(i), -1);
+                if (valueExists != -1) {
+                    var target = existsMap[valueExists]; 
+                    actualMap[target].Add(sortedKey);
+                    actualMap[target].AddRange(duplicateVerticesMap[sortedKey]);
+                    existsMap[sortedKey] = target;
+                    duplicateVerticesMap[sortedKey].ForEach(i => existsMap[i] = target);
+                } else {
+                    actualMap[sortedKey] = new HashSet<int>(duplicateVerticesMap[sortedKey]);
+                    existsMap[sortedKey] = sortedKey;
+                    duplicateVerticesMap[sortedKey].ForEach(i => existsMap[i] = sortedKey);    
                 }
             }
             
@@ -315,19 +293,21 @@ namespace Geometry {
             duplicateVerticesMap.Clear();
             foreach (var pair in actualMap) {
                 duplicateVerticesMap[pair.Key] = new List<int>(pair.Value);
+                existsMap.Remove(pair.Key);
             }
 
-            return reverseDuplicateMap;
+            return existsMap;
         }
-
+        
         private void RemapDuplicateElements(List<float3> vertices, List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
+            using var method = Profiler.ProfileMethod();
             // Remap the vertex indices for faces and edges
             var edgeReverseMap = new Dictionary<int, int>();
             foreach (var duplicate in duplicates) {
                 edgeReverseMap[duplicate.Item2] = duplicate.Item1;
             }
 
-            var allEdgeIndices = faces.SelectMany(face => new[] { face.EdgeA, face.EdgeB, face.EdgeC }).Distinct().Except(edgeReverseMap.Keys).QuickSorted();
+            var allEdgeIndices = faces.SelectMany(face => new[] { face.EdgeA, face.EdgeB, face.EdgeC }).Distinct().Except(edgeReverseMap.Keys).ToList().InsertionSorted();
             var edgeRemap = new Dictionary<int, int>();
             var remapIndex = 0;
             foreach (var sortedKey in allEdgeIndices) {
@@ -360,37 +340,37 @@ namespace Geometry {
         private void RemapFace(Face face, Dictionary<int, int> reverseDuplicateMap, Dictionary<int, int> edgeReverseMap, Dictionary<int, int> edgeIndexRemap, Dictionary<int, int> vertexIndexRemap) {
             if (reverseDuplicateMap.ContainsKey(face.VertA)) {
                 face.VertA = vertexIndexRemap[reverseDuplicateMap[face.VertA]];
-            } else if (vertexIndexRemap.ContainsKey(face.VertA)) {
+            } else {
                 face.VertA = vertexIndexRemap[face.VertA];
             }
 
             if (reverseDuplicateMap.ContainsKey(face.VertB)) {
                 face.VertB = vertexIndexRemap[reverseDuplicateMap[face.VertB]];
-            } else if (vertexIndexRemap.ContainsKey(face.VertB)) {
+            } else {
                 face.VertB = vertexIndexRemap[face.VertB];
             }
 
             if (reverseDuplicateMap.ContainsKey(face.VertC)) {
                 face.VertC = vertexIndexRemap[reverseDuplicateMap[face.VertC]];
-            } else if (vertexIndexRemap.ContainsKey(face.VertC)) {
+            } else {
                 face.VertC = vertexIndexRemap[face.VertC];
             }
 
             if (edgeReverseMap.ContainsKey(face.EdgeA)) {
                 face.EdgeA = edgeIndexRemap[edgeReverseMap[face.EdgeA]];
-            } else if (edgeIndexRemap.ContainsKey(face.EdgeA)) {
+            } else {
                 face.EdgeA = edgeIndexRemap[face.EdgeA];
             }
 
             if (edgeReverseMap.ContainsKey(face.EdgeB)) {
                 face.EdgeB = edgeIndexRemap[edgeReverseMap[face.EdgeB]];
-            } else if (edgeIndexRemap.ContainsKey(face.EdgeB)) {
+            } else {
                 face.EdgeB = edgeIndexRemap[face.EdgeB];
             }
 
             if (edgeReverseMap.ContainsKey(face.EdgeC)) {
                 face.EdgeC = edgeIndexRemap[edgeReverseMap[face.EdgeC]];
-            } else if (edgeIndexRemap.ContainsKey(face.EdgeC)) {
+            } else {
                 face.EdgeC = edgeIndexRemap[face.EdgeC];
             }
         }
@@ -399,31 +379,33 @@ namespace Geometry {
             var edge = edges[edgeIndex];
             if (reverseDuplicateMap.ContainsKey(edge.VertA)) {
                 edge.VertA = vertexRemap[reverseDuplicateMap[edge.VertA]];
-            } else if (vertexRemap.ContainsKey(edge.VertA)) {
+            } else {
                 edge.VertA = vertexRemap[edge.VertA];
             }
 
             if (reverseDuplicateMap.ContainsKey(edge.VertB)) {
                 edge.VertB = vertexRemap[reverseDuplicateMap[edge.VertB]];
-            } else if (vertexRemap.ContainsKey(edge.VertB)) {
+            } else {
                 edge.VertB = vertexRemap[edge.VertB];
             }
         }
 
         private void RemoveDuplicateElements(List<float3> vertices, List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
+            using var method = Profiler.ProfileMethod();
             // Remove duplicate edges
-            foreach (var edge in duplicates.Select(tuple => edges[tuple.Item2]).ToList()) {
+            foreach (var edge in duplicates.Select(t=>edges[t.Item2]).ToList()) {
                 edges.Remove(edge);
             }
 
             // Remove duplicate vertices
-            var sortedDuplicateVertices = reverseDuplicatesMap.Keys.QuickSorted().Reverse().ToList();
+            var sortedDuplicateVertices = reverseDuplicatesMap.Keys.ToList().QuickSorted((i, i1) => i1.CompareTo(i));
             foreach (var vertexIndex in sortedDuplicateVertices) {
                 vertices.RemoveAt(vertexIndex);
             }
         }
 
         private void CheckForErrors(List<float3> vertices) {
+            using var method = Profiler.ProfileMethod();
             // Check if there are any invalid edges
             for (var i = 0; i < edges.Count; i++) {
                 var edge = edges[i];
@@ -447,6 +429,7 @@ namespace Geometry {
         }
 
         private void FillVertexMetadata() {
+            using var method = Profiler.ProfileMethod();
             // Edges
             for (var i = 0; i < edges.Count; i++) {
                 var edge = edges[i];
@@ -477,6 +460,7 @@ namespace Geometry {
         }
 
         private void FillFaceMetadata() {
+            using var method = Profiler.ProfileMethod();
             for (var i = 0; i < faces.Count; i++) {
                 var face = faces[i];
                 var edgeA = edges[face.EdgeA];
@@ -491,6 +475,7 @@ namespace Geometry {
         }
 
         private void FillFaceCornerMetadata() {
+            using var method = Profiler.ProfileMethod();
             foreach (var face in faces) {
                 var fcA = faceCorners[face.FaceCornerA];
                 var fcB = faceCorners[face.FaceCornerB];
@@ -501,7 +486,8 @@ namespace Geometry {
                 fcC.Vert = face.VertC;
             }
         }
-
+        
+        
         [Serializable]
         public class Vertex {
             public List<int> Edges;
@@ -522,9 +508,12 @@ namespace Geometry {
             public int FaceA = -1;
             public int FaceB = -1;
 
-            public Edge(int vertA, int vertB) {
+            public int SelfIndex;
+
+            public Edge(int vertA, int vertB, int selfIndex) {
                 VertA = vertA;
                 VertB = vertB;
+                SelfIndex = selfIndex;
             }
         }
 
