@@ -39,5 +39,36 @@ namespace Tests.Unit.Attribute {
             Assert.AreEqual(attr.Domain, deserialized.Domain, "{0} == {1}", attr.Domain, deserialized.Domain);
             Assert.IsTrue(attr.Values.SequenceEqual(deserialized.Values), "original.Values.SequenceEqual(deserialized.Values)");
         }
+
+        [Test]
+        public void AttributeCloningDoesNotThrow() {
+            var attr = Enumerable.Range(0, 100).Select(_ => Rand.Float).Into<FloatAttribute>("attr", AttributeDomain.Vertex);
+
+            BaseAttribute clone = null;
+            Assert.DoesNotThrow(() => {
+                clone = (BaseAttribute) attr.Clone();
+            }, "clone = (BaseAttribute) attr.Clone()");
+            
+            Assert.IsNotNull(clone, "clone != null");
+
+            FloatAttribute typedClone = null;
+            Assert.DoesNotThrow(() => {
+                typedClone = clone as FloatAttribute;
+            });
+            
+            Assert.IsNotNull(typedClone, "typedClone != null");
+        }
+
+        [Test]
+        public void AttributeCloneIsCorrect() {
+            var attr = Enumerable.Range(0, 100).Select(_ => Rand.Float).Into<FloatAttribute>("attr", AttributeDomain.Vertex);
+            var clone = (FloatAttribute)attr.Clone();
+            
+            Assert.AreEqual(attr.Name, clone.Name, "attr.Name == clone.Name");
+            Assert.AreEqual(attr.Type, clone.Type, "attr.Type == clone.Type");
+            Assert.AreEqual(attr.Domain, clone.Domain, "attr.Domain == clone.Domain");
+            Assert.AreEqual(attr.ElementType, clone.ElementType, "attr.ElementType == clone.ElementType");
+            Assert.IsTrue(attr.Values.SequenceEqual(clone.Values), "attr.Values.SequenceEqual(clone.Values)");
+        }
     }
 }
