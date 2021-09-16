@@ -135,7 +135,7 @@ namespace Geometry {
             foreach (var pair in allRhsAttributeDictionaries) {
                 // Skipping already existing attributes because they were merged in previous foreach-loop
                 if(lhs.attributeManager.HasAttribute(pair.Key, pair.Value.Domain)) continue;
-                lhs.attributeManager.Store(pair.Value);
+                lhs.attributeManager.Store((BaseAttribute) pair.Value.Clone());
             }
             
             //!! 5. Update metadata on `lhs`
