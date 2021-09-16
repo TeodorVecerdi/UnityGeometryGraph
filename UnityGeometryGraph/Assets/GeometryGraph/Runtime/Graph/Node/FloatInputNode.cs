@@ -5,7 +5,7 @@
         public RuntimePort ValuePort { get; }
 
         public FloatInputNode(string guid) : base(guid) {
-            ValuePort = new RuntimePort(PortType.Float, PortDirection.Output, this);
+            ValuePort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
         }
 
         public void UpdateValue(float newValue) {

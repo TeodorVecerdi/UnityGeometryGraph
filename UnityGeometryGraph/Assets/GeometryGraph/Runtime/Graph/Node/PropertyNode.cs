@@ -4,7 +4,7 @@
         public RuntimePort Port { get; }
         
         public PropertyNode(string guid) : base(guid) {
-            Port = new RuntimePort(PortType.Any, PortDirection.Output, this);
+            Port = RuntimePort.Create(PortType.Any, PortDirection.Output, this);
         }
 
         public override object GetValueForPort(RuntimePort port) {

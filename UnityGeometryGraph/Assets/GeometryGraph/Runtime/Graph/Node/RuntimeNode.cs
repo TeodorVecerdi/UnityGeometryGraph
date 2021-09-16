@@ -1,13 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     [Serializable]
     public abstract class RuntimeNode {
         public string Guid;
+        public List<RuntimePort> Ports;
 
         public RuntimeNode(string guid) {
             Guid = guid;
+            Ports = new List<RuntimePort>();
         }
 
         public abstract object GetValueForPort(RuntimePort port);

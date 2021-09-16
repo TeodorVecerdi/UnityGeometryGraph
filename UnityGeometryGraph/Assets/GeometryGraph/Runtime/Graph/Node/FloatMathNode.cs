@@ -14,9 +14,9 @@ namespace GeometryGraph.Runtime.Graph {
         public RuntimePort ResultPort { get; }
 
         public FloatMathNode(string guid) : base(guid) {
-            APort = new RuntimePort(PortType.Float, PortDirection.Input, this);
-            BPort = new RuntimePort(PortType.Float, PortDirection.Input, this);
-            ResultPort = new RuntimePort(PortType.Float, PortDirection.Output, this);
+            APort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
+            BPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
+            ResultPort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
         }
 
         // Note: This requires parity between graph enum and runtime enum.

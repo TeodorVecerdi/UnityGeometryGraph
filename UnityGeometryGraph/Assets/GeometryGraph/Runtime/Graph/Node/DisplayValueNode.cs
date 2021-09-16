@@ -5,7 +5,7 @@ namespace GeometryGraph.Runtime.Graph {
         public RuntimePort Input { get; }
 
         public DisplayValueNode(string guid) : base(guid) {
-            Input = new RuntimePort(PortType.Any, PortDirection.Input, this);
+            Input = RuntimePort.Create(PortType.Any, PortDirection.Input, this);
         }
 
         public override object GetValueForPort(RuntimePort port) {

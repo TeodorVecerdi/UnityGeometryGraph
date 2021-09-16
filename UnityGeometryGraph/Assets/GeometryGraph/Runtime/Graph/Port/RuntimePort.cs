@@ -11,11 +11,18 @@ namespace GeometryGraph.Runtime.Graph {
         [SerializeReference] public readonly RuntimeNode Node;
         public readonly List<Connection> Connections;
 
-        public RuntimePort(PortType type, PortDirection direction, RuntimeNode owner) {
+        private RuntimePort() {}
+        private RuntimePort(PortType type, PortDirection direction, RuntimeNode owner) {
             Type = type;
             Direction = direction;
             Node = owner;
             Connections = new List<Connection>();
+        }
+
+        public static RuntimePort Create(PortType type, PortDirection direction, RuntimeNode owner) {
+            var port = new RuntimePort(type, direction, owner);
+            owner.Ports.Add(port);
+            return port;
         }
     }
 }
