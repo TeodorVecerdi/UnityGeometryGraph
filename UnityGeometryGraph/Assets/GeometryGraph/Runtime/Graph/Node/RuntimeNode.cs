@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace GeometryGraph.Runtime.Graph {
     [Serializable]
     public abstract class RuntimeNode {
         public string Guid;
-        public List<RuntimePort> Ports;
 
         public RuntimeNode(string guid) {
             Guid = guid;
-            Ports = new List<RuntimePort>();
         }
 
         public abstract object GetValueForPort(RuntimePort port);
@@ -50,6 +47,22 @@ namespace GeometryGraph.Runtime.Graph {
 
             var outputPort = firstConnection.Output;
             return (T)outputPort.Node.GetValueForPort(outputPort);
+        }
+
+        public void OnConnectionCreated(Connection connection) {
+            connection.Input.Connections.Add(connection);
+            connection.Output.Connections.Add(connection);
+            
+            NotifyConnectionCreated(connection, connection.Input);
+            NotifyConnectionCreated(connection, connection.Output);
+        }
+
+        public void OnConnectionRemoved(Connection connection) {
+            connection.Input.Connections.Remove(connection);
+            connection.Output.Connections.Remove(connection);
+            
+            NotifyConnectionRemoved(connection, connection.Input);
+            NotifyConnectionRemoved(connection, connection.Output);
         }
     }
 }
