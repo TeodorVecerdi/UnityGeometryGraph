@@ -20,6 +20,7 @@ namespace GeometryGraph.Editor {
             field.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Float Input Node value");
                 value = evt.newValue;
+                RuntimeNode.UpdateValue(value);
                 NotifyPortValueChanged(valuePort);
             });
             
@@ -48,6 +49,7 @@ namespace GeometryGraph.Editor {
 
         public override void SetNodeData(JObject jsonData) {
             value = jsonData.Value<float>("value");
+            RuntimeNode.UpdateValue(value);
             field.SetValueWithoutNotify(value);
             NotifyPortValueChanged(valuePort);
             base.SetNodeData(jsonData);

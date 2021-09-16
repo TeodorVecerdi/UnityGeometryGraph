@@ -19,6 +19,16 @@ namespace GeometryGraph.Runtime.Graph {
             ResultPort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
         }
 
+        public void UpdateA(float newA) {
+            a = newA;
+            NotifyPortValueChanged(ResultPort);
+        }
+
+        public void UpdateB(float newB) {
+            b = newB;
+            NotifyPortValueChanged(ResultPort);
+        }
+        
         // Note: This requires parity between graph enum and runtime enum.
         // Should probably change at some point into a shared enum
         public void UpdateOperation(int operationAsInt) {

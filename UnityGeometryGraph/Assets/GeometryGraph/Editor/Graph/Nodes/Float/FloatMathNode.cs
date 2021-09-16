@@ -32,6 +32,7 @@ namespace GeometryGraph.Editor {
             operationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Math Operation");
                 operation = (MathOperation)evt.newValue;
+                RuntimeNode.UpdateOperation((int)operation);
                 NotifyPortValueChanged(resultPort);
             });
             
@@ -41,11 +42,13 @@ namespace GeometryGraph.Editor {
             (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>(
                 "A", Orientation.Horizontal, PortType.Float, edgeConnectorListener, onDisconnect: (edge, port) => {
                     a = aField.value;
+                    RuntimeNode.UpdateA(a);
                     NotifyPortValueChanged(resultPort);
                 });
             (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>(
                 "B", Orientation.Horizontal, PortType.Float, edgeConnectorListener, onDisconnect: (edge, port) => {
                     b = bField.value;
+                    RuntimeNode.UpdateB(b);
                     NotifyPortValueChanged(resultPort);
                 });
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener);
@@ -56,12 +59,14 @@ namespace GeometryGraph.Editor {
             aField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Math input (A)");
                 a = evt.newValue;
+                RuntimeNode.UpdateA(a);
                 NotifyPortValueChanged(resultPort);
             });
            
             bField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Math input (B)");
                 b = evt.newValue;
+                RuntimeNode.UpdateB(b);
                 NotifyPortValueChanged(resultPort);
             });
 
@@ -81,8 +86,10 @@ namespace GeometryGraph.Editor {
         protected internal override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
             if (port == aPort) {
                 a = GetValueFromEdge(edge, a);
+                RuntimeNode.NotifyPortValueChanged(RuntimePortDictionary[aPort]);
             } else if (port == bPort) {
                 b = GetValueFromEdge(edge, b);
+                RuntimeNode.NotifyPortValueChanged(RuntimePortDictionary[bPort]);
             }
 
             UpdateResult();
@@ -121,6 +128,7 @@ namespace GeometryGraph.Editor {
             root["b"] = b;
             root["bf"] = bField.enabledSelf ? b : bField.value;
             root["op"] = (int)operation;
+            
             return root;
         }
 
@@ -131,6 +139,10 @@ namespace GeometryGraph.Editor {
             bField.SetValueWithoutNotify(jsonData.Value<float>("bf"));
             operation = (MathOperation)jsonData.Value<int>("op");
             operationField.SetValueWithoutNotify(operation);
+
+            RuntimeNode.UpdateA(a);
+            RuntimeNode.UpdateB(b);
+            RuntimeNode.UpdateOperation((int)operation);
 
             base.SetNodeData(jsonData); 
         }

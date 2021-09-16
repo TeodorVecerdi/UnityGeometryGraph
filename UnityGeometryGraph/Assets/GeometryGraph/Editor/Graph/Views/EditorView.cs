@@ -154,12 +154,26 @@ namespace GeometryGraph.Editor {
 
             // Create & add graph elements 
             graphObject.GraphData.Nodes.ForEach(node => AddNode(node));
-            graphObject.GraphData.Edges.ForEach(AddEdge);
+            graphObject.GraphData.Edges.ForEach(edge => {
+                var outputNode = GraphFrameworkGraphView.nodes.First(node => node.viewDataKey == edge.Output) as AbstractNode;
+                var inputNode = GraphFrameworkGraphView.nodes.First(node => node.viewDataKey == edge.Input) as AbstractNode;
+                var outputPort = (GraphFrameworkPort)outputNode.Owner.GuidPortDictionary[edge.OutputPort];
+                var inputPort = (GraphFrameworkPort)inputNode.Owner.GuidPortDictionary[edge.InputPort];
+                
+                if (inputPort != null && outputPort != null) {
+                    var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
+                    var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
+                    runtimeOutput.Node.OnConnectionCreated(runtimeOutput, runtimeInput);
+                    runtimeInput.Node.OnConnectionCreated(runtimeOutput, runtimeInput);
+                } else {
+                    Debug.Log("Edge ports were null");
+                }
+                AddEdge(edge);
+            });
             graphObject.GraphData.Properties.ForEach(AddProperty);
         }
 
         public void HandleChanges() {
-
             if(graphObject.GraphData.AddedProperties.Any() || graphObject.GraphData.RemovedProperties.Any())
                 searchWindowProvider.RegenerateEntries = true;
             blackboardProvider.HandleChanges();

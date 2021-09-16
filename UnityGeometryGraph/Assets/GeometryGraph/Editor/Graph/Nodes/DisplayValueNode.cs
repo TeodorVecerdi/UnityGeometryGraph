@@ -31,16 +31,6 @@ namespace GeometryGraph.Editor {
             valueLabel.text = GetValueFromEdge(edge, (object)null).ToString();
         }
 
-        /*protected override void OnEdgeConnected(Edge edge, GraphFrameworkPort port) {
-            if (valueLabel == null || valuePort == null || edge.output == null) return;
-            var value = GetValueFromEdge(edge, (object)null);
-            if (value == null) {
-                Debug.Log("value is null");
-                value = "";
-            }
-            valueLabel.text = value.ToString();
-        }*/
-
         public override object GetValueForPort(GraphFrameworkPort port) {
             return null;
         }

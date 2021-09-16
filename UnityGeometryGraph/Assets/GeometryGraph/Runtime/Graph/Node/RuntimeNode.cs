@@ -76,10 +76,12 @@ namespace GeometryGraph.Runtime.Graph {
         public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
             var selfPort = output.Node == this ? output : input;
             var index = selfPort.Connections.FindIndex(connection => connection.Output == output && connection.Input == input);
-            var connection = selfPort.Connections[index];
-            selfPort.Connections.RemoveAt(index);
-            NotifyConnectionRemoved(connection, selfPort);
-            Debug.Log($"Connection Removed {GetType()}");
+            if (index != -1) {
+                var connection = selfPort.Connections[index];
+                selfPort.Connections.RemoveAt(index);
+                NotifyConnectionRemoved(connection, selfPort);
+                Debug.Log($"Connection Removed {GetType()}");
+            }
         }
     }
 }
