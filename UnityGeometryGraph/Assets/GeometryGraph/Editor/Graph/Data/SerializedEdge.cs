@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor {

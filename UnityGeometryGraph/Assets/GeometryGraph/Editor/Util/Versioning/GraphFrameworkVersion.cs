@@ -1,6 +1,3 @@
-using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace GeometryGraph.Editor {
