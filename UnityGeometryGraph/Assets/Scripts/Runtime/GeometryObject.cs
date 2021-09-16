@@ -44,13 +44,17 @@ namespace Runtime {
 
         private Mesh TransformMeshToRootLocal(MeshFilter filter) {
             var filterLocalToRootLocalMatrix = transform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+            var rotation = Quaternion.LookRotation(
+                filterLocalToRootLocalMatrix.GetColumn(2),
+                filterLocalToRootLocalMatrix.GetColumn(1)
+            );
             var sourceMesh = filter.sharedMesh;
-            
+
             var mesh = new Mesh();
             var vertices = sourceMesh.vertices.Select(vertex => (Vector3)(filterLocalToRootLocalMatrix * new Vector4(vertex.x, vertex.y, vertex.z, 1.0f))).ToList();
+            var normals = sourceMesh.normals.Select(normal => (rotation * normal).normalized).ToList();
             mesh.SetVertices(vertices);
-            mesh.SetNormals(sourceMesh.normals);
-            mesh.SetTangents(sourceMesh.tangents);
+            mesh.SetNormals(normals);
             mesh.SetUVs(0, sourceMesh.uv);
             mesh.subMeshCount = sourceMesh.subMeshCount;
             for (var i = 0; i < mesh.subMeshCount; i++) {
