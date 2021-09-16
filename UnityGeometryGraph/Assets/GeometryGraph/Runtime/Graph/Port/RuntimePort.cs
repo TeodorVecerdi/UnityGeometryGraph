@@ -6,9 +6,16 @@ namespace GeometryGraph.Runtime.Graph {
     [Serializable]
     public class RuntimePort {
         public string Guid;
-        public PortType Type;
-        public PortDirection Direction;
-        [SerializeReference] public RuntimeNode Node;
-        public List<Connection> Connections;
+        public readonly PortType Type;
+        public readonly PortDirection Direction;
+        [SerializeReference] public readonly RuntimeNode Node;
+        public readonly List<Connection> Connections;
+
+        public RuntimePort(PortType type, PortDirection direction, RuntimeNode owner) {
+            Type = type;
+            Direction = direction;
+            Node = owner;
+            Connections = new List<Connection>();
+        }
     }
 }

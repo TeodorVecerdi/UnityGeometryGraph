@@ -1,19 +1,20 @@
 ﻿namespace GeometryGraph.Runtime.Graph {
     public class FloatInputNode : RuntimeNode {
         private float value;
-        private RuntimePort port;
-        
-        public FloatInputNode(string guid, float value) : base(guid) {
-            this.value = value;
+
+        public RuntimePort ValuePort { get; }
+
+        public FloatInputNode(string guid) : base(guid) {
+            ValuePort = new RuntimePort(PortType.Float, PortDirection.Output, this);
         }
 
         public void UpdateValue(float newValue) {
             value = newValue;
-            NotifyPortValueChanged(port);
+            NotifyPortValueChanged(ValuePort);
         }
 
         public override object GetValueForPort(RuntimePort port) {
-            if (port == this.port) return value;
+            if (port == this.ValuePort) return value;
             return null;
         }
     }

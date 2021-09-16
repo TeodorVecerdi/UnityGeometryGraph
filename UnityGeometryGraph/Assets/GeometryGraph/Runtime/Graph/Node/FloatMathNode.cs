@@ -9,32 +9,32 @@ namespace GeometryGraph.Runtime.Graph {
         private enum MathOperation {Add, Subtract, Multiply, Divide}
         private MathOperation operation;
 
-        private RuntimePort aPort;
-        private RuntimePort bPort;
-        private RuntimePort resultPort;
-        
-        public FloatMathNode(string guid, float a, float b) : base(guid) {
-            this.a = a;
-            this.b = b;
-            result = CalculateResult();
+        public RuntimePort APort { get; }
+        public RuntimePort BPort { get; }
+        public RuntimePort ResultPort { get; }
+
+        public FloatMathNode(string guid) : base(guid) {
+            APort = new RuntimePort(PortType.Float, PortDirection.Input, this);
+            BPort = new RuntimePort(PortType.Float, PortDirection.Input, this);
+            ResultPort = new RuntimePort(PortType.Float, PortDirection.Output, this);
         }
 
         // Note: This requires parity between graph enum and runtime enum.
         // Should probably change at some point into a shared enum
         public void UpdateOperation(int operationAsInt) {
             operation = (MathOperation) operationAsInt;
-            NotifyPortValueChanged(resultPort);
+            NotifyPortValueChanged(ResultPort);
         }
 
         public override object GetValueForPort(RuntimePort port) {
-            if (port != resultPort) return null;
+            if (port != ResultPort) return null;
             result = CalculateResult();
             return result;
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port == aPort) a = GetValue(connection, a);
-            else if (port == bPort) b = GetValue(connection, b);
+            if (port == APort) a = GetValue(connection, a);
+            else if (port == BPort) b = GetValue(connection, b);
 
             UpdateResult();
         }
@@ -44,7 +44,7 @@ namespace GeometryGraph.Runtime.Graph {
             if(Math.Abs(result - newResult) < 0.00001f) return;
 
             result = newResult;
-            NotifyPortValueChanged(resultPort);
+            NotifyPortValueChanged(ResultPort);
         }
 
         private float CalculateResult() {

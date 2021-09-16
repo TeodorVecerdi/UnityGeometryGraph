@@ -2,9 +2,10 @@
 
 namespace GeometryGraph.Runtime.Graph {
     public class DisplayValueNode : RuntimeNode {
-        private RuntimePort input;
-        
+        public RuntimePort Input { get; }
+
         public DisplayValueNode(string guid) : base(guid) {
+            Input = new RuntimePort(PortType.Any, PortDirection.Input, this);
         }
 
         public override object GetValueForPort(RuntimePort port) {
@@ -12,7 +13,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port != input) return;
+            if (port != Input) return;
 
             Debug.Log(GetValue(connection, (object)null).ToString());
         }
