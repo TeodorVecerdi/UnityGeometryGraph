@@ -27,12 +27,14 @@ public abstract class GameObjectProcessor<TChild, TProcessed> : MonoBehaviour {
     }
 
     protected virtual int ComputeChildrenHashCode(Transform transform) {
+        // TODO: Write a better hashcode. Include transform data, childCount/child components.
+        // Currently it reacts only to adding/removing object and disabling/enabling objects
         unchecked {
-            var hashCode = transform.gameObject.GetHashCode() * 37 + transform.gameObject.activeSelf.GetHashCode();
+            var hashCode = transform.gameObject.GetHashCode() * 137 + transform.gameObject.activeSelf.GetHashCode();
             if (transform.childCount == 0) return hashCode;
             
             for (var i = 0; i < transform.childCount; i++) {
-                hashCode = hashCode * 37 + ComputeChildrenHashCode(transform.GetChild(i));
+                hashCode = hashCode * 239 + ComputeChildrenHashCode(transform.GetChild(i));
             }
 
             return hashCode;
