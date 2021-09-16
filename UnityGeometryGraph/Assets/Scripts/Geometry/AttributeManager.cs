@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using Attribute;
 using Misc;
 using Sirenix.OdinInspector;
@@ -14,6 +15,11 @@ namespace Geometry {
         [ShowInInspector] private AttributeDictionary edgeAttributes;
         [ShowInInspector] private AttributeDictionary faceAttributes;
         [ShowInInspector] private AttributeDictionary faceCornerAttributes;
+
+        internal IReadOnlyDictionary<string, BaseAttribute> VertexAttributes => vertexAttributes;
+        internal IReadOnlyDictionary<string, BaseAttribute> EdgeAttributes => edgeAttributes;
+        internal IReadOnlyDictionary<string, BaseAttribute> FaceAttributes => faceAttributes;
+        internal IReadOnlyDictionary<string, BaseAttribute> FaceCornerAttributes => faceCornerAttributes;
 
         [SerializeField, HideInInspector] private bool dirty;
         [SerializeField, HideInInspector] private SerializedAttributeDictionary serializedVertexAttributes;
