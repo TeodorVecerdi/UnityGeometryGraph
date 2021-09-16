@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Attribute;
 using UnityCommons;
@@ -85,9 +85,14 @@ namespace Geometry {
 
             //!! 4. Merge attributes on `lhs`
             // Material index is treated separately
-            var lhsMaterialIndexAttr = lhs.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face);
-            lhsMaterialIndexAttr.AppendMany(rhsMaterialIndexAttr).Into(lhsMaterialIndexAttr);
-            
+            if (lhs.attributeManager.HasAttribute("material_index", AttributeDomain.Face)) {
+                var lhsMaterialIndexAttr = lhs.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face);
+                lhsMaterialIndexAttr.AppendMany(rhsMaterialIndexAttr).Into(lhsMaterialIndexAttr);
+            } else {
+                var attr = rhsMaterialIndexAttr.Into<IntAttribute>("material_index", AttributeDomain.Face);
+                lhs.attributeManager.Store(attr);
+            }
+
             // Rest of attributes just get merged normally
             // First attributes in lhs & rhs
             var allLhsAttributeDictionaries = 
