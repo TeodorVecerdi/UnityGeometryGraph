@@ -11,6 +11,7 @@ namespace Geometry {
     public class GeometryDebugger : SerializedMonoBehaviour {
         [SerializeField] private ElementGizmoType gizmoType;
         [SerializeField] private float handleSize = 0.1f;
+        [SerializeField] private float faceDistanceOffset = 0.015f;
         
         [ShowIf("@gizmoType == ElementGizmoType.Faces || gizmoType == ElementGizmoType.FacesByMaterial || gizmoType == ElementGizmoType.FacesByShadeSmooth")]
         [SerializeField] private bool showFaceNormals;
@@ -82,7 +83,7 @@ namespace Geometry {
                     }
                 }
             } else if (gizmoType == ElementGizmoType.Faces || gizmoType == ElementGizmoType.FacesByMaterial || gizmoType == ElementGizmoType.FacesByShadeSmooth) {
-                var dist = 0.015f * UnityEditor.HandleUtility.GetHandleSize(transform.position);
+                var dist = faceDistanceOffset * UnityEditor.HandleUtility.GetHandleSize(transform.position);
                 var faceNormals = data.GetAttribute<Vector3Attribute>("normal");
                 var faceMaterials = data.GetAttribute<IntAttribute>("material_index");
                 var faceShadeSmooth = data.GetAttribute<BoolAttribute>("shade_smooth");
