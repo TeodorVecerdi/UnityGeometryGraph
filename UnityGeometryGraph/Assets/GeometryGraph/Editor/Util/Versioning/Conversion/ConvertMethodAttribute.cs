@@ -2,7 +2,7 @@ using System;
 
 namespace GraphFramework.Editor {
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false), ]
-    public class ConvertMethodAttribute : Attribute {
+    public class ConvertMethodAttribute : System.Attribute {
         public readonly SemVer TargetVersion;
 
         /// <summary>
