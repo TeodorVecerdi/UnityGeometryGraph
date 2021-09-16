@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Attribute;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityCommons;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Geometry {
-    public class GeometryDebugger : MonoBehaviour {
+    public class GeometryDebugger : SerializedMonoBehaviour {
         [SerializeField] private ElementGizmoType gizmoType;
         [SerializeField] private float handleSize = 0.1f;
         
@@ -25,22 +26,22 @@ namespace Geometry {
         private int __GetMaxIndex() {
             if (source == null || data == null) return -1;
             return gizmoType switch {
-                ElementGizmoType.Vertices => source.GeometryData.Vertices.Count - 1,
-                ElementGizmoType.Edges => source.GeometryData.Edges.Count - 1,
-                ElementGizmoType.Faces => source.GeometryData.Faces.Count - 1,
-                ElementGizmoType.FaceEdges => source.GeometryData.Faces.Count - 1,
+                ElementGizmoType.Vertices => source.Geometry.Vertices.Count - 1,
+                ElementGizmoType.Edges => source.Geometry.Edges.Count - 1,
+                ElementGizmoType.Faces => source.Geometry.Faces.Count - 1,
+                ElementGizmoType.FaceEdges => source.Geometry.Faces.Count - 1,
                 _ => 0
             };
         }
 
-        [SerializeField] private GeometryImporter source;
-        private GeometryData data => source?.GeometryData;
+        [SerializeField] private IGeometryProvider source;
+        private GeometryData data => source?.Geometry;
 
         private void OnDrawGizmosSelected() {
 #if UNITY_EDITOR
             if (gizmoType == ElementGizmoType.None || source == null || data == null) return;
         
-            UnityEditor.Handles.matrix = Gizmos.matrix = source.transform.localToWorldMatrix;
+            UnityEditor.Handles.matrix = Gizmos.matrix = source.LocalToWorldMatrix;
             var zTest = UnityEditor.Handles.zTest;
             UnityEditor.Handles.zTest = CompareFunction.LessEqual;
             Random.InitState(0);

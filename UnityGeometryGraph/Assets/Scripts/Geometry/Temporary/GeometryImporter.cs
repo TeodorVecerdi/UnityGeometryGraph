@@ -5,11 +5,12 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Geometry {
-    public class GeometryImporter : MonoBehaviour {
+    public class GeometryImporter : MonoBehaviour, IGeometryProvider {
         [SerializeField] private MeshFilter geometrySource;
         [SerializeField] private GeometryData geometryData;
 
-        public GeometryData GeometryData => geometryData;
+        public GeometryData Geometry => geometryData;
+        public Matrix4x4 LocalToWorldMatrix => transform.localToWorldMatrix;
 
         [Button]
         private void ClearProfilingData() {

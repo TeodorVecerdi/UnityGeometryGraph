@@ -22,11 +22,11 @@ namespace Geometry {
         private List<List<int>> triangles = new List<List<int>>();
         private HashSet<int> exportedFaces = new HashSet<int>();
 
-        private GeometryData geometry => source?.GeometryData;
+        private GeometryData geometry => source?.Geometry;
 
         [Button]
         public void ExportSubmesh() {
-            if (target == null || source == null || source.GeometryData == null) {
+            if (target == null || source == null || source.Geometry == null) {
                 Debug.LogError("Target MeshFilter or Source is null");
                 return;
             }
