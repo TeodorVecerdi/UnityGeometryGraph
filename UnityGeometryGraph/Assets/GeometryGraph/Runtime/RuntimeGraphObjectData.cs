@@ -1,6 +1,6 @@
 using System;
 
-namespace GraphFramework.Runtime {
+namespace GeometryGraph.Runtime {
     [Serializable]
     public class RuntimeGraphObjectData {
     }

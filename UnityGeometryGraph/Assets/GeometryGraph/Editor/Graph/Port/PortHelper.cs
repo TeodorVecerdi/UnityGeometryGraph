@@ -1,7 +1,7 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public static class PortHelper {
         public static bool IsCompatibleWith(this GraphFrameworkPort port, GraphFrameworkPort other) {
             if (port.node == other.node) return false;

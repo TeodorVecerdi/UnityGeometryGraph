@@ -1,7 +1,7 @@
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class PropertyNode : AbstractNode {
         private string propertyGuid;
         private string currentType;

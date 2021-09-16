@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [Serializable]
     public class SerializedProperty {
         public string Type;

@@ -1,6 +1,6 @@
 using UnityEditor.Searcher;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class SearchWindowAdapter : SearcherAdapter {
         public override bool HasDetailsPanel => false;
 

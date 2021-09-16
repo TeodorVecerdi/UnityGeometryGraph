@@ -1,6 +1,6 @@
 using System;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class Ref<T> : IEquatable<T>, IEquatable<Ref<T>> where T : struct {
         private T value;
         private Func<T> getValue;

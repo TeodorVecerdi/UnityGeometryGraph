@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class GraphFrameworkObject : ScriptableObject, ISerializationCallbackReceiver {
         [NonSerialized] private GraphFrameworkData graphData;
         [NonSerialized] private int objectVersion;

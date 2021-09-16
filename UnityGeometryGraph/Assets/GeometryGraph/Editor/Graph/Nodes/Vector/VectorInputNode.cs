@@ -4,7 +4,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor.Vector {
+namespace GeometryGraph.Editor.Vector {
     [Title("Vector", "Input")]
     public class VectorInputNode : AbstractNode {
         private float x;

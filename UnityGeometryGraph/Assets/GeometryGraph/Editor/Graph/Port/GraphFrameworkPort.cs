@@ -4,7 +4,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class GraphFrameworkPort : Port {
         public PortType Type { get; private set; }
         public new AbstractNode node => base.node as AbstractNode;

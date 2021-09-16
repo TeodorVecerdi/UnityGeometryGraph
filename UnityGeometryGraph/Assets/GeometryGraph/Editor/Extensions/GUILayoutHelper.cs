@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public static class GUILayoutHelper {
         public static void BeginCenterVertically() {
             GUILayout.BeginHorizontal();

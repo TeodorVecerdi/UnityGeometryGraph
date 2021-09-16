@@ -3,7 +3,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [Title("Display Value")]
     public class DisplayValueNode : AbstractNode {
         private GraphFrameworkPort valuePort;

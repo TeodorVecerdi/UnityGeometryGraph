@@ -1,11 +1,10 @@
 using System.Linq;
-using GraphFramework.Runtime;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     
     /*
   !! * Original inspector for DialogueGraph

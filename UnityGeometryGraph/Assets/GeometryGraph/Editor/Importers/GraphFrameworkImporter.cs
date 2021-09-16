@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
-using GraphFramework.Runtime;
+using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEngine;
 
 // Note: Aliases for easily differentiating between runtime and editor classes 
-using RuntimeNode = GraphFramework.Runtime.Node;
-using RuntimeEdge = GraphFramework.Runtime.Edge;
-using RuntimeProp = GraphFramework.Runtime.Property;
+using RuntimeNode = GeometryGraph.Runtime.Graph.Node;
+using RuntimeEdge = GeometryGraph.Runtime.Graph.Edge;
+using RuntimeProp = GeometryGraph.Runtime.Graph.Property;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [ScriptedImporter(0, Extension, 3)]
     public class GraphFrameworkImporter : ScriptedImporter {
         public const string Extension = "geometrygraph";

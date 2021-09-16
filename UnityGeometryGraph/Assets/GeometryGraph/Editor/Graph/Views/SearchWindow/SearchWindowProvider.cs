@@ -6,7 +6,7 @@ using UnityEditor.Searcher;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class SearchWindowProvider : ScriptableObject {
         private GraphFrameworkEditorWindow editorWindow;
         private EditorView editorView;

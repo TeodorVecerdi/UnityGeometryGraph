@@ -5,7 +5,7 @@ using UnityEditor.Callbacks;
 
 using UnityEngine;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [CustomEditor(typeof(GraphFrameworkImporter))]
     public class GraphFrameworkImporterEditor : ScriptedImporterEditor {
         protected override bool needsApplyRevert => false;

@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor.Vector {
+namespace GeometryGraph.Editor.Vector {
     [Title("Vector", "Vector Math")]
     public class VectorMathNode : AbstractNode{
         private Vector3 a;

@@ -4,7 +4,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Edge = UnityEditor.Experimental.GraphView.Edge;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [Serializable]
     public class SerializedEdge {
         public string Input;

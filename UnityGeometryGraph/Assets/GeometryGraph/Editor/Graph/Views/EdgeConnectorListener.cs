@@ -2,7 +2,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.Searcher;
 using UnityEngine;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class EdgeConnectorListener : IEdgeConnectorListener {
         private readonly EditorView editorView;
         private readonly SearchWindowProvider searchWindowProvider;

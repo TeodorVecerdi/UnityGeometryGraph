@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public static class GraphFrameworkVersion {
         private static readonly SemVer fallbackVersion = (SemVer) "1.0.0";
         

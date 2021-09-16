@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GeometryGraph.Editor;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public static class GraphFrameworkUtility {
         
         #region IO Utilities

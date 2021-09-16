@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     internal class CreateGraphObject : EndNameEditAction {
         [MenuItem("Assets/Create/Geometry Graph/Empty Graph", false, 1)]
         public static void CreateObject()

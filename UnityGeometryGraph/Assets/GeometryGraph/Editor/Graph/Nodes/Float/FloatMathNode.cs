@@ -6,7 +6,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [Title("Float", "Math")]
     public class FloatMathNode : AbstractNode {
         private float a;

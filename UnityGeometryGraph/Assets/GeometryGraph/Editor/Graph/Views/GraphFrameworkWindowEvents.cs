@@ -1,6 +1,6 @@
 using System;
 
-namespace GraphFramework {
+namespace GeometryGraph {
     public class GraphFrameworkWindowEvents {
         public Action SaveRequested;
         public Func<bool> SaveAsRequested;

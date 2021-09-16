@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor.Vector {
+namespace GeometryGraph.Editor.Vector {
     [Title("Vector", "Split XYZ")]
     public class SplitVectorNode : AbstractNode{
         private Vector3 input;

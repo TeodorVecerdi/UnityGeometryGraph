@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using GraphFramework.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Node = UnityEditor.Experimental.GraphView.Node;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class BlackboardProvider {
         private static readonly Texture2D exposedIcon = Resources.Load<Texture2D>("GraphView/Nodes/BlackboardFieldExposed");
         public Blackboard Blackboard { get; private set; }

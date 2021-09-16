@@ -7,7 +7,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public abstract class AbstractNode : Node {
         public SerializedNode Owner { get; set; }
         public string GUID;

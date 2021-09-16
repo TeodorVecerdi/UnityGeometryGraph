@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Debug = UnityEngine.Debug;
 
-namespace GraphFramework.Runtime {
+namespace GeometryGraph.Runtime {
     public class Profiler {
         private static Stack<ProfileSession> sessionStack = new Stack<ProfileSession>();
         private static List<ProfileSession> finishedSessions = new List<ProfileSession>();

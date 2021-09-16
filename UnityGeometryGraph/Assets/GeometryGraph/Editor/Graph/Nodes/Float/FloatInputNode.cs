@@ -3,7 +3,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [Title("Float", "Input")]
     public class FloatInputNode : AbstractNode {
         private float value;

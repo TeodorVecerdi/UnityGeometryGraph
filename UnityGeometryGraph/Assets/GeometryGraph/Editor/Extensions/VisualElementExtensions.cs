@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public static class VisualElementExtensions {
         public static void AddStyleSheet(this VisualElement element, string path) {
             var stylesheet = Resources.Load<StyleSheet>(path);

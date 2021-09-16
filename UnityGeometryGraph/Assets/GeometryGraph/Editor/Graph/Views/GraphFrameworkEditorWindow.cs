@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class GraphFrameworkEditorWindow : EditorWindow {
         private string selectedAssetGuid;
         private GraphFrameworkObject graphObject;

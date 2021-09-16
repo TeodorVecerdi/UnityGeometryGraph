@@ -1,6 +1,6 @@
 using System;
 
-namespace GraphFramework.Runtime {
+namespace GeometryGraph.Runtime.Graph {
     [Serializable]
     public class Node {
         public NodeType Type;

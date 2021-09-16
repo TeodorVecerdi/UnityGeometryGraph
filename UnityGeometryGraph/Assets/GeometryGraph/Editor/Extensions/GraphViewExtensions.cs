@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public static class GraphViewExtensions {
         public static void InsertCopyPasteData(this GraphFrameworkGraphView graphFrameworkGraphView, CopyPasteData copyPasteData) {
             if (copyPasteData == null) return;

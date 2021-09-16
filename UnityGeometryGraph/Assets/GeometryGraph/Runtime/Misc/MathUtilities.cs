@@ -1,7 +1,7 @@
 ﻿using Unity.Mathematics;
 using UnityEngine;
 
-namespace GraphFramework.Runtime {
+namespace GeometryGraph.Runtime {
     public static class MathUtilities {
         public static float DistanceSqr(Vector3 a, Vector3 b) {
             var num1 = a.x - b.x;

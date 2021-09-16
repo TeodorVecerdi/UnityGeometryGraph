@@ -1,8 +1,8 @@
 using System;
-using GraphFramework.Runtime;
+using GeometryGraph.Runtime.Graph;
 using UnityEngine;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [Serializable]
     public abstract class AbstractProperty {
         [SerializeField] public string GUID = Guid.NewGuid().ToString();

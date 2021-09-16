@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GraphFramework.Runtime {
+namespace GeometryGraph.Runtime {
     [Serializable]
     public class SerializedDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver {
         [SerializeField] private List<TKey> keys = new List<TKey>();

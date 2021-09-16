@@ -1,4 +1,4 @@
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public enum PortType {
         Float,
         Vector,

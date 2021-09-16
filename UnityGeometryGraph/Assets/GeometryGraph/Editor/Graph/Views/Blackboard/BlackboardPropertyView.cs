@@ -6,7 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class BlackboardPropertyView : VisualElement {
         private readonly BlackboardField field;
         private readonly EditorView editorView;

@@ -1,7 +1,7 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace GraphFramework.Runtime {
+namespace GeometryGraph.Runtime.Graph {
     public class RuntimeGraphObject : ScriptableObject {
         // Graph data
         [SerializeField] public List<Node> Nodes;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public static class VersionConverter {
         private static readonly SemVer v100 = (SemVer) "1.0.0";
 

@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [Serializable]
     public class GraphFrameworkData : ISerializationCallbackReceiver {
         public GraphFrameworkObject Owner { get; set; }

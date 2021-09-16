@@ -1,6 +1,6 @@
 using System;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class TitleAttribute : System.Attribute {
         public readonly string[] Title;

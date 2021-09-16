@@ -1,8 +1,8 @@
 using System;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false), ]
-    public class ConvertMethodAttribute : System.Attribute {
+    public class ConvertMethodAttribute : Attribute {
         public readonly SemVer TargetVersion;
 
         /// <summary>

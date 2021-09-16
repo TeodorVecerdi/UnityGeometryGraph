@@ -5,7 +5,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphFramework.Editor {
+namespace GeometryGraph.Editor {
     public class GraphFrameworkGraphView : GraphView {
         private EditorView editorView;
         public EditorView EditorView => editorView;
