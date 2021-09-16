@@ -2,7 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Geometry {
+namespace GeometryGraph.Runtime.Geometry {
     public class TestScript : MonoBehaviour {
         [Button]
         private void PrintChildHierarchy() {

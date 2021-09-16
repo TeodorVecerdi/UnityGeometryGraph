@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Attribute;
+using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.Data;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Geometry {
+namespace GeometryGraph.Runtime.Geometry {
     public class GeometryExporterSmoothShaded : SerializedMonoBehaviour {
         [SerializeField] private MeshFilter target;
         [SerializeField, OnStateUpdate(nameof(__OnStateUpdate_GeometrySource))] private IGeometryProvider source;

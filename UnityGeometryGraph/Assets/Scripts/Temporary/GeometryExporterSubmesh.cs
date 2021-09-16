@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Attribute;
+using GeometryGraph.Runtime.Attribute;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Geometry {
+namespace GeometryGraph.Runtime.Geometry {
     public class GeometryExporterSubmesh : MonoBehaviour {
         [SerializeField] private MeshFilter target;
         [SerializeField] private GeometryImporter source;
