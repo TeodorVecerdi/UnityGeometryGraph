@@ -4,7 +4,7 @@ namespace GeometryGraph.Editor {
     public class GeometryObjectProperty : AbstractProperty {
 
         public GeometryObjectProperty() {
-            DisplayName = "Geometry Object";
+            DisplayName = "Geometry";
             Type = PropertyType.GeometryObject;
         }
 

@@ -181,27 +181,22 @@ namespace GeometryGraph.Editor {
                 searchWindowProvider.RegenerateEntries = true;
             blackboardProvider.HandleChanges();
 
-            // Debug.Log(graphObject.RuntimeGraph.RuntimeData == graphObject.GraphData.RuntimeGraphData); 
-
             foreach (var removedNode in graphObject.GraphData.RemovedNodes) {
                 removedNode.Node.NotifyRuntimeNodeRemoved();
                 RemoveNode(removedNode);
                 graphObject.RuntimeGraph.OnNodeRemoved(removedNode.Node.Runtime);
-                Debug.Log("Removed node");
             }
 
             foreach (var removedEdge in graphObject.GraphData.RemovedEdges) {
                 var inputPort = (GraphFrameworkPort)removedEdge.Edge?.input;
                 var outputPort = (GraphFrameworkPort)removedEdge.Edge?.output;
                 if (inputPort == null || outputPort == null) {
-                    Debug.Log("Removed edge with null ends");
                 } else {
                     var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
                     runtimeInput.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
                     runtimeOutput.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
                     graphObject.RuntimeGraph.OnConnectionRemoved(runtimeOutput, runtimeInput);
-                    Debug.Log($"Removed edge from {outputPort.node.title} to {inputPort.node.title}");
                 }
 
                 RemoveEdge(removedEdge);
@@ -211,7 +206,6 @@ namespace GeometryGraph.Editor {
                 AddNode(addedNode);
                 graphObject.RuntimeGraph.OnNodeAdded(addedNode.Node.Runtime);
                 addedNode.Node.OnPropertyUpdated(null);
-                Debug.Log("Added node");
             }
 
             foreach (var addedEdge in graphObject.GraphData.AddedEdges) {
@@ -227,8 +221,6 @@ namespace GeometryGraph.Editor {
                     runtimeInput.Node.OnConnectionCreated(connection);
                     graphObject.RuntimeGraph.OnConnectionAdded(connection);
                 }
-
-                Debug.Log("Added edge");
             }
 
             foreach (var queuedNode in graphObject.GraphData.NodeSelectionQueue) {

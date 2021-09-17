@@ -6,7 +6,7 @@ namespace GeometryGraph.Editor {
         public static Type PropertyTypeToSystemType(PropertyType propertyType) {
             switch (propertyType) {
                 case PropertyType.GeometryObject: return typeof(GeometryObjectPropertyNode);
-                // case PropertyType.GeometryCollection: return typeof(GeometryCollectionPropertyNode);
+                case PropertyType.GeometryCollection: return typeof(GeometryCollectionPropertyNode);
                 default: throw new ArgumentOutOfRangeException(nameof(propertyType), propertyType, null);
             }
         } 

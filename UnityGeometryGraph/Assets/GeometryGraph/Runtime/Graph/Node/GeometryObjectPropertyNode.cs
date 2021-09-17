@@ -1,8 +1,13 @@
-﻿using UnityEngine;
+﻿using GeometryGraph.Runtime.Data;
+using GeometryGraph.Runtime.Geometry;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class GeometryObjectPropertyNode : RuntimeNode {
+        private static readonly GeometryData defaultValue = GeometryData.Empty;
+        
         [SerializeReference] public Property Property;
+       
         public RuntimePort Port { get; }
         
         public GeometryObjectPropertyNode(string guid) : base(guid) {
@@ -10,7 +15,8 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override object GetValueForPort(RuntimePort port) {
-            return null; //((GeometryObject)Property.Value).Geometry;
+            var value = (GeometryObject)Property?.Value;
+            return value == null ? defaultValue.Clone() : value.Geometry;
         }
     }
 }

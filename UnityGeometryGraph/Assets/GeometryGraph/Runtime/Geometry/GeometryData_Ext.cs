@@ -96,17 +96,21 @@ namespace GeometryGraph.Runtime.Geometry {
 
             //!! 3. Update attributes on `rhs`
             var rhsMaterialIndexOffset = lhs.submeshCount;
-            var rhsMaterialIndexAttr = rhs.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face).Select(i => i + rhsMaterialIndexOffset);
-
-            //!! 4. Merge attributes on `lhs`
-            // Material index is treated separately
-            if (lhs.attributeManager.HasAttribute("material_index", AttributeDomain.Face)) {
-                var lhsMaterialIndexAttr = lhs.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face);
-                lhsMaterialIndexAttr.AppendMany(rhsMaterialIndexAttr).Into(lhsMaterialIndexAttr);
-            } else {
-                var attr = rhsMaterialIndexAttr.Into<IntAttribute>("material_index", AttributeDomain.Face);
-                lhs.attributeManager.Store(attr);
+            if (rhs.attributeManager.HasAttribute("material_index", AttributeDomain.Face)) {
+                var rhsMaterialIndexAttr = rhs.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face).Select(i => i + rhsMaterialIndexOffset);
+                
+                //!! 4. Merge attributes on `lhs`
+                // Material index is treated separately
+                if (lhs.attributeManager.HasAttribute("material_index", AttributeDomain.Face)) {
+                    var lhsMaterialIndexAttr = lhs.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face);
+                    lhsMaterialIndexAttr.AppendMany(rhsMaterialIndexAttr).Into(lhsMaterialIndexAttr);
+                } else {
+                    var attr = rhsMaterialIndexAttr.Into<IntAttribute>("material_index", AttributeDomain.Face);
+                    lhs.attributeManager.Store(attr);
+                }
             }
+
+            
 
             // Rest of attributes just get merged normally
             // First attributes in lhs & rhs

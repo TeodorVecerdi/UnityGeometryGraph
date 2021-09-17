@@ -3,6 +3,7 @@
         Float,
         Vector,
         Geometry,
+        Collection,
         Any
     }
 }

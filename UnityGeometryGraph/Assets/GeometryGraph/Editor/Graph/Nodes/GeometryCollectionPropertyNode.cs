@@ -1,17 +1,19 @@
+using System;
 using GeometryGraph.Runtime;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 
 namespace GeometryGraph.Editor {
-    public class GeometryObjectPropertyNode : AbstractNode<GeometryGraph.Runtime.Graph.GeometryObjectPropertyNode> {
+    public class GeometryCollectionPropertyNode : AbstractNode<GeometryGraph.Runtime.Graph.GeometryCollectionPropertyNode> {
         public override bool IsProperty => true;
         
         private string propertyGuid;
         private AbstractProperty property;
         private GraphFrameworkPort propertyPort;
+
+        private static readonly GeometryData[] empty = Array.Empty<GeometryData>();
         
         public override AbstractProperty Property {
             get => property;
@@ -38,7 +40,7 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize(property != null ? property.DisplayName : "ERROR", EditorView.DefaultNodePosition);
 
-            propertyPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener);
+            propertyPort = GraphFrameworkPort.Create("Collection", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Collection, edgeConnectorListener);
             AddPort(propertyPort);
             
             Refresh();
@@ -49,7 +51,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override object GetValueForPort(GraphFrameworkPort port) {
-            return GeometryData.Empty;
+            return empty;
         }
 
         public override JObject GetNodeData() {

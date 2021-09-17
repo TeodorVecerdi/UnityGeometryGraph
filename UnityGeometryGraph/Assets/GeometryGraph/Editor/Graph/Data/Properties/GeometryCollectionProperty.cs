@@ -3,7 +3,7 @@
 namespace GeometryGraph.Editor {
     public class GeometryCollectionProperty : AbstractProperty {
         public GeometryCollectionProperty() {
-            DisplayName = "Geometry Collection";
+            DisplayName = "Collection";
             Type = PropertyType.GeometryCollection;
         }
 

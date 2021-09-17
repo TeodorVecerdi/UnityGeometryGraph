@@ -43,5 +43,18 @@ namespace GeometryGraph.Runtime.Graph {
                 break;
             }
         }
+
+        public void AssignProperty(RuntimeNode runtimeNode, string propertyGuid) {
+            switch (runtimeNode) {
+                case GeometryObjectPropertyNode propertyNode: {
+                    propertyNode.Property = RuntimeData.Properties.FirstOrGivenDefault(property => property.Guid == propertyGuid, null);
+                    break;
+                }
+                case GeometryCollectionPropertyNode propertyNode: {
+                    propertyNode.Property = RuntimeData.Properties.FirstOrGivenDefault(property => property.Guid == propertyGuid, null);
+                    break;
+                }
+            }
+        }
     }
 }

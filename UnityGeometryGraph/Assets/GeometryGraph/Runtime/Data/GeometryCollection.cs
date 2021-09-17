@@ -14,8 +14,9 @@ namespace GeometryGraph.Runtime.Data {
         [SerializeField] private List<GeometryData> objects;
         [SerializeField, HideInInspector] private List<Transform> children = new List<Transform>();
         protected override List<GeometryData> Processed { get => objects; set => objects = value; }
-        
-        
+
+        public List<GeometryData> Collection => objects;
+
         [Button]
         public override void Process() {
             var newHashCode = ComputeChildrenHashCode(transform);
