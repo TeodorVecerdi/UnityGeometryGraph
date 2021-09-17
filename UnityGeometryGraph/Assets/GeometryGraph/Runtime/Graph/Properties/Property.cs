@@ -7,5 +7,6 @@ namespace GeometryGraph.Runtime.Graph {
         public string ReferenceName;
         public string DisplayName;
         public PropertyType Type;
+        public object Value;
     }
 }

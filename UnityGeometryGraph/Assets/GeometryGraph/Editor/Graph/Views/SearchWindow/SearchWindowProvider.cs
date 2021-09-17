@@ -47,9 +47,9 @@ namespace GeometryGraph.Editor {
             }
 
             foreach (var property in editorView.GraphObject.GraphData.Properties) {
-                var node = new SerializedNode(typeof(PropertyNode), new Rect(Vector2.zero, EditorView.DefaultNodeSize));
+                var node = new SerializedNode(PropertyUtils.PropertyTypeToSystemType(property.Type), new Rect(Vector2.zero, EditorView.DefaultNodeSize));
                 node.BuildNode(editorView, editorView.EdgeConnectorListener, false);
-                var propertyNode = node.Node as PropertyNode;
+                var propertyNode = node.Node;
                 propertyNode.PropertyGuid = property.GUID;
                 node.BuildPortData();
                 AddEntries(node, new[] {"Properties", $"{property.Type}: {property.DisplayName}"}, nodeEntries);

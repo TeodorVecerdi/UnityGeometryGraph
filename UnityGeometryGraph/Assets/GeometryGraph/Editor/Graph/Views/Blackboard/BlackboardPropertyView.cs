@@ -55,7 +55,7 @@ namespace GeometryGraph.Editor {
 
             focusOutCallback = evt => undoGroup = -1;
 
-            BuildFields(property);
+            // BuildFields(property);
             AddToClassList("blackboardPropertyView");
         }
 

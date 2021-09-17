@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework.Constraints;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -50,6 +51,13 @@ namespace GeometryGraph.Editor {
         public abstract object GetValueForPort(GraphFrameworkPort port);
         public abstract void BindPorts();
 
+        // Property specific
+        public virtual void OnPropertyUpdated(AbstractProperty property) {}
+        public virtual bool IsProperty { get; } = false;
+        public virtual string PropertyGuid { get; set; } = string.Empty;
+        public virtual AbstractProperty Property { get; set; } = null;
+
+        // Virtual
         protected internal virtual void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {}
         protected internal virtual void OnEdgeConnected(Edge edge, GraphFrameworkPort port) {}
         protected internal virtual void OnEdgeDisconnected(Edge edge, GraphFrameworkPort port) {}
@@ -60,6 +68,8 @@ namespace GeometryGraph.Editor {
         public virtual void OnNodeDeserialized() { }
         public virtual void SetNodeData(JObject jsonData) { }
         public virtual JObject GetNodeData() => new JObject();
+        
+        // Abstract
         public abstract void NotifyRuntimeNodeRemoved();
         public abstract RuntimeNode Runtime { get; }
     }

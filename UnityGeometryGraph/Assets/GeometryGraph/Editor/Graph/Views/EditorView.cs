@@ -210,6 +210,7 @@ namespace GeometryGraph.Editor {
             foreach (var addedNode in graphObject.GraphData.AddedNodes) {
                 AddNode(addedNode);
                 graphObject.RuntimeGraph.OnNodeAdded(addedNode.Node.Runtime);
+                addedNode.Node.OnPropertyUpdated(null);
                 Debug.Log("Added node");
             }
 

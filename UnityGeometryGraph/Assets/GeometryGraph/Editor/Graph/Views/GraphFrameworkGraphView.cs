@@ -35,7 +35,7 @@ namespace GeometryGraph.Editor {
             var properties = selection.OfType<BlackboardField>().Select(x => x.userData as AbstractProperty);
 
             // Collect the property nodes and get the corresponding properties
-            var propertyNodeGuids = nodes.OfType<PropertyNode>().Select(x => x.PropertyGuid);
+            var propertyNodeGuids = nodes.OfType<AbstractNode>().Where(node => node.IsProperty).Select(x => x.PropertyGuid);
             var metaProperties = editorView.GraphObject.GraphData.Properties.Where(x => propertyNodeGuids.Contains(x.GUID));
 
             var copyPasteData = new CopyPasteData(editorView, nodes, edges, properties, metaProperties);
@@ -117,10 +117,11 @@ namespace GeometryGraph.Editor {
             if (obj is BlackboardField blackboardField) {
                 editorView.GraphObject.RegisterCompleteObjectUndo("Drag Blackboard Field");
                 var property = blackboardField.userData as AbstractProperty;
-                var node = new SerializedNode(typeof(PropertyNode), new Rect(nodePosition, EditorView.DefaultNodeSize));
+                var node = new SerializedNode(PropertyUtils.PropertyTypeToSystemType(property.Type), new Rect(nodePosition, EditorView.DefaultNodeSize));
                 editorView.GraphObject.GraphData.AddNode(node);
                 node.BuildNode(editorView, editorView.EdgeConnectorListener, false);
-                var propertyNode = node.Node as PropertyNode;
+                
+                var propertyNode = node.Node;
                 propertyNode.PropertyGuid = property.GUID;
                 propertyNode.Property = property;
                 node.BuildPortData();

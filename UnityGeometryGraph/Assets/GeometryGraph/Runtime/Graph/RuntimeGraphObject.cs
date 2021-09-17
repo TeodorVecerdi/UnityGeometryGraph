@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
@@ -6,6 +7,16 @@ namespace GeometryGraph.Runtime.Graph {
 
         public void Load(RuntimeGraphObjectData runtimeData) {
             RuntimeData.Load(runtimeData);
+        }
+
+        public void OnPropertyAdded(Property property) {
+            if(RuntimeData.Properties.Any(p => p.Guid == property.Guid)) 
+                return;
+            RuntimeData.Properties.Add(property);
+        }
+
+        public void OnPropertyRemoved(string propertyGuid) {
+            RuntimeData.Properties.RemoveAll(p => p.Guid == propertyGuid);
         }
 
         public void OnNodeAdded(RuntimeNode node) {
@@ -22,6 +33,15 @@ namespace GeometryGraph.Runtime.Graph {
 
         public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
             RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == output.Guid && connection.InputGuid == input.Guid);
+        }
+
+        public void OnPropertyUpdated(string propertyGuid, string newDisplayName) {
+            foreach (var runtimeDataProperty in RuntimeData.Properties) {
+                if (runtimeDataProperty.Guid != propertyGuid) continue;
+            
+                runtimeDataProperty.DisplayName = newDisplayName;
+                break;
+            }
         }
     }
 }

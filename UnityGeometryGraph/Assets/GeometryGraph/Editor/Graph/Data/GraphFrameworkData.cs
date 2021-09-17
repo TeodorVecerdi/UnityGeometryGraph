@@ -184,7 +184,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void RemoveProperty(AbstractProperty property) {
-            var propertyNodes = nodes.FindAll(node => node.Node is PropertyNode propertyNode && propertyNode.PropertyGuid == property.GUID);
+            var propertyNodes = nodes.FindAll(node => node.Node.IsProperty &&  node.Node.PropertyGuid == property.GUID);
             foreach (var node in propertyNodes)
                 RemoveNode(node);
 

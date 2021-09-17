@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using GeometryGraph.Runtime.Graph;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -58,9 +59,11 @@ namespace GeometryGraph.Editor {
                 property.DisplayName = newText;
                 editorView.GraphObject.GraphData.SanitizePropertyName(property);
                 field.text = property.DisplayName;
-                var modifiedNodes = editorView.GraphObject.GraphData.Nodes.Where(node => node.Node is PropertyNode propertyNode && propertyNode.PropertyGuid == property.GUID).Select(node => node.Node as PropertyNode);
+                var propertyType = PropertyUtils.PropertyTypeToSystemType(property.Type);
+                editorView.GraphObject.RuntimeGraph.OnPropertyUpdated(property.GUID, property.DisplayName);
+                var modifiedNodes = editorView.GraphObject.GraphData.Nodes.Where(node => node.Node.GetType() == propertyType).Select(node => node.Node);
                 foreach (var modifiedNode in modifiedNodes) {
-                    modifiedNode?.Update(property);
+                    modifiedNode.OnPropertyUpdated(property);
                 }
             }
         }
@@ -75,8 +78,9 @@ namespace GeometryGraph.Editor {
 
         private void AddItemRequested(Blackboard blackboard) {
             var menu = new GenericMenu();
+            menu.AddItem(new GUIContent("Geometry Object"), false, () => AddInputRow(new GeometryObjectProperty(), true));
+            menu.AddItem(new GUIContent("Geometry Collection"), false, () => AddInputRow(new GeometryCollectionProperty(), true));
             // Note: Left as reference
-            // menu.AddItem(new GUIContent("Check"), false, () => AddInputRow(new CheckProperty(), true));
             // menu.AddItem(new GUIContent("Trigger"), false, () => AddInputRow(new TriggerProperty(), true));
             // menu.AddItem(new GUIContent("Actor"), false, () => AddInputRow(new ActorProperty(), true));
             menu.ShowAsContext();
@@ -118,6 +122,7 @@ namespace GeometryGraph.Editor {
             expandedInputs[property.GUID] = true;
             editorView.GraphObject.RegisterCompleteObjectUndo("Create Property");
             editorView.GraphObject.GraphData.AddProperty(property);
+
             field.OpenTextEditor();
         }
 
@@ -153,16 +158,21 @@ namespace GeometryGraph.Editor {
         }
 
         public void HandleChanges() {
-            foreach (var inputGuid in editorView.GraphObject.GraphData.RemovedProperties) {
-                if (!inputRows.TryGetValue(inputGuid.GUID, out var row))
+            foreach (var property in editorView.GraphObject.GraphData.RemovedProperties) {
+                if (!inputRows.TryGetValue(property.GUID, out var row))
                     continue;
 
                 row.RemoveFromHierarchy();
-                inputRows.Remove(inputGuid.GUID);
+                inputRows.Remove(property.GUID);
+                
+                editorView.GraphObject.RuntimeGraph.OnPropertyRemoved(property.GUID);
             }
 
-            foreach (var input in editorView.GraphObject.GraphData.AddedProperties)
-                AddInputRow(input, index: editorView.GraphObject.GraphData.Properties.IndexOf(input));
+            foreach (var property in editorView.GraphObject.GraphData.AddedProperties) {
+                AddInputRow(property, index: editorView.GraphObject.GraphData.Properties.IndexOf(property));
+                var runtimeProperty = new Property{Guid = property.GUID, DisplayName =  property.DisplayName, ReferenceName = property.ReferenceName, Type = property.Type};
+                editorView.GraphObject.RuntimeGraph.OnPropertyAdded(runtimeProperty);
+            }
 
             if (editorView.GraphObject.GraphData.MovedProperties.Any()) {
                 foreach (var row in inputRows.Values)

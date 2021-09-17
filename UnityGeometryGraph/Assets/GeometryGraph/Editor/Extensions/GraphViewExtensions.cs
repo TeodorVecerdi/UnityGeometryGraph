@@ -15,7 +15,7 @@ namespace GeometryGraph.Editor {
                 graphFrameworkGraphView.GraphData.SanitizePropertyReference(copy, property.OverrideReferenceName);
                 graphFrameworkGraphView.GraphData.AddProperty(copy);
 
-                var dependentNodes = copyPasteData.Nodes.Where(node => node.Type == typeof(PropertyNode).FullName);
+                var dependentNodes = copyPasteData.Nodes.Where(node => node.Node.IsProperty);
                 foreach (var node in dependentNodes) {
                     var root = JObject.Parse(node.NodeData);
                     root["propertyGuid"] = copy.GUID;

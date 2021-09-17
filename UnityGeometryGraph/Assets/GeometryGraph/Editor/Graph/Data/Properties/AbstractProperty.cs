@@ -56,7 +56,7 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        public abstract object GetValue();
+        // public abstract object GetValue();
         public abstract AbstractProperty Copy();
     }
 
@@ -68,7 +68,6 @@ namespace GeometryGraph.Editor {
             set => this.value = value;
         }
 
-        public T GetValueT() => value;
-        public override object GetValue() => value;
+        public T GetValue() => value;
     }
 }
