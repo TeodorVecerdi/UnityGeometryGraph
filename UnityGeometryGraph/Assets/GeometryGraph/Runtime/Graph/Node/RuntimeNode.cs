@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     [Serializable]
@@ -64,9 +63,8 @@ namespace GeometryGraph.Runtime.Graph {
             // Debug.Log($"Node removed {GetType()}");
         }
 
-        public void OnConnectionCreated(RuntimePort output, RuntimePort input) {
-            var selfPort = output.Node == this ? output : input;
-            var connection = new Connection {Input = input, Output = output};
+        public void OnConnectionCreated(Connection connection) {
+            var selfPort = connection.Output.Node == this ? connection.Output : connection.Input;
             selfPort.Connections.Add(connection);
             NotifyConnectionCreated(connection, selfPort);
 

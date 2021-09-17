@@ -9,20 +9,19 @@ namespace GeometryGraph.Runtime.Graph {
         public List<RuntimePort> Ports;
 
         private SerializedRuntimeNode() {
-            
         }
-        
+
         public static SerializedRuntimeNode FromRuntimeNode(RuntimeNode node) {
             return new SerializedRuntimeNode {
                 Guid = node.Guid,
                 Type = node.GetType().FullName,
-                Ports = new List<RuntimePort>(node.Ports)
+                Ports = node.Ports
             };
         }
 
         public static RuntimeNode FromSerializedNode(SerializedRuntimeNode serializedNode) {
-            var inst = (RuntimeNode) Activator.CreateInstance(System.Type.GetType(serializedNode.Type), serializedNode.Guid);
-            inst.Ports = new List<RuntimePort>(serializedNode.Ports);
+            var inst = (RuntimeNode)Activator.CreateInstance(System.Type.GetType(serializedNode.Type), serializedNode.Guid);
+            inst.Ports = serializedNode.Ports;
             return inst;
         }
     }

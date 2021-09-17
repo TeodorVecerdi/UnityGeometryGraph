@@ -34,31 +34,32 @@ namespace GeometryGraph.Editor {
             this.graphObject = graphObject;
             this.editorWindow = editorWindow;
             this.AddStyleSheet("Styles/Graph");
-            
-            
+
             var toolbar = new IMGUIContainer(() => {
                 GUILayout.BeginHorizontal(EditorStyles.toolbar);
                 if (GUILayout.Button("Save Graph", EditorStyles.toolbarButton)) {
                     EditorWindow.Events.SaveRequested?.Invoke();
                 }
+
                 GUILayout.Space(6);
                 if (GUILayout.Button("Save As...", EditorStyles.toolbarButton)) {
                     EditorWindow.Events.SaveAsRequested?.Invoke();
                 }
+
                 GUILayout.Space(6);
                 if (GUILayout.Button("Show In Project", EditorStyles.toolbarButton)) {
                     EditorWindow.Events.ShowInProjectRequested?.Invoke();
                 }
-                
+
                 GUILayout.FlexibleSpace();
                 IsBlackboardVisible = GUILayout.Toggle(IsBlackboardVisible, "Blackboard", EditorStyles.toolbarButton);
                 graphObject.IsBlackboardVisible = IsBlackboardVisible;
 
                 GUILayout.EndHorizontal();
             });
-            
+
             Add(toolbar);
-            var content = new VisualElement {name="content"};
+            var content = new VisualElement { name = "content" };
             {
                 graphFrameworkGraphView = new GraphFrameworkGraphView(this);
                 graphFrameworkGraphView.SetupZoom(0.05f, 8f);
@@ -68,31 +69,30 @@ namespace GeometryGraph.Editor {
                 graphFrameworkGraphView.AddManipulator(new ClickSelector());
                 graphFrameworkGraphView.RegisterCallback<KeyDownEvent>(OnKeyDown);
                 content.Add(graphFrameworkGraphView);
-               
+
                 var grid = new GridBackground();
                 graphFrameworkGraphView.Insert(0, grid);
                 grid.StretchToParentSize();
-                
+
                 blackboardProvider = new BlackboardProvider(this);
                 graphFrameworkGraphView.Add(blackboardProvider.Blackboard);
-                
+
                 graphFrameworkGraphView.graphViewChanged += OnGraphViewChanged;
             }
-            
+
             searchWindowProvider = ScriptableObject.CreateInstance<SearchWindowProvider>();
             searchWindowProvider.Initialize(this.editorWindow, this);
 
             graphFrameworkGraphView.nodeCreationRequest = ctx => {
                 searchWindowProvider.ConnectedPort = null;
                 SearcherWindow.Show(editorWindow, searchWindowProvider.LoadSearchWindow(),
-                    item => searchWindowProvider.OnSelectEntry(item, ctx.screenMousePosition - editorWindow.position.position),
-                    ctx.screenMousePosition - editorWindow.position.position, null);
+                                    item => searchWindowProvider.OnSelectEntry(item, ctx.screenMousePosition - editorWindow.position.position),
+                                    ctx.screenMousePosition - editorWindow.position.position, null);
             };
             edgeConnectorListener = new EdgeConnectorListener(this, searchWindowProvider);
-            
+
             Add(content);
         }
-        
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange) {
             if (graphViewChange.movedElements != null) {
@@ -108,6 +108,7 @@ namespace GeometryGraph.Editor {
                 foreach (var edge in graphViewChange.edgesToCreate) {
                     graphObject.GraphData.AddEdge(edge);
                 }
+
                 graphViewChange.edgesToCreate.Clear();
             }
 
@@ -159,31 +160,36 @@ namespace GeometryGraph.Editor {
                 var inputNode = GraphFrameworkGraphView.nodes.First(node => node.viewDataKey == edge.Input) as AbstractNode;
                 var outputPort = (GraphFrameworkPort)outputNode.Owner.GuidPortDictionary[edge.OutputPort];
                 var inputPort = (GraphFrameworkPort)inputNode.Owner.GuidPortDictionary[edge.InputPort];
-                
+
                 if (inputPort != null && outputPort != null) {
                     var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    runtimeOutput.Node.OnConnectionCreated(runtimeOutput, runtimeInput);
-                    runtimeInput.Node.OnConnectionCreated(runtimeOutput, runtimeInput);
+                    var connection = new Connection { Output = runtimeOutput, Input = runtimeInput };
+                    runtimeOutput.Node.OnConnectionCreated(connection);
+                    runtimeInput.Node.OnConnectionCreated(connection);
                 } else {
                     Debug.Log("Edge ports were null");
                 }
+
                 AddEdge(edge);
             });
             graphObject.GraphData.Properties.ForEach(AddProperty);
         }
 
         public void HandleChanges() {
-            if(graphObject.GraphData.AddedProperties.Any() || graphObject.GraphData.RemovedProperties.Any())
+            if (graphObject.GraphData.AddedProperties.Any() || graphObject.GraphData.RemovedProperties.Any())
                 searchWindowProvider.RegenerateEntries = true;
             blackboardProvider.HandleChanges();
 
-            
+            // Debug.Log(graphObject.RuntimeGraph.RuntimeData == graphObject.GraphData.RuntimeGraphData); 
+
             foreach (var removedNode in graphObject.GraphData.RemovedNodes) {
                 removedNode.Node.NotifyRuntimeNodeRemoved();
                 RemoveNode(removedNode);
+                graphObject.RuntimeGraph.OnNodeRemoved(removedNode.Node.Runtime);
                 Debug.Log("Removed node");
             }
+
             foreach (var removedEdge in graphObject.GraphData.RemovedEdges) {
                 var inputPort = (GraphFrameworkPort)removedEdge.Edge?.input;
                 var outputPort = (GraphFrameworkPort)removedEdge.Edge?.output;
@@ -192,36 +198,42 @@ namespace GeometryGraph.Editor {
                 } else {
                     var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    var runtimeConnection = new Connection {Input = inputPort.node.RuntimePortDictionary[inputPort], Output = outputPort.node.RuntimePortDictionary[outputPort]};
-                    runtimeConnection.Input.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
-                    runtimeConnection.Output.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
+                    runtimeInput.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
+                    runtimeOutput.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
+                    graphObject.RuntimeGraph.OnConnectionRemoved(runtimeOutput, runtimeInput);
                     Debug.Log($"Removed edge from {outputPort.node.title} to {inputPort.node.title}");
                 }
+
                 RemoveEdge(removedEdge);
             }
 
             foreach (var addedNode in graphObject.GraphData.AddedNodes) {
                 AddNode(addedNode);
+                graphObject.RuntimeGraph.OnNodeAdded(addedNode.Node.Runtime);
                 Debug.Log("Added node");
             }
+
             foreach (var addedEdge in graphObject.GraphData.AddedEdges) {
                 AddEdge(addedEdge);
                 var outputPort = (GraphFrameworkPort)addedEdge.Edge?.output;
                 var inputPort = (GraphFrameworkPort)addedEdge.Edge?.input;
-                
+
                 if (inputPort != null && outputPort != null) {
                     var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    runtimeOutput.Node.OnConnectionCreated(runtimeOutput, runtimeInput);
-                    runtimeInput.Node.OnConnectionCreated(runtimeOutput, runtimeInput);
+                    var connection = new Connection { Output = runtimeOutput, Input = runtimeInput };
+                    runtimeOutput.Node.OnConnectionCreated(connection);
+                    runtimeInput.Node.OnConnectionCreated(connection);
+                    graphObject.RuntimeGraph.OnConnectionAdded(connection);
                 }
-                
+
                 Debug.Log("Added edge");
             }
-            
+
             foreach (var queuedNode in graphObject.GraphData.NodeSelectionQueue) {
                 graphFrameworkGraphView.AddToSelection(queuedNode.Node);
             }
+
             foreach (var queuedEdge in graphObject.GraphData.EdgeSelectionQueue) {
                 graphFrameworkGraphView.AddToSelection(queuedEdge.Edge);
             }
@@ -233,11 +245,11 @@ namespace GeometryGraph.Editor {
         }
 
         public void RemoveNode(SerializedNode nodeToRemove) {
-            if(nodeToRemove.Node != null)
+            if (nodeToRemove.Node != null)
                 graphFrameworkGraphView.RemoveElement(nodeToRemove.Node);
             else {
                 var view = graphFrameworkGraphView.GetNodeByGuid(nodeToRemove.GUID);
-                if(view != null)
+                if (view != null)
                     graphFrameworkGraphView.RemoveElement(view);
             }
         }

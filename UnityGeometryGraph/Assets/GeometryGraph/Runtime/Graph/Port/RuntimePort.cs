@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     [Serializable]
@@ -8,10 +7,12 @@ namespace GeometryGraph.Runtime.Graph {
         public string Guid;
         public PortType Type;
         public PortDirection Direction;
-        [SerializeReference] public RuntimeNode Node;
-        public List<Connection> Connections;
+        [NonSerialized] public RuntimeNode Node;
+        [NonSerialized] public List<Connection> Connections;
 
-        private RuntimePort() {}
+        private RuntimePort() {
+        }
+
         private RuntimePort(PortType type, PortDirection direction, RuntimeNode owner) {
             Type = type;
             Direction = direction;

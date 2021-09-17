@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GeometryGraph.Runtime.Graph;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.VersionControl;
 using UnityEngine;
@@ -11,6 +12,9 @@ using Debug = UnityEngine.Debug;
 
 namespace GeometryGraph.Editor {
     public static class GraphFrameworkUtility {
+        public static JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+            { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+        
         
         #region IO Utilities
         public static bool CreateFile(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
@@ -24,7 +28,7 @@ namespace GeometryGraph.Editor {
         }
 
         public static void CreateFileNoUpdate(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
-            var jsonString = JsonUtility.ToJson(graphObject.GraphData, true);
+            var jsonString = JsonUtility.ToJson(graphObject.GraphData);
             File.WriteAllText(path, jsonString);
             if (refreshAsset) AssetDatabase.ImportAsset(path);
         }
@@ -36,7 +40,7 @@ namespace GeometryGraph.Editor {
             var assetPath = AssetDatabase.GUIDToAssetPath(graphObject.GraphData.AssetGuid);
             if (string.IsNullOrEmpty(assetPath)) return false;
 
-            var jsonString = JsonUtility.ToJson(graphObject.GraphData, true);
+            var jsonString = JsonUtility.ToJson(graphObject.GraphData);
             File.WriteAllText(assetPath, jsonString);
             if (refreshAsset) AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
             return true;

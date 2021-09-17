@@ -39,7 +39,7 @@ namespace GeometryGraph.Editor {
             var metaProperties = editorView.GraphObject.GraphData.Properties.Where(x => propertyNodeGuids.Contains(x.GUID));
 
             var copyPasteData = new CopyPasteData(editorView, nodes, edges, properties, metaProperties);
-            return JsonUtility.ToJson(copyPasteData, true);
+            return JsonUtility.ToJson(copyPasteData);
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt) {

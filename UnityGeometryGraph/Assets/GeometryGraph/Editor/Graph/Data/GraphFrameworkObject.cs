@@ -8,7 +8,7 @@ namespace GeometryGraph.Editor {
     public class GraphFrameworkObject : ScriptableObject, ISerializationCallbackReceiver {
         [NonSerialized] private GraphFrameworkData graphData;
         [NonSerialized] private int objectVersion;
-        
+
         [SerializeField] public string AssetGuid;
         [SerializeField] public bool IsBlackboardVisible;
         [SerializeField] private string serializedGraph;
@@ -28,8 +28,8 @@ namespace GeometryGraph.Editor {
         public void Initialize(GraphFrameworkData graphData) {
             GraphData = graphData;
             RuntimeGraph = CreateInstance<RuntimeGraphObject>();
-            RuntimeGraph.Load(graphData.RuntimeGraphData);
-            
+            GraphData.Load(RuntimeGraph);
+
             IsBlackboardVisible = GraphData.IsBlackboardVisible;
         }
 
@@ -44,19 +44,21 @@ namespace GeometryGraph.Editor {
             Undo.RegisterCompleteObjectUndo(this, operation);
             fileVersion++;
             objectVersion++;
-            isDirty = true; 
+            isDirty = true;
         }
 
         public void OnBeforeSerialize() {
-            if(graphData == null) return;
+            if (graphData == null) return;
 
             serializedGraph = JsonUtility.ToJson(graphData);
             AssetGuid = graphData.AssetGuid;
         }
 
         public void OnAfterDeserialize() {
-            if(GraphData != null) return;
+            if (GraphData != null) return;
             GraphData = Deserialize();
+            
+            if (RuntimeGraph != null && GraphData != null) GraphData.Load(RuntimeGraph);
         }
 
         public void HandleUndoRedo() {
@@ -64,9 +66,9 @@ namespace GeometryGraph.Editor {
                 Debug.LogError("Trying to handle undo/redo when undo/redo was not performed", this);
                 return;
             }
+
             var deserialized = Deserialize();
             graphData.ReplaceWith(deserialized);
-            // Undo.PerformUndo();
         }
 
         private GraphFrameworkData Deserialize() {

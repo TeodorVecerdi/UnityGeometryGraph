@@ -61,11 +61,13 @@ namespace GeometryGraph.Editor {
         public virtual void SetNodeData(JObject jsonData) { }
         public virtual JObject GetNodeData() => new JObject();
         public abstract void NotifyRuntimeNodeRemoved();
+        public abstract RuntimeNode Runtime { get; }
     }
     
     public abstract class AbstractNode<TRuntimeNode> : AbstractNode where TRuntimeNode : RuntimeNode {
         private static readonly Type runtimeNodeType = typeof(TRuntimeNode);
 
+        public sealed override RuntimeNode Runtime => RuntimeNode;
         protected TRuntimeNode RuntimeNode;
 
         protected void Initialize(string nodeTitle, Rect nodePosition) {

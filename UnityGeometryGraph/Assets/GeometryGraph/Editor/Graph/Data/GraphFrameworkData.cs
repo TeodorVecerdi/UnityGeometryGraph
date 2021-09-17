@@ -14,7 +14,6 @@ namespace GeometryGraph.Editor {
         [SerializeField] public string AssetGuid;
         [SerializeField] public bool IsBlackboardVisible;
         [SerializeField] public string GraphVersion;
-        // [SerializeField] public string SerializedRuntimeGraph;
         [SerializeReference] public RuntimeGraphObjectData RuntimeGraphData;
 
         [NonSerialized] private Dictionary<string, SerializedNode> nodeDictionary = new Dictionary<string, SerializedNode>();
@@ -62,9 +61,6 @@ namespace GeometryGraph.Editor {
             if (Owner != null) {
                 IsBlackboardVisible = Owner.IsBlackboardVisible; 
             }
-
-            /*if (RuntimeGraphData != null)
-                SerializedRuntimeGraph = JsonConvert.SerializeObject(RuntimeGraphData);*/
             
             serializedProperties.Clear();
             foreach (var property in properties) {
@@ -73,8 +69,6 @@ namespace GeometryGraph.Editor {
         }
 
         public void OnAfterDeserialize() {
-            /*if(!string.IsNullOrEmpty(SerializedRuntimeGraph))
-                RuntimeGraphData.Load(JsonConvert.DeserializeObject<RuntimeGraphObjectData>(SerializedRuntimeGraph));*/
             nodes.ForEach(node => nodeDictionary.Add(node.GUID, node));
             serializedProperties.ForEach(prop => AddProperty(prop.Deserialize()));
         }
@@ -115,6 +109,8 @@ namespace GeometryGraph.Editor {
             foreach (var property in otherGraphData.properties) {
                 AddProperty(property);
             }
+            
+            RuntimeGraphData.Load(otherGraphData.RuntimeGraphData);
         }
 
         public void AddNode(SerializedNode node) {
@@ -333,7 +329,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void Load(RuntimeGraphObject runtimeGraph) {
-            runtimeGraph.Load(RuntimeGraphData);
+            if(RuntimeGraphData != null) runtimeGraph.Load(RuntimeGraphData); 
             RuntimeGraphData = runtimeGraph.RuntimeData;
         }
     }
