@@ -1,4 +1,5 @@
 using System;
+using GeometryGraph.Runtime.Graph;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -13,6 +14,7 @@ namespace GeometryGraph.Editor {
         [SerializeField] private string serializedGraph;
         [SerializeField] private int fileVersion;
         [SerializeField] private bool isDirty;
+        [SerializeField] public RuntimeGraphObject RuntimeGraph;
 
         public GraphFrameworkData GraphData {
             get => graphData;
@@ -25,6 +27,9 @@ namespace GeometryGraph.Editor {
 
         public void Initialize(GraphFrameworkData graphData) {
             GraphData = graphData;
+            RuntimeGraph = CreateInstance<RuntimeGraphObject>();
+            RuntimeGraph.Load(graphData.RuntimeGraphData);
+            
             IsBlackboardVisible = GraphData.IsBlackboardVisible;
         }
 
@@ -39,7 +44,7 @@ namespace GeometryGraph.Editor {
             Undo.RegisterCompleteObjectUndo(this, operation);
             fileVersion++;
             objectVersion++;
-            isDirty = true;
+            isDirty = true; 
         }
 
         public void OnBeforeSerialize() {
@@ -66,6 +71,7 @@ namespace GeometryGraph.Editor {
 
         private GraphFrameworkData Deserialize() {
             var deserialized = JsonUtility.FromJson<GraphFrameworkData>(serializedGraph);
+            if (deserialized == null) return null;
             deserialized.AssetGuid = AssetGuid;
             objectVersion = fileVersion;
             serializedGraph = "";

@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using GeometryGraph.Runtime.Graph;
-using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEngine;
@@ -25,17 +21,10 @@ namespace GeometryGraph.Editor {
                 GraphFrameworkUtility.SaveGraph(graphObject, false);
             }
 
-            ctx.AddObjectToAsset("MainAsset", graphObject, icon);
-            ctx.SetMainObject(graphObject);
+            ctx.AddObjectToAsset("MainAsset", graphObject.RuntimeGraph, icon);
+            ctx.SetMainObject(graphObject.RuntimeGraph);
 
-            var runtimeObject = ScriptableObject.CreateInstance<RuntimeGraphObject>();
-            var filePath = ctx.assetPath;
-            var assetNameSubStartIndex = filePath.LastIndexOf('/') + 1;
-            var assetNameSubEndIndex = filePath.LastIndexOf('.');
-            var assetName = filePath.Substring(assetNameSubStartIndex, assetNameSubEndIndex - assetNameSubStartIndex);
-            runtimeObject.name = $"{assetName} (Runtime)";
-
-            // Add properties
+            /*// Add properties
             runtimeObject.Properties = new List<RuntimeProperty>(
                 graphObject.GraphData.Properties.Select(
                     property =>
@@ -51,10 +40,10 @@ namespace GeometryGraph.Editor {
                 /*var nodeData = JObject.Parse(node.NodeData);
                 var runtimeNode = new RuntimeNode {
                     Guid = node.GUID
-                };*/
+                };#1#
                 /*switch (node.Type) {
                     default: throw new NotSupportedException($"Invalid node type {node.Type}.");
-                }*/
+                }#1#
 
                 // runtimeObject.Nodes.Add(runtimeNode);
             }
@@ -66,14 +55,15 @@ namespace GeometryGraph.Editor {
                         new RuntimeEdge {
                             FromNode = edge.Output, FromPort = edge.OutputPort, ToNode = edge.Input, ToPort = edge.InputPort
                         }
-                )*/
+                )#1#
             );
-            runtimeObject.BuildGraph();
+            runtimeObject.BuildGraph();*/
 
-            ctx.AddObjectToAsset("RuntimeAsset", runtimeObject, runtimeIcon);
+            graphObject.hideFlags = HideFlags.HideInHierarchy;
+            ctx.AddObjectToAsset("GraphAsset", graphObject, runtimeIcon);
             AssetDatabase.Refresh();
 
-            EditorUtility.SetDirty(runtimeObject);
+            // EditorUtility.SetDirty(graphObject);
         }
     }
 }

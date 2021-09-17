@@ -61,7 +61,7 @@ namespace GeometryGraph.Runtime.Graph {
                     otherPort.Connections.Remove(connection);
                 }
             }
-            Debug.Log($"Node removed {GetType()}");
+            // Debug.Log($"Node removed {GetType()}");
         }
 
         public void OnConnectionCreated(RuntimePort output, RuntimePort input) {
@@ -70,7 +70,7 @@ namespace GeometryGraph.Runtime.Graph {
             selfPort.Connections.Add(connection);
             NotifyConnectionCreated(connection, selfPort);
 
-            Debug.Log($"Connection created {GetType()}");
+            // Debug.Log($"Connection created {GetType()}");
         }
 
         public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
@@ -80,7 +80,7 @@ namespace GeometryGraph.Runtime.Graph {
                 var connection = selfPort.Connections[index];
                 selfPort.Connections.RemoveAt(index);
                 NotifyConnectionRemoved(connection, selfPort);
-                Debug.Log($"Connection Removed {GetType()}");
+                // Debug.Log($"Connection Removed {GetType()}");
             }
         }
     }

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GeometryGraph.Runtime;
+using GeometryGraph.Runtime.Graph;
+using Newtonsoft.Json;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -11,8 +14,9 @@ namespace GeometryGraph.Editor {
         [SerializeField] public string AssetGuid;
         [SerializeField] public bool IsBlackboardVisible;
         [SerializeField] public string GraphVersion;
+        // [SerializeField] public string SerializedRuntimeGraph;
+        [SerializeReference] public RuntimeGraphObjectData RuntimeGraphData;
 
-        
         [NonSerialized] private Dictionary<string, SerializedNode> nodeDictionary = new Dictionary<string, SerializedNode>();
         [SerializeField] private List<SerializedNode> nodes = new List<SerializedNode>();
         [NonSerialized] private List<SerializedNode> addedNodes = new List<SerializedNode>();
@@ -45,10 +49,23 @@ namespace GeometryGraph.Editor {
         public List<SerializedNode> NodeSelectionQueue => nodeSelectionQueue;
         public List<SerializedEdge> EdgeSelectionQueue => edgeSelectionQueue;
 
-        public void OnBeforeSerialize() {
-            if (Owner != null)
-                IsBlackboardVisible = Owner.IsBlackboardVisible;
+        [JsonConstructor]
+        private GraphFrameworkData() {
+            
+        }
+        
+        public GraphFrameworkData(RuntimeGraphObject runtimeGraph) {
+            RuntimeGraphData = runtimeGraph.RuntimeData;
+        }
 
+        public void OnBeforeSerialize() {
+            if (Owner != null) {
+                IsBlackboardVisible = Owner.IsBlackboardVisible; 
+            }
+
+            /*if (RuntimeGraphData != null)
+                SerializedRuntimeGraph = JsonConvert.SerializeObject(RuntimeGraphData);*/
+            
             serializedProperties.Clear();
             foreach (var property in properties) {
                 serializedProperties.Add(new SerializedProperty(property));
@@ -56,6 +73,8 @@ namespace GeometryGraph.Editor {
         }
 
         public void OnAfterDeserialize() {
+            /*if(!string.IsNullOrEmpty(SerializedRuntimeGraph))
+                RuntimeGraphData.Load(JsonConvert.DeserializeObject<RuntimeGraphObjectData>(SerializedRuntimeGraph));*/
             nodes.ForEach(node => nodeDictionary.Add(node.GUID, node));
             serializedProperties.ForEach(prop => AddProperty(prop.Deserialize()));
         }
@@ -311,6 +330,11 @@ namespace GeometryGraph.Editor {
                     AddEdge(remappedEdge);
                 }
             }
+        }
+
+        public void Load(RuntimeGraphObject runtimeGraph) {
+            runtimeGraph.Load(RuntimeGraphData);
+            RuntimeGraphData = runtimeGraph.RuntimeData;
         }
     }
 }

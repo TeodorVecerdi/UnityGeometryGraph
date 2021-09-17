@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port != Input) return;
 
-            Debug.Log(GetValue(connection, (object)null).ToString());
+            // Debug.Log(GetValue(connection, (object)null).ToString());
         }
     }
 }

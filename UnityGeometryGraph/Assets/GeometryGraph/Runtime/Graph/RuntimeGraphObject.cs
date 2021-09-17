@@ -1,28 +1,27 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class RuntimeGraphObject : ScriptableObject {
+        [SerializeField] public RuntimeGraphObjectData RuntimeData = new RuntimeGraphObjectData();
+        
         // Graph data
-        [SerializeField] public List<RuntimeNode> Nodes;
-        [SerializeField] public List<Connection> Connections;
-        [SerializeField] public List<Property> Properties;
-
-        public NodeDictionary NodeDictionary;
-        public PropertyDictionary PropertyDictionary;
-
+        
         public void BuildGraph() {
-            PropertyDictionary = new PropertyDictionary();
-            foreach (var property in Properties) {
-                PropertyDictionary.Add(property.Guid, property);
+            RuntimeData.PropertyDictionary = new PropertyDictionary();
+            foreach (var property in RuntimeData.Properties) {
+                RuntimeData.PropertyDictionary.Add(property.Guid, property);
             }
 
-            NodeDictionary = new NodeDictionary();
-            foreach (var node in Nodes) {
-                NodeDictionary.Add(node.Guid, node);
+            RuntimeData.NodeDictionary = new NodeDictionary();
+            foreach (var node in RuntimeData.Nodes) {
+                RuntimeData.NodeDictionary.Add(node.Guid, node);
             }
             
             // !! TODO: Implement graph construction? 
+        }
+
+        public void Load(RuntimeGraphObjectData runtimeData) {
+            RuntimeData.Load(runtimeData);
         }
     }
 }
