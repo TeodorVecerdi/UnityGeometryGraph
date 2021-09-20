@@ -43,8 +43,8 @@ namespace GeometryGraph.Runtime.Geometry {
             var faceMaterialIndices = new List<int>();
             var faceSmoothShaded = new List<bool>();
 
-            BuildMetadata(mesh, vertices, meshUvs, faceNormals, uvs, faceMaterialIndices, 
-                                            faceSmoothShaded, duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+            BuildMetadata(mesh, vertices, meshUvs, /*out*/faceNormals, /*out*/uvs, /*out*/faceMaterialIndices, /*out*/faceSmoothShaded, 
+                          duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
             attributeManager = new AttributeManager();
             FillBuiltinAttributes(vertices, uvs, faceNormals, faceMaterialIndices, faceSmoothShaded);
@@ -75,8 +75,9 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         private void BuildMetadata(
-            Mesh mesh, List<float3> vertices, List<float2> uvs, List<float3> faceNormals, List<float2> correctUvs, List<int> faceMaterialIndices, 
-            List<bool> smoothShaded, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold
+            Mesh mesh, List<float3> vertices, List<float2> uvs, 
+            /*out*/ List<float3> faceNormals, List<float2> correctUvs, List<int> faceMaterialIndices, List<bool> smoothShaded, 
+            float duplicateDistanceThreshold, float duplicateNormalAngleThreshold
         ) {
             using var method = Profiler.ProfileMethod();
             edges = new List<Edge>(mesh.triangles.Length);
@@ -155,11 +156,15 @@ namespace GeometryGraph.Runtime.Geometry {
         private void RemoveDuplicates(List<float3> vertices, List<float3> faceNormals, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
             using var method = Profiler.ProfileMethod();
             var duplicates = GetDuplicateEdges(vertices, faceNormals, duplicateDistanceThreshold * duplicateDistanceThreshold, duplicateNormalAngleThreshold);
+            
+            /*unique vertex => [duplicate vertices]*/
             var duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
+            
+            /*duplicate vertex => unique vertex*/
             var reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
             RemapDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
             RemoveDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
-            CheckForErrors(vertices);
+            CheckForErrors(vertices.Count);
         }
 
         private void FillElementMetadata() {
@@ -411,12 +416,12 @@ namespace GeometryGraph.Runtime.Geometry {
             }
         }
 
-        private void CheckForErrors(List<float3> vertices) {
+        private void CheckForErrors(int vertexCount) {
             using var method = Profiler.ProfileMethod();
-            // Check if there are any invalid edges
+            // Check if there are any invalid`edges
             for (var i = 0; i < edges.Count; i++) {
                 var edge = edges[i];
-                if (edge.VertA >= vertices.Count || edge.VertB >= vertices.Count) {
+                if (edge.VertA >= vertexCount || edge.VertB >= vertexCount) {
                     Debug.LogError($"Edge at index {i} contains invalid vertices");
                 }
             }
@@ -429,7 +434,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     Debug.LogError($"Face at index {i} contains invalid edges");
                 }
 
-                if (face.VertA >= vertices.Count || face.VertB >= vertices.Count || face.VertC >= vertices.Count) {
+                if (face.VertA >= vertexCount || face.VertB >= vertexCount || face.VertC >= vertexCount) {
                     Debug.LogError($"Face at index {i} contains invalid vertices");
                 }
             }
@@ -477,7 +482,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
                 // Cleanup
                 face.AdjacentFaces.RemoveDuplicates();
-                face.AdjacentFaces.RemoveAll(adjacentIndex => adjacentIndex == i || adjacentIndex == -1);
+                face.AdjacentFaces.RemoveAll(adjacentIndex => /*self*/adjacentIndex == i || /*no face*/adjacentIndex == -1);
             }
         }
 
@@ -495,6 +500,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public object Clone() {
+            // TODO: Should probably write a proper Clone method some time
             var clone = GeometryData.Empty;
             GeometryData.Merge(clone, this);
             return clone;

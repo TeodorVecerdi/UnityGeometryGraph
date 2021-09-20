@@ -27,6 +27,8 @@ namespace GeometryGraph.Runtime.Geometry {
             public int FaceA = -1;
             public int FaceB = -1;
 
+            // Note: Only used for edge duplicate detection/removal and is not needed from there on.
+            // It's also not valid from that point forwards 
             public int SelfIndex;
 
             public Edge(int vertA, int vertB, int selfIndex) {
