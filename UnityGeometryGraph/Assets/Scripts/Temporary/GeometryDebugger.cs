@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using Attribute;
+using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.Data;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityCommons;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Geometry {
+namespace GeometryGraph.Runtime.Geometry {
     public class GeometryDebugger : SerializedMonoBehaviour {
         [SerializeField] private ElementGizmoType gizmoType;
         [SerializeField] private float handleSize = 0.1f;

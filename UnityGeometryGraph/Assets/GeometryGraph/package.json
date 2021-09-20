@@ -1,0 +1,31 @@
+{
+  "name": "dev.vecerdi.geometry_graph",
+  "version": "1.0.0",
+  "displayName": "Geometry Graph",
+  "description": "TODO",
+  "unity": "2020.1",
+  "keywords": [
+    "node-based",
+    "editor-tool",
+    "geometry",
+    "visual-scripting",
+    "geometry-graph",
+    "procedural",
+    "procedural-geometry",
+  ],
+  "author": {
+    "name": "Teodor Vecerdi",
+    "email": "teodor.vecerdi@gmail.com",
+    "url": "https://github.com/TeodorVecerdi"
+  },
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.1",
+    "com.unity.shadergraph": "8.2.0"
+  },
+  "samples": [
+  ],
+  "repository": {
+    "url": "https://github.com/TeodorVecerdi/UnityGeometryGraph.git",
+    "type": "git"
+  }
+}
