@@ -1,7 +1,5 @@
 ﻿using GeometryGraph.Runtime.Graph;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor {
     [Title("Graph Output")]
@@ -12,9 +10,7 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Graph Output", EditorView.DefaultNodePosition);
 
-            if (Owner != null)
-                Owner.EditorView.GraphFrameworkGraphView.GraphOutputNode = this;
-            valuePort = GraphFrameworkPort.Create("Value", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener);
+            valuePort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener);
             AddPort(valuePort);
         }
 

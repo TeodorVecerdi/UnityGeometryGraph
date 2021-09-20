@@ -55,6 +55,10 @@ namespace GeometryGraph.Editor {
                 }
             }
             GUILayout.EndVertical();
+
+            if (GUILayout.Button("Evaluate")) {
+                targetGraph.Evaluate();
+            }
         }
 
         private void OnGraphChanged() {
