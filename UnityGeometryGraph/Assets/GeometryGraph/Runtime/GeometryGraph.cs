@@ -22,10 +22,6 @@ namespace GeometryGraph.Runtime {
         
         public void Evaluate() {
             if(exporter == null) return;
-
-            Debug.Log(graph.RuntimeData.Connections.Count);
-            Debug.Log(graph.RuntimeData.Nodes.Count);
-            Debug.Log(graph.RuntimeData.Properties.Count);
             exporter.Export(graph.Evaluate(sceneData));
         }
     }

@@ -8,14 +8,10 @@ namespace GeometryGraph.Runtime.Graph {
 
         public GeometryData Evaluate(GeometryGraphSceneData sceneData) {
             // TODO: Execute graph using `sceneData`
-            RuntimeData.OnAfterDeserialize();
-            
             if (RuntimeData.OutputNode == null) {
                 Debug.Log("Output node is null");
                 return GeometryData.Empty;
             }
-
-            Debug.Log(RuntimeData.OutputNode.Input == RuntimeData.OutputNode.Ports[0]);
 
             LoadScenePropertyValues(sceneData.PropertyData);
             var result = RuntimeData.OutputNode.EvaluateGraph();
