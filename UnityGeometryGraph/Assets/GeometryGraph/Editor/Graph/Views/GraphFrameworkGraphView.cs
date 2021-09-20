@@ -16,21 +16,21 @@ namespace GeometryGraph.Editor {
 
         protected override bool canCutSelection {
             get {
-                var onlyOutputNode = selection.OfType<OutputNode>().Any();
+                var onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
                 return !onlyOutputNode && base.canCutSelection;
             }
         }
 
         protected override bool canDuplicateSelection {
             get {
-                var onlyOutputNode = selection.Any(selectable => selectable == GraphOutputNode);
+                var onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
                 return !onlyOutputNode && base.canCutSelection;
             }
         }
 
         protected override bool canCopySelection {
             get {
-                var onlyOutputNode = selection.Any(selectable => selectable == GraphOutputNode);
+                var onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
                 if (onlyOutputNode) return false;
                 
                 return selection.OfType<AbstractNode>().Any() || selection.OfType<Group>().Any() || selection.OfType<BlackboardField>().Any();
