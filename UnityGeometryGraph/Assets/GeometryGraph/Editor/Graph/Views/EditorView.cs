@@ -154,7 +154,12 @@ namespace GeometryGraph.Editor {
             graphFrameworkGraphView.graphElements.ToList().OfType<BlackboardRow>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
 
             // Create & add graph elements 
-            graphObject.GraphData.Nodes.ForEach(node => AddNode(node));
+            graphObject.GraphData.Nodes.ForEach(node => {
+                AddNode(node);
+                if (node.Node is OutputNode outputNode) {
+                    graphFrameworkGraphView.GraphOutputNode = outputNode;
+                }
+            });
             graphObject.GraphData.Edges.ForEach(edge => {
                 var outputNode = GraphFrameworkGraphView.nodes.First(node => node.viewDataKey == edge.Output) as AbstractNode;
                 var inputNode = GraphFrameworkGraphView.nodes.First(node => node.viewDataKey == edge.Input) as AbstractNode;
@@ -183,6 +188,10 @@ namespace GeometryGraph.Editor {
 
             foreach (var removedNode in graphObject.GraphData.RemovedNodes) {
                 removedNode.Node.NotifyRuntimeNodeRemoved();
+                if (removedNode.Node is OutputNode) {
+                    GraphFrameworkGraphView.GraphOutputNode = null;
+                    searchWindowProvider.RegenerateEntries = true;
+                }
                 RemoveNode(removedNode);
                 graphObject.RuntimeGraph.OnNodeRemoved(removedNode.Node.Runtime);
             }
@@ -204,6 +213,10 @@ namespace GeometryGraph.Editor {
 
             foreach (var addedNode in graphObject.GraphData.AddedNodes) {
                 AddNode(addedNode);
+                if (addedNode.Node is OutputNode outputNode) {
+                    graphFrameworkGraphView.GraphOutputNode = outputNode;
+                    searchWindowProvider.RegenerateEntries = true;
+                }
                 graphObject.RuntimeGraph.OnNodeAdded(addedNode.Node.Runtime);
                 addedNode.Node.OnPropertyUpdated(null);
             }

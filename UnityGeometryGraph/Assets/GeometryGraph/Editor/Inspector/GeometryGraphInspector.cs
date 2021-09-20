@@ -24,6 +24,7 @@ namespace GeometryGraph.Editor {
         public override void OnInspectorGUI() {
             var graphProperty = serializedObject.FindProperty("graph");
             EditorGUILayout.PropertyField(graphProperty);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("exporter"));
             var changed = serializedObject.ApplyModifiedProperties();
             
             if (changed) {

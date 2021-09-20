@@ -14,6 +14,8 @@ namespace GeometryGraph.Editor {
         public List<NodeEntry> CurrentNodeEntries;
         public Port ConnectedPort;
         public bool RegenerateEntries { get; set; }
+        
+        private static readonly Type outputNodeType = typeof(OutputNode);
 
         public void Initialize(GraphFrameworkEditorWindow editorWindow, EditorView editorView) {
             this.editorWindow = editorWindow;
@@ -38,6 +40,8 @@ namespace GeometryGraph.Editor {
             foreach (var type in TypeCache.GetTypesDerivedFrom<AbstractNode>()) {
                 if (!type.IsClass || type.IsAbstract)
                     continue;
+                
+                if(type == outputNodeType && editorView.GraphFrameworkGraphView.GraphOutputNode != null) continue;
 
                 if (type.GetCustomAttributes(typeof(TitleAttribute), false) is TitleAttribute[] attrs && attrs.Length > 0) {
                     foreach (var attr in attrs) {

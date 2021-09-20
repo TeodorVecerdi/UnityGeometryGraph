@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -8,6 +9,8 @@ namespace GeometryGraph.Runtime {
     public class GeometryGraph : MonoBehaviour {
         [SerializeField] private RuntimeGraphObject graph;
         [SerializeField] private GeometryGraphSceneData sceneData = new GeometryGraphSceneData();
+        [SerializeField] private GeometryExporter exporter;
+        
         [SerializeField] private string graphGuid;
 
         public RuntimeGraphObject Graph => graph;
@@ -15,6 +18,12 @@ namespace GeometryGraph.Runtime {
         public string GraphGuid {
             get => graphGuid;
             set => graphGuid = value;
+        }
+
+        [Button]
+        public void Evaluate() {
+            if(exporter == null) return;
+            exporter.Export(graph.Evaluate(sceneData));
         }
     }
 

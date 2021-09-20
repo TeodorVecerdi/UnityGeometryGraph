@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -11,6 +12,31 @@ namespace GeometryGraph.Editor {
         public EditorView EditorView => editorView;
         public GraphFrameworkData GraphData => editorView.GraphObject.GraphData;
 
+        public OutputNode GraphOutputNode;
+
+        protected override bool canCutSelection {
+            get {
+                var onlyOutputNode = selection.OfType<OutputNode>().Any();
+                return !onlyOutputNode && base.canCutSelection;
+            }
+        }
+
+        protected override bool canDuplicateSelection {
+            get {
+                var onlyOutputNode = selection.Any(selectable => selectable == GraphOutputNode);
+                return !onlyOutputNode && base.canCutSelection;
+            }
+        }
+
+        protected override bool canCopySelection {
+            get {
+                var onlyOutputNode = selection.Any(selectable => selectable == GraphOutputNode);
+                if (onlyOutputNode) return false;
+                
+                return selection.OfType<AbstractNode>().Any() || selection.OfType<Group>().Any() || selection.OfType<BlackboardField>().Any();
+            }
+        }
+
         public GraphFrameworkGraphView(EditorView editorView) {
             this.editorView = editorView;
             RegisterCallback<DragUpdatedEvent>(OnDragUpdated);
@@ -19,8 +45,6 @@ namespace GeometryGraph.Editor {
             unserializeAndPaste = UnserializeAndPasteImpl;
             deleteSelection = DeleteSelectionImpl;
         }
-        
-        protected override bool canCopySelection => selection.OfType<AbstractNode>().Any() || selection.OfType<Group>().Any() || selection.OfType<BlackboardField>().Any();
 
         private void UnserializeAndPasteImpl(string operation, string data) {
             editorView.GraphObject.RegisterCompleteObjectUndo(operation);
@@ -30,12 +54,20 @@ namespace GeometryGraph.Editor {
 
         private string SerializeGraphElementsImpl(IEnumerable<GraphElement> elements) {
             var elementsList = elements.ToList();
-            var nodes = elementsList.OfType<AbstractNode>().Select(x => x.Owner);
-            var edges = elementsList.OfType<Edge>().Select(x => x.userData).OfType<SerializedEdge>();
+            var nodes = 
+                elementsList
+                        .OfType<AbstractNode>()
+                        .Where(node => !(node is OutputNode))
+                        .Select(x => x.Owner);
+            var edges =
+                elementsList
+                        .OfType<Edge>()
+                        .Where(edge => !(edge.output.node is OutputNode || edge.input.node is OutputNode))
+                        .Select(x => x.userData).OfType<SerializedEdge>();
             var properties = selection.OfType<BlackboardField>().Select(x => x.userData as AbstractProperty);
 
             // Collect the property nodes and get the corresponding properties
-            var propertyNodeGuids = nodes.OfType<AbstractNode>().Where(node => node.IsProperty).Select(x => x.PropertyGuid);
+            var propertyNodeGuids = this.nodes.Where(node => ((AbstractNode)node).IsProperty).Select(node => ((AbstractNode)node).PropertyGuid);
             var metaProperties = editorView.GraphObject.GraphData.Properties.Where(x => propertyNodeGuids.Contains(x.GUID));
 
             var copyPasteData = new CopyPasteData(editorView, nodes, edges, properties, metaProperties);
@@ -76,15 +108,14 @@ namespace GeometryGraph.Editor {
             
             
             foreach (var selectable in selection) {
-                if (!(selectable is BlackboardField field) || field.userData == null)
-                    continue;
+                if (!(selectable is BlackboardField field) || field.userData == null) continue;
                 var property = (AbstractProperty) field.userData;
                 editorView.GraphObject.GraphData.RemoveProperty(property);
             }
             
             selection.Clear();
         }
-
+        
         #region Drag & Drop
         private void OnDragUpdated(DragUpdatedEvent evt) {
             var selection = DragAndDrop.GetGenericData("DragSelection") as List<ISelectable>;

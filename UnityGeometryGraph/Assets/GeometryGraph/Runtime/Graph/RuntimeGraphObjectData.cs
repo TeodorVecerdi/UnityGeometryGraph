@@ -11,6 +11,7 @@ namespace GeometryGraph.Runtime {
         [SerializeField] public string Guid;
         
         [NonSerialized] public List<RuntimeNode> Nodes = new List<RuntimeNode>();
+        [NonSerialized] public OutputNode OutputNode;
         [SerializeField] public List<Connection> Connections = new List<Connection>();
         [SerializeField] public List<Property> Properties = new List<Property>();
         [SerializeField] private List<SerializedRuntimeNode> serializedRuntimeNodes = new List<SerializedRuntimeNode>();
@@ -57,8 +58,14 @@ namespace GeometryGraph.Runtime {
 
             Nodes ??= new List<RuntimeNode>();
             Nodes.Clear();
+            OutputNode = null;
+            
             foreach (var serializedRuntimeNode in serializedRuntimeNodes) {
-                Nodes.Add(SerializedRuntimeNode.FromSerializedNode(serializedRuntimeNode));
+                var node = SerializedRuntimeNode.FromSerializedNode(serializedRuntimeNode);
+                if (node is OutputNode outputNode) {
+                    OutputNode = outputNode;
+                }
+                Nodes.Add(node);
             }
 
             var allPorts = Nodes.SelectMany(node => node.Ports).ToList();

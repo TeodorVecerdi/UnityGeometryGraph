@@ -1,12 +1,16 @@
 using System.Linq;
+using GeometryGraph.Runtime.Geometry;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class RuntimeGraphObject : ScriptableObject {
         [SerializeField] public RuntimeGraphObjectData RuntimeData = new RuntimeGraphObjectData();
 
-        public void Evaluate(GeometryGraphSceneData sceneData) {
+        public GeometryData Evaluate(GeometryGraphSceneData sceneData) {
             // TODO: Execute graph using `sceneData`
+            if (RuntimeData.OutputNode == null)
+                return GeometryData.Empty;
+            return RuntimeData.OutputNode.EvaluateGraph();
         }
 
         public void Load(RuntimeGraphObjectData runtimeData) {
