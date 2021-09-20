@@ -21,8 +21,7 @@ namespace GeometryGraph.Runtime {
 
         public void OnAfterDeserialize() {
             Clear();
-            for (int i = 0; i < keys.Count && i < values.Count; i++)
-            {
+            for (var i = 0; i < keys.Count && i < values.Count; i++) {
                 this[keys[i]] = values[i];
             }
         }

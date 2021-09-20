@@ -5,6 +5,10 @@ namespace GeometryGraph.Runtime.Graph {
     public class RuntimeGraphObject : ScriptableObject {
         [SerializeField] public RuntimeGraphObjectData RuntimeData = new RuntimeGraphObjectData();
 
+        public void Evaluate(GeometryGraphSceneData sceneData) {
+            // TODO: Execute graph using `sceneData`
+        }
+
         public void Load(RuntimeGraphObjectData runtimeData) {
             RuntimeData.Load(runtimeData);
         }

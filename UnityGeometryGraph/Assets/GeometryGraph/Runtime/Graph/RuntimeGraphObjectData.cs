@@ -8,12 +8,20 @@ using UnityEngine;
 namespace GeometryGraph.Runtime {
     [Serializable]
     public class RuntimeGraphObjectData : ISerializationCallbackReceiver {
+        [SerializeField] public string Guid;
+        
         [NonSerialized] public List<RuntimeNode> Nodes = new List<RuntimeNode>();
         [SerializeField] public List<Connection> Connections = new List<Connection>();
         [SerializeField] public List<Property> Properties = new List<Property>();
         [SerializeField] private List<SerializedRuntimeNode> serializedRuntimeNodes = new List<SerializedRuntimeNode>();
 
+        public RuntimeGraphObjectData() {
+            Guid = System.Guid.NewGuid().ToString();
+        }
+
         public void Load(RuntimeGraphObjectData runtimeData) {
+            Guid = runtimeData.Guid;
+            
             Nodes.Clear();
             Nodes.AddRange(runtimeData.Nodes);
             Connections.Clear();
@@ -34,10 +42,6 @@ namespace GeometryGraph.Runtime {
             OnAfterDeserialize();
         }
 
-        /// <summary>
-        ///   <para>Implement this method to receive a callback before Unity serializes your object.</para>
-        /// </summary>
-        /// <footer><a href="file:///C:/Program%20Files/Unity/Hub/Editor/2021.1.19f1/Editor/Data/Documentation/en/ScriptReference/ISerializationCallbackReceiver.OnBeforeSerialize.html">External documentation for `ISerializationCallbackReceiver.OnBeforeSerialize`</a></footer>
         public void OnBeforeSerialize() {
             if (Nodes == null) return;
 
@@ -48,10 +52,6 @@ namespace GeometryGraph.Runtime {
             }
         }
 
-        /// <summary>
-        ///   <para>Implement this method to receive a callback after Unity deserializes your object.</para>
-        /// </summary>
-        /// <footer><a href="file:///C:/Program%20Files/Unity/Hub/Editor/2021.1.19f1/Editor/Data/Documentation/en/ScriptReference/ISerializationCallbackReceiver.OnAfterDeserialize.html">External documentation for `ISerializationCallbackReceiver.OnAfterDeserialize`</a></footer>
         public void OnAfterDeserialize() {
             if (serializedRuntimeNodes == null) return;
 
