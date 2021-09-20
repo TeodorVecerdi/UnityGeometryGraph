@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.Data;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
-    public class GeometryExporterSubmesh : MonoBehaviour {
+    public class GeometryExporterSubmesh : SerializedMonoBehaviour {
         [SerializeField] private MeshFilter target;
         [SerializeField] private GeometryImporter source;
+        [SerializeField, ShowInInspector] private IGeometryProvider source2;
 
         [SerializeField] private Mesh mesh;
 
@@ -22,11 +24,11 @@ namespace GeometryGraph.Runtime.Geometry {
         private List<List<int>> triangles = new List<List<int>>();
         private HashSet<int> exportedFaces = new HashSet<int>();
 
-        private GeometryData geometry => source?.Geometry;
+        private GeometryData geometry => source?.Geometry ?? source2?.Geometry;
 
         [Button]
         public void ExportSubmesh() {
-            if (target == null || source == null || source.Geometry == null) {
+            if (target == null || (source == null && source2 == null) || geometry == null) {
                 Debug.LogError("Target MeshFilter or Source is null");
                 return;
             }

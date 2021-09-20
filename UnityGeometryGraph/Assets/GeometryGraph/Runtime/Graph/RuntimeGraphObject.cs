@@ -7,7 +7,6 @@ namespace GeometryGraph.Runtime.Graph {
         [SerializeField] public RuntimeGraphObjectData RuntimeData = new RuntimeGraphObjectData();
 
         public GeometryData Evaluate(GeometryGraphSceneData sceneData) {
-            // TODO: Execute graph using `sceneData`
             if (RuntimeData.OutputNode == null) {
                 Debug.Log("Output node is null");
                 return GeometryData.Empty;
