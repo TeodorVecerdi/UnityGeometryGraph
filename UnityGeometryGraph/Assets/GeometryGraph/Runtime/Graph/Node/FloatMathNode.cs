@@ -9,9 +9,9 @@ namespace GeometryGraph.Runtime.Graph {
         private enum MathOperation {Add, Subtract, Multiply, Divide}
         private MathOperation operation;
 
-        public RuntimePort APort { get; }
-        public RuntimePort BPort { get; }
-        public RuntimePort ResultPort { get; }
+        public RuntimePort APort { get; private set; }
+        public RuntimePort BPort { get; private set; }
+        public RuntimePort ResultPort { get; private set; }
 
         public FloatMathNode(string guid) : base(guid) {
             APort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
@@ -48,6 +48,13 @@ namespace GeometryGraph.Runtime.Graph {
 
             UpdateResult();
         }
+        
+        public override void RebindPorts() {
+            APort = Ports[0];
+            BPort = Ports[1];
+            ResultPort = Ports[2];
+        }
+
 
         private void UpdateResult() {
             var newResult = CalculateResult();

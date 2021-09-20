@@ -2,7 +2,7 @@
     public class FloatInputNode : RuntimeNode {
         private float value;
 
-        public RuntimePort ValuePort { get; }
+        public RuntimePort ValuePort { get; private set; }
 
         public FloatInputNode(string guid) : base(guid) {
             ValuePort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
@@ -14,8 +14,12 @@
         }
 
         public override object GetValueForPort(RuntimePort port) {
-            if (port == this.ValuePort) return value;
+            if (port == ValuePort) return value;
             return null;
+        }
+        
+        public override void RebindPorts() {
+            ValuePort = Ports[0];
         }
     }
 }

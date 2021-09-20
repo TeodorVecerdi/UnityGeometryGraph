@@ -72,13 +72,19 @@ namespace GeometryGraph.Runtime {
             foreach (var connection in Connections) {
                 connection.Output = allPorts.Find(port => port.Guid == connection.OutputGuid);
                 connection.Input = allPorts.Find(port => port.Guid == connection.InputGuid);
+
+                Debug.Log($"Assigned port [{connection.Output}] to output of connection");
+                Debug.Log($"Assigned port [{connection.Input}] to input of connection");
             }
 
             foreach (var node in Nodes) {
                 foreach (var port in node.Ports) {
                     port.Node = node;
-                    port.Connections = new List<Connection>(Connections.Where(connection => connection.Output == port || connection.Input == port));
+                    port.Connections = new List<Connection>(Connections.Where(connection => connection.OutputGuid == port.Guid || connection.InputGuid == port.Guid));
+                    Debug.Log($"Added {port.Connections.Count} connections to port {port}");
                 }
+                
+                node.RebindPorts();
             }
         }
     }

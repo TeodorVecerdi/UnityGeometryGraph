@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     [Serializable]
@@ -14,6 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public abstract object GetValueForPort(RuntimePort port);
+        public abstract void RebindPorts();
         
         protected virtual void OnPortValueChanged(Connection connection, RuntimePort port) {}
         protected virtual void OnConnectionCreated(Connection connection, RuntimePort port) {}
@@ -46,7 +48,9 @@ namespace GeometryGraph.Runtime.Graph {
 
         protected T GetValue<T>(RuntimePort port, T defaultValue) {
             var firstConnection = port.Connections.FirstOrDefault();
-            if (firstConnection == null) return defaultValue;
+            if (firstConnection == null) {
+                return defaultValue;
+            }
 
             var outputPort = firstConnection.Output;
             return (T)outputPort.Node.GetValueForPort(outputPort);

@@ -19,10 +19,13 @@ namespace GeometryGraph.Runtime {
             get => graphGuid;
             set => graphGuid = value;
         }
-
-        [Button]
+        
         public void Evaluate() {
             if(exporter == null) return;
+
+            Debug.Log(graph.RuntimeData.Connections.Count);
+            Debug.Log(graph.RuntimeData.Nodes.Count);
+            Debug.Log(graph.RuntimeData.Properties.Count);
             exporter.Export(graph.Evaluate(sceneData));
         }
     }
@@ -41,5 +44,14 @@ namespace GeometryGraph.Runtime {
     [Serializable] public class PropertyValue {
         [SerializeField] public Object ObjectValue;
         //!! Add more here as needed
+
+        public object GetValueForPropertyType(PropertyType type) {
+            switch (type) {
+                case PropertyType.GeometryObject:
+                case PropertyType.GeometryCollection:
+                    return ObjectValue;
+                default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
     }
 }

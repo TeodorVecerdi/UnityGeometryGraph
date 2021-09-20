@@ -8,9 +8,19 @@ namespace GeometryGraph.Runtime.Graph {
 
         public GeometryData Evaluate(GeometryGraphSceneData sceneData) {
             // TODO: Execute graph using `sceneData`
-            if (RuntimeData.OutputNode == null)
+            RuntimeData.OnAfterDeserialize();
+            
+            if (RuntimeData.OutputNode == null) {
+                Debug.Log("Output node is null");
                 return GeometryData.Empty;
-            return RuntimeData.OutputNode.EvaluateGraph();
+            }
+
+            Debug.Log(RuntimeData.OutputNode.Input == RuntimeData.OutputNode.Ports[0]);
+
+            LoadScenePropertyValues(sceneData.PropertyData);
+            var result = RuntimeData.OutputNode.EvaluateGraph();
+            CleanupScenePropertyValues();
+            return result;
         }
 
         public void Load(RuntimeGraphObjectData runtimeData) {
@@ -62,6 +72,18 @@ namespace GeometryGraph.Runtime.Graph {
                     propertyNode.Property = RuntimeData.Properties.FirstOrGivenDefault(property => property.Guid == propertyGuid, null);
                     break;
                 }
+            }
+        }
+
+        private void LoadScenePropertyValues(PropertyDataDictionary propertyData) {
+            foreach (var property in RuntimeData.Properties) {
+                property.Value = propertyData[property.Guid].GetValueForPropertyType(property.Type);
+            }
+        }
+
+        private void CleanupScenePropertyValues() {
+            foreach (var property in RuntimeData.Properties) {
+                property.Value = null;
             }
         }
     }
