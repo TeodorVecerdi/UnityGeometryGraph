@@ -1,4 +1,5 @@
 using System.IO;
+using GeometryGraph.Runtime.Graph;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEditor.Callbacks;
@@ -29,7 +30,19 @@ namespace GeometryGraph.Editor {
             if (extension != GraphFrameworkImporter.Extension)
                 return false;
 
-            var graphObject = GraphFrameworkUtility.LoadGraphAtPath(assetPath);
+            var allAssetsAtPath = AssetDatabase.LoadAllAssetsAtPath(assetPath);
+            GraphFrameworkObject graphObject = null;
+            foreach (var asset in allAssetsAtPath) {
+                if (!(asset is GraphFrameworkObject frameworkObject)) continue;
+                graphObject = frameworkObject;
+                break;
+            }
+
+            if (graphObject == null) {
+                Debug.LogWarning("GRAPH OBJECT NULL AFTER LOAD");
+                graphObject = GraphFrameworkUtility.LoadGraphAtPath(assetPath);
+            }
+            
             if (string.IsNullOrEmpty(graphObject.AssetGuid)) {
                 graphObject.RecalculateAssetGuid(assetPath);
                 GraphFrameworkUtility.SaveGraph(graphObject, false);

@@ -169,7 +169,8 @@ namespace GeometryGraph.Editor {
         #region Window Events
         private void SaveAsset() {
             graphObject.GraphData.GraphVersion = GraphFrameworkVersion.Version.GetValue();
-            GraphFrameworkUtility.SaveGraph(graphObject);
+            GraphFrameworkUtility.SaveGraph(graphObject, false);
+            // graphObject.ResetVersion();
             UpdateTitle();
         }
 

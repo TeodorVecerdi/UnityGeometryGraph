@@ -145,7 +145,6 @@ namespace GeometryGraph.Editor {
         }
 
         public void BuildGraph() {
-            Debug.Log("Build graph");
             // Remove existing elements
             graphFrameworkGraphView.graphElements.ToList().OfType<Node>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
             graphFrameworkGraphView.graphElements.ToList().OfType<Edge>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
