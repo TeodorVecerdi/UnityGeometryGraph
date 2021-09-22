@@ -4,6 +4,7 @@ using GeometryGraph.Runtime.Geometry;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GeometryGraph.Runtime.Graph {
     public class GeometryCollectionPropertyNode : RuntimeNode {
@@ -16,8 +17,12 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override object GetValueForPort(RuntimePort port) {
-            var value = (GeometryCollection)Property?.Value;
-            return value == null ? Array.Empty<GeometryData>().Clone() : value.Collection;
+            GeometryCollection objectValue = null;
+            var value = Property?.Value;
+            if ((Object)value != null) {
+                objectValue = (GeometryCollection)value;
+            }
+            return objectValue == null ? Array.Empty<GeometryData>() : objectValue.Collection;
         }
         
         public override void RebindPorts() {

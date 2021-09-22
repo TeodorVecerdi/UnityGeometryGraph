@@ -22,8 +22,14 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override object GetValueForPort(RuntimePort port) {
-            var value = (GeometryObject)Property?.Value;
-            return value == null ? defaultValue.Clone() : value.Geometry;
+            GeometryObject objectValue = null;
+            var value = Property?.Value;
+            if ((Object)value != null) {
+                objectValue = (GeometryObject)value;
+            }
+            
+            Debug.Log($"GeometryObjectPropertyNode[{Property?.DisplayName}] returning value [{value}]");
+            return objectValue == null ? defaultValue.Clone() : objectValue.Geometry;
         }
 
         public override string GetCustomData() {

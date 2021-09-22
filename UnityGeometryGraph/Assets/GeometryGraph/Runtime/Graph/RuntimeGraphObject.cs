@@ -12,6 +12,9 @@ namespace GeometryGraph.Runtime.Graph {
                 return GeometryData.Empty;
             }
 
+            Debug.Log(RuntimeData.Nodes.Count);
+            Debug.Log(RuntimeData.Connections.Count);
+
             LoadScenePropertyValues(sceneData.PropertyData);
             var result = RuntimeData.OutputNode.EvaluateGraph();
             CleanupScenePropertyValues();
@@ -48,17 +51,29 @@ namespace GeometryGraph.Runtime.Graph {
 
         public void OnNodeAdded(RuntimeNode node) {
             RuntimeData.Nodes.Add(node);
+            if (node is OutputNode outputNode) RuntimeData.OutputNode = outputNode;
         }
 
         public void OnNodeRemoved(RuntimeNode node) {
             RuntimeData.Nodes.RemoveAll(n => n.Guid == node.Guid);
+            if (node is OutputNode) RuntimeData.OutputNode = null;
         }
 
         public void OnConnectionAdded(Connection connection) {
             RuntimeData.Connections.Add(connection);
+            var ports = RuntimeData.Nodes.SelectMany(node => node.Ports).Where(port => port.Guid == connection.OutputGuid || port.Guid == connection.InputGuid);
+            foreach (var runtimePort in ports) {
+                Debug.Log("Added connection to port connection list");
+                runtimePort.Connections.Add(connection);
+            }
         }
 
         public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
+            foreach (var connection in RuntimeData.Connections.Where(connection => connection.OutputGuid == output.Guid && connection.InputGuid == input.Guid)) {
+                connection.Input.Connections.Remove(connection);
+                connection.Output.Connections.Remove(connection);
+            } 
+
             RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == output.Guid && connection.InputGuid == input.Guid);
         }
 

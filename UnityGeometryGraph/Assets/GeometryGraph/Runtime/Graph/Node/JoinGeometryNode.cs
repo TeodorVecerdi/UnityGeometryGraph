@@ -1,4 +1,6 @@
-﻿using GeometryGraph.Runtime.Geometry;
+﻿using System.Linq;
+using GeometryGraph.Runtime.Geometry;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class JoinGeometryNode : RuntimeNode {
@@ -14,6 +16,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
+            Debug.Log($"JoinGeometryNode: Calculating Result");
             CalculateResult();
             return result;
         }
@@ -28,11 +31,12 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
-            var values = GetValues(APort, GeometryData.Empty);
+            var values = GetValues(APort, GeometryData.Empty).ToList();
             result = GeometryData.Empty;
             foreach (var geometryData in values) {
                 result.MergeWith(geometryData);
             }
+            Debug.Log($"JoinGeometryNode: {values.Count} geometries ; {result.Vertices.Count} vertices");
         }
     }
 }

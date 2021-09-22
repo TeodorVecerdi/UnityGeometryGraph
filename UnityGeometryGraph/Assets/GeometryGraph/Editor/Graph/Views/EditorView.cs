@@ -228,7 +228,7 @@ namespace GeometryGraph.Editor {
                 if (inputPort != null && outputPort != null) {
                     var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    var connection = new Connection { Output = runtimeOutput, Input = runtimeInput };
+                    var connection = new Connection { Output = runtimeOutput, OutputGuid = runtimeOutput.Guid, Input = runtimeInput, InputGuid = runtimeInput.Guid};
                     runtimeOutput.Node.OnConnectionCreated(connection);
                     runtimeInput.Node.OnConnectionCreated(connection);
                     graphObject.RuntimeGraph.OnConnectionAdded(connection);

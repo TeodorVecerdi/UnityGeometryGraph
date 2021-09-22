@@ -206,17 +206,21 @@ namespace GeometryGraph.Editor {
                 return;
             }
             properties.RemoveAt(currentIndex);
+            var runtimeProperty = RuntimeGraphData.Properties[currentIndex];
+            RuntimeGraphData.Properties.RemoveAt(currentIndex);
             if (newIndex > currentIndex)
                 newIndex--;
             var isLast = newIndex == properties.Count;
             if (isLast) {
                 Debug.Log($"New index is the last index new:{newIndex} current:{currentIndex}");
                 properties.Add(property);
+                RuntimeGraphData.Properties.Add(runtimeProperty);
             } else {
                 Debug.Log($"new:{newIndex} current:{currentIndex}");
                 properties.Insert(newIndex, property);
+                RuntimeGraphData.Properties.Insert(newIndex, runtimeProperty);
             }
-            if (!movedProperties.Contains(property))
+            if (!movedProperties.Contains(property)) {}
                 movedProperties.Add(property);
         }
 

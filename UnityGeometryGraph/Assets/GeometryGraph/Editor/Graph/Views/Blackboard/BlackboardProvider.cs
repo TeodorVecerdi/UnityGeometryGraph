@@ -20,9 +20,6 @@ namespace GeometryGraph.Editor {
         // private readonly BlackboardSection actorSection;
         
         private readonly List<Node> selectedNodes = new List<Node>();
-        private readonly Dictionary<string, bool> expandedInputs = new Dictionary<string, bool>();
-
-        public Dictionary<string, bool> ExpandedInputs => expandedInputs;
         
         public string AssetName {
             get => Blackboard.title;
@@ -111,23 +108,16 @@ namespace GeometryGraph.Editor {
             pill.RegisterCallback<MouseLeaveEvent>(evt => OnMouseHover(evt, property));
             pill.RegisterCallback<DragUpdatedEvent>(OnDragUpdatedEvent);
 
-            var expandButton = row.Q<Button>("expandButton");
-            expandButton.RegisterCallback<MouseDownEvent>(evt => OnExpanded(evt, property), TrickleDown.TrickleDown);
             inputRows[property.GUID] = row;
             
             if (!create)
                 return;
             
-            row.expanded = true;
-            expandedInputs[property.GUID] = true;
+            row.expanded = false;
             editorView.GraphObject.RegisterCompleteObjectUndo("Create Property");
             editorView.GraphObject.GraphData.AddProperty(property);
 
             field.OpenTextEditor();
-        }
-
-        private void OnExpanded(MouseDownEvent evt, AbstractProperty input) {
-            expandedInputs[input.GUID] = !inputRows[input.GUID].expanded;
         }
 
         private void OnMouseHover(EventBase evt, AbstractProperty input) {
@@ -185,7 +175,6 @@ namespace GeometryGraph.Editor {
                 }
             }
 
-            expandedInputs.Clear();
         }
     }
 }

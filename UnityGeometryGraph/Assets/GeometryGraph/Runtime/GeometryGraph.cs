@@ -36,13 +36,12 @@ namespace GeometryGraph.Runtime {
             foreach (var key in toRemove) {
                 SceneData.PropertyData.Remove(key);
             }
-            
+
             foreach (var property in Graph.RuntimeData.Properties) {
                 if (!SceneData.PropertyData.ContainsKey(property.Guid)) {
                     SceneData.PropertyData[property.Guid] = new PropertyValue();
                 }
             }
-
         }
 
     }
@@ -52,7 +51,7 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private int propertyHashCode;
         
         public PropertyDataDictionary PropertyData => propertyData;
-        
+
         public int PropertyHashCode {
             get => propertyHashCode;
             set => propertyHashCode = value;
@@ -68,6 +67,7 @@ namespace GeometryGraph.Runtime {
     [Serializable] public class PropertyDataDictionary : SerializedDictionary<string, PropertyValue> {}
 
     [Serializable] public class PropertyValue {
+        [SerializeField] public int PropertyIndex;
         [SerializeField] public Object ObjectValue;
         [SerializeField] public int IntValue; 
         [SerializeField] public float FloatValue; 

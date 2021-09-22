@@ -10,7 +10,14 @@ namespace GeometryGraph.Editor {
     [CustomEditor(typeof(GraphFrameworkImporter))]
     public class GraphFrameworkImporterEditor : ScriptedImporterEditor {
         protected override bool needsApplyRevert => false;
-        
+
+        /// <summary>
+        ///   <para>This function is called when the object is loaded.</para>
+        /// </summary>
+        /// <footer><a href="https://docs.unity3d.com/2021.2/Documentation/ScriptReference/30_search.html?q=AssetImporters.AssetImporterEditor.OnEnable">`AssetImporterEditor.OnEnable` on docs.unity3d.com</a></footer>
+        public override void OnEnable() {
+            base.OnEnable();
+        }
 
         public override void OnInspectorGUI() {
             var importer = target as GraphFrameworkImporter;

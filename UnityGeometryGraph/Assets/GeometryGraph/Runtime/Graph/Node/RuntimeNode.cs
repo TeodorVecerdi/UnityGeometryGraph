@@ -77,15 +77,11 @@ namespace GeometryGraph.Runtime.Graph {
                     otherPort.Connections.Remove(connection);
                 }
             }
-            // Debug.Log($"Node removed {GetType()}");
         }
 
         public void OnConnectionCreated(Connection connection) {
             var selfPort = connection.Output.Node == this ? connection.Output : connection.Input;
-            selfPort.Connections.Add(connection);
             NotifyConnectionCreated(connection, selfPort);
-
-            // Debug.Log($"Connection created {GetType()}");
         }
 
         public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
@@ -93,9 +89,7 @@ namespace GeometryGraph.Runtime.Graph {
             var index = selfPort.Connections.FindIndex(connection => connection.Output == output && connection.Input == input);
             if (index != -1) {
                 var connection = selfPort.Connections[index];
-                selfPort.Connections.RemoveAt(index);
                 NotifyConnectionRemoved(connection, selfPort);
-                // Debug.Log($"Connection Removed {GetType()}");
             }
         }
     }

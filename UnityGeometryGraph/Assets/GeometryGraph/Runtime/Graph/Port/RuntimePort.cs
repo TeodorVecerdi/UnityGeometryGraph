@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 
 namespace GeometryGraph.Runtime.Graph {
     [Serializable]
@@ -8,7 +9,7 @@ namespace GeometryGraph.Runtime.Graph {
         public PortType Type;
         public PortDirection Direction;
         [NonSerialized] public RuntimeNode Node;
-        [NonSerialized] public List<Connection> Connections;
+        [NonSerialized, ShowInInspector] public List<Connection> Connections;
 
         private RuntimePort() {
         }
