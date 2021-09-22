@@ -18,6 +18,9 @@ MonoBehaviour:
   - enabled: 1
     converterName: Serialization.JsonConverters.float3Converter
     settings: []
+  - enabled: 1
+    converterName: Serialization.JsonConverters.float2Converter
+    settings: []
   useAllUnityConverters: 1
   unityConverters:
   - enabled: 1

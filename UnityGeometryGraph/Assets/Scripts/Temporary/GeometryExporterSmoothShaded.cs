@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using GeometryGraph.Runtime.Attribute;
 using GeometryGraph.Runtime.Data;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace GeometryGraph.Runtime.Geometry {
     public class GeometryExporterSmoothShaded : SerializedMonoBehaviour {
@@ -36,6 +38,8 @@ namespace GeometryGraph.Runtime.Geometry {
                 Debug.LogError("Target MeshFilter or Source is null");
                 return;
             }
+
+            var sw = Stopwatch.StartNew();
 
             PrepareMesh();
             sharedFaceCount = 0;
@@ -92,6 +96,8 @@ namespace GeometryGraph.Runtime.Geometry {
             }
             
             ApplyMesh();
+            
+            Debug.Log(sw.Elapsed.TotalMilliseconds);
         }
 
         private void ApplyMesh() {
