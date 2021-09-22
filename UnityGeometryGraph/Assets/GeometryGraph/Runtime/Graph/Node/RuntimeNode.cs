@@ -52,6 +52,13 @@ namespace GeometryGraph.Runtime.Graph {
             return (T)outputPort.Node.GetValueForPort(outputPort);
         }
 
+        protected IEnumerable<T> GetValues<T>(RuntimePort port, T defaultValue) {
+            if (port.Connections.Count == 0) yield return defaultValue;
+            foreach (var connection in port.Connections) {
+                yield return (T)connection.Output.Node.GetValueForPort(connection.Output);
+            }
+        }
+
         protected T GetValue<T>(RuntimePort port, T defaultValue) {
             var firstConnection = port.Connections.FirstOrDefault();
             if (firstConnection == null) {
