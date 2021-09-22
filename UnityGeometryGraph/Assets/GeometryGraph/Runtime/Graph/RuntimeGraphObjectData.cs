@@ -94,10 +94,12 @@ namespace GeometryGraph.Runtime {
                 
                 node.RebindPorts();
 
-                if (node is GeometryObjectPropertyNode geometryObjectPropertyNode) {
-                    geometryObjectPropertyNode.Property = Properties.Find(property => property.Guid == geometryObjectPropertyNode.PropertyGuid);
-                } else if (node is GeometryCollectionPropertyNode geometryCollectionPropertyNode) {
-                    geometryCollectionPropertyNode.Property = Properties.Find(property => property.Guid == geometryCollectionPropertyNode.PropertyGuid);
+                switch (node) {
+                    case GeometryObjectPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
+                    case GeometryCollectionPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
+                    case IntegerPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
+                    case FloatPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
+                    case VectorPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
                 }
             }
         }

@@ -77,6 +77,9 @@ namespace GeometryGraph.Editor {
             var menu = new GenericMenu();
             menu.AddItem(new GUIContent("Geometry Object"), false, () => AddInputRow(new GeometryObjectProperty(), true));
             menu.AddItem(new GUIContent("Geometry Collection"), false, () => AddInputRow(new GeometryCollectionProperty(), true));
+            menu.AddItem(new GUIContent("Integer"), false, () => AddInputRow(new IntegerProperty(), true));
+            menu.AddItem(new GUIContent("Float"), false, () => AddInputRow(new FloatProperty(), true));
+            menu.AddItem(new GUIContent("Vector"), false, () => AddInputRow(new VectorProperty(), true));
             // Note: Left as reference
             // menu.AddItem(new GUIContent("Trigger"), false, () => AddInputRow(new TriggerProperty(), true));
             // menu.AddItem(new GUIContent("Actor"), false, () => AddInputRow(new ActorProperty(), true));

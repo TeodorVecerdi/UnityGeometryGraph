@@ -67,7 +67,6 @@ namespace GeometryGraph.Runtime {
     [Serializable] public class PropertyDataDictionary : SerializedDictionary<string, PropertyValue> {}
 
     [Serializable] public class PropertyValue {
-        [SerializeField] public int PropertyIndex;
         [SerializeField] public Object ObjectValue;
         [SerializeField] public int IntValue; 
         [SerializeField] public float FloatValue; 
@@ -79,6 +78,11 @@ namespace GeometryGraph.Runtime {
                 case PropertyType.GeometryObject:
                 case PropertyType.GeometryCollection:
                     return ObjectValue;
+                
+                case PropertyType.Integer: return IntValue;
+                case PropertyType.Float:   return FloatValue;
+                case PropertyType.Vector:  return VectorValue;
+                
                 default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }

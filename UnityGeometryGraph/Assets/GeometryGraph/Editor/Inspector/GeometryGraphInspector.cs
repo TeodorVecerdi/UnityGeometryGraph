@@ -57,7 +57,38 @@ namespace GeometryGraph.Editor {
                         targetGraph.SceneData.PropertyData[property.Guid].ObjectValue = newValue;
                     }
                 } else {
-                    GUILayout.Label($"NOT A UNITY OBJECT TYPE: {property.DisplayName}: {backingValueType}");
+                    switch (property.Type) {
+                        case PropertyType.Integer: {
+                            
+                            EditorGUI.BeginChangeCheck();
+                            var newValue = EditorGUILayout.IntField(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].IntValue);
+                            if (EditorGUI.EndChangeCheck()) {
+                                Undo.RegisterCompleteObjectUndo(targetGraph, $"Changed {property.DisplayName} value");
+                                targetGraph.SceneData.PropertyData[property.Guid].IntValue = newValue;
+                            }
+                            break;
+                        }
+                        case PropertyType.Float: {
+                            EditorGUI.BeginChangeCheck();
+                            var newValue = EditorGUILayout.FloatField(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].FloatValue);
+                            if (EditorGUI.EndChangeCheck()) {
+                                Undo.RegisterCompleteObjectUndo(targetGraph, $"Changed {property.DisplayName} value");
+                                targetGraph.SceneData.PropertyData[property.Guid].FloatValue = newValue;
+                            }
+                            break;
+                        }
+                        case PropertyType.Vector: {
+                            EditorGUI.BeginChangeCheck();
+                            var newValue = EditorGUILayout.Vector3Field(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].VectorValue);
+                            if (EditorGUI.EndChangeCheck()) {
+                                Undo.RegisterCompleteObjectUndo(targetGraph, $"Changed {property.DisplayName} value");
+                                targetGraph.SceneData.PropertyData[property.Guid].VectorValue = newValue;
+                            }
+                            break;
+                        }
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
             }
             GUILayout.EndVertical();

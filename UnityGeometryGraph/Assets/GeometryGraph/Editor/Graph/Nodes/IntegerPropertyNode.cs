@@ -3,9 +3,10 @@ using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 namespace GeometryGraph.Editor {
-    public class GeometryObjectPropertyNode : AbstractNode<GeometryGraph.Runtime.Graph.GeometryObjectPropertyNode> {
+    public class IntegerPropertyNode : AbstractNode<GeometryGraph.Runtime.Graph.IntegerPropertyNode> {
         public override bool IsProperty => true;
         
         private string propertyGuid;
@@ -37,7 +38,7 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize(property != null ? property.DisplayName : "ERROR", EditorView.DefaultNodePosition);
 
-            propertyPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener);
+            propertyPort = GraphFrameworkPort.Create("Value", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Integer, edgeConnectorListener);
             AddPort(propertyPort);
             
             Refresh();
