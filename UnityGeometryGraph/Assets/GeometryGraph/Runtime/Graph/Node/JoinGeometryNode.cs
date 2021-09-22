@@ -16,7 +16,6 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
-            Debug.Log($"JoinGeometryNode: Calculating Result");
             CalculateResult();
             return result;
         }
@@ -36,7 +35,6 @@ namespace GeometryGraph.Runtime.Graph {
             foreach (var geometryData in values) {
                 result.MergeWith(geometryData);
             }
-            Debug.Log($"JoinGeometryNode: {values.Count} geometries ; {result.Vertices.Count} vertices");
         }
     }
 }

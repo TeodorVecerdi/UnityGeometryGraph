@@ -28,7 +28,6 @@ namespace GeometryGraph.Runtime.Graph {
                 objectValue = (GeometryObject)value;
             }
             
-            Debug.Log($"GeometryObjectPropertyNode[{Property?.DisplayName}] returning value [{value}]");
             return objectValue == null ? defaultValue.Clone() : objectValue.Geometry;
         }
 

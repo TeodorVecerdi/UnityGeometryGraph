@@ -332,13 +332,6 @@ namespace GeometryGraph.Runtime.Geometry {
             foreach (var key in allVertexIndices) {
                 vertexRemap[key] = remapIndex++;
             }
-            
-            /*Debug.Log(reverseDuplicatesMap.ToListString());
-            foreach (var pair in duplicateVerticesMap) {
-                Debug.Log($"{pair.Key}: {pair.Value.ToListString()}");
-            }
-
-            Debug.Log(vertexRemap.ToListString());*/
 
             foreach (var face in faces) {
                 RemapEdge(face.EdgeA, reverseDuplicatesMap, vertexRemap);

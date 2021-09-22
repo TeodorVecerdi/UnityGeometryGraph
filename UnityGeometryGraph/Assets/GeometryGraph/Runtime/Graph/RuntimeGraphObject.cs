@@ -8,12 +8,8 @@ namespace GeometryGraph.Runtime.Graph {
 
         public GeometryData Evaluate(GeometryGraphSceneData sceneData) {
             if (RuntimeData.OutputNode == null) {
-                Debug.Log("Output node is null");
                 return GeometryData.Empty;
             }
-
-            Debug.Log(RuntimeData.Nodes.Count);
-            Debug.Log(RuntimeData.Connections.Count);
 
             LoadScenePropertyValues(sceneData.PropertyData);
             var result = RuntimeData.OutputNode.EvaluateGraph();
@@ -63,7 +59,6 @@ namespace GeometryGraph.Runtime.Graph {
             RuntimeData.Connections.Add(connection);
             var ports = RuntimeData.Nodes.SelectMany(node => node.Ports).Where(port => port.Guid == connection.OutputGuid || port.Guid == connection.InputGuid);
             foreach (var runtimePort in ports) {
-                Debug.Log("Added connection to port connection list");
                 runtimePort.Connections.Add(connection);
             }
         }

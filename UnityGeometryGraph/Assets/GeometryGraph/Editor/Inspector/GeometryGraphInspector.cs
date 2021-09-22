@@ -18,7 +18,6 @@ namespace GeometryGraph.Editor {
             if(targetGraph.Graph == null) return;
             if (!targetGraph.GraphGuid.Equals(targetGraph.Graph.RuntimeData.Guid, StringComparison.InvariantCulture)) {
                 targetGraph.GraphGuid = targetGraph.Graph.RuntimeData.Guid;
-                Debug.Log("OnGraphChanged");
                 OnGraphChanged();
             }
 

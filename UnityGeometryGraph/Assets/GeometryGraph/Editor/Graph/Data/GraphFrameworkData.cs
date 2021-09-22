@@ -202,7 +202,6 @@ namespace GeometryGraph.Editor {
             if (currentIndex == -1)
                 throw new ArgumentException("Property is not in graph.");
             if (newIndex == currentIndex) {
-                Debug.Log($"New index is the same as current index {newIndex} == {currentIndex}");   
                 return;
             }
             properties.RemoveAt(currentIndex);
@@ -212,11 +211,9 @@ namespace GeometryGraph.Editor {
                 newIndex--;
             var isLast = newIndex == properties.Count;
             if (isLast) {
-                Debug.Log($"New index is the last index new:{newIndex} current:{currentIndex}");
                 properties.Add(property);
                 RuntimeGraphData.Properties.Add(runtimeProperty);
             } else {
-                Debug.Log($"new:{newIndex} current:{currentIndex}");
                 properties.Insert(newIndex, property);
                 RuntimeGraphData.Properties.Insert(newIndex, runtimeProperty);
             }

@@ -164,8 +164,6 @@ namespace GeometryGraph.Editor {
             var firstConnection = port.connections.FirstOrDefault();
             if (firstConnection == null) return defaultValue;
 
-            Debug.Log($"Found connection for port {port.portName}");
-
             var sourcePort = firstConnection.output as GraphFrameworkPort;
             return (T)sourcePort!.node!.GetValueForPort(sourcePort);
         }
