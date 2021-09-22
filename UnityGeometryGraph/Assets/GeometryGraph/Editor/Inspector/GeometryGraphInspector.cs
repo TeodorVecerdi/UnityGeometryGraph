@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using GeometryGraph.Runtime;
 using UnityEditor;
 using UnityEngine;
@@ -18,6 +19,10 @@ namespace GeometryGraph.Editor {
                 targetGraph.GraphGuid = targetGraph.Graph.RuntimeData.Guid;
                 Debug.Log("OnGraphChanged");
                 OnGraphChanged();
+            }
+
+            if (targetGraph.SceneData.PropertyHashCode != targetGraph.Graph.RuntimeData.PropertyHashCode) {
+                targetGraph.OnPropertiesChanged(targetGraph.Graph.RuntimeData.PropertyHashCode);
             }
         }
 

@@ -16,6 +16,10 @@ namespace GeometryGraph.Runtime {
         [SerializeField] public List<Property> Properties = new List<Property>();
         [SerializeField] private List<SerializedRuntimeNode> serializedRuntimeNodes = new List<SerializedRuntimeNode>();
 
+        [SerializeField] private int propertyHashCode = 0;
+
+        public int PropertyHashCode => propertyHashCode;
+
         public RuntimeGraphObjectData() {
             Guid = System.Guid.NewGuid().ToString();
         }
@@ -31,6 +35,13 @@ namespace GeometryGraph.Runtime {
             Properties.AddRange(runtimeData.Properties);
 
             OnBeforeSerialize();
+        }
+
+        public void UpdatePropertyHashCode() {
+            propertyHashCode = 0;
+            foreach (var property in Properties) {
+                propertyHashCode = propertyHashCode * 37 + property.Guid.GetHashCode();
+            }
         }
 
         [OnSerializing]

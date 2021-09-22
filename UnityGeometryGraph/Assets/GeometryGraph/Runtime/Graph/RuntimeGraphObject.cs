@@ -26,10 +26,24 @@ namespace GeometryGraph.Runtime.Graph {
             if(RuntimeData.Properties.Any(p => p.Guid == property.Guid)) 
                 return;
             RuntimeData.Properties.Add(property);
+            RuntimeData.UpdatePropertyHashCode();
+
+#if UNITY_EDITOR
+            GeometryGraph graph;
+            if (UnityEditor.Selection.activeGameObject == null || (graph = UnityEditor.Selection.activeGameObject.GetComponent<GeometryGraph>()) == null) return;
+            graph.OnPropertiesChanged(RuntimeData.PropertyHashCode);
+#endif
         }
 
         public void OnPropertyRemoved(string propertyGuid) {
-            RuntimeData.Properties.RemoveAll(p => p.Guid == propertyGuid);
+            var removed = RuntimeData.Properties.RemoveAll(p => p.Guid == propertyGuid);
+            if (removed != 0) RuntimeData.UpdatePropertyHashCode();
+            
+#if UNITY_EDITOR
+            GeometryGraph graph;
+            if (UnityEditor.Selection.activeGameObject == null || (graph = UnityEditor.Selection.activeGameObject.GetComponent<GeometryGraph>()) == null) return;
+            graph.OnPropertiesChanged(RuntimeData.PropertyHashCode);
+#endif
         }
 
         public void OnNodeAdded(RuntimeNode node) {
