@@ -28,3 +28,16 @@ EditorView > #content > GraphFrameworkGraphView > GridBackground {
     --thick-line-color: rgba(20, 20, 20, 0.4);
     --spacing: 20;
 }
+
+Button.enum-dropdown-button {
+    padding: 1px 2px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+Button.enum-dropdown-button .arrow-down {
+    width: 14px;
+    height: 14px;
+    align-self: flex-end;
+    background-image: resource("d_dropdown");
+}
