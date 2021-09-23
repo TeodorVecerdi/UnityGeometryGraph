@@ -21,9 +21,12 @@ namespace GeometryGraph.Editor {
         public event Action<Edge, GraphFrameworkPort> OnConnect;
         public event Action<Edge, GraphFrameworkPort> OnDisconnect;
 
-        private GraphFrameworkPort(AbstractNode ownerNode, Orientation portOrientation, Direction portDirection, Capacity portCapacity) : base(
+        private string label;
+
+        private GraphFrameworkPort(string label, AbstractNode ownerNode, Orientation portOrientation, Direction portDirection, Capacity portCapacity) : base(
             portOrientation, portDirection, portCapacity, typeof(object)) {
             node = ownerNode;
+            this.label = label;
         }
 
         /// <summary>
@@ -49,7 +52,7 @@ namespace GeometryGraph.Editor {
         }
 
         public static GraphFrameworkPort Create(string name, Orientation portOrientation, Direction portDirection, Capacity portCapacity, PortType type, EdgeConnectorListener edgeConnectorListener, AbstractNode ownerNode, bool hideLabel = false) {
-            var port = new GraphFrameworkPort(ownerNode, portOrientation, portDirection, portCapacity);
+            var port = new GraphFrameworkPort(name, ownerNode, portOrientation, portDirection, portCapacity);
             if (edgeConnectorListener != null) {
                 port.m_EdgeConnector = new EdgeConnector<Edge>(edgeConnectorListener);
                 port.AddManipulator(port.m_EdgeConnector);
@@ -87,7 +90,7 @@ namespace GeometryGraph.Editor {
             if(onDisconnect != null) port.OnDisconnect += onDisconnect;
             
             if (showLabelOnField) {
-                port[1].AddToClassList("d-none");
+                port.m_ConnectorText.text = string.Empty;
                 port.OnConnect += (_, __) => SetCompFieldVisible(port, field, false);
                 port.OnDisconnect += (_, __) => SetCompFieldVisible(port, field, true);
             } else {
@@ -118,10 +121,10 @@ namespace GeometryGraph.Editor {
 
             if (visible) {
                 field.RemoveFromClassList("d-none");
-                port[1].AddToClassList("d-none");
+                port.m_ConnectorText.text = string.Empty;
             } else {
                 field.AddToClassList("d-none");
-                port[1].RemoveFromClassList("d-none");
+                port.m_ConnectorText.text = port.label;
             }
         }
     }
