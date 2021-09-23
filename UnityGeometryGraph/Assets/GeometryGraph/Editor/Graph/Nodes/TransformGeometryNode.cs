@@ -9,12 +9,14 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+using WhichDefaultValue = GeometryGraph.Runtime.Graph.TransformGeometryNode.WhichDefaultValue;
+
 namespace GeometryGraph.Editor {
     [Title("Transform Geometry")]
     public class TransformGeometryNode : AbstractNode<GeometryGraph.Runtime.Graph.TransformGeometryNode> {
         private float3 defaultTranslation;
         private float3 defaultEulerRotation;
-        private float3 defaultScale;
+        private float3 defaultScale = float3_util.one;
 
         private Vector3Field translationField;
         private Vector3Field eulerRotationField;
@@ -29,7 +31,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Join Geometry", EditorView.DefaultNodePosition);
+            Initialize("Transform Geometry", EditorView.DefaultNodePosition);
 
             inputGeometryPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener);
             outputGeometryPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener);
@@ -40,7 +42,7 @@ namespace GeometryGraph.Editor {
             translationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Translation value");
                 defaultTranslation = evt.newValue;
-                RuntimeNode.UpdateDefaultValue(defaultTranslation, 0);
+                RuntimeNode.UpdateDefaultValue(defaultTranslation, WhichDefaultValue.Translation);
             });
             (rotationPort, eulerRotationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
                 "Rotation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, showLabelOnField: false
@@ -48,16 +50,17 @@ namespace GeometryGraph.Editor {
             eulerRotationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Rotation value");
                 defaultEulerRotation = MathUtilities.WrapPI(evt.newValue);
-                RuntimeNode.UpdateDefaultValue(defaultEulerRotation, 1);
+                RuntimeNode.UpdateDefaultValue(defaultEulerRotation, WhichDefaultValue.Rotation);
             });
             
             (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
                 "Scale", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, showLabelOnField: false
             );
+            scaleField.SetValueWithoutNotify(float3_util.one);
             scaleField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Scale value");
                 defaultScale = evt.newValue;
-                RuntimeNode.UpdateDefaultValue(defaultScale, 2);
+                RuntimeNode.UpdateDefaultValue(defaultScale, WhichDefaultValue.Scale);
             });
             
             AddPort(inputGeometryPort);
@@ -127,7 +130,11 @@ namespace GeometryGraph.Editor {
             translationField.SetValueWithoutNotify(defaultTranslation);
             eulerRotationField.SetValueWithoutNotify(defaultEulerRotation);
             scaleField.SetValueWithoutNotify(defaultScale);
-
+            
+            RuntimeNode.UpdateDefaultValue(defaultTranslation, WhichDefaultValue.Translation);
+            RuntimeNode.UpdateDefaultValue(defaultEulerRotation, WhichDefaultValue.Rotation);
+            RuntimeNode.UpdateDefaultValue(defaultScale, WhichDefaultValue.Scale);
+            
             base.SetNodeData(jsonData); 
         }
     }

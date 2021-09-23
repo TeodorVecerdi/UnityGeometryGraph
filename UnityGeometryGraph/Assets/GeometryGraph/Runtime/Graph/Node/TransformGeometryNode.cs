@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using GeometryGraph.Runtime.Attribute;
 using GeometryGraph.Runtime.Geometry;
 using Unity.Mathematics;
@@ -26,10 +27,13 @@ namespace GeometryGraph.Runtime.Graph {
             OutputGeometryPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
 
-        public void UpdateDefaultValue(float3 value, int whichDefaultValue) {
-            if (whichDefaultValue == 0) defaultTranslation = value;
-            else if (whichDefaultValue == 1) defaultRotation = value;
-            else if (whichDefaultValue == 2) defaultScale = value;
+        public void UpdateDefaultValue(float3 value, WhichDefaultValue whichDefaultValue) {
+            switch (whichDefaultValue) {
+                case WhichDefaultValue.Translation: defaultTranslation = value; break;
+                case WhichDefaultValue.Rotation: defaultRotation = value; break;
+                case WhichDefaultValue.Scale: defaultScale = value; break;
+                default: throw new ArgumentOutOfRangeException(nameof(whichDefaultValue), whichDefaultValue, null);
+            }
 
             NotifyPortValueChanged(OutputGeometryPort);
         }
@@ -62,5 +66,7 @@ namespace GeometryGraph.Runtime.Graph {
             var positionAttribute = result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             positionAttribute.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionAttribute);
         }
+        
+        public enum WhichDefaultValue {Translation = 0, Rotation = 1, Scale = 2}
     }
 }
