@@ -55,9 +55,9 @@ namespace GeometryGraph.Runtime.Geometry {
                 var normal2 = faceNormal;
 
                 if (shadeSmoothAttr[faceIndex]) {
-                    normal0 = math.normalize(geometry.Vertices[face.VertA].Faces.Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
-                    normal1 = math.normalize(geometry.Vertices[face.VertB].Faces.Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
-                    normal2 = math.normalize(geometry.Vertices[face.VertC].Faces.Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
+                    normal0 = math.normalize(geometry.Vertices[face.VertA].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
+                    normal1 = math.normalize(geometry.Vertices[face.VertB].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
+                    normal2 = math.normalize(geometry.Vertices[face.VertC].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
                 }
                 
                 var (t0, t1, t2) = AddFace(faceIndex, normal0, normal1, normal2);
@@ -180,7 +180,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var otherUV = uvAttr[otherFaceCornerIndex];
             var normal = !shadeSmoothAttr[sharedA] 
                 ? normalAttr[sharedA]
-                : math.normalize(geometry.Vertices[otherVertexIndex].Faces.Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
+                : math.normalize(geometry.Vertices[otherVertexIndex].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
 
             var submesh = submeshAttr[sharedA];
             vertices.Add(otherVertex);
