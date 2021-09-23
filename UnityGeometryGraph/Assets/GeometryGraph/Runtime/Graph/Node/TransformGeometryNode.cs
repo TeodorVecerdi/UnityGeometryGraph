@@ -60,11 +60,15 @@ namespace GeometryGraph.Runtime.Graph {
             var translation = GetValue(TranslationPort, defaultTranslation);
             var rotation = GetValue(RotationPort, defaultRotation);
             var scale = GetValue(ScalePort, defaultScale);
-            var trs = float4x4.TRS(translation, quaternion.EulerXYZ(math.radians(rotation)), scale);
+            var rotQuaternion = quaternion.EulerXYZ(math.radians(rotation));
+            var trs = float4x4.TRS(translation, rotQuaternion, scale);
+            var trsNormal = float4x4.TRS(translation, rotQuaternion, float3_util.one);
             result = GetValue(InputGeometryPort, GeometryData.Empty);
             
             var positionAttribute = result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             positionAttribute.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionAttribute);
+            var normalAttribute = result.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
+            normalAttribute.Yield(normal => math.normalize(math.mul(trsNormal, new float4(normal, 1.0f)).xyz)).Into(normalAttribute);
         }
         
         public enum WhichDefaultValue {Translation = 0, Rotation = 1, Scale = 2}
