@@ -3,6 +3,7 @@
         Integer,
         Float,
         Vector,
+        Boolean,
         Geometry,
         Collection,
         Any

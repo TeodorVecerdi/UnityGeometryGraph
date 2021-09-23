@@ -77,7 +77,7 @@
     },
     "com.unity.searcher": {
       "version": "4.8.0",
-      "depth": 2,
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
