@@ -11,20 +11,20 @@ namespace GeometryGraph.Editor {
             get => viewDataKey;
             set {
                 viewDataKey = value;
-                if (node != null) {
-                    if (!node.RuntimePortDictionary.ContainsKey(this)) {
-                        Debug.LogWarning($"Port {portName} on node {node.title} is not bound to any RuntimePort");
-                    } else {
-                        node.RuntimePortDictionary[this].Guid = value;
-                    }
-                }
+                if (node == null || !node.RuntimePortDictionary.ContainsKey(this)) return;
+
+                node.RuntimePortDictionary[this].Guid = value;
             }
         }
         public PortType Type { get; private set; }
-        public new AbstractNode node => (AbstractNode)base.node;
+        public new AbstractNode node { get; }
         public event Action<Edge, GraphFrameworkPort> OnConnect;
         public event Action<Edge, GraphFrameworkPort> OnDisconnect;
-        private GraphFrameworkPort(Orientation portOrientation, Direction portDirection, Capacity portCapacity) : base(portOrientation, portDirection, portCapacity, typeof(object)) { }
+
+        private GraphFrameworkPort(AbstractNode ownerNode, Orientation portOrientation, Direction portDirection, Capacity portCapacity) : base(
+            portOrientation, portDirection, portCapacity, typeof(object)) {
+            node = ownerNode;
+        }
 
         /// <summary>
         ///   <para>Connect and edge to the port.</para>
@@ -48,8 +48,8 @@ namespace GeometryGraph.Editor {
             OnDisconnect?.Invoke(edge, this);
         }
 
-        public static GraphFrameworkPort Create(string name, Orientation portOrientation, Direction portDirection, Capacity portCapacity, PortType type, EdgeConnectorListener edgeConnectorListener, bool hideLabel = false) {
-            var port = new GraphFrameworkPort(portOrientation, portDirection, portCapacity);
+        public static GraphFrameworkPort Create(string name, Orientation portOrientation, Direction portDirection, Capacity portCapacity, PortType type, EdgeConnectorListener edgeConnectorListener, AbstractNode ownerNode, bool hideLabel = false) {
+            var port = new GraphFrameworkPort(ownerNode, portOrientation, portDirection, portCapacity);
             if (edgeConnectorListener != null) {
                 port.m_EdgeConnector = new EdgeConnector<Edge>(edgeConnectorListener);
                 port.AddManipulator(port.m_EdgeConnector);
@@ -78,8 +78,8 @@ namespace GeometryGraph.Editor {
             return port;
         }
 
-        public static (GraphFrameworkPort port, T field) CreateWithBackingField<T, TVal>(string name, Orientation portOrientation, PortType type, EdgeConnectorListener edgeConnectorListener, bool hideLabel = false, bool showLabelOnField = true, Action<Edge, GraphFrameworkPort> onConnect = null, Action<Edge, GraphFrameworkPort> onDisconnect = null) where T : BaseField<TVal>, new() {
-            var port = Create(name, portOrientation, Direction.Input, Capacity.Single, type, edgeConnectorListener, hideLabel);
+        public static (GraphFrameworkPort port, T field) CreateWithBackingField<T, TVal>(string name, Orientation portOrientation, PortType type, EdgeConnectorListener edgeConnectorListener, AbstractNode ownerNode, bool hideLabel = false, bool showLabelOnField = true, Action<Edge, GraphFrameworkPort> onConnect = null, Action<Edge, GraphFrameworkPort> onDisconnect = null) where T : BaseField<TVal>, new() {
+            var port = Create(name, portOrientation, Direction.Input, Capacity.Single, type, edgeConnectorListener, ownerNode, hideLabel);
             var field = new T();
             if (showLabelOnField) field.label = name;
             field.AddToClassList("port-backing-field");

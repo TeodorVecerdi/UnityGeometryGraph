@@ -19,7 +19,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override object GetValueForPort(RuntimePort port) {
-            if (Property == null) return float3.zero;
+            if (Property?.Value == null) return float3.zero;
             return (float3)Property.Value;
         }
 

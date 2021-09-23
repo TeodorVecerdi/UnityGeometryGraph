@@ -1,5 +1,4 @@
 ﻿using GeometryGraph.Runtime;
-using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -33,11 +32,11 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Transform Geometry", EditorView.DefaultNodePosition);
 
-            inputGeometryPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener);
-            outputGeometryPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener);
+            inputGeometryPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener, this);
+            outputGeometryPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, showLabelOnField: false
+                "Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false
             );
             translationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Translation value");
@@ -45,7 +44,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateDefaultValue(defaultTranslation, WhichDefaultValue.Translation);
             });
             (rotationPort, eulerRotationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Rotation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, showLabelOnField: false
+                "Rotation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false
             );
             eulerRotationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Rotation value");
@@ -54,7 +53,7 @@ namespace GeometryGraph.Editor {
             });
             
             (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Scale", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, showLabelOnField: false
+                "Scale", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false
             );
             scaleField.SetValueWithoutNotify(float3_util.one);
             scaleField.RegisterValueChangedCallback(evt => {
@@ -83,33 +82,6 @@ namespace GeometryGraph.Editor {
             BindPort(scalePort, RuntimeNode.ScalePort);
             BindPort(outputGeometryPort, RuntimeNode.OutputGeometryPort);
         }
-
-        protected internal override void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {
-            /*// TODO: change this to account for multiple values
-            if (port == aPort) {
-                a = (GeometryData)GetValueFromEdge(edge, a).Clone();
-                RuntimeNode.NotifyPortValueChanged(RuntimePortDictionary[aPort]);
-            }
-            */
-
-            // UpdateResult();
-        }
-
-        /*private void UpdateResult() {
-            CalculateResult();
-            NotifyPortValueChanged(resultPort);
-        }*/
-
-        public override object GetValueForPort(GraphFrameworkPort port) {
-            return GeometryData.Empty;
-            /*if (port != resultPort) return null;
-
-            CalculateResult();
-            return result;*/
-        }
-
-        /*private void CalculateResult() {
-        }*/
 
         public override JObject GetNodeData() {
             var root = base.GetNodeData();

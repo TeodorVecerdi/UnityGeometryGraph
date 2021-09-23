@@ -125,7 +125,7 @@ namespace GeometryGraph.Editor {
 
         private void OnMouseHover(EventBase evt, AbstractProperty input) {
             if (evt.eventTypeId == MouseEnterEvent.TypeId()) {
-                foreach (var node in editorView.GraphFrameworkGraphView.nodes.ToList()) {
+                foreach (var node in editorView.GraphView.nodes.ToList()) {
                     if (node.viewDataKey == input.GUID) {
                         selectedNodes.Add(node);
                         node.AddToClassList("hovered");

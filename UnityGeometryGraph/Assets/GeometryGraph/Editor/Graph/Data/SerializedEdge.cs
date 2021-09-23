@@ -18,8 +18,8 @@ namespace GeometryGraph.Editor {
 
         public void BuildEdge(EditorView editorView) {
             EditorView = editorView;
-            var inputNode = editorView.GraphFrameworkGraphView.nodes.First(node => node.viewDataKey == Input) as AbstractNode;
-            var outputNode = editorView.GraphFrameworkGraphView.nodes.First(node => node.viewDataKey == Output) as AbstractNode;
+            var inputNode = editorView.GraphView.nodes.First(node => node.viewDataKey == Input) as AbstractNode;
+            var outputNode = editorView.GraphView.nodes.First(node => node.viewDataKey == Output) as AbstractNode;
             var inputPort = inputNode.Owner.GuidPortDictionary[InputPort];
             var outputPort = outputNode.Owner.GuidPortDictionary[OutputPort];
             Edge = inputPort.ConnectTo(outputPort);

@@ -13,7 +13,7 @@ namespace GeometryGraph.Editor {
         public static readonly Vector2 DefaultNodeSize = new Vector2(200, 150);
         public static readonly Rect DefaultNodePosition = new Rect(Vector2.zero, DefaultNodeSize);
 
-        private readonly GraphFrameworkGraphView graphFrameworkGraphView;
+        private readonly GraphFrameworkGraphView graphView;
         private readonly GraphFrameworkEditorWindow editorWindow;
         private readonly GraphFrameworkObject graphObject;
         private readonly BlackboardProvider blackboardProvider;
@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
 
         public GraphFrameworkEditorWindow EditorWindow => editorWindow;
         public GraphFrameworkObject GraphObject => graphObject;
-        public GraphFrameworkGraphView GraphFrameworkGraphView => graphFrameworkGraphView;
+        public GraphFrameworkGraphView GraphView => graphView;
         public EdgeConnectorListener EdgeConnectorListener => edgeConnectorListener;
 
         public EditorView(GraphFrameworkEditorWindow editorWindow, GraphFrameworkObject graphObject) {
@@ -61,29 +61,29 @@ namespace GeometryGraph.Editor {
             Add(toolbar);
             var content = new VisualElement { name = "content" };
             {
-                graphFrameworkGraphView = new GraphFrameworkGraphView(this);
-                graphFrameworkGraphView.SetupZoom(0.05f, 8f);
-                graphFrameworkGraphView.AddManipulator(new ContentDragger());
-                graphFrameworkGraphView.AddManipulator(new SelectionDragger());
-                graphFrameworkGraphView.AddManipulator(new RectangleSelector());
-                graphFrameworkGraphView.AddManipulator(new ClickSelector());
-                graphFrameworkGraphView.RegisterCallback<KeyDownEvent>(OnKeyDown);
-                content.Add(graphFrameworkGraphView);
+                graphView = new GraphFrameworkGraphView(this);
+                graphView.SetupZoom(0.05f, 8f);
+                graphView.AddManipulator(new ContentDragger());
+                graphView.AddManipulator(new SelectionDragger());
+                graphView.AddManipulator(new RectangleSelector());
+                graphView.AddManipulator(new ClickSelector());
+                graphView.RegisterCallback<KeyDownEvent>(OnKeyDown);
+                content.Add(graphView);
 
                 var grid = new GridBackground();
-                graphFrameworkGraphView.Insert(0, grid);
+                graphView.Insert(0, grid);
                 grid.StretchToParentSize();
 
                 blackboardProvider = new BlackboardProvider(this);
-                graphFrameworkGraphView.Add(blackboardProvider.Blackboard);
+                graphView.Add(blackboardProvider.Blackboard);
 
-                graphFrameworkGraphView.graphViewChanged += OnGraphViewChanged;
+                graphView.graphViewChanged += OnGraphViewChanged;
             }
 
             searchWindowProvider = ScriptableObject.CreateInstance<SearchWindowProvider>();
             searchWindowProvider.Initialize(this.editorWindow, this);
 
-            graphFrameworkGraphView.nodeCreationRequest = ctx => {
+            graphView.nodeCreationRequest = ctx => {
                 searchWindowProvider.ConnectedPort = null;
                 SearcherWindow.Show(editorWindow, searchWindowProvider.LoadSearchWindow(),
                                     item => searchWindowProvider.OnSelectEntry(item, ctx.screenMousePosition - editorWindow.position.position),
@@ -98,7 +98,7 @@ namespace GeometryGraph.Editor {
             if (graphViewChange.movedElements != null) {
                 editorWindow.GraphObject.RegisterCompleteObjectUndo("Moved elements");
                 foreach (var node in graphViewChange.movedElements.OfType<AbstractNode>()) {
-                    var rect = node.parent.ChangeCoordinatesTo(graphFrameworkGraphView.contentViewContainer, node.GetPosition());
+                    var rect = node.parent.ChangeCoordinatesTo(graphView.contentViewContainer, node.GetPosition());
                     node.Owner.DrawState.Position = rect;
                 }
             }
@@ -132,13 +132,13 @@ namespace GeometryGraph.Editor {
 
         private void OnKeyDown(KeyDownEvent evt) {
             if (evt.actionKey && evt.keyCode == KeyCode.G) {
-                if (graphFrameworkGraphView.selection.OfType<GraphElement>().Any()) {
+                if (graphView.selection.OfType<GraphElement>().Any()) {
                     // TODO: GROUP
                 }
             }
 
             if (evt.actionKey && evt.keyCode == KeyCode.U) {
-                if (graphFrameworkGraphView.selection.OfType<GraphElement>().Any()) {
+                if (graphView.selection.OfType<GraphElement>().Any()) {
                     // TODO: UNGROUP
                 }
             }
@@ -146,22 +146,26 @@ namespace GeometryGraph.Editor {
 
         public void BuildGraph() {
             // Remove existing elements
-            graphFrameworkGraphView.graphElements.ToList().OfType<Node>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
-            graphFrameworkGraphView.graphElements.ToList().OfType<Edge>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
-            graphFrameworkGraphView.graphElements.ToList().OfType<Group>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
-            graphFrameworkGraphView.graphElements.ToList().OfType<StickyNote>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
-            graphFrameworkGraphView.graphElements.ToList().OfType<BlackboardRow>().ToList().ForEach(graphFrameworkGraphView.RemoveElement);
+            graphView.graphElements.ToList().OfType<Node>().ToList().ForEach(graphView.RemoveElement);
+            graphView.graphElements.ToList().OfType<Edge>().ToList().ForEach(graphView.RemoveElement);
+            graphView.graphElements.ToList().OfType<Group>().ToList().ForEach(graphView.RemoveElement);
+            graphView.graphElements.ToList().OfType<StickyNote>().ToList().ForEach(graphView.RemoveElement);
+            graphView.graphElements.ToList().OfType<BlackboardRow>().ToList().ForEach(graphView.RemoveElement);
 
             // Create & add graph elements 
             graphObject.GraphData.Nodes.ForEach(node => {
                 AddNode(node);
+                
+                node.Node.SetExpandedWithoutNotify(true);
+                node.Node.RefreshPorts();
+                
                 if (node.Node is OutputNode outputNode) {
-                    graphFrameworkGraphView.GraphOutputNode = outputNode;
+                    graphView.GraphOutputNode = outputNode;
                 }
             });
             graphObject.GraphData.Edges.ForEach(edge => {
-                var outputNode = GraphFrameworkGraphView.nodes.First(node => node.viewDataKey == edge.Output) as AbstractNode;
-                var inputNode = GraphFrameworkGraphView.nodes.First(node => node.viewDataKey == edge.Input) as AbstractNode;
+                var outputNode = GraphView.nodes.First(node => node.viewDataKey == edge.Output) as AbstractNode;
+                var inputNode = GraphView.nodes.First(node => node.viewDataKey == edge.Input) as AbstractNode;
                 var outputPort = (GraphFrameworkPort)outputNode.Owner.GuidPortDictionary[edge.OutputPort];
                 var inputPort = (GraphFrameworkPort)inputNode.Owner.GuidPortDictionary[edge.InputPort];
 
@@ -177,6 +181,13 @@ namespace GeometryGraph.Editor {
 
                 AddEdge(edge);
             });
+            
+            // Refresh expanded state
+            graphObject.GraphData.Nodes.ForEach(node => {
+                node.Node.SetExpandedWithoutNotify(node.DrawState.Expanded);
+                node.Node.RefreshPorts();
+            });
+
             graphObject.GraphData.Properties.ForEach(AddProperty);
         }
 
@@ -188,7 +199,7 @@ namespace GeometryGraph.Editor {
             foreach (var removedNode in graphObject.GraphData.RemovedNodes) {
                 removedNode.Node.NotifyRuntimeNodeRemoved();
                 if (removedNode.Node is OutputNode) {
-                    GraphFrameworkGraphView.GraphOutputNode = null;
+                    GraphView.GraphOutputNode = null;
                     searchWindowProvider.RegenerateEntries = true;
                 }
                 RemoveNode(removedNode);
@@ -210,10 +221,16 @@ namespace GeometryGraph.Editor {
                 RemoveEdge(removedEdge);
             }
 
+            var anyCollapsedNode = false;
             foreach (var addedNode in graphObject.GraphData.AddedNodes) {
                 AddNode(addedNode);
+                if (addedNode.DrawState.Expanded == false) {
+                    anyCollapsedNode = true;
+                    addedNode.Node.SetExpandedWithoutNotify(true);
+                    addedNode.Node.RefreshPorts();
+                }
                 if (addedNode.Node is OutputNode outputNode) {
-                    graphFrameworkGraphView.GraphOutputNode = outputNode;
+                    graphView.GraphOutputNode = outputNode;
                     searchWindowProvider.RegenerateEntries = true;
                 }
                 graphObject.RuntimeGraph.OnNodeAdded(addedNode.Node.Runtime);
@@ -235,40 +252,47 @@ namespace GeometryGraph.Editor {
                 }
             }
 
+            if (anyCollapsedNode) {
+                foreach (var addedNode in graphObject.GraphData.AddedNodes) {
+                    addedNode.Node.SetExpandedWithoutNotify(addedNode.DrawState.Expanded);
+                    addedNode.Node.RefreshPorts();
+                }
+            }
+
             foreach (var queuedNode in graphObject.GraphData.NodeSelectionQueue) {
-                graphFrameworkGraphView.AddToSelection(queuedNode.Node);
+                graphView.AddToSelection(queuedNode.Node);
             }
 
             foreach (var queuedEdge in graphObject.GraphData.EdgeSelectionQueue) {
-                graphFrameworkGraphView.AddToSelection(queuedEdge.Edge);
+                graphView.AddToSelection(queuedEdge.Edge);
             }
         }
 
         public void AddNode(SerializedNode nodeToAdd) {
             nodeToAdd.BuildNode(this, edgeConnectorListener);
-            graphFrameworkGraphView.AddElement(nodeToAdd.Node);
+            graphView.AddElement(nodeToAdd.Node);
         }
 
         public void RemoveNode(SerializedNode nodeToRemove) {
             if (nodeToRemove.Node != null)
-                graphFrameworkGraphView.RemoveElement(nodeToRemove.Node);
+                graphView.RemoveElement(nodeToRemove.Node);
             else {
-                var view = graphFrameworkGraphView.GetNodeByGuid(nodeToRemove.GUID);
+                var view = graphView.GetNodeByGuid(nodeToRemove.GUID);
                 if (view != null)
-                    graphFrameworkGraphView.RemoveElement(view);
+                    graphView.RemoveElement(view);
             }
         }
 
         public void AddEdge(SerializedEdge edgeToAdd) {
             edgeToAdd.BuildEdge(this);
-            graphFrameworkGraphView.AddElement(edgeToAdd.Edge);
+            graphView.AddElement(edgeToAdd.Edge);
         }
 
         public void RemoveEdge(SerializedEdge edgeToRemove) {
             if (edgeToRemove.Edge != null) {
                 edgeToRemove.Edge.input?.Disconnect(edgeToRemove.Edge);
                 edgeToRemove.Edge.output?.Disconnect(edgeToRemove.Edge);
-                graphFrameworkGraphView.RemoveElement(edgeToRemove.Edge);
+                graphView.RemoveElement(edgeToRemove.Edge);
             }
         }
 

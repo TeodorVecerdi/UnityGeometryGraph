@@ -47,7 +47,6 @@ namespace GeometryGraph.Editor {
             base.expanded = value;
         }
         
-        public abstract object GetValueForPort(GraphFrameworkPort port);
         public abstract void BindPorts();
 
         // Property specific
@@ -57,7 +56,6 @@ namespace GeometryGraph.Editor {
         public virtual AbstractProperty Property { get; set; } = null;
 
         // Virtual
-        protected internal virtual void OnPortValueChanged(Edge edge, GraphFrameworkPort port) {}
         protected internal virtual void OnEdgeConnected(Edge edge, GraphFrameworkPort port) {}
         protected internal virtual void OnEdgeDisconnected(Edge edge, GraphFrameworkPort port) {}
         protected virtual void OnNodeGuidChanged() { }
@@ -94,7 +92,6 @@ namespace GeometryGraph.Editor {
             InjectCustomStyle();
         }
         
-        public abstract override object GetValueForPort(GraphFrameworkPort port);
         public abstract override void BindPorts();
 
         public override void NotifyRuntimeNodeRemoved() {
@@ -136,36 +133,11 @@ namespace GeometryGraph.Editor {
         public sealed override void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) {
             if (port.direction != Direction.Input) return;
             OnEdgeConnected(edge, port);
-            OnPortValueChanged(edge, port);
         }
 
         // Both input & output ports
         public sealed override void NotifyEdgeDisconnected(Edge edge, GraphFrameworkPort port) {
             OnEdgeDisconnected(edge, port);
-        }
-
-        // Only output ports
-        protected void NotifyPortValueChanged(GraphFrameworkPort port) {
-            if (port.direction != Direction.Output) return;
-            
-            foreach (var edge in port.connections) {
-                (edge.input.node as AbstractNode)!.OnPortValueChanged(edge, edge.input as GraphFrameworkPort);
-            }
-        }
-        
-        protected T GetValueFromEdge<T>(Edge edge, T defaultValue) {
-            var outputPort = edge.output as GraphFrameworkPort;
-            if (outputPort == null) return defaultValue;
-
-            return (T)outputPort.node.GetValueForPort(outputPort);
-        }
-
-        protected T GetValue<T>(GraphFrameworkPort port, T defaultValue) {
-            var firstConnection = port.connections.FirstOrDefault();
-            if (firstConnection == null) return defaultValue;
-
-            var sourcePort = firstConnection.output as GraphFrameworkPort;
-            return (T)sourcePort!.node!.GetValueForPort(sourcePort);
         }
     }
 }

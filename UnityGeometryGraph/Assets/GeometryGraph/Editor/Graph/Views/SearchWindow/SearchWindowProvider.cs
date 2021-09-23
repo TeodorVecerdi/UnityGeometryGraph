@@ -41,7 +41,7 @@ namespace GeometryGraph.Editor {
                 if (!type.IsClass || type.IsAbstract)
                     continue;
                 
-                if(type == outputNodeType && editorView.GraphFrameworkGraphView.GraphOutputNode != null) continue;
+                if(type == outputNodeType && editorView.GraphView.GraphOutputNode != null) continue;
 
                 if (type.GetCustomAttributes(typeof(TitleAttribute), false) is TitleAttribute[] attrs && attrs.Length > 0) {
                     foreach (var attr in attrs) {
@@ -189,7 +189,7 @@ namespace GeometryGraph.Editor {
 
             var nodeEntry = searchNodeItem.NodeEntry;
             var windowMousePosition = editorWindow.rootVisualElement.ChangeCoordinatesTo(editorWindow.rootVisualElement.parent, mousePosition);
-            var graphMousePosition = editorView.GraphFrameworkGraphView.contentViewContainer.WorldToLocal(windowMousePosition);
+            var graphMousePosition = editorView.GraphView.contentViewContainer.WorldToLocal(windowMousePosition);
 
             SerializedNode node;
             if (nodeEntry.Node != null) {

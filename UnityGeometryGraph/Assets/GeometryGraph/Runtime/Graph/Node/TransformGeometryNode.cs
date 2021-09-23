@@ -60,7 +60,7 @@ namespace GeometryGraph.Runtime.Graph {
             var translation = GetValue(TranslationPort, defaultTranslation);
             var rotation = GetValue(RotationPort, defaultRotation);
             var scale = GetValue(ScalePort, defaultScale);
-            var trs = float4x4.TRS(translation, quaternion.EulerXYZ(rotation), scale);
+            var trs = float4x4.TRS(translation, quaternion.EulerXYZ(math.radians(rotation)), scale);
             result = GetValue(InputGeometryPort, GeometryData.Empty);
             
             var positionAttribute = result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
