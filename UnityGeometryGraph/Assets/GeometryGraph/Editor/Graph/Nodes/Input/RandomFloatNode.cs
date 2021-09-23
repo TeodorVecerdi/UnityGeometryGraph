@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
             seedPort.Add(seedField);
             AddPort(valuePort);
             
-            RefreshExpandedState();
+            Refresh();
         }
         
         public override void BindPorts() {

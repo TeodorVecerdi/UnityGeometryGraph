@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
             AddPort(valuePort);
             extensionContainer.Add(valueField);
             
-            RefreshExpandedState();
+            Refresh();
         }
         
         public override void BindPorts() {

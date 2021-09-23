@@ -12,6 +12,7 @@ namespace GeometryGraph.Editor {
 
             valuePort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener, this);
             AddPort(valuePort);
+            Refresh();
         }
 
         public override void BindPorts() {

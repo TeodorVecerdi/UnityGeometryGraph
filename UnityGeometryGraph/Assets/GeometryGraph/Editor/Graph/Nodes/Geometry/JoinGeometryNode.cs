@@ -17,7 +17,7 @@ namespace GeometryGraph.Editor {
             AddPort(aPort);
             AddPort(resultPort);
             
-            RefreshExpandedState();
+            Refresh();
         }
         
         public override void BindPorts() {
