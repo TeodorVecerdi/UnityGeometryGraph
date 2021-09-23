@@ -22,22 +22,15 @@ EnumField .unity-enum-field__input {
     min-width: 96px;
 }
 
-FloatInputNode.collapsed #title {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+.port-backing-field {
+    margin-left: -6px;
 }
 
-FloatInputNode #title #title-button-container {
-    justify-content: center;
-    align-content: center;
-    align-items: center;
+Vector3Field.port-backing-field {
+    margin-left: initial;
 }
 
-FloatInputNode.port-backing-field {
-    margin-left: 2px;
-}
-
-FloatInputNode.port-backing-field Label {
+.port-backing-field Label {
     height: 16px;
     align-self: center;
     -unity-text-align: middle-left;
