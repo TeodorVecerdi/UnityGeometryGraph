@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ namespace GeometryGraph.Runtime.Graph {
             if ((Object)value != null) {
                 objectValue = (GeometryCollection)value;
             }
-            return objectValue == null ? Array.Empty<GeometryData>() : objectValue.Collection;
+            return objectValue == null ? Array.Empty<GeometryData>() : objectValue.Collection.Select(data => data.Clone());
         }
         
         public override void RebindPorts() {

@@ -29,6 +29,9 @@ namespace GeometryGraph.Runtime.Geometry {
             faces = new List<Face>();
             faceCorners = new List<FaceCorner>();
             attributeManager = new AttributeManager();
+            
+            FillBuiltinAttributes(Array.Empty<float3>(), new List<float2>(), Array.Empty<float3>(), Array.Empty<int>(), Array.Empty<bool>());
+            
             submeshCount = 0;
         }
 

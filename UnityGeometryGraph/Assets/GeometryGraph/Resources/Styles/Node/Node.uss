@@ -44,6 +44,10 @@ FloatInputNode.port-backing-field Label {
     padding-top: 0;
 }
 
+.node.collapsed Vector3Field.port-backing-field {
+    display: none;
+}
+
 Vector3Field.port-backing-field .unity-vector3-field__input {
     flex-grow: 1;
     flex-direction: column;

@@ -28,7 +28,7 @@ namespace GeometryGraph.Runtime.Graph {
                 objectValue = (GeometryObject)value;
             }
             
-            return objectValue == null ? defaultValue.Clone() : objectValue.Geometry;
+            return objectValue == null ? defaultValue.Clone() : objectValue.Geometry.Clone();
         }
 
         public override string GetCustomData() {
