@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Newtonsoft.Json;
 
-namespace Serialization {
+namespace GeometryGraph.Runtime.Serialization {
     internal static class JsonHelperExtensions {
         public static float? ReadAsFloat(this JsonReader reader) {
             // https://github.com/jilleJr/Newtonsoft.Json-for-Unity.Converters/issues/46

@@ -12,10 +12,6 @@ using Debug = UnityEngine.Debug;
 
 namespace GeometryGraph.Editor {
     public static class GraphFrameworkUtility {
-        public static JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
-            { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = PreserveReferencesHandling.Objects };
-        
-        
         #region IO Utilities
         public static bool CreateFile(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
             if (graphObject == null || string.IsNullOrEmpty(path)) return false;

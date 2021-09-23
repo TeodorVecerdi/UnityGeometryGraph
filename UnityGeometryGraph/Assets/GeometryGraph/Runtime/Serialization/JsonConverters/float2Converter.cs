@@ -3,10 +3,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.UnityConverters;
 using Unity.Mathematics;
 
-namespace Serialization.JsonConverters {
+namespace GeometryGraph.Runtime.Serialization {
     // ReSharper disable once InconsistentNaming
     [UsedImplicitly]
     public class float2Converter : PartialConverter<float2> {
+        public static float2Converter Converter = new float2Converter();
+        
         protected override void ReadValue(ref float2 value, string name, JsonReader reader, JsonSerializer serializer) {
             switch (name) {
                 case nameof(value.x):

@@ -1,8 +1,12 @@
 ﻿using System;
-using System.Linq;
 using GeometryGraph.Runtime.Attribute;
 using GeometryGraph.Runtime.Geometry;
+using GeometryGraph.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
+using UnityEditor;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class TransformGeometryNode : RuntimeNode {
@@ -62,7 +66,7 @@ namespace GeometryGraph.Runtime.Graph {
             var scale = GetValue(ScalePort, defaultScale);
             var rotQuaternion = quaternion.EulerXYZ(math.radians(rotation));
             var trs = float4x4.TRS(translation, rotQuaternion, scale);
-            var trsNormal = float4x4.TRS(translation, rotQuaternion, float3_util.one);
+            var trsNormal = float4x4.TRS(float3.zero, rotQuaternion, scale);
             result = GetValue(InputGeometryPort, GeometryData.Empty);
             
             var positionAttribute = result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
@@ -70,7 +74,26 @@ namespace GeometryGraph.Runtime.Graph {
             var normalAttribute = result.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
             normalAttribute.Yield(normal => math.normalize(math.mul(trsNormal, new float4(normal, 1.0f)).xyz)).Into(normalAttribute);
         }
-        
+
+        public override string GetCustomData() {
+            var data = new JObject {
+                ["t"] = JsonConvert.SerializeObject(defaultTranslation, Formatting.None, float3Converter.Converter),
+                ["r"] = JsonConvert.SerializeObject(defaultRotation, Formatting.None, float3Converter.Converter),
+                ["s"] = JsonConvert.SerializeObject(defaultScale, Formatting.None, float3Converter.Converter),
+            };
+            return data.ToString(Formatting.None);
+        }
+
+        public override void SetCustomData(string json) {
+            if(string.IsNullOrEmpty(json)) return;
+            
+            var data = JObject.Parse(json);
+            defaultTranslation = JsonConvert.DeserializeObject<float3>(data.Value<string>("t"), float3Converter.Converter);
+            defaultRotation = JsonConvert.DeserializeObject<float3>(data.Value<string>("r"), float3Converter.Converter);
+            defaultScale = JsonConvert.DeserializeObject<float3>(data.Value<string>("s"), float3Converter.Converter);
+            NotifyPortValueChanged(OutputGeometryPort);
+        }
+
         public enum WhichDefaultValue {Translation = 0, Rotation = 1, Scale = 2}
     }
 }
