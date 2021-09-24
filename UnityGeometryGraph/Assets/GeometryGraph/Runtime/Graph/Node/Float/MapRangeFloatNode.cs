@@ -55,9 +55,40 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            NotifyPortValueChanged(ResultPort);
+            if(port == ResultPort) return;
+            if (port == InputPort) {
+                var newValue = GetValue(InputPort, inputValue);
+                if (Math.Abs(newValue - inputValue) > 0.000001f) {
+                    inputValue = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                }
+            } else if (port == FromMinPort) {
+                var newValue = GetValue(FromMinPort, fromMin);
+                if (Math.Abs(newValue - fromMin) > 0.000001f) {
+                    fromMin = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                }
+            } else if (port == FromMaxPort) {
+                var newValue = GetValue(FromMaxPort, fromMax);
+                if (Math.Abs(newValue - fromMax) > 0.000001f) {
+                    fromMax = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                }
+            } else if (port == ToMinPort) {
+                var newValue = GetValue(ToMinPort, toMin);
+                if (Math.Abs(newValue - toMin) > 0.000001f) {
+                    toMin = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                }
+            } else if (port == ToMaxPort) {
+                var newValue = GetValue(ToMaxPort, toMax);
+                if (Math.Abs(newValue - toMax) > 0.000001f) {
+                    toMax = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                }
+            }
         }
-        
+
         public override void RebindPorts() {
             InputPort = Ports[0];
             FromMinPort = Ports[1];

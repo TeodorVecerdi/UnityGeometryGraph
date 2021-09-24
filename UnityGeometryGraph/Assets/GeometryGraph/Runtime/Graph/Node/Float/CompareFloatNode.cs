@@ -54,7 +54,26 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            NotifyPortValueChanged(ResultPort);
+            if(port == ResultPort) return;
+            if (port == TolerancePort) {
+                var newValue = GetValue(TolerancePort, tolerance);
+                if (Math.Abs(newValue - tolerance) > 0.000001f) {
+                    tolerance = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                } 
+            } else if (port == APort) {
+                var newValue = GetValue(APort, a);
+                if (Math.Abs(newValue - a) > 0.000001f) {
+                    a = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                } 
+            } else if (port == BPort) {
+                var newValue = GetValue(BPort, b);
+                if (Math.Abs(newValue - b) > 0.000001f) {
+                    b = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                } 
+            }
         }
         
         public override void RebindPorts() {

@@ -38,7 +38,26 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            NotifyPortValueChanged(ResultPort);
+            if(port == ResultPort) return;
+            if (port == InputPort) {
+                var newValue = GetValue(InputPort, inputValue);
+                if (Math.Abs(newValue - inputValue) > 0.000001f) {
+                    inputValue = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                } 
+            } else if (port == MinPort) {
+                var newValue = GetValue(MinPort, minValue);
+                if (Math.Abs(newValue - minValue) > 0.000001f) {
+                    minValue = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                } 
+            } else if (port == MaxPort) {
+                var newValue = GetValue(MaxPort, maxValue);
+                if (Math.Abs(newValue - maxValue) > 0.000001f) {
+                    maxValue = newValue;
+                    NotifyPortValueChanged(ResultPort);
+                } 
+            }
         }
         
         public override void RebindPorts() {
@@ -47,7 +66,6 @@ namespace GeometryGraph.Runtime.Graph {
             MaxPort = Ports[2];
             ResultPort = Ports[3];
         }
-
 
         public override string GetCustomData() {
             var data = new JObject {

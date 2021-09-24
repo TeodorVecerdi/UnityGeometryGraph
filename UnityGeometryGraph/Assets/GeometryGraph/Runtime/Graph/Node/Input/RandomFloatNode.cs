@@ -24,7 +24,13 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            // not needed
+            if (port == SeedPort) {
+                var newSeed = GetValue(SeedPort, seed);
+                if (newSeed != seed) {
+                    seed = newSeed;
+                    NotifyPortValueChanged(ValuePort);
+                }
+            }
         }
         
         public override void RebindPorts() {
