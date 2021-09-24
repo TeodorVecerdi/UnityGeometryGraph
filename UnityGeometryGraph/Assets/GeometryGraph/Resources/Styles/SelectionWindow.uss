@@ -12,15 +12,6 @@
     background-color: #2f2f2f;
 }
 
-.tree-root .tree-vertical-separator {
-    width: 0;
-    flex-grow: 1;
-    height: 100%;
-    padding-left: 1px;
-    padding-right: 1px;
-    background-color: #282828;
-}
-
 .tree-root .category {
     width: 126px;
     margin-bottom: 8px;
@@ -42,12 +33,13 @@
 
 .tree-root .category .category-title {
     font-size: 14px;
-    -unity-text-align: lower-center;
+    -unity-text-align: middle-left;
     -unity-font-style: bold;
     height: 24px;
-    margin: 0 16px;
+    margin: 0 8px;
     margin-top: 6px;
-    padding-bottom: 2px;
+    padding-bottom: 4px;
+    padding-left: 8px;
     border-bottom-width: 1px;
     border-bottom-color: #404040;
 }
@@ -78,6 +70,7 @@
     padding: 4px 16px;
     height: 16px;
     background-color: #2f2f2f;
+    -unity-text-align: middle-left;
 }
 
 .tree-root .category .entries-container .entry .entry-button:hover {
@@ -85,12 +78,11 @@
 }
 
 .tree-root .category .entries-container .entry .entry-separator {
-    margin-left: 16px;
-    margin-right: 16px;
+    margin: 0 8px;
     margin-top: 2px;
     padding-top: 1px;
     padding-bottom: 1px;
     
-    border-top-color: #303030;
-    border-top-width: 2px;
+    border-top-color: #404040;
+    border-top-width: 1px;
 }

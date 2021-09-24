@@ -2,8 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using UnityCommons;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -18,7 +17,7 @@ namespace GeometryGraph.Editor {
         private readonly List<object> valueProvider;
         private readonly List<SelectionCategory> categories;
 
-        public SelectionTree(List<object> valueProvider = null) {
+        public SelectionTree([NotNull] List<object> valueProvider) {
             this.valueProvider = valueProvider;
             categories = new List<SelectionCategory>();
         }
@@ -65,15 +64,7 @@ namespace GeometryGraph.Editor {
 
             for (int i = 0; i < categories.Count; i++) {
                 var selectionCategory = categories[i];
-                
-                if (!selectionCategory.IsStacked && i > 0) {
-                    var verticalSeparator = new VisualElement();
-                    verticalSeparator.AddToClassList("tree-vertical-separator");
-                    root.Add(verticalSeparator);
-                }
-                
                 root.Add(selectionCategory.CreateElement(valueProvider, (SelectionCategory.CategorySize)actualSizes[i], onSelect, window));
-
             }
 
             return root;

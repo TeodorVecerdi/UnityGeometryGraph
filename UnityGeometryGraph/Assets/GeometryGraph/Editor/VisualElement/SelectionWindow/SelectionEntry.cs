@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
             root.AddToClassList("entry");
             var button = new Button(() => {
                 window.Close();
-                onSelect(valueProvider?[index] ?? index);
+                onSelect(valueProvider[index]);
             }) { 
                 text = title ?? RandomUtilities.DisplayNameString(valueProvider[index].ToString()),
                 tooltip = tooltip

@@ -45,7 +45,7 @@ namespace GeometryGraph.Editor {
                 new SelectionEntry("Absolute value of x", 8, false),
                 new SelectionEntry("e to the power of x", 9, false),
             },
-            new SelectionCategory("Rounding", false, SelectionCategory.CategorySize.Large) {
+            new SelectionCategory("Rounding", false, SelectionCategory.CategorySize.Normal) {
                 new SelectionEntry("x rounded to the nearest integer", 18, false),
                 new SelectionEntry("The largest integer smaller than x", 19, false),
                 new SelectionEntry("The smallest integer larger than x", 20, false),
@@ -55,21 +55,21 @@ namespace GeometryGraph.Editor {
                 new SelectionEntry("x wrapped between min and max", 24, false),
                 new SelectionEntry("x snapped to the nearest multiple of increment", 25, false),
             },
-            new SelectionCategory("Comparison", false, SelectionCategory.CategorySize.Large) {
+            new SelectionCategory("Comparison", false, SelectionCategory.CategorySize.Medium) {
                 new SelectionEntry("The minimum between x and y", 10, false),
                 new SelectionEntry("The maximum between x and y", 11, false),
                 new SelectionEntry("1 if x < y; 0 otherwise", 12, false),
                 new SelectionEntry("1 if x > y; 0 otherwise", 13, false),
                 new SelectionEntry("Sign of x", 14, false),
-                new SelectionEntry("1 if the distance between x and y is less than tolerance", 15, false),
+                new SelectionEntry("1 if the distance between x and y is less than tolerance; 0 otherwise", 15, false),
                 new SelectionEntry("The minimum between x and y with smoothing", 16, false),
                 new SelectionEntry("The maximum between x and y with smoothing", 17, false),
             },
-            new SelectionCategory("Conversion", true, SelectionCategory.CategorySize.Large) {
+            new SelectionCategory("Conversion", true, SelectionCategory.CategorySize.Normal) {
                 new SelectionEntry("Converts degrees to radians", 33, false),
                 new SelectionEntry("Converts radians to degrees", 34, false),
             },
-            new SelectionCategory("Trigonometry", true, SelectionCategory.CategorySize.Large) {
+            new SelectionCategory("Trigonometry", true, SelectionCategory.CategorySize.Normal) {
                 new SelectionEntry("Sine of x (in radians)", 26, false),
                 new SelectionEntry("Cosine of x (in radians)", 27, false),
                 new SelectionEntry("Tangent of x (in radians)", 28, false),
