@@ -6,11 +6,11 @@ namespace GeometryGraph.Editor {
         /// Splits <paramref name="value"/> into words where the case changes.
         /// </summary>
         /// <example><c>"someStringValue"</c> becomes <c>"Some String Value"</c></example>
-        public static string WordBreakString(string value) {
+        public static string DisplayNameString(string value) {
             var result = new StringBuilder();
             var currentWordStart = 0;
             for (var i = 1; i < value.Length - 1; i++) {
-                if (char.IsUpper(value[i]) != char.IsUpper(value[i + 1])) {
+                if (char.IsUpper(value[i]) != char.IsUpper(value[i + 1]) || char.IsLetter(value[i]) != char.IsLetter(value[i + 1])) {
                     result.Append($"{Capitalize(value.Substring(currentWordStart, i - currentWordStart + 1))} ");
                     currentWordStart = i + 1;
                     i++;

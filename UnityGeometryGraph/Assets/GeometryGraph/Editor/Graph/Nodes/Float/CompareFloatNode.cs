@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using GeometryGraph.Runtime;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
@@ -17,63 +20,44 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort bPort;
         private GraphFrameworkPort resultPort;
 
-        private EnumField operationField;
+        private EnumSelectionButton<CompareOperation> operationButton;
         private FloatField toleranceField;
         private FloatField aField;
         private FloatField bField;
-        private Button testButton;
 
         private CompareOperation operation;
         private float tolerance = 1e-6f;
         private float a;
         private float b;
 
-        public enum TestEnum {
-            ValueA,
-            ValueB,
-            ValueC,
-            ValueD,
-            ValueE,
-            ValueF,
-            ValueG,
-            ValueH,
-            ValueI,
-            ValueJ,
-            ValueK,
-            ValueL,
-            ValueM,
-            ValueN,
-            ValueO,
-            ValueP,
-            ValueQ,
-            ValueR,
-            ValueS,
-            ValueT,
-        }
+        private static readonly SelectionTree compareOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(CompareOperation)).Convert(o => o))) {
+            new SelectionCategory("Operation", false, SelectionCategory.CategorySize.Large) {
+                new SelectionEntry("a < b", 0, false),
+                new SelectionEntry("a ≤ b", 1, false),
+                new SelectionEntry("a > b", 2, false),
+                new SelectionEntry("a ≥ b", 3, true),
+                new SelectionEntry("a = b, within tolerance", 4, false),
+                new SelectionEntry("a ≠ b, within tolerance", 5, false),
+            }
+        };
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Compare", EditorView.DefaultNodePosition);
 
-            operationField = new EnumField(operation);
             (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
             (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
             (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("B", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
-            testButton = new Button { text = "Test" };
-            testButton.AddToClassList("enum-dropdown-button");
-            var arrow = new VisualElement();
-            arrow.AddToClassList("arrow-down");
-            testButton.Add(arrow);
-            testButton.clicked += () => {
-                var pos = GUIUtility.GUIToScreenPoint(testButton.worldBound.position);
-                pos.y += testButton.worldBound.height;
-                EnumDropdownWindow.ShowWindow<TestEnum>(pos, v => {
-                    testButton.text = RandomUtilities.WordBreakString(v.ToString());
-                });
-            };
-            
+            operationButton = new EnumSelectionButton<CompareOperation>(operation, compareOperationTree);
+            operationButton.RegisterCallback<ChangeEvent<CompareOperation>>(evt => {
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
+                operation = evt.newValue;
+                RuntimeNode.UpdateCompareOperation(operation);
+                OnOperationChanged();
+            });
+
             toleranceField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change tolerance");
                 tolerance = evt.newValue;
@@ -91,20 +75,12 @@ namespace GeometryGraph.Editor {
                 b = evt.newValue;
                 RuntimeNode.UpdateValue(b, Which.B);
             });
-            
-            operationField.RegisterValueChangedCallback(evt => {
-                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
-                operation = (CompareOperation) evt.newValue;
-                RuntimeNode.UpdateCompareOperation(operation);
-                OnOperationChanged();
-            });
 
-            tolerancePort.Add(toleranceField);
+            tolerancePort.Add(toleranceField); 
             aPort.Add(aField);
             bPort.Add(bField);
             
-            inputContainer.Add(testButton);
-            inputContainer.Add(operationField);
+            inputContainer.Add(operationButton);
             AddPort(tolerancePort);
             AddPort(aPort);
             AddPort(bPort);
@@ -135,7 +111,7 @@ namespace GeometryGraph.Editor {
 
         private void OnOperationChanged() {
             var showTolerance = operation == CompareOperation.Equal || operation == CompareOperation.NotEqual;
-
+            
             if (showTolerance) {
                 tolerancePort.RemoveFromClassList("d-none");
             } else {
@@ -151,7 +127,7 @@ namespace GeometryGraph.Editor {
             a = jsonData.Value<float>("a");
             b = jsonData.Value<float>("b");
             
-            operationField.SetValueWithoutNotify(operation);
+            operationButton.SetValueWithoutNotify(operation, 1);
             toleranceField.SetValueWithoutNotify(tolerance);
             aField.SetValueWithoutNotify(a);
             bField.SetValueWithoutNotify(b);
