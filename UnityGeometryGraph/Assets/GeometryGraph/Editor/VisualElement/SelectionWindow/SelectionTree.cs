@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityCommons;
 using UnityEditor;
 using UnityEngine;
@@ -23,35 +24,37 @@ namespace GeometryGraph.Editor {
         }
 
         public float GetWidth() {
-            var size = 0.0f;
-            var currentSize = 0.0f;
+            var columns = new List<List<SelectionCategory>>{new List<SelectionCategory>()};
+            var currentColumn = 0;
             foreach (var category in categories) {
                 if (!category.IsStacked) {
-                    size += currentSize;
-                    currentSize = 0.0f;
+                    columns[currentColumn].Add(category);
+                    columns.Add(new List<SelectionCategory>());
+                    currentColumn++;
+                    continue;
                 }
-
-                currentSize = Mathf.Max(currentSize, CategorySizeToSize(category.Size));
+                
+                columns[currentColumn].Add(category);
             }
 
-            size += currentSize;
-            return size;
+            return columns.Sum(column => column.Aggregate(0.0f, (current, category) => Mathf.Max(current, CategorySizeToSize(category.Size))));
         }
 
         public float GetHeight() {
-            var maxHeight = 0.0f;
-            var currentHeight = 0.0f;
+            var columns = new List<List<SelectionCategory>>{new List<SelectionCategory>()};
+            var currentColumn = 0;
             foreach (var category in categories) {
                 if (!category.IsStacked) {
-                    maxHeight = Mathf.Max(maxHeight, currentHeight);
-                    currentHeight = 0.0f;
+                    columns[currentColumn].Add(category);
+                    columns.Add(new List<SelectionCategory>());
+                    currentColumn++;
+                    continue;
                 }
-
-                currentHeight += category.GetHeight();
+                
+                columns[currentColumn].Add(category);
             }
-
-            maxHeight = Mathf.Max(maxHeight, currentHeight);
-            return maxHeight;
+            
+            return columns.Aggregate(0.0f, (current, column) => Mathf.Max(current, column.Sum(category => category.GetHeight())));
         }
 
         public VisualElement CreateElement(EditorWindow window, Action<object> onSelect) {

@@ -1,4 +1,8 @@
-﻿.tree-root {
+﻿#SelectionWindow {
+    background-color: #2f2f2f;
+}
+
+.tree-root {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;

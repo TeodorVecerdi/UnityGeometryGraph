@@ -22,6 +22,17 @@ namespace GeometryGraph.Editor {
         public event Action<Edge, GraphFrameworkPort> OnDisconnect;
 
         private string label;
+        private bool fieldVisible;
+        private Label fieldLabel;
+        
+        public string Label {
+            get => label;
+            set {
+                label = value;
+                if (!fieldVisible) m_ConnectorText.text = label;
+                if (fieldLabel != null) fieldLabel.text = label;
+            }
+        }
 
         private GraphFrameworkPort(string label, AbstractNode ownerNode, Orientation portOrientation, Direction portDirection, Capacity portCapacity) : base(
             portOrientation, portDirection, portCapacity, typeof(object)) {
@@ -86,18 +97,21 @@ namespace GeometryGraph.Editor {
             var field = new T();
             if (showLabelOnField) field.label = name;
             field.AddToClassList("port-backing-field");
+            port.fieldLabel = field.labelElement;
+            
             if(onConnect != null) port.OnConnect += onConnect;
             if(onDisconnect != null) port.OnDisconnect += onDisconnect;
             
             if (showLabelOnField) {
                 port.m_ConnectorText.text = string.Empty;
+                port.fieldVisible = true;
                 port.OnConnect += (_, __) => SetCompFieldVisible(port, field, false);
                 port.OnDisconnect += (_, __) => SetCompFieldVisible(port, field, true);
             } else {
-                port.OnConnect += (_, __) => SetFieldVisible(field, false);
-                port.OnDisconnect += (_, __) => SetFieldVisible(field, true);
+                port.OnConnect += (_, __) => SetFieldVisible(port, field, false);
+                port.OnDisconnect += (_, __) => SetFieldVisible(port, field, true);
             }
-            
+
             field.visible = true;
             field.SetEnabled(true);
             field.RemoveFromClassList("d-none");
@@ -105,8 +119,9 @@ namespace GeometryGraph.Editor {
             return (port, field);
         }
         
-        private static void SetFieldVisible(VisualElement field, bool visible) {
+        private static void SetFieldVisible(GraphFrameworkPort port, VisualElement field, bool visible) {
             field.SetEnabled(visible);
+            port.fieldVisible = visible;
 
             if (visible) {
                 field.RemoveFromClassList("d-none");
@@ -118,6 +133,7 @@ namespace GeometryGraph.Editor {
 
         private static void SetCompFieldVisible(GraphFrameworkPort port, VisualElement field, bool visible) {
             field.SetEnabled(visible);
+            port.fieldVisible = visible;
 
             if (visible) {
                 field.RemoveFromClassList("d-none");

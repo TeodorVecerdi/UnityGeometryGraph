@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace GeometryGraph.Editor {
     internal class SelectionCategory : IEnumerable<SelectionEntry> {
         public enum CategorySize {Normal = 0, Medium = 1, Large = 2, ExtraLarge = 3}
-        private const float k_BaseCategoryHeight = 24.0f + 8.0f;
+        private const float k_BaseCategoryHeight = 24.0f + 8.0f + 8.0f;
         private readonly string title;
         private readonly bool isStacked;
         private readonly CategorySize size;
@@ -24,11 +25,7 @@ namespace GeometryGraph.Editor {
         }
 
         public float GetHeight() {
-            var height = k_BaseCategoryHeight;
-            foreach(var entry in entries) {
-                height += entry.GetHeight();
-            }
-            return height;
+            return k_BaseCategoryHeight + entries.Sum(entry => entry.GetHeight());
         }
 
         public VisualElement CreateElement(List<object> valueProvider, CategorySize realSize, Action<object> onSelect, EditorWindow window) {
@@ -68,10 +65,6 @@ namespace GeometryGraph.Editor {
 
         public void Add(SelectionEntry entry) {
             entries.Add(entry);
-        }
-
-        public void AddRange(IEnumerable<SelectionEntry> entries) {
-            this.entries.AddRange(entries);
         }
     }
 }
