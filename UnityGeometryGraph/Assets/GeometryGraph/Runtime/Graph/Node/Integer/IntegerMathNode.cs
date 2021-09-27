@@ -22,7 +22,7 @@ namespace GeometryGraph.Runtime.Graph {
             YPort = RuntimePort.Create(PortType.Integer, PortDirection.Input, this);
             TolerancePort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
             ExtraPort = RuntimePort.Create(PortType.Integer, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Integer, PortDirection.Input, this);
+            ResultPort = RuntimePort.Create(PortType.Integer, PortDirection.Output, this);
         }
 
         public void UpdateOperation(IntegerMathNode_MathOperation newOperation) {
@@ -160,15 +160,6 @@ namespace GeometryGraph.Runtime.Graph {
 
             // Rounding
             Modulo = 18, Wrap = 19, Snap = 20
-            // Round = 18, Floor = 19, Ceil = 20, Truncate = 21,
-            /*Fraction = 22, */,
-
-            // Trig
-            // Sine = 26, Cosine = 27, Tangent = 28,
-            // Arcsine = 29, Arccosine = 30, Arctangent = 31, Atan2 = 32,
-
-            // Conversion
-            // ToRadians = 33, ToDegrees = 34
         }
     }
 }

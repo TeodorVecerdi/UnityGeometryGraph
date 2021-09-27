@@ -23,6 +23,10 @@ namespace GeometryGraph.Runtime {
             var h = Math.Clamp(0.5 + 0.5 * (x - y) / distance, 0.0, 1.0);
             return (float)(x * (1 - h) + y * h - distance * h * (1 - h));
         }
+        
+        public static float Wrap(float x, float min, float max) {
+            return ((x - min) % (max - min) + (max - min)) % (max - min) + min;
+        }
 
         public static Vector3 WrapPI(Vector3 a) {
             if (a.x < -180.0f) a.x += 360.0f;

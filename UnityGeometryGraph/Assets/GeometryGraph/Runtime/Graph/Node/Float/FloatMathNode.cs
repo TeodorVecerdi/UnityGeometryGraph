@@ -1,4 +1,5 @@
 ﻿using System;
+using GeometryGraph.Runtime.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace GeometryGraph.Runtime.Graph {
             YPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
             TolerancePort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
             ExtraPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
+            ResultPort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
         }
 
         public void UpdateOperation(FloatMathNode_MathOperation newOperation) {
@@ -85,7 +86,7 @@ namespace GeometryGraph.Runtime.Graph {
                 FloatMathNode_MathOperation.Truncate => (int)x,
                 FloatMathNode_MathOperation.Fraction => x - (int)x,
                 FloatMathNode_MathOperation.Modulo => (float)Math.IEEERemainder(x, y),
-                FloatMathNode_MathOperation.Wrap => x = ((x - y) % (extra - y) + (extra - y)) % (extra - y) + y,
+                FloatMathNode_MathOperation.Wrap => x = ExtraMath.Wrap(x, y, extra),
                 FloatMathNode_MathOperation.Snap => Mathf.Round(x / y) * y,
 
                 FloatMathNode_MathOperation.Sine => Mathf.Sin(x),
@@ -178,7 +179,7 @@ namespace GeometryGraph.Runtime.Graph {
 
             // Trig
             Sine = 26, Cosine = 27, Tangent = 28,
-            Arcsine = 29, Arccosine = 30, Arctangent = 31, Atan2 = 32,
+            Arcsine = 29, Arccosine = 30, Arctangent = 31, [DisplayName("Atan2")] Atan2 = 32,
 
             // Conversion
             ToRadians = 33, ToDegrees = 34

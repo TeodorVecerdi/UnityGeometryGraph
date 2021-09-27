@@ -19,7 +19,7 @@ namespace GeometryGraph.Runtime.Graph {
             TolerancePort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
             APort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
             BPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Boolean, PortDirection.Input, this);
+            ResultPort = RuntimePort.Create(PortType.Boolean, PortDirection.Output, this);
         }
 
         public void UpdateCompareOperation(CompareFloatNode_CompareOperation newOperation) {

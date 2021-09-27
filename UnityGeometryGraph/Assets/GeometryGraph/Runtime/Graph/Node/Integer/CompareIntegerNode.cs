@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
         public CompareIntegerNode(string guid) : base(guid) {
             APort = RuntimePort.Create(PortType.Integer, PortDirection.Input, this);
             BPort = RuntimePort.Create(PortType.Integer, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Boolean, PortDirection.Input, this);
+            ResultPort = RuntimePort.Create(PortType.Boolean, PortDirection.Output, this);
         }
 
         public void UpdateCompareOperation(CompareIntegerNode_CompareOperation newOperation) {

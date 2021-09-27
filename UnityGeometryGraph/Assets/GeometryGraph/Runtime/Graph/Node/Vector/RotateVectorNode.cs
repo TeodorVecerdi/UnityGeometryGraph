@@ -26,8 +26,8 @@ namespace GeometryGraph.Runtime.Graph {
             VectorPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
             CenterPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
             AxisPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
-            EulerAnglesPort = RuntimePort.Create(PortType.Vector, PortDirection.Output, this);
-            AnglePort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
+            EulerAnglesPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
+            AnglePort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
             ResultPort = RuntimePort.Create(PortType.Vector, PortDirection.Output, this);
         }
 
