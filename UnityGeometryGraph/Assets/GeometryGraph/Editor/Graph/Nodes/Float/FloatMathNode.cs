@@ -82,7 +82,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Math", EditorView.DefaultNodePosition);
+            Initialize("Float Math", EditorView.DefaultNodePosition);
 
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);

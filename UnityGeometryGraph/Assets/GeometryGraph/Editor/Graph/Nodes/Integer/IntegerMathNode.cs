@@ -45,12 +45,12 @@ namespace GeometryGraph.Editor {
                 new SelectionEntry("Absolute value of x", 8, false),
                 new SelectionEntry("e to the power of x", 9, false),
             },
-            new SelectionCategory("Rounding", false, SelectionCategory.CategorySize.Normal) {
+            new SelectionCategory("Rounding", true, SelectionCategory.CategorySize.Normal) {
                 new SelectionEntry("The remainder of x / y", 18, false),
                 new SelectionEntry("x wrapped between min and max", 19, false),
                 new SelectionEntry("x snapped to the nearest multiple of increment", 20, false),
             },
-            new SelectionCategory("Comparison", false, SelectionCategory.CategorySize.Medium) {
+            new SelectionCategory("Comparison", true, SelectionCategory.CategorySize.Medium) {
                 new SelectionEntry("The minimum between x and y", 10, false),
                 new SelectionEntry("The maximum between x and y", 11, false),
                 new SelectionEntry("1 if x < y; 0 otherwise", 12, false),
@@ -64,7 +64,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Math", EditorView.DefaultNodePosition);
+            Initialize("Integer Math", EditorView.DefaultNodePosition);
 
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("X", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Y", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);

@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
 
         public void SetValueWithoutNotify(T newValue, int scheduleNesting = 0) {
             rawValue = newValue;
-            var buttonText = RandomUtilities.DisplayNameString(rawValue.ToString());
+            var buttonText = RandomUtilities.DisplayNameEnum(rawValue);
             text = buttonText;
 
             scheduleNesting = scheduleNesting.Clamped(0, 2);

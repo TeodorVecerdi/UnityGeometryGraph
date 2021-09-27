@@ -26,7 +26,7 @@ namespace GeometryGraph.Editor {
         private int b;
 
         private static readonly SelectionTree compareOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(CompareOperation)).Convert(o => o))) {
-            new SelectionCategory("Operation", false, SelectionCategory.CategorySize.Normal) {
+            new SelectionCategory("Operation", false, SelectionCategory.CategorySize.Large) {
                 new SelectionEntry("a < b", 0, false),
                 new SelectionEntry("a ≤ b", 1, false),
                 new SelectionEntry("a > b", 2, false),
