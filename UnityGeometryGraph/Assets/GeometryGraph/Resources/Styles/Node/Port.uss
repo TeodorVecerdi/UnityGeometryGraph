@@ -20,3 +20,27 @@ GraphFrameworkPort.check-port {
 GraphFrameworkPort.output {
     margin-right: -12px;
 }
+
+GraphFrameworkPort.portType-Boolean {
+    --port-color: #f0f;
+}
+
+GraphFrameworkPort.portType-Integer {
+    --port-color: #f00;
+}
+
+GraphFrameworkPort.portType-Float {
+    --port-color: #ff0;
+}
+
+GraphFrameworkPort.portType-Vector {
+    --port-color: #0ff;
+}
+
+GraphFrameworkPort.portType-Geometry {
+    --port-color: #0f0;
+}
+
+GraphFrameworkPort.portType-Collection {
+    --port-color: #00f;
+}

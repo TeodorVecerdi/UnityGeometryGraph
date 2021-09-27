@@ -91,9 +91,9 @@ namespace GeometryGraph.Editor {
             }
             
             port.AddStyleSheet("Styles/Node/Port");
+            port.AddToClassList($"portType-{type}");
 
             port.Type = type;
-            port.portColor = PortHelper.PortColor(port);
             port.GUID = Guid.NewGuid().ToString();
             port.portName = name;
 
@@ -106,9 +106,6 @@ namespace GeometryGraph.Editor {
                 color.value = Color.clear;
                 label.style.color = color;
             }
-            
-            
-            port.InjectCustomStyle();
             
             return port;
         }
