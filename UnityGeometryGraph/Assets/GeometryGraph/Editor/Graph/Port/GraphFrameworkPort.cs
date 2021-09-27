@@ -23,7 +23,7 @@ namespace GeometryGraph.Editor {
         public event Action<Edge, GraphFrameworkPort> OnDisconnect;
 
         private string label;
-        private string originalLabel;
+        private readonly string originalLabel;
         private bool portVisible;
         private bool fieldVisible;
         private Label fieldLabel;

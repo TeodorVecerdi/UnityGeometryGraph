@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GeometryGraph.Runtime.Graph;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace GeometryGraph.Editor {
             if (port.direction == Direction.Input && port.Type == PortType.Any ||
                 other.direction == Direction.Input && other.Type == PortType.Any) 
                 return true;
-            return port.Type == other.Type;
+            return port.Type == other.Type || compatiblePortTypes.Contains((port.Type, other.Type));
         }
 
         public static Color PortColor(GraphFrameworkPort port) {
@@ -42,5 +43,10 @@ namespace GeometryGraph.Editor {
                     throw new ArgumentOutOfRangeException(nameof(port), port, "Undefined color for port type.");
             }*/
         }
+
+        // !! Update Runtime.PortValueConverter.Convert when adding stuff to this!
+        private static readonly HashSet<(PortType, PortType)> compatiblePortTypes = new HashSet<(PortType, PortType)>(new PortTypeEqualityComparer()) {
+            (PortType.Float, PortType.Integer), (PortType.Float, PortType.Boolean), (PortType.Integer, PortType.Boolean)
+        };
     }
 }

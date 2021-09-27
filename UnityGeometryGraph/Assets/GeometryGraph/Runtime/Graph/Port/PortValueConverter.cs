@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GeometryGraph.Runtime.Graph {
+﻿namespace GeometryGraph.Runtime.Graph {
     public static class PortValueConverter {
         public static object Convert(object value, PortType sourceType, PortType targetType) {
             if (targetType == PortType.Float) {
