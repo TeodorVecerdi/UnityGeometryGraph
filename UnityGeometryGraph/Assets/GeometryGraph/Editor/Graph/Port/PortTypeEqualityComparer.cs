@@ -6,12 +6,12 @@ namespace GeometryGraph.Editor {
         public override bool Equals((PortType, PortType) x, (PortType, PortType) y) {
             var (pAA, pAB) = x;
             var (pBA, pBB) = y;
-            return (pAA == pBA && pAB == pBB) || (pAA == pBB && pAB == pBA);
+            return pAA == pBA && pAB == pBB;
         }
 
         public override int GetHashCode((PortType, PortType) pair) {
             var (portTypeA, portTypeB) = pair;
-            return portTypeA.GetHashCode() + portTypeB.GetHashCode();
+            return portTypeA.GetHashCode() * 17 +  portTypeB.GetHashCode();
         }
     }
 }
