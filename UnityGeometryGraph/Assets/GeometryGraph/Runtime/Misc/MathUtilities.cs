@@ -46,6 +46,9 @@ namespace GeometryGraph.Runtime {
 
     public static class float3_util {
         public static readonly float3 one = new float3(1);
+        public static readonly float3 right = new float3(1, 0, 0);
+        public static readonly float3 up = new float3(0, 1, 0);
+        public static readonly float3 forward = new float3(0, 0, 1);
     }
 
     public static class float2_util {

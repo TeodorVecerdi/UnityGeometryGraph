@@ -27,6 +27,7 @@ namespace GeometryGraph.Editor {
         private bool portVisible;
         private bool fieldVisible;
         private Label fieldLabel;
+        private VisualElement field;
         
         public string Label {
             get => label;
@@ -52,11 +53,13 @@ namespace GeometryGraph.Editor {
         internal void Show() {
             portVisible = true;
             RemoveFromClassList("d-none");
+            field?.RemoveFromClassList("d-none");
         }
 
         internal void HideAndDisconnect() {
             portVisible = false;
             AddToClassList("d-none");
+            field?.AddToClassList("d-none");
             connections.Select(edge => (SerializedEdge)edge.userData).ToList().ForEach(edge => node.Owner.EditorView.GraphView.GraphData.RemoveEdge(edge));
             DisconnectAll();
         }
@@ -116,6 +119,7 @@ namespace GeometryGraph.Editor {
             if (showLabelOnField) field.label = name;
             field.AddToClassList("port-backing-field");
             port.fieldLabel = field.labelElement;
+            port.field = field;
             
             if(onConnect != null) port.OnConnect += onConnect;
             if(onDisconnect != null) port.OnDisconnect += onDisconnect;

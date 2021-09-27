@@ -36,9 +36,9 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateValue(vector);
             });
 
-            vectorPort.Add(vectorField);
             
             AddPort(vectorPort);
+            inputContainer.Add(vectorField);
             AddPort(xPort);
             AddPort(yPort);
             AddPort(zPort);
