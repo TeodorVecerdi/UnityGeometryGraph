@@ -15,7 +15,7 @@ namespace GeometryGraph.Editor {
         
         public void OnDropOutsidePort(Edge edge, Vector2 position) {
             var port = edge.output?.edgeConnector.edgeDragHelper.draggedPort ?? edge.input?.edgeConnector.edgeDragHelper.draggedPort;
-            searchWindowProvider.ConnectedPort = port;
+            searchWindowProvider.ConnectedPort = port as GraphFrameworkPort;
             searchWindowProvider.RegenerateEntries = true;
             SearcherWindow.Show(editorView.EditorWindow, searchWindowProvider.LoadSearchWindow(), item => searchWindowProvider.OnSelectEntry(item, position), position, null);
             searchWindowProvider.RegenerateEntries = true;

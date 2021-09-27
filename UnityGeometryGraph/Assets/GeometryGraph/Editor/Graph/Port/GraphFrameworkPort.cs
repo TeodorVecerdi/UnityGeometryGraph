@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using GeometryGraph.Runtime.Graph;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -22,6 +23,8 @@ namespace GeometryGraph.Editor {
         public event Action<Edge, GraphFrameworkPort> OnDisconnect;
 
         private string label;
+        private string originalLabel;
+        private bool portVisible;
         private bool fieldVisible;
         private Label fieldLabel;
         
@@ -34,10 +37,28 @@ namespace GeometryGraph.Editor {
             }
         }
 
+        internal string OriginalLabel => originalLabel;
+        internal bool FieldVisible => fieldVisible;
+        internal bool PortVisible => portVisible;
+
         private GraphFrameworkPort(string label, AbstractNode ownerNode, Orientation portOrientation, Direction portDirection, Capacity portCapacity) : base(
             portOrientation, portDirection, portCapacity, typeof(object)) {
             node = ownerNode;
             this.label = label;
+            originalLabel = label;
+            portVisible = true;
+        }
+
+        internal void Show() {
+            portVisible = true;
+            RemoveFromClassList("d-none");
+        }
+
+        internal void HideAndDisconnect() {
+            portVisible = false;
+            AddToClassList("d-none");
+            connections.Select(edge => (SerializedEdge)edge.userData).ToList().ForEach(edge => node.Owner.EditorView.GraphView.GraphData.RemoveEdge(edge));
+            DisconnectAll();
         }
 
         /// <summary>

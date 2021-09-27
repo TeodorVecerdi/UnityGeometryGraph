@@ -12,7 +12,7 @@ namespace GeometryGraph.Editor {
         private EditorView editorView;
         private Texture2D icon;
         public List<NodeEntry> CurrentNodeEntries;
-        public Port ConnectedPort;
+        public GraphFrameworkPort ConnectedPort;
         public bool RegenerateEntries { get; set; }
         
         private static readonly Type outputNodeType = typeof(OutputNode);
@@ -92,7 +92,7 @@ namespace GeometryGraph.Editor {
 
             var portIndices = new List<int>();
             for (var i = 0; i < node.Node.Ports.Count; i++) {
-                if ((ConnectedPort as GraphFrameworkPort).IsCompatibleWith(node.Node.Ports[i] as GraphFrameworkPort) && ConnectedPort.direction != node.Node.Ports[i].direction) {
+                if (ConnectedPort.IsCompatibleWith(node.Node.Ports[i]) && ConnectedPort.direction != node.Node.Ports[i].direction && node.Node.Ports[i].PortVisible) {
                     portIndices.Add(i);
                 }
             }
@@ -103,8 +103,8 @@ namespace GeometryGraph.Editor {
                     newTitle[i] = title[i];
 
                 newTitle[title.Length - 1] = title[title.Length - 1];
-                if (!string.IsNullOrEmpty(node.Node.Ports[portIndex].portName))
-                    newTitle[title.Length - 1] += $" ({node.Node.Ports[portIndex].portName})";
+                if (!string.IsNullOrEmpty(node.Node.Ports[portIndex].OriginalLabel))
+                    newTitle[title.Length - 1] += $" ({node.Node.Ports[portIndex].OriginalLabel})";
 
                 nodeEntries.Add(new NodeEntry(node, newTitle, portIndex, node.Node.Ports[portIndex].capacity));
             }
@@ -120,7 +120,7 @@ namespace GeometryGraph.Editor {
             node.InitializeNode(null);
             var portIndices = new List<int>();
             for (var i = 0; i < node.Ports.Count; i++) {
-                if ((ConnectedPort as GraphFrameworkPort).IsCompatibleWith(node.Ports[i] as GraphFrameworkPort) && ConnectedPort.direction != node.Ports[i].direction) {
+                if (ConnectedPort.IsCompatibleWith(node.Ports[i]) && ConnectedPort.direction != node.Ports[i].direction && node.Ports[i].PortVisible) {
                     portIndices.Add(i);
                 }
             }
@@ -129,7 +129,7 @@ namespace GeometryGraph.Editor {
                 var newTitle = new string[title.Length];
                 for (int i = 0; i < title.Length - 1; i++)
                     newTitle[i] = title[i];
-                newTitle[title.Length - 1] = title[title.Length - 1] + $" ({node.Ports[portIndex].portName})";
+                newTitle[title.Length - 1] = title[title.Length - 1] + $" ({node.Ports[portIndex].OriginalLabel})";
 
                 nodeEntries.Add(new NodeEntry(nodeType, newTitle, portIndex, node.Ports[portIndex].capacity));
             }
