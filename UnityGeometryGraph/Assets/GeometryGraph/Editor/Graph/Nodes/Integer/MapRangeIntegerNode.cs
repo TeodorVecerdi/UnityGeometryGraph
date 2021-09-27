@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using GeometryGraph.Runtime.Graph;
+﻿using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.MapRangeFloatNode.MapRangeFloatNode_Which;
+using Which = GeometryGraph.Runtime.Graph.MapRangeIntegerNode.MapRangeIntegerNode_Which;
 
 namespace GeometryGraph.Editor {
-    [Title("Float", "Map Range")]
-    public class MapRangeFloatNode : AbstractNode<GeometryGraph.Runtime.Graph.MapRangeFloatNode> {
+    [Title("Integer", "Map Range")]
+    public class MapRangeIntegerNode : AbstractNode<GeometryGraph.Runtime.Graph.MapRangeIntegerNode> {
         
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort fromMinPort;
@@ -18,29 +17,29 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort resultPort;
 
         private Toggle clampField;
-        private FloatField inputField;
-        private FloatField fromMinField;
-        private FloatField toMinField;
-        private FloatField fromMaxField;
-        private FloatField toMaxField;
+        private IntegerField inputField;
+        private IntegerField fromMinField;
+        private IntegerField toMinField;
+        private IntegerField fromMaxField;
+        private IntegerField toMaxField;
 
         private bool clamp;
-        private float inputValue;
-        private float fromMin = 0.0f;
-        private float fromMax = 1.0f;
-        private float toMin = 0.0f;
-        private float toMax = 1.0f;
+        private int inputValue;
+        private int fromMin = 0;
+        private int fromMax = 1;
+        private int toMin = 0;
+        private int toMax = 1;
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Map Range", EditorView.DefaultNodePosition);
 
-            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Input", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Min", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (fromMaxPort, fromMaxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (toMinPort, toMinField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("To Min", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (toMaxPort, toMaxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("To Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
+            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Input", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("From Min", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (fromMaxPort, fromMaxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("From Max", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (toMinPort, toMinField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("To Min", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (toMaxPort, toMaxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("To Max", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Integer, edgeConnectorListener, this);
 
             clampField = new Toggle("Clamp");
             clampField.RegisterValueChangedCallback(evt => {
@@ -76,10 +75,10 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateValue(toMax, Which.ToMax);
             });
             
-            fromMinField.SetValueWithoutNotify(0.0f);
-            fromMaxField.SetValueWithoutNotify(1.0f);
-            toMinField.SetValueWithoutNotify(0.0f);
-            toMaxField.SetValueWithoutNotify(1.0f);
+            fromMinField.SetValueWithoutNotify(0);
+            fromMaxField.SetValueWithoutNotify(1);
+            toMinField.SetValueWithoutNotify(0);
+            toMaxField.SetValueWithoutNotify(1);
 
             inputPort.Add(inputField);
             fromMinPort.Add(fromMinField);
@@ -122,11 +121,11 @@ namespace GeometryGraph.Editor {
 
         public override void SetNodeData(JObject jsonData) {
             clamp = jsonData.Value<int>("c") == 1;
-            inputValue = jsonData.Value<float>("i");
-            fromMin = jsonData.Value<float>("f");
-            fromMax = jsonData.Value<float>("F");
-            toMin = jsonData.Value<float>("t");
-            toMax = jsonData.Value<float>("T");
+            inputValue = jsonData.Value<int>("i");
+            fromMin = jsonData.Value<int>("f");
+            fromMax = jsonData.Value<int>("F");
+            toMin = jsonData.Value<int>("t");
+            toMax = jsonData.Value<int>("T");
             
             inputField.SetValueWithoutNotify(inputValue);
             fromMinField.SetValueWithoutNotify(fromMin);

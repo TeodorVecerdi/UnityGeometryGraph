@@ -1,43 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using GeometryGraph.Runtime;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.CompareFloatNode.CompareFloatNode_Which;
-using CompareOperation = GeometryGraph.Runtime.Graph.CompareFloatNode.CompareFloatNode_CompareOperation;
+using Which = GeometryGraph.Runtime.Graph.CompareIntegerNode.CompareIntegerNode_Which;
+using CompareOperation = GeometryGraph.Runtime.Graph.CompareIntegerNode.CompareIntegerNode_CompareOperation;
 
 namespace GeometryGraph.Editor {
-    [Title("Float", "Compare")]
-    public class CompareFloatNode : AbstractNode<GeometryGraph.Runtime.Graph.CompareFloatNode> {
+    [Title("Integer", "Compare")]
+    public class CompareIntegerNode : AbstractNode<GeometryGraph.Runtime.Graph.CompareIntegerNode> {
         
-        private GraphFrameworkPort tolerancePort;
         private GraphFrameworkPort aPort;
         private GraphFrameworkPort bPort;
         private GraphFrameworkPort resultPort;
 
         private EnumSelectionButton<CompareOperation> operationButton;
-        private FloatField toleranceField;
-        private FloatField aField;
-        private FloatField bField;
+        private IntegerField aField;
+        private IntegerField bField;
 
         private CompareOperation operation;
-        private float tolerance = 1e-6f;
-        private float a;
-        private float b;
+        private int a;
+        private int b;
 
         private static readonly SelectionTree compareOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(CompareOperation)).Convert(o => o))) {
-            new SelectionCategory("Operation", false, SelectionCategory.CategorySize.Large) {
+            new SelectionCategory("Operation", false, SelectionCategory.CategorySize.Normal) {
                 new SelectionEntry("a < b", 0, false),
                 new SelectionEntry("a ≤ b", 1, false),
                 new SelectionEntry("a > b", 2, false),
                 new SelectionEntry("a ≥ b", 3, true),
-                new SelectionEntry("a = b, within tolerance", 4, false),
-                new SelectionEntry("a ≠ b, within tolerance", 5, false),
+                new SelectionEntry("a = b", 4, false),
+                new SelectionEntry("a ≠ b", 5, false),
             }
         };
 
@@ -45,9 +40,8 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Compare", EditorView.DefaultNodePosition);
 
-            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("B", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
+            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("A", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("B", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
             operationButton = new EnumSelectionButton<CompareOperation>(operation, compareOperationTree);
@@ -55,13 +49,6 @@ namespace GeometryGraph.Editor {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
                 RuntimeNode.UpdateCompareOperation(operation);
-                OnOperationChanged();
-            });
-
-            toleranceField.RegisterValueChangedCallback(evt => {
-                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change tolerance");
-                tolerance = evt.newValue;
-                RuntimeNode.UpdateValue(tolerance, Which.Tolerance);
             });
 
             aField.RegisterValueChangedCallback(evt => {
@@ -76,23 +63,18 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateValue(b, Which.B);
             });
 
-            tolerancePort.Add(toleranceField); 
             aPort.Add(aField);
             bPort.Add(bField);
             
             inputContainer.Add(operationButton);
-            AddPort(tolerancePort);
             AddPort(aPort);
             AddPort(bPort);
             AddPort(resultPort);
             
-            OnOperationChanged();
-
             Refresh();
         }
 
         public override void BindPorts() {
-            BindPort(tolerancePort, RuntimeNode.TolerancePort);
             BindPort(aPort, RuntimeNode.APort);
             BindPort(bPort, RuntimeNode.BPort);
             BindPort(resultPort, RuntimeNode.ResultPort);
@@ -102,40 +84,24 @@ namespace GeometryGraph.Editor {
             var root = base.GetNodeData();
 
             root["o"] = (int)operation;
-            root["t"] = tolerance;
             root["a"] = a;
             root["b"] = b;
             
             return root;
         }
-
-        private void OnOperationChanged() {
-            var showTolerance = operation == CompareOperation.Equal || operation == CompareOperation.NotEqual;
-            
-            if (showTolerance) {
-                tolerancePort.Show();
-            } else {
-                tolerancePort.HideAndDisconnect();
-            }
-        }
-
+        
         public override void SetNodeData(JObject jsonData) {
             operation = (CompareOperation) jsonData.Value<int>("o");
-            tolerance = jsonData.Value<float>("t");
-            a = jsonData.Value<float>("a");
-            b = jsonData.Value<float>("b");
+            a = jsonData.Value<int>("a");
+            b = jsonData.Value<int>("b");
             
             operationButton.SetValueWithoutNotify(operation, 1);
-            toleranceField.SetValueWithoutNotify(tolerance);
             aField.SetValueWithoutNotify(a);
             bField.SetValueWithoutNotify(b);
             
             RuntimeNode.UpdateCompareOperation(operation);
-            RuntimeNode.UpdateValue(tolerance, Which.Tolerance);
             RuntimeNode.UpdateValue(a, Which.A);
             RuntimeNode.UpdateValue(b, Which.B);
-
-            OnOperationChanged();
 
             base.SetNodeData(jsonData);
         }

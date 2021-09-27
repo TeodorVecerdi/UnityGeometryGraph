@@ -161,58 +161,27 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(ResultPort);
         }
 
-        public enum FloatMathNode_Which {
-            X = 0,
-            Y = 1,
-            Tolerance = 2,
-            Extra = 3
-        }
+        public enum FloatMathNode_Which { X = 0, Y = 1, Tolerance = 2, Extra = 3 }
 
         public enum FloatMathNode_MathOperation {
             // Operations
-            Add = 0,
-            Subtract = 1,
-            Multiply = 2,
-            Divide = 3,
-            Power = 4,
-            Logarithm = 5,
-            SquareRoot = 6,
-            InverseSquareRoot = 7,
-            Absolute = 8,
-            Exponent = 9,
+            Add = 0, Subtract = 1, Multiply = 2, Divide = 3, Power = 4,
+            Logarithm = 5, SquareRoot = 6, InverseSquareRoot = 7, Absolute = 8, Exponent = 9,
 
             // Comparison
-            Minimum = 10,
-            Maximum = 11,
-            LessThan = 12,
-            GreaterThan = 13,
-            Sign = 14,
-            Compare = 15,
-            SmoothMinimum = 16,
-            SmoothMaximum = 17,
+            Minimum = 10, Maximum = 11, LessThan = 12, GreaterThan = 13,
+            Sign = 14, Compare = 15, SmoothMinimum = 16, SmoothMaximum = 17,
 
             // Rounding
-            Round = 18,
-            Floor = 19,
-            Ceil = 20,
-            Truncate = 21,
-            Fraction = 22,
-            Modulo = 23,
-            Wrap = 24,
-            Snap = 25,
+            Round = 18, Floor = 19, Ceil = 20, Truncate = 21,
+            Fraction = 22, Modulo = 23, Wrap = 24, Snap = 25,
 
             // Trig
-            Sine = 26,
-            Cosine = 27,
-            Tangent = 28,
-            Arcsine = 29,
-            Arccosine = 30,
-            Arctangent = 31,
-            Atan2 = 32,
+            Sine = 26, Cosine = 27, Tangent = 28,
+            Arcsine = 29, Arccosine = 30, Arctangent = 31, Atan2 = 32,
 
             // Conversion
-            ToRadians = 33,
-            ToDegrees = 34
+            ToRadians = 33, ToDegrees = 34
         }
     }
 }
