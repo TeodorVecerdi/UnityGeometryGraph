@@ -33,7 +33,10 @@ namespace GeometryGraph.Editor {
                 window.Close();
                 onSelect(valueProvider[index]);
             }) { 
-                text = title ?? RandomUtilities.DisplayNameString(valueProvider[index].ToString()),
+                
+                text = title ?? (valueProvider[index] is Enum
+                    ? RandomUtilities.DisplayNameEnum(valueProvider[index])
+                    : RandomUtilities.DisplayNameString(valueProvider[index].ToString())),
                 tooltip = tooltip
             };
             button.AddToClassList("entry-button");
