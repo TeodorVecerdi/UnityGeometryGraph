@@ -64,7 +64,7 @@ namespace GeometryGraph.Runtime.Graph {
             var translation = GetValue(TranslationPort, defaultTranslation);
             var rotation = GetValue(RotationPort, defaultRotation);
             var scale = GetValue(ScalePort, defaultScale);
-            var rotQuaternion = quaternion.EulerXYZ(math.radians(rotation));
+            var rotQuaternion = quaternion.Euler(math.radians(rotation));
             var trs = float4x4.TRS(translation, rotQuaternion, scale);
             var trsNormal = float4x4.TRS(float3.zero, rotQuaternion, scale);
             result = GetValue(InputGeometryPort, GeometryData.Empty);
