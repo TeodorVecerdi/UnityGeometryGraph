@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
         private bool y;
 
         private static readonly SelectionTree compareOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(Operation)).Convert(o => o))) {
-            new SelectionCategory("Operation", false, SelectionCategory.CategorySize.Large) {
+            new SelectionCategory("Operation", false, SelectionCategory.CategorySize.Normal) {
                 new SelectionEntry("True if both x and y are true", 0, false),
                 new SelectionEntry("True if either x or y are true", 1, false),
                 new SelectionEntry("True if only one of x and y are true", 2, false),
