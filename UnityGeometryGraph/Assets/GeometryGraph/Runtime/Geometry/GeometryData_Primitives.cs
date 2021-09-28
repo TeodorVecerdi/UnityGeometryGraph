@@ -25,7 +25,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 var angle = 2.0f * Mathf.PI * t;
                 var circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(radius * circlePosition);
-                vertexUvs.Add((circlePosition.xz + float2_util.one) / 2.0f);
+                vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
             }
 
             var edges = new List<Edge>();
@@ -60,9 +60,9 @@ namespace GeometryGraph.Runtime.Geometry {
                     i * 3, i * 3 + 1, i * 3 + 2,
                     i, (i + 1) % points, i + points
                 );
-                uvs.Add(vertexUvs[0]);
-                uvs.Add(vertexUvs[i+1]);
                 uvs.Add(vertexUvs[v]);
+                uvs.Add(vertexUvs[i+1]);
+                uvs.Add(vertexUvs[0]);
                 faces.Add(face);
                 faceCorners.Add(new FaceCorner(i));
                 faceCorners.Add(new FaceCorner(i));
