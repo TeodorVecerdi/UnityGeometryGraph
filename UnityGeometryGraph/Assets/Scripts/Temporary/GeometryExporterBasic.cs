@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.Data;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
-    public class GeometryExporterBasic : MonoBehaviour {
+    public class GeometryExporterBasic : SerializedMonoBehaviour {
         [SerializeField] private MeshFilter target;
-        [SerializeField] private GeometryImporter source;
+        [SerializeField] private IGeometryProvider source;
 
         [SerializeField] private Mesh mesh;
 
@@ -57,27 +58,52 @@ namespace GeometryGraph.Runtime.Geometry {
                 var sharedC = GetSharedFace(faceIndex, face.EdgeC, normal);
 
                 var (t0, t1, t2) = AddFace(face, normal);
+                var (triA0, triA1, triB0, triB1, triC0, triC1) = GetActualSharedTriangles(face, t0, t1, t2);
+
                 var triangleOffset = vertices.Count;
 
                 if (sharedA != -1) {
                     exportedFaces.Add(sharedA);
-                    AddAdjacentFace(sharedA, face.VertA, face.VertB, triangleOffset, t1, t0, normal);
+                    AddAdjacentFace(sharedA, geometry.Edges[face.EdgeA].VertA, geometry.Edges[face.EdgeA].VertB, triangleOffset, triA0, triA1, normal);
                     triangleOffset++;
                 }
 
                 if (sharedB != -1) {
                     exportedFaces.Add(sharedB);
-                    AddAdjacentFace(sharedB, face.VertB, face.VertC, triangleOffset, t2, t1, normal);
+                    AddAdjacentFace(sharedB, geometry.Edges[face.EdgeB].VertA, geometry.Edges[face.EdgeB].VertB, triangleOffset, triB1, triB0, normal);
                     triangleOffset++;
                 }
                 
                 if (sharedC != -1) {
                     exportedFaces.Add(sharedC);
-                    AddAdjacentFace(sharedC, face.VertC, face.VertA, triangleOffset, t0, t2, normal);
+                    AddAdjacentFace(sharedC, geometry.Edges[face.EdgeC].VertA, geometry.Edges[face.EdgeC].VertB, triangleOffset, triC1, triC0, normal);
                 }
             }
             
             ApplyMesh();
+        }
+
+        private (int triA0, int triA1, int triB0, int triB1, int triC0, int triC1) GetActualSharedTriangles(GeometryData.Face face, int t0, int t1, int t2) {
+            int triA0 = -1, triA1 = -1, triB0 = -1, triB1 = -1, triC0 = -1, triC1 = -1;
+            if (geometry.Edges[face.EdgeA].VertA == face.VertA) triA0 = t0;
+            if (geometry.Edges[face.EdgeA].VertA == face.VertB) triA0 = t1;
+            if (geometry.Edges[face.EdgeA].VertA == face.VertC) triA0 = t2;
+            if (geometry.Edges[face.EdgeA].VertB == face.VertA) triA1 = t0;
+            if (geometry.Edges[face.EdgeA].VertB == face.VertB) triA1 = t1;
+            if (geometry.Edges[face.EdgeA].VertB == face.VertC) triA1 = t2;
+            if (geometry.Edges[face.EdgeB].VertA == face.VertA) triB0 = t0;
+            if (geometry.Edges[face.EdgeB].VertA == face.VertB) triB0 = t1;
+            if (geometry.Edges[face.EdgeB].VertA == face.VertC) triB0 = t2;
+            if (geometry.Edges[face.EdgeB].VertB == face.VertA) triB1 = t0;
+            if (geometry.Edges[face.EdgeB].VertB == face.VertB) triB1 = t1;
+            if (geometry.Edges[face.EdgeB].VertB == face.VertC) triB1 = t2;
+            if (geometry.Edges[face.EdgeC].VertA == face.VertA) triC0 = t0;
+            if (geometry.Edges[face.EdgeC].VertA == face.VertB) triC0 = t1;
+            if (geometry.Edges[face.EdgeC].VertA == face.VertC) triC0 = t2;
+            if (geometry.Edges[face.EdgeC].VertB == face.VertA) triC1 = t0;
+            if (geometry.Edges[face.EdgeC].VertB == face.VertB) triC1 = t1;
+            if (geometry.Edges[face.EdgeC].VertB == face.VertC) triC1 = t2;
+            return (triA0, triA1, triB0, triB1, triC0, triC1);
         }
 
         private void ApplyMesh() {
@@ -120,7 +146,7 @@ namespace GeometryGraph.Runtime.Geometry {
         private void PrepareMesh() {
             if (mesh == null) mesh = target.sharedMesh;
             if (mesh == null) {
-                mesh = new Mesh { name = $"{source.gameObject.name} Mesh" };
+                mesh = new Mesh { name = $"Exported Mesh" };
                 target.sharedMesh = mesh;
             }
 
@@ -135,7 +161,9 @@ namespace GeometryGraph.Runtime.Geometry {
 
         private int GetSharedFace(int faceIndex, int edgeIndex, float3 normal) {
             var edge = geometry.Edges[edgeIndex];
-            var sharedFaceIndex = edge.FaceA != faceIndex ? edge.FaceA : edge.FaceB;
+            var sharedFaceIndex = -1;
+            if (edge.FaceA == faceIndex) sharedFaceIndex = edge.FaceB;
+            else if (edge.FaceB == faceIndex) sharedFaceIndex = edge.FaceA;
             
             if (exportedFaces.Contains(sharedFaceIndex)) return -1;
             if (sharedFaceIndex != -1 && normalAttr[sharedFaceIndex].Equals(normal)) {
