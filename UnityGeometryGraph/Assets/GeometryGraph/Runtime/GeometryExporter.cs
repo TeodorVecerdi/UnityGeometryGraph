@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Attribute;
 using GeometryGraph.Runtime.Data;
@@ -78,13 +79,13 @@ namespace GeometryGraph.Runtime.Geometry {
 
                 if (sharedB != -1) {
                     exportedFaces.Add(sharedB);
-                    AddAdjacentFace(sharedB, geometry.Edges[face.EdgeB].VertA, geometry.Edges[face.EdgeB].VertB, triangleOffset, triB1, triB0);
+                    AddAdjacentFace(sharedB, geometry.Edges[face.EdgeB].VertA, geometry.Edges[face.EdgeB].VertB, triangleOffset, triB0, triB1);
                     triangleOffset++;
                 }
                 
                 if (sharedC != -1) {
                     exportedFaces.Add(sharedC);
-                    AddAdjacentFace(sharedC, geometry.Edges[face.EdgeC].VertA, geometry.Edges[face.EdgeC].VertB, triangleOffset, triC1, triC0);
+                    AddAdjacentFace(sharedC, geometry.Edges[face.EdgeC].VertA, geometry.Edges[face.EdgeC].VertB, triangleOffset, triC0, triC1);
                 }
             }
             
@@ -125,9 +126,23 @@ namespace GeometryGraph.Runtime.Geometry {
             uvs.Add(uv0);
             uvs.Add(uv1);
             uvs.Add(uv2);
-            triangles[submesh].Add(t0);
-            triangles[submesh].Add(t1);
-            triangles[submesh].Add(t2);
+
+            var faceNormal = normalAttr[faceIndex];
+            var calculatedNormal = math.normalize(math.cross(vertices[t1] - vertices[t0], vertices[t2] - vertices[t0]));
+
+            var eqNegX = faceNormal.x != 0.0f && Math.Abs(faceNormal.x - -calculatedNormal.x) < 0.001f;
+            var eqNegY = faceNormal.y != 0.0f && Math.Abs(faceNormal.y - -calculatedNormal.y) < 0.001f;
+            var eqNegZ = faceNormal.z != 0.0f && Math.Abs(faceNormal.z - -calculatedNormal.z) < 0.001f;
+
+            if (eqNegX || eqNegY || eqNegZ) {
+                triangles[submesh].Add(t1);
+                triangles[submesh].Add(t0);
+                triangles[submesh].Add(t2);
+            } else {
+                triangles[submesh].Add(t0);
+                triangles[submesh].Add(t1);
+                triangles[submesh].Add(t2);
+            }
             
             return (t0, t1, t2);
         }
@@ -160,7 +175,7 @@ namespace GeometryGraph.Runtime.Geometry {
             
             if (exportedFaces.Contains(sharedFaceIndex)) return -1;
             if (sharedFaceIndex != -1 && math_util.angle(normalAttr[sharedFaceIndex], normal) < normalAngleThreshold) {
-            // if (sharedFaceIndex != -1 && normalAttr[sharedFaceIndex].Equals( normal)) {
+            // if (sharedFaceIndex != -1 && normalAttr[sharedFaceIndex].Equals(normal)) {
                 return sharedFaceIndex;
             }
 
@@ -192,10 +207,22 @@ namespace GeometryGraph.Runtime.Geometry {
             vertices.Add(otherVertex);
             normals.Add(normal);
             uvs.Add(otherUV);
-                    
-            triangles[submesh].Add(triangle0);
-            triangles[submesh].Add(triangle1);
-            triangles[submesh].Add(triangle2);
+
+            var sharedFaceNormal = normalAttr[sharedA];
+            var calculatedNormal = math.normalize(math.cross(vertices[triangle1] - vertices[triangle0], vertices[triangle2] - vertices[triangle0]));
+            var eqNegX = sharedFaceNormal.x != 0.0f && Math.Abs(sharedFaceNormal.x - -calculatedNormal.x) < 0.001f;
+            var eqNegY = sharedFaceNormal.y != 0.0f && Math.Abs(sharedFaceNormal.y - -calculatedNormal.y) < 0.001f;
+            var eqNegZ = sharedFaceNormal.z != 0.0f && Math.Abs(sharedFaceNormal.z - -calculatedNormal.z) < 0.001f;
+
+            if (eqNegX || eqNegY || eqNegZ) {
+                triangles[submesh].Add(triangle1);
+                triangles[submesh].Add(triangle0);
+                triangles[submesh].Add(triangle2);
+            } else {
+                triangles[submesh].Add(triangle0);
+                triangles[submesh].Add(triangle1);
+                triangles[submesh].Add(triangle2);
+            }
         }
         
         private (int triA0, int triA1, int triB0, int triB1, int triC0, int triC1) GetActualSharedTriangles(GeometryData.Face face, int t0, int t1, int t2) {
