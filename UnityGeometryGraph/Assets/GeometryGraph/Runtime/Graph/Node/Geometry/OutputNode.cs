@@ -28,8 +28,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port != Input) return;
-            var value = GetValue(connection, (object)null);
+            
         }
     }
 }

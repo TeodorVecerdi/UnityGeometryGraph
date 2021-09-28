@@ -67,7 +67,7 @@ namespace GeometryGraph.Runtime.Graph {
             var rotQuaternion = quaternion.Euler(math.radians(rotation));
             var trs = float4x4.TRS(translation, rotQuaternion, scale);
             var trsNormal = float4x4.TRS(float3.zero, rotQuaternion, scale);
-            result = GetValue(InputGeometryPort, GeometryData.Empty);
+            result = (GeometryData) GetValue(InputGeometryPort, GeometryData.Empty).Clone();
             
             var positionAttribute = result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             positionAttribute.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionAttribute);

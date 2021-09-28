@@ -21,7 +21,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var vertexUvs = new List<float2> { float2_util.one * 0.5f };
             
             for (var i = 0; i < points; i++) {
-                var t = i / (float)(points - 1);
+                var t = i / (float)(points);
                 var angle = 2.0f * Mathf.PI * t;
                 var circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(radius * circlePosition);
@@ -56,7 +56,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 var v = (i + 2) % (points + 1);
                 if (v == 0) v = 1;
                 var face = new Face(
-                    0, i + 1, v,
+                    v, i + 1, 0,
                     i * 3, i * 3 + 1, i * 3 + 2,
                     i, (i + 1) % points, i + points
                 );
