@@ -30,9 +30,30 @@ namespace GeometryGraph.Runtime.Geometry {
             faceCorners = new List<FaceCorner>();
             attributeManager = new AttributeManager();
             
-            FillBuiltinAttributes(Array.Empty<float3>(), new List<float2>(), Array.Empty<float3>(), Array.Empty<int>(), Array.Empty<bool>());
+            FillBuiltinAttributes(Array.Empty<float3>(), new List<float2>(), Array.Empty<float>(), Array.Empty<float3>(), Array.Empty<int>(), Array.Empty<bool>());
             
             submeshCount = 0;
+        }
+
+        private GeometryData(IEnumerable<Edge> edges, IEnumerable<Face> faces, IEnumerable<FaceCorner> faceCorners, int submeshCount,
+                             IEnumerable<float3> vertexPositions, IEnumerable<float3> faceNormals, IEnumerable<int> materialIndices,
+                             IEnumerable<bool> smoothShaded, IEnumerable<float> creases, IEnumerable<float2> uvs) {
+            vertices = new List<Vertex>();
+            this.edges = edges is List<Edge> edgeList ? edgeList : new List<Edge>(edges);
+            this.faces = faces is List<Face> facesList ? facesList : new List<Face>(faces);
+            this.faceCorners = faceCorners is List<FaceCorner> faceCornersList ? faceCornersList : new List<FaceCorner>(faceCorners);
+
+            var materialIndicesList = materialIndices is List<int> indicesList ? indicesList : materialIndices.ToList();
+            var vertexPositionsList = vertexPositions is List<float3> positionsList ? positionsList : vertexPositions.ToList();
+            var uvsList = uvs is List<float2> uvList ? uvList : uvs.ToList();
+            
+            if (submeshCount == -1) submeshCount = materialIndicesList.Max() + 1;
+            this.submeshCount = submeshCount;
+            
+            vertexPositionsList.ForEach(_ => vertices.Add(new Vertex()));
+            FillElementMetadata();
+            
+            FillBuiltinAttributes(vertexPositionsList, uvsList, creases, faceNormals, materialIndicesList, smoothShaded);
         }
 
         public GeometryData(Mesh mesh, float duplicateDistanceThreshold, float duplicateNormalAngleThreshold) {
@@ -50,7 +71,7 @@ namespace GeometryGraph.Runtime.Geometry {
                           duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
             attributeManager = new AttributeManager();
-            FillBuiltinAttributes(vertices, uvs, faceNormals, faceMaterialIndices, faceSmoothShaded);
+            FillBuiltinAttributes(vertices, uvs, new float[edges.Count], faceNormals, faceMaterialIndices, faceSmoothShaded);
         }
 
         public TAttribute GetAttribute<TAttribute>(string name) where TAttribute : BaseAttribute {
@@ -62,7 +83,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         private void FillBuiltinAttributes(
-            IEnumerable<float3> vertices, List<float2> uvs, 
+            IEnumerable<float3> vertices, List<float2> uvs, IEnumerable<float> creases,
             IEnumerable<float3> faceNormals, IEnumerable<int> faceMaterialIndices, IEnumerable<bool> faceSmoothShaded
         ) {
             using var method = Profiler.ProfileMethod();
@@ -72,7 +93,7 @@ namespace GeometryGraph.Runtime.Geometry {
             attributeManager.Store(faceMaterialIndices.Into<IntAttribute>("material_index", AttributeDomain.Face));
             attributeManager.Store(faceSmoothShaded.Into<BoolAttribute>("shade_smooth", AttributeDomain.Face));
 
-            attributeManager.Store(new float[edges.Count].Into<ClampedFloatAttribute>("crease", AttributeDomain.Edge));
+            attributeManager.Store(creases.Into<ClampedFloatAttribute>("crease", AttributeDomain.Edge));
 
             if (uvs.Count > 0) attributeManager.Store(uvs.Into<Vector2Attribute>("uv", AttributeDomain.FaceCorner));
         }
