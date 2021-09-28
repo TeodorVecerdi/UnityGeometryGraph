@@ -42,6 +42,7 @@ namespace GeometryGraph.Runtime.Geometry {
             this.edges = edges is List<Edge> edgeList ? edgeList : new List<Edge>(edges);
             this.faces = faces is List<Face> facesList ? facesList : new List<Face>(faces);
             this.faceCorners = faceCorners is List<FaceCorner> faceCornersList ? faceCornersList : new List<FaceCorner>(faceCorners);
+            attributeManager = new AttributeManager();
 
             var materialIndicesList = materialIndices is List<int> indicesList ? indicesList : materialIndices.ToList();
             var vertexPositionsList = vertexPositions is List<float3> positionsList ? positionsList : vertexPositions.ToList();
