@@ -6,6 +6,7 @@ using GeometryGraph.Runtime.Data;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace GeometryGraph.Runtime.Geometry {
     public class GeometryExporter : MonoBehaviour, IGeometryProvider {
@@ -129,10 +130,9 @@ namespace GeometryGraph.Runtime.Geometry {
 
             var faceNormal = normalAttr[faceIndex];
             var calculatedNormal = math.normalize(math.cross(vertices[t1] - vertices[t0], vertices[t2] - vertices[t0]));
-
-            var eqNegX = faceNormal.x != 0.0f && Math.Abs(faceNormal.x - -calculatedNormal.x) < 0.001f;
-            var eqNegY = faceNormal.y != 0.0f && Math.Abs(faceNormal.y - -calculatedNormal.y) < 0.001f;
-            var eqNegZ = faceNormal.z != 0.0f && Math.Abs(faceNormal.z - -calculatedNormal.z) < 0.001f;
+            var eqNegX = Math.Abs(faceNormal.x) > 0.0001f && Math.Abs(faceNormal.x - -calculatedNormal.x) < 0.001f;
+            var eqNegY = Math.Abs(faceNormal.y) > 0.0001f && Math.Abs(faceNormal.y - -calculatedNormal.y) < 0.001f;
+            var eqNegZ = Math.Abs(faceNormal.z) > 0.0001f && Math.Abs(faceNormal.z - -calculatedNormal.z) < 0.001f;
 
             if (eqNegX || eqNegY || eqNegZ) {
                 triangles[submesh].Add(t1);
@@ -150,13 +150,15 @@ namespace GeometryGraph.Runtime.Geometry {
         private void PrepareMesh() {
             if (mesh == null) mesh = target.sharedMesh;
             if (mesh == null) {
-                mesh = new Mesh { name = "Exported Mesh" };
+                mesh = new Mesh {
+                    name = "Exported Mesh",
+                    indexFormat = IndexFormat.UInt32
+                };
                 target.sharedMesh = mesh;
             }
 
             mesh.Clear();
             mesh.subMeshCount = geometry.SubmeshCount;
-            
             vertices.Clear();
             normals.Clear();
             uvs.Clear();
@@ -210,10 +212,10 @@ namespace GeometryGraph.Runtime.Geometry {
 
             var sharedFaceNormal = normalAttr[sharedA];
             var calculatedNormal = math.normalize(math.cross(vertices[triangle1] - vertices[triangle0], vertices[triangle2] - vertices[triangle0]));
-            var eqNegX = sharedFaceNormal.x != 0.0f && Math.Abs(sharedFaceNormal.x - -calculatedNormal.x) < 0.001f;
-            var eqNegY = sharedFaceNormal.y != 0.0f && Math.Abs(sharedFaceNormal.y - -calculatedNormal.y) < 0.001f;
-            var eqNegZ = sharedFaceNormal.z != 0.0f && Math.Abs(sharedFaceNormal.z - -calculatedNormal.z) < 0.001f;
-
+            var eqNegX = Math.Abs(sharedFaceNormal.x) > 0.0001f && Math.Abs(sharedFaceNormal.x - -calculatedNormal.x) < 0.001f;
+            var eqNegY = Math.Abs(sharedFaceNormal.y) > 0.0001f && Math.Abs(sharedFaceNormal.y - -calculatedNormal.y) < 0.001f;
+            var eqNegZ = Math.Abs(sharedFaceNormal.z) > 0.0001f && Math.Abs(sharedFaceNormal.z - -calculatedNormal.z) < 0.001f;
+            
             if (eqNegX || eqNegY || eqNegZ) {
                 triangles[submesh].Add(triangle1);
                 triangles[submesh].Add(triangle0);
