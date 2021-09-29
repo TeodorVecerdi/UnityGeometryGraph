@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
+using UnityCommons;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
@@ -281,5 +282,94 @@ namespace GeometryGraph.Runtime.Geometry {
 
             return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
         }
+        
+        public static GeometryData MakeCone(float radius, float height, int points) {
+            if (points < 3) points = 3;
+            if (Math.Abs(radius) < 0.0f) radius = 0.0f;
+
+            var faceCount = 2 * points;
+            var edgeCount = 3 * points;
+            var materialIndices = new int[faceCount].ToList();
+            var smoothShaded = Enumerable.Repeat((false, true), points).SelectMany(pair => new[] { pair.Item1, pair.Item2 }).ToList();
+            var creases = new float[edgeCount].ToList();
+            
+            var vertexPositions = new List<float3> { float3.zero, float3_util.up * height };
+            var vertexUvs = new List<float2> { float2_util.one * 0.5f, new float2(0.5f, 1.0f) };
+            
+            for (var i = 0; i < points; i++) {
+                var t = i / (float)points;
+                var angle = 2.0f * Mathf.PI * t;
+                var circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
+                vertexPositions.Add(radius * circlePosition);
+                vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
+            }
+
+            var edges = new List<Edge>();
+            var faces = new List<Face>();
+            var faceCorners = new List<FaceCorner>();
+            
+            // Inner and Vertical Edges
+            for (var i = 0; i < points; i++) {
+                var edge = new Edge(0, i + 2, i) {
+                    FaceA = i * 2,
+                    FaceB = (i - 1).Mod(points) * 2
+                };
+                var edgeV = new Edge(1, i + 2, i) {
+                    FaceA = i * 2 + 1,
+                    FaceB = (i - 1).Mod(points) * 2 + 1
+                };
+                edges.Add(edge);
+                edges.Add(edgeV);
+            }
+            // Outer edges
+            for (var i = 0; i < points; i++) {
+                var v = (i + 3) % (points + 2);
+                if (v < 2) v = 2;
+                var edge = new Edge(i + 2, v, i + points) {
+                    FaceA = i * 2,
+                    FaceB = i * 2 + 1
+                };
+                edges.Add(edge);
+            }
+
+            var uvs = new List<float2>();
+            var faceNormals = new List<float3>();
+            // Faces and FCs
+            for (var i = 0; i < points; i++) {
+                var v = (i + 3) % (points + 2);
+                if (v < 2) v = 2;
+                var face = new Face(
+                    v, 0, i + 2,
+                    i * 6, i * 6 + 1, i * 6 + 2,
+                    i * 2, i + 2 * points, ((i + 1) * 2) % (2 * points)
+                );
+                uvs.Add(vertexUvs[v]);
+                uvs.Add(vertexUvs[0]);
+                uvs.Add(vertexUvs[i+2]);
+                faceNormals.Add(-float3_util.up);
+                faces.Add(face);
+                
+                var faceV = new Face(
+                    v, i + 2, 1,
+                    i * 6 + 3, i * 6 + 4, i * 6 + 5,
+                    i * 2 + 1, ((i + 1) * 2 + 1) % (2 * points), i + 2 * points
+                );
+                uvs.Add(vertexUvs[v]);
+                uvs.Add(vertexUvs[i+2]);
+                uvs.Add(vertexUvs[1]);
+                faceNormals.Add(math.normalize(math.cross(vertexPositions[i + 2] - vertexPositions[v], vertexPositions[1] - vertexPositions[v])));
+                faces.Add(faceV);
+                
+                faceCorners.Add(new FaceCorner(i * 2));
+                faceCorners.Add(new FaceCorner(i * 2));
+                faceCorners.Add(new FaceCorner(i * 2));
+                faceCorners.Add(new FaceCorner(i * 2 + 1));
+                faceCorners.Add(new FaceCorner(i * 2 + 1));
+                faceCorners.Add(new FaceCorner(i * 2 + 1));
+            }
+
+            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
+        }
+
     }
 }
