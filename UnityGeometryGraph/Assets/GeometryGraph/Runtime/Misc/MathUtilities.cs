@@ -59,6 +59,8 @@ namespace GeometryGraph.Runtime {
 
     public static class float2_util {
         public static readonly float2 one = new float2(1);
+        public static readonly float2 right = new float2(1, 0);
+        public static readonly float2 up = new float2(0, 1);
     }
 }
 // ReSharper restore InconsistentNaming

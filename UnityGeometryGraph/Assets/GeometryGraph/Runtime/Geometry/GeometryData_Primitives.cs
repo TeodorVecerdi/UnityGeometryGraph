@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_util.up).ToList();
             var materialIndices = new int[faceCount].ToList();
             var smoothShaded = new bool[faceCount].ToList();
-            var creases = Enumerable.Range(0, edgeCount).Select(_ => 0.0f).ToList();
+            var creases = new float[edgeCount].ToList();
             
             var vertexPositions = new List<float3> { float3.zero };
             var vertexUvs = new List<float2> { float2_util.one * 0.5f };
@@ -86,7 +86,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_util.up).ToList();
             var materialIndices = new int[faceCount].ToList();
             var smoothShaded = new bool[faceCount].ToList();
-            var creases = Enumerable.Range(0, edgeCount).Select(_ => 0.0f).ToList();
+            var creases = new float[edgeCount].ToList();
             
             var vertexPositions = new List<float3>();
             var vertexUVs = new List<float2>();
@@ -189,6 +189,96 @@ namespace GeometryGraph.Runtime.Geometry {
                 }
             }
             
+            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
+        }
+
+        public static GeometryData MakeCube(float3 size) {
+            const int faceCount = 12;
+            const int edgeCount = 18;
+            
+            
+            var materialIndices = new int[faceCount].ToList();
+            var smoothShaded = new bool[faceCount].ToList();
+            var creases = new float[edgeCount].ToList();
+            
+            var vertexPositions = new [] {
+                // Bottom
+                float3.zero,
+                new float3(size.x, 0.0f, 0.0f),
+                new float3(size.x, 0.0f, size.z),
+                new float3(0.0f, 0.0f, size.z),
+                // Top
+                new float3(0.0f, size.y, 0.0f),
+                new float3(size.x, size.y, 0.0f),
+                new float3(size.x, size.y, size.z),
+                new float3(0.0f, size.y, size.z),
+            } // Offset center
+            .Select(p => p - size * 0.5f).ToList();
+            
+            var down = -float3_util.up;
+            var left = -float3_util.right;
+            var back = -float3_util.forward;
+            var faceNormals = new List<float3> {
+                down, down,
+                back, back,
+                float3_util.right, float3_util.right, 
+                float3_util.forward, float3_util.forward,
+                left, left,
+                float3_util.up, float3_util.up
+            };
+
+            var right = float2_util.right;
+            var zero = float2.zero;
+            var up = float2_util.up;
+            var one = float2_util.one;
+            var uvs = new List<float2> {
+                zero, right, up, one, up, right,
+                zero, right, up, one, up, right, 
+                zero, right, up, one, up, right,
+                zero, right, up, one, up, right,
+                zero, right, up, one, up, right,
+                zero, right, up, one, up, right
+            };
+
+            var fcI = 0;
+            var faces = new List<Face> {
+                new Face(2, 1, 3, fcI++, fcI++, fcI++, 1, 4, 2), 
+                new Face(1, 0, 3, fcI++, fcI++, fcI++, 0, 3, 4),
+                new Face(0, 1, 4, fcI++, fcI++, fcI++, 0, 9, 5), 
+                new Face(5, 4, 1, fcI++, fcI++, fcI++, 13, 9, 6),
+                new Face(1, 2, 5, fcI++, fcI++, fcI++, 1, 10, 6), 
+                new Face(6, 5, 2, fcI++, fcI++, fcI++, 14, 10, 7),
+                new Face(2, 3, 6, fcI++, fcI++, fcI++, 2, 11, 7), 
+                new Face(7, 6, 3, fcI++, fcI++, fcI++, 15, 11, 8),
+                new Face(3, 0, 7, fcI++, fcI++, fcI++, 3, 12, 8), 
+                new Face(4, 7, 0, fcI++, fcI++, fcI++, 16, 12, 5),
+                new Face(4, 5, 7, fcI++, fcI++, fcI++, 13, 17, 16), 
+                new Face(6, 7, 5, fcI++, fcI++, fcI++, 15, 17, 14),
+            };
+
+            var eI = 0;
+            var edges = new List<Edge> {
+                new Edge(0, 1, eI++) { FaceA = 1, FaceB = 2 },
+                new Edge(1, 2, eI++) { FaceA = 0, FaceB = 4 },
+                new Edge(2, 3, eI++) { FaceA = 0, FaceB = 6 },
+                new Edge(3, 0, eI++) { FaceA = 1, FaceB = 8 },
+                new Edge(1, 3, eI++) { FaceA = 0, FaceB = 1 },
+                new Edge(0, 4, eI++) { FaceA = 2, FaceB = 9 },
+                new Edge(1, 5, eI++) { FaceA = 3, FaceB = 4 },
+                new Edge(2, 6, eI++) { FaceA = 5, FaceB = 6 },
+                new Edge(3, 7, eI++) { FaceA = 7, FaceB = 8 },
+                new Edge(1, 4, eI++) { FaceA = 2, FaceB = 3 },
+                new Edge(2, 5, eI++) { FaceA = 4, FaceB = 5 },
+                new Edge(3, 6, eI++) { FaceA = 6, FaceB = 7 },
+                new Edge(0, 7, eI++) { FaceA = 8, FaceB = 9 },
+                new Edge(4, 5, eI++) { FaceA = 3, FaceB = 10 },
+                new Edge(5, 6, eI++) { FaceA = 5, FaceB = 11 },
+                new Edge(6, 7, eI++) { FaceA = 7, FaceB = 11 },
+                new Edge(7, 4, eI++) { FaceA = 9, FaceB = 10 },
+                new Edge(5, 7, eI++) { FaceA = 10, FaceB = 11 },
+            };
+            var faceCorners = Enumerable.Range(0, faceCount).SelectMany(i => new []{ new FaceCorner(i), new FaceCorner(i), new FaceCorner(i) }).ToList();
+
             return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
         }
     }
