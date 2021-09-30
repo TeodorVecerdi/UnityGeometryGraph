@@ -15,6 +15,8 @@ namespace GeometryGraph.Runtime.Geometry {
         [ShowInInspector] private AttributeDictionary faceAttributes;
         [ShowInInspector] private AttributeDictionary faceCornerAttributes;
 
+        [SerializeReference] private GeometryData owner;
+
         internal IReadOnlyDictionary<string, BaseAttribute> VertexAttributes => vertexAttributes;
         internal IReadOnlyDictionary<string, BaseAttribute> EdgeAttributes => edgeAttributes;
         internal IReadOnlyDictionary<string, BaseAttribute> FaceAttributes => faceAttributes;
@@ -26,12 +28,13 @@ namespace GeometryGraph.Runtime.Geometry {
         [SerializeField, HideInInspector] private SerializedAttributeDictionary serializedFaceAttributes;
         [SerializeField, HideInInspector] private SerializedAttributeDictionary serializedFaceCornerAttributes;
 
-        public AttributeManager() {
+        public AttributeManager(GeometryData owner) {
             vertexAttributes = new AttributeDictionary();
             edgeAttributes = new AttributeDictionary();
             faceAttributes = new AttributeDictionary();
             faceCornerAttributes = new AttributeDictionary();
             dirty = true;
+            this.owner = owner;
         }
 
         public bool HasAttribute(string name) {
@@ -39,6 +42,13 @@ namespace GeometryGraph.Runtime.Geometry {
                    edgeAttributes.ContainsKey(name) ||
                    faceAttributes.ContainsKey(name) ||
                    faceCornerAttributes.ContainsKey(name);
+        }
+
+        public bool HasAttribute(string name, AttributeType type) {
+            return vertexAttributes.ContainsKey(name) && vertexAttributes[name].Type == type ||
+                   edgeAttributes.ContainsKey(name) && edgeAttributes[name].Type == type ||
+                   faceAttributes.ContainsKey(name) && faceAttributes[name].Type == type ||
+                   faceCornerAttributes.ContainsKey(name) && faceCornerAttributes[name].Type == type;
         }
 
         public bool HasAttribute(string name, AttributeDomain domain) {
@@ -51,6 +61,18 @@ namespace GeometryGraph.Runtime.Geometry {
             };
 
             return searchDict.ContainsKey(name);
+        }
+
+        public bool HasAttribute(string name, AttributeType type, AttributeDomain domain) {
+            var searchDict = domain switch {
+                AttributeDomain.Vertex => vertexAttributes,
+                AttributeDomain.Edge => edgeAttributes,
+                AttributeDomain.Face => faceAttributes,
+                AttributeDomain.FaceCorner => faceCornerAttributes,
+                _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
+            };
+
+            return searchDict.ContainsKey(name) && searchDict[name].Type == type;
         }
 
         public bool Store(BaseAttribute attribute) {
@@ -70,7 +92,11 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public bool Store(BaseAttribute attribute, AttributeDomain targetDomain) {
-            // Todo: perform conversion from `attribute.Domain` to `targetDomain`
+            if (attribute.Domain != targetDomain) {
+                AttributeConvert.ConvertDomain(owner, attribute, targetDomain).Into(attribute);
+                attribute.Domain = targetDomain;
+            }
+            
             var destDict = targetDomain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
@@ -113,6 +139,31 @@ namespace GeometryGraph.Runtime.Geometry {
             if (searchDict.ContainsKey(name)) return searchDict[name];
             // note: Maybe I should do `else find any attribute with name and convert to domain`
             return null;
+        }
+        
+        public BaseAttribute Request(string name, AttributeType type, AttributeDomain domain) {
+            var searchDict = domain switch {
+                AttributeDomain.Vertex => vertexAttributes,
+                AttributeDomain.Edge => edgeAttributes,
+                AttributeDomain.Face => faceAttributes,
+                AttributeDomain.FaceCorner => faceCornerAttributes,
+                _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
+            };
+            if (searchDict.ContainsKey(name)) {
+                if (searchDict[name].Type == type)
+                    return searchDict[name];
+
+                return searchDict[name].Yield(o => AttributeConvert.ConvertType(o, searchDict[name].Type, type)).Into(name, type, domain);
+            }
+
+            var attribute = vertexAttributes.ContainsKey(name) ? vertexAttributes[name] :
+                edgeAttributes.ContainsKey(name) ? edgeAttributes[name] :
+                faceAttributes.ContainsKey(name) ? faceAttributes[name] :
+                faceCornerAttributes.ContainsKey(name) ? faceCornerAttributes[name] : null;
+            if (attribute == null) return null;
+
+            var clone = (BaseAttribute) attribute.Clone();
+            return AttributeConvert.ConvertDomain(owner, clone, domain).Into(clone);
         }
 
         /// <summary>

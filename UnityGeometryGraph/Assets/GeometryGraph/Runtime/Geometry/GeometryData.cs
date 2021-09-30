@@ -28,7 +28,7 @@ namespace GeometryGraph.Runtime.Geometry {
             edges = new List<Edge>();
             faces = new List<Face>();
             faceCorners = new List<FaceCorner>();
-            attributeManager = new AttributeManager();
+            attributeManager = new AttributeManager(this);
             
             FillBuiltinAttributes(Array.Empty<float3>(), new List<float2>(), Array.Empty<float>(), Array.Empty<float3>(), Array.Empty<int>(), Array.Empty<bool>());
             
@@ -42,7 +42,7 @@ namespace GeometryGraph.Runtime.Geometry {
             this.edges = edges is List<Edge> edgeList ? edgeList : new List<Edge>(edges);
             this.faces = faces is List<Face> facesList ? facesList : new List<Face>(faces);
             this.faceCorners = faceCorners is List<FaceCorner> faceCornersList ? faceCornersList : new List<FaceCorner>(faceCorners);
-            attributeManager = new AttributeManager();
+            attributeManager = new AttributeManager(this);
 
             var materialIndicesList = materialIndices is List<int> indicesList ? indicesList : materialIndices.ToList();
             var vertexPositionsList = vertexPositions is List<float3> positionsList ? positionsList : vertexPositions.ToList();
@@ -71,16 +71,41 @@ namespace GeometryGraph.Runtime.Geometry {
             BuildMetadata(mesh, vertices, meshUvs, /*out*/faceNormals, /*out*/uvs, /*out*/faceMaterialIndices, /*out*/faceSmoothShaded, 
                           duplicateDistanceThreshold, duplicateNormalAngleThreshold);
 
-            attributeManager = new AttributeManager();
+            attributeManager = new AttributeManager(this);
             FillBuiltinAttributes(vertices, uvs, new float[edges.Count], faceNormals, faceMaterialIndices, faceSmoothShaded);
         }
 
+        public bool HasAttribute(string name) => attributeManager.HasAttribute(name);
+        public bool HasAttribute(string name, AttributeType type) => attributeManager.HasAttribute(name, type);
+        public bool HasAttribute(string name, AttributeDomain domain) => attributeManager.HasAttribute(name, domain);
+        public bool HasAttribute(string name, AttributeType type, AttributeDomain domain) => attributeManager.HasAttribute(name, type, domain);
+        
+        public BaseAttribute GetAttribute(string name) {
+            return attributeManager.Request(name);
+        }
+
+        public BaseAttribute GetAttribute(string name, AttributeDomain domain) {
+            return attributeManager.Request(name, domain);
+        }
+        
+        public BaseAttribute GetAttribute(string name, AttributeType type, AttributeDomain domain) {
+            return attributeManager.Request(name, type, domain);
+        }
+
         public TAttribute GetAttribute<TAttribute>(string name) where TAttribute : BaseAttribute {
-            return (TAttribute)attributeManager.Request(name);
+            return (TAttribute)attributeManager.Request(name, AttributeUtility.SystemTypeToAttributeType(typeof(TAttribute)));
         }
 
         public TAttribute GetAttribute<TAttribute>(string name, AttributeDomain domain) where TAttribute : BaseAttribute {
-            return (TAttribute)attributeManager.Request(name, domain);
+            return (TAttribute)attributeManager.Request(name, AttributeUtility.SystemTypeToAttributeType(typeof(TAttribute)), domain);
+        }
+
+        public bool StoreAttribute(BaseAttribute attribute) {
+            return attributeManager.Store(attribute);
+        }
+        
+        public bool StoreAttribute(BaseAttribute attribute, AttributeDomain targetDomain) {
+            return attributeManager.Store(attribute, targetDomain);
         }
 
         private void FillBuiltinAttributes(
