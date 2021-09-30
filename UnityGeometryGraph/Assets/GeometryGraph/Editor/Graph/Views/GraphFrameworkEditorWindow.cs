@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
                 if (deleted) return false;
                 if (graphObject == null) return false;
                 var current = JsonUtility.ToJson(graphObject.GraphData);
-                var saved = File.ReadAllText(AssetDatabase.GUIDToAssetPath(selectedAssetGuid));
+                var saved = GraphFrameworkUtility.ReadCompressed(AssetDatabase.GUIDToAssetPath(selectedAssetGuid));
                 return !string.Equals(current, saved, StringComparison.Ordinal);
             }
         }
