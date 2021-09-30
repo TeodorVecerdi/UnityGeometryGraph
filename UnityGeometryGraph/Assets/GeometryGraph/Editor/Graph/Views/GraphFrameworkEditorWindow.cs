@@ -48,8 +48,10 @@ namespace GeometryGraph.Editor {
         }
 
         private void Update() {
-            if (focusedWindow == this && deleted) {
-                DisplayDeletedFromDiskDialog();
+            // if (focusedWindow == this && deleted) {
+            if (deleted) {
+                var shouldClose = DisplayDeletedFromDiskDialog();
+                if (shouldClose) return;
             }
 
             if (graphObject == null && selectedAssetGuid != null) {
@@ -89,7 +91,7 @@ namespace GeometryGraph.Editor {
             graphObject.GraphData.ClearChanges();
         }
 
-        private void DisplayDeletedFromDiskDialog() {
+        private bool DisplayDeletedFromDiskDialog() {
             var shouldClose = true; // Close unless if the same file was replaced
 
             if (EditorUtility.DisplayDialog("Graph Missing", $"{AssetDatabase.GUIDToAssetPath(selectedAssetGuid)} has been deleted or moved outside of Unity.\n\nWould you like to save your Graph Asset?", "Save As", "Close Window")) {
@@ -100,6 +102,8 @@ namespace GeometryGraph.Editor {
                 Close();
             else
                 deleted = false; // Was restored
+
+            return shouldClose;
         }
 
         public void SetGraphObject(GraphFrameworkObject graphObject) {
@@ -113,6 +117,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void GraphDeleted() {
+            Debug.Log("Graph deleted");
             deleted = true;
         }
 
