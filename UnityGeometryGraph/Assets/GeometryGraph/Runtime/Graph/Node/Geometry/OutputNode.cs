@@ -1,5 +1,4 @@
 ﻿using GeometryGraph.Runtime.Geometry;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class OutputNode : RuntimeNode {

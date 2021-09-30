@@ -19,10 +19,6 @@ namespace GeometryGraph.Runtime.Graph {
         public override object GetValueForPort(RuntimePort port) {
             return port == ValuePort ? value : 0;
         }
-
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            // not needed
-        }
         
         public override void RebindPorts() {
             ValuePort = Ports[0];

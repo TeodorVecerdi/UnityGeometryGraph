@@ -3,7 +3,6 @@ using System.Linq;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
 using Unity.Mathematics;
-using UnityCommons;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

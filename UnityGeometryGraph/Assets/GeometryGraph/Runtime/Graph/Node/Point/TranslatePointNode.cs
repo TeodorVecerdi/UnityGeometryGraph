@@ -5,7 +5,6 @@ using GeometryGraph.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
-using UnityCommons;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {

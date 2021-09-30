@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using GeometryGraph.Runtime.Geometry;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class JoinGeometryNode : RuntimeNode {

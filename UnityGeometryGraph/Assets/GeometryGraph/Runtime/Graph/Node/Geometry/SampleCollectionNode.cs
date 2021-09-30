@@ -5,7 +5,6 @@ using GeometryGraph.Runtime.Geometry;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityCommons;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class SampleCollectionNode : RuntimeNode {

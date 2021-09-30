@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using GeometryGraph.Runtime.Geometry;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {

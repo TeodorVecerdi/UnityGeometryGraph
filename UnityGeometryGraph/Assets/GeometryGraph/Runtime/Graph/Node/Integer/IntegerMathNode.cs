@@ -1,7 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class IntegerMathNode : RuntimeNode {

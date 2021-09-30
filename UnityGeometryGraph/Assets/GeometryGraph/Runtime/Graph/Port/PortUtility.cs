@@ -1,5 +1,4 @@
 ﻿using System;
-using GeometryGraph.Runtime.Attribute;
 
 namespace GeometryGraph.Runtime.Graph {
     public static class PortTypeUtility {
