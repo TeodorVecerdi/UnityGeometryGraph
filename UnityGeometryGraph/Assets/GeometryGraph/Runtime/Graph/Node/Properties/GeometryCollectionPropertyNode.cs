@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
@@ -23,7 +24,7 @@ namespace GeometryGraph.Runtime.Graph {
             if ((Object)value != null) {
                 objectValue = (GeometryCollection)value;
             }
-            return objectValue == null ? Array.Empty<GeometryData>() : objectValue.Collection.Select(data => data.Clone());
+            return objectValue == null ? (IEnumerable<GeometryData>)Array.Empty<GeometryData>() : (IEnumerable<GeometryData>)objectValue.Collection.Select(data => (GeometryData)data.Clone());
         }
         
         public override void RebindPorts() {
