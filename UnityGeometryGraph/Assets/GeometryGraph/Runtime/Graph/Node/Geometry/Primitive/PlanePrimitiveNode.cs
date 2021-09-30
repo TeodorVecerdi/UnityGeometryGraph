@@ -59,6 +59,7 @@ namespace GeometryGraph.Runtime.Graph {
                 }
             } else if (port == SubdivisionsPort) {
                 var newValue = GetValue(connection, subdivisions);
+                if (newValue < 0) newValue = 0;
                 if (newValue != subdivisions) {
                     subdivisions = newValue;
                     CalculateResult();

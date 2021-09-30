@@ -48,6 +48,7 @@ namespace GeometryGraph.Runtime.Graph {
                 }
             } else if (port == PointsPort) {
                 var newValue = GetValue(connection, points);
+                if (newValue < 3) newValue = 3;
                 if (newValue != points) {
                     points = newValue;
                     CalculateResult();
