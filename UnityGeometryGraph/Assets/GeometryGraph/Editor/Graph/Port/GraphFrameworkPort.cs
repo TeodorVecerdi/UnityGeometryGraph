@@ -120,20 +120,20 @@ namespace GeometryGraph.Editor {
             field.AddToClassList("port-backing-field");
             port.fieldLabel = field.labelElement;
             port.field = field;
-            
-            if(onConnect != null) port.OnConnect += onConnect;
-            if(onDisconnect != null) port.OnDisconnect += onDisconnect;
-            
+
             if (showLabelOnField) {
                 port.m_ConnectorText.text = string.Empty;
                 port.fieldVisible = true;
-                port.OnConnect += (_, __) => SetCompFieldVisible(port, field, false);
-                port.OnDisconnect += (_, __) => SetCompFieldVisible(port, field, true);
+                port.OnConnect += (_, __) => SetCompFieldVisible(port, false);
+                port.OnDisconnect += (_, __) => SetCompFieldVisible(port, true);
             } else {
-                port.OnConnect += (_, __) => SetFieldVisible(port, field, false);
-                port.OnDisconnect += (_, __) => SetFieldVisible(port, field, true);
+                port.OnConnect += (_, __) => SetFieldVisible(port, false);
+                port.OnDisconnect += (_, __) => SetFieldVisible(port, true);
             }
 
+            if(onConnect != null) port.OnConnect += onConnect;
+            if(onDisconnect != null) port.OnDisconnect += onDisconnect;
+            
             field.visible = true;
             field.SetEnabled(true);
             field.RemoveFromClassList("d-none");
@@ -141,27 +141,31 @@ namespace GeometryGraph.Editor {
             return (port, field);
         }
         
-        private static void SetFieldVisible(GraphFrameworkPort port, VisualElement field, bool visible) {
-            field.SetEnabled(visible);
+        private static void SetFieldVisible(GraphFrameworkPort port, bool visible) {
+            port.field.SetEnabled(visible);
             port.fieldVisible = visible;
+            
+            if(!port.portVisible) return;
 
             if (visible) {
-                field.RemoveFromClassList("d-none");
+                port.field.RemoveFromClassList("d-none");
             } else {
-                field.AddToClassList("d-none");
+                port.field.AddToClassList("d-none");
             }
         }
 
 
-        private static void SetCompFieldVisible(GraphFrameworkPort port, VisualElement field, bool visible) {
-            field.SetEnabled(visible);
+        private static void SetCompFieldVisible(GraphFrameworkPort port, bool visible) {
+            port.field.SetEnabled(visible);
             port.fieldVisible = visible;
 
+            if(!port.portVisible) return;
+            
             if (visible) {
-                field.RemoveFromClassList("d-none");
+                port.field.RemoveFromClassList("d-none");
                 port.m_ConnectorText.text = string.Empty;
             } else {
-                field.AddToClassList("d-none");
+                port.field.AddToClassList("d-none");
                 port.m_ConnectorText.text = port.label;
             }
         }
