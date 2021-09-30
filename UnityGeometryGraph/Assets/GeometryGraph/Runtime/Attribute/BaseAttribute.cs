@@ -172,6 +172,10 @@ namespace GeometryGraph.Runtime.Attribute {
             return otherAttribute;
         }
 
+        public static BaseAttribute Into(this IEnumerable values, string name, AttributeType type, AttributeDomain domain) {
+            return Into(values, name, domain, AttributeUtility.AttributeTypeToSystemType(type));
+        }
+
         public static TAttribute Into<TAttribute>(this BaseAttribute attribute, string name, AttributeDomain? domain = null) where TAttribute : BaseAttribute {
             return (TAttribute)Into(attribute, name, new AttributeDomain?(domain ?? attribute.Domain), typeof(TAttribute));
         }
