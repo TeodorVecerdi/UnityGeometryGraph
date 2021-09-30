@@ -50,7 +50,8 @@ namespace GeometryGraph.Runtime.Graph {
             if (outputPort == null) return defaultValue;
 
             var value = outputPort.Node.GetValueForPort(outputPort);
-            if (value is T tValue) return tValue;
+            var tValue = (T)value;
+            if (tValue != null) return tValue;
             return (T)PortValueConverter.Convert(value, outputPort.Type, connection.Input.Type);
         }
 
@@ -58,7 +59,8 @@ namespace GeometryGraph.Runtime.Graph {
             if (port.Connections.Count == 0) yield return defaultValue;
             foreach (var connection in port.Connections) {
                 var value = connection.Output.Node.GetValueForPort(connection.Output);
-                if (value is T tValue) yield return tValue;
+                var tValue = (T)value;
+                if (tValue != null) yield return tValue;
                 else yield return (T)PortValueConverter.Convert(value, connection.Output.Type, connection.Input.Type);
             }
         }
@@ -69,10 +71,7 @@ namespace GeometryGraph.Runtime.Graph {
                 return defaultValue;
             }
 
-            var outputPort = firstConnection.Output;
-            var value = outputPort.Node.GetValueForPort(outputPort);
-            if (value is T tValue) return tValue;
-            return (T)PortValueConverter.Convert(value, outputPort.Type, firstConnection.Input.Type);
+            return GetValue(firstConnection, defaultValue);
         }
 
         public void OnNodeRemoved() {
