@@ -79,7 +79,6 @@ namespace GeometryGraph.Runtime.Graph {
                 foreach (var connection in port.Connections) {
                     var otherPort = port.Direction == PortDirection.Input ? connection.Output : connection.Input;
                     otherPort.Node.NotifyConnectionRemoved(connection, port);
-                    otherPort.Connections.Remove(connection);
                 }
             }
         }
