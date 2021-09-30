@@ -89,7 +89,7 @@ namespace GeometryGraph.Runtime.Graph {
             
             switch (sampleType) {
                 case SampleCollectionNode_SampleType.AtIndex:
-                    result = collection[index % collection.Count];
+                    result = collection[index.Mod(collection.Count)];
                     break;
                 case SampleCollectionNode_SampleType.Random:
                     Rand.PushState(seed);
