@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GeometryGraph.Runtime.Graph;
-using Newtonsoft.Json;
+using K4os.Compression.LZ4;
+using K4os.Compression.LZ4.Streams;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace GeometryGraph.Editor {
     public static class GraphFrameworkUtility {
         #region IO Utilities
+
+        private static readonly LZ4EncoderSettings EncoderSettings = new LZ4EncoderSettings { CompressionLevel = LZ4Level.L09_HC };
+        
         public static bool CreateFile(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
             if (graphObject == null || string.IsNullOrEmpty(path)) return false;
 
@@ -24,8 +26,8 @@ namespace GeometryGraph.Editor {
         }
 
         public static void CreateFileNoUpdate(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
-            var jsonString = JsonUtility.ToJson(graphObject.GraphData);
-            File.WriteAllText(path, jsonString);
+            var json = JsonUtility.ToJson(graphObject.GraphData);
+            WriteCompressed(json, path);
             if (refreshAsset) AssetDatabase.ImportAsset(path);
         }
 
@@ -37,7 +39,7 @@ namespace GeometryGraph.Editor {
             if (string.IsNullOrEmpty(assetPath)) return false;
 
             var jsonString = JsonUtility.ToJson(graphObject.GraphData);
-            File.WriteAllText(assetPath, jsonString);
+            WriteCompressed(jsonString, assetPath);
             if (refreshAsset) AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
             return true;
         }
@@ -45,7 +47,7 @@ namespace GeometryGraph.Editor {
         public static GraphFrameworkObject LoadGraphAtPath(string assetPath) {
             if (string.IsNullOrEmpty(assetPath)) return null;
 
-            var jsonString = File.ReadAllText(assetPath);
+            var jsonString = ReadCompressed(assetPath);
             try {
                 var graphData = JsonUtility.FromJson<GraphFrameworkData>(jsonString);
                 var graphObject = ScriptableObject.CreateInstance<GraphFrameworkObject>();
@@ -66,6 +68,22 @@ namespace GeometryGraph.Editor {
 
             return LoadGraphAtPath(assetPath);
         }
+
+        internal static void WriteCompressed(string value, string path) {
+            var bytes = System.Text.Encoding.UTF8.GetBytes(value);
+            using var byteStream = new MemoryStream(bytes);
+            using var lz4Stream = LZ4Stream.Encode(File.Create(path), EncoderSettings);
+            byteStream.CopyTo(lz4Stream);
+        }
+
+        internal static string ReadCompressed(string path) {
+            using var lz4Stream = LZ4Stream.Decode(File.OpenRead(path));
+            using var memoryStream = new MemoryStream();
+            lz4Stream.CopyTo(memoryStream);
+
+            return System.Text.Encoding.UTF8.GetString(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
+        }
+        
         #endregion
 
         /// <summary>
