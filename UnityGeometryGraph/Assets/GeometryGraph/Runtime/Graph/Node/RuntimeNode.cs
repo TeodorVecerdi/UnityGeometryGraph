@@ -50,9 +50,24 @@ namespace GeometryGraph.Runtime.Graph {
             if (outputPort == null) return defaultValue;
 
             var value = outputPort.Node.GetValueForPort(outputPort);
-            var tValue = (T)value;
-            if (tValue != null) return tValue;
+            
+            if (PortTypeUtility.IsUnmanagedType(outputPort.Type)) {
+                if (value is T tValueUnmanaged) return tValueUnmanaged;
+            } else {
+                var tValue = (T)value;
+                if (tValue != null) return tValue;
+            }
+            
             return (T)PortValueConverter.Convert(value, outputPort.Type, connection.Input.Type);
+        }
+
+        protected T GetValue<T>(RuntimePort port, T defaultValue) {
+            var firstConnection = port.Connections.FirstOrDefault();
+            if (firstConnection == null) {
+                return defaultValue;
+            }
+
+            return GetValue(firstConnection, defaultValue);
         }
 
         protected IEnumerable<T> GetValues<T>(RuntimePort port, T defaultValue) {
@@ -63,15 +78,6 @@ namespace GeometryGraph.Runtime.Graph {
                 if (tValue != null) yield return tValue;
                 else yield return (T)PortValueConverter.Convert(value, connection.Output.Type, connection.Input.Type);
             }
-        }
-
-        protected T GetValue<T>(RuntimePort port, T defaultValue) {
-            var firstConnection = port.Connections.FirstOrDefault();
-            if (firstConnection == null) {
-                return defaultValue;
-            }
-
-            return GetValue(firstConnection, defaultValue);
         }
 
         public void OnNodeRemoved() {
@@ -89,6 +95,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
+            Debug.Log("OnConnectionRemoved");
             var selfPort = output.Node == this ? output : input;
             var index = selfPort.Connections.FindIndex(connection => connection.Output == output && connection.Input == input);
             if (index != -1) {
