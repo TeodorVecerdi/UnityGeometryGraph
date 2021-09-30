@@ -44,6 +44,7 @@ namespace GeometryGraph.Runtime.Graph {
                 default: throw new ArgumentOutOfRangeException(nameof(which), which, null);
             }
 
+            Calculate();
             NotifyPortValueChanged(ResultPort);
         }
 

@@ -38,6 +38,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public bool HasAttribute(string name) {
+            if (name == null) return false;
             return vertexAttributes.ContainsKey(name) ||
                    edgeAttributes.ContainsKey(name) ||
                    faceAttributes.ContainsKey(name) ||
@@ -45,6 +46,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public bool HasAttribute(string name, AttributeType type) {
+            if (name == null) return false;
             return vertexAttributes.ContainsKey(name) && vertexAttributes[name].Type == type ||
                    edgeAttributes.ContainsKey(name) && edgeAttributes[name].Type == type ||
                    faceAttributes.ContainsKey(name) && faceAttributes[name].Type == type ||
@@ -52,6 +54,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public bool HasAttribute(string name, AttributeDomain domain) {
+            if (name == null) return false;
             var searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
@@ -64,6 +67,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public bool HasAttribute(string name, AttributeType type, AttributeDomain domain) {
+            if (name == null) return false;
             var searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
