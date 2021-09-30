@@ -95,6 +95,18 @@ namespace GeometryGraph.Runtime.Graph {
             foreach (var property in RuntimeData.Properties) {
                 property.Value = propertyData[property.Guid].GetValueForPropertyType(property.Type);
             }
+            
+            // Call NotifyPortValueChanged on all property nodes
+            foreach (var runtimeNode in RuntimeData.Nodes) {
+                switch (runtimeNode) {
+                    case GeometryObjectPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
+                    case GeometryCollectionPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
+                    case IntegerPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
+                    case FloatPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
+                    case VectorPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
+                    default: continue;
+                }
+            }
         }
 
         private void CleanupScenePropertyValues() {
