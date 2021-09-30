@@ -16,7 +16,9 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "Newtonsoft.Json.dll"
+        "Newtonsoft.Json.dll",
+        "K4os.Compression.LZ4.dll",
+        "K4os.Compression.LZ4.Streams.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
