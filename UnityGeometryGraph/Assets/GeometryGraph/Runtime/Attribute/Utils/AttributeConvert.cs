@@ -211,7 +211,12 @@ namespace GeometryGraph.Runtime.Attribute {
     
     // Type conversion
     internal static partial class AttributeConvert {
-        // oof sorry 
+
+        internal static object ConvertType(object value, AttributeType from, AttributeType to) {
+            return ConvertType<object>(value, from, to);
+        }
+
+        // oof 
         internal static T ConvertType<T>(object value, AttributeType from, AttributeType to) {
             return from switch {
                 AttributeType.Boolean => to switch {
