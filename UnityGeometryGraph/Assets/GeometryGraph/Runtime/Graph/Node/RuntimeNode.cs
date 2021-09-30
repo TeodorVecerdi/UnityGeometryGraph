@@ -95,7 +95,6 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
-            Debug.Log("OnConnectionRemoved");
             var selfPort = output.Node == this ? output : input;
             var index = selfPort.Connections.FindIndex(connection => connection.Output == output && connection.Input == input);
             if (index != -1) {

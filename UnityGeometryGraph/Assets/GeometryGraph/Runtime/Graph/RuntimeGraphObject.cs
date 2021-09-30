@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using GeometryGraph.Runtime.Geometry;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
@@ -63,13 +65,24 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
 
-        public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
-            foreach (var connection in RuntimeData.Connections.Where(connection => connection.OutputGuid == output.Guid && connection.InputGuid == input.Guid)) {
-                connection.Input.Connections.Remove(connection);
-                connection.Output.Connections.Remove(connection);
+        public void OnConnectionRemoved(string outputGuid, string inputGuid) {
+            foreach (var connection in RuntimeData.Connections.Where(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid)) {
+                foreach (var runtimePort in connection.Output.Node.Ports) {
+                    if (string.Equals(runtimePort.Guid, outputGuid, StringComparison.InvariantCulture)) {
+                        runtimePort.Connections.Remove(connection);
+                        break;
+                    }
+                }
+                
+                foreach (var runtimePort in connection.Input.Node.Ports) {
+                    if (string.Equals(runtimePort.Guid, inputGuid, StringComparison.InvariantCulture)) {
+                        runtimePort.Connections.Remove(connection);
+                        break;
+                    }
+                }
             } 
 
-            RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == output.Guid && connection.InputGuid == input.Guid);
+            RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
         }
 
         public void OnPropertyUpdated(string propertyGuid, string newDisplayName) {

@@ -209,14 +209,15 @@ namespace GeometryGraph.Editor {
             foreach (var removedEdge in graphObject.GraphData.RemovedEdges) {
                 var inputPort = (GraphFrameworkPort)removedEdge.Edge?.input;
                 var outputPort = (GraphFrameworkPort)removedEdge.Edge?.output;
-                if (inputPort == null || outputPort == null) {
-                } else {
+                
+                if (inputPort != null && outputPort != null) {
                     var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
                     runtimeInput.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
                     runtimeOutput.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
-                    graphObject.RuntimeGraph.OnConnectionRemoved(runtimeOutput, runtimeInput);
                 }
+
+                graphObject.RuntimeGraph.OnConnectionRemoved(removedEdge.OutputPort, removedEdge.InputPort);
 
                 RemoveEdge(removedEdge);
             }
