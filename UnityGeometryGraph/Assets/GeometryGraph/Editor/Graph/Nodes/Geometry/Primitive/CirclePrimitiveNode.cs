@@ -22,8 +22,8 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Circle Primitive", EditorView.DefaultNodePosition);
 
-            (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(radius, Which.Radius));
+            (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(points, Which.Points));
             resultPort = GraphFrameworkPort.Create("Circle", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             radiusField.RegisterValueChangedCallback(evt => {

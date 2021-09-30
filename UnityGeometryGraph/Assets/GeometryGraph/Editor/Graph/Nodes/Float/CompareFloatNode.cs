@@ -45,9 +45,9 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Compare", EditorView.DefaultNodePosition);
 
-            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("B", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
+            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(tolerance, Which.Tolerance));
+            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(a, Which.A));
+            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("B", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(b, Which.B));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
             operationButton = new EnumSelectionButton<CompareOperation>(operation, compareOperationTree);

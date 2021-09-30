@@ -28,10 +28,10 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Cylinder Primitive", EditorView.DefaultNodePosition);
 
-            (bottomRadiusPort, bottomRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Bottom Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (topRadiusPort, topRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Top Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (bottomRadiusPort, bottomRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Bottom Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(bottomRadius, Which.BottomRadius));
+            (topRadiusPort, topRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Top Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(topRadius, Which.TopRadius));
+            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(height, Which.Height));
+            (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(points, Which.Points));
             resultPort = GraphFrameworkPort.Create("Cylinder", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             topRadiusField.RegisterValueChangedCallback(evt => {

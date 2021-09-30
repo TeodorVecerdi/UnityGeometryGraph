@@ -46,9 +46,9 @@ namespace GeometryGraph.Editor {
             Initialize("Scale Points", EditorView.DefaultNodePosition);
 
             inputPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener, this);
-            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Factor", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
-            (scalarPort, scalarField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Factor", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this);
+            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Factor", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector, Which.Vector));
+            (scalarPort, scalarField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Factor", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(scalar, Which.Scalar));
+            (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(attributeName, Which.AttributeName));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             modeButton = new EnumSelectionButton<Mode>(mode, tree);

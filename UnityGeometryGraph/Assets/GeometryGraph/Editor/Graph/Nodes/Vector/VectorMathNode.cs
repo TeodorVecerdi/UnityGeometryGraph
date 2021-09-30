@@ -100,12 +100,12 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Vector Math", EditorView.DefaultNodePosition);
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("X", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Y", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
-            (wrapMaxPort, wrapMaxField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Max", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
-            (iorPort, iorField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("IOR", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Scale", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (distancePort, distanceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Distance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("X", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(x, Which.X));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Y", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(y, Which.Y));
+            (wrapMaxPort, wrapMaxField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Max", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(wrapMax, Which.WrapMax));
+            (iorPort, iorField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("IOR", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(ior, Which.IOR));
+            (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Scale", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(scale, Which.Scale));
+            (distancePort, distanceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Distance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(distance, Which.Distance));
             
             vectorResultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
             floatResultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);

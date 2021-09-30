@@ -84,10 +84,10 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Float Math", EditorView.DefaultNodePosition);
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (extraPort, extraField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(x, Which.X));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(y, Which.Y));
+            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(tolerance, Which.Tolerance));
+            (extraPort, extraField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(extra, Which.Extra));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
 
             operationButton = new EnumSelectionButton<MathOperation>(operation, mathOperationTree);

@@ -17,7 +17,7 @@ namespace GeometryGraph.Editor {
             Initialize("Random Float", EditorView.DefaultNodePosition);
 
             valuePort = GraphFrameworkPort.Create("Value", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
-            (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateSeed(seed));
             seedField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed seed");
                 seed = evt.newValue;

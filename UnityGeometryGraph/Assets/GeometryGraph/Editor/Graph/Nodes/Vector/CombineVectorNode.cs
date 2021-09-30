@@ -27,9 +27,9 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Combine", EditorView.DefaultNodePosition);
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (zPort, zField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Z", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector.x, Which.X));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector.y, Which.Y));
+            (zPort, zField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Z", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector.z, Which.Z));
             vectorPort = GraphFrameworkPort.Create("Vector", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
 
             xField.RegisterValueChangedCallback(evt => {

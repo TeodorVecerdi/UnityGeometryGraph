@@ -39,8 +39,8 @@ namespace GeometryGraph.Editor {
             Initialize("Sample Collection", EditorView.DefaultNodePosition);
 
             collectionPort = GraphFrameworkPort.Create("Collection", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Collection, edgeConnectorListener, this);
-            (indexPort, indexField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Index", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
-            (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (indexPort, indexField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Index", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(index, Which.Index));
+            (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(seed, Which.Seed));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             sampleTypeButton = new EnumSelectionButton<SampleType>(sampleType, tree);

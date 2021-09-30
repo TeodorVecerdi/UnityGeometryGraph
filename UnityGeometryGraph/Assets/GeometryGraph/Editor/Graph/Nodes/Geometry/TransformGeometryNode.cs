@@ -36,7 +36,8 @@ namespace GeometryGraph.Editor {
             outputGeometryPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false
+                "Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, 
+                onDisconnect: (_, _) => RuntimeNode.UpdateDefaultValue(defaultTranslation, WhichDefaultValue.Translation)
             );
             translationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Translation value");
@@ -44,7 +45,8 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateDefaultValue(defaultTranslation, WhichDefaultValue.Translation);
             });
             (rotationPort, eulerRotationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Rotation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false
+                "Rotation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, 
+                onDisconnect: (_, _) => RuntimeNode.UpdateDefaultValue(defaultEulerRotation, WhichDefaultValue.Rotation)
             );
             eulerRotationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Rotation value");
@@ -53,7 +55,8 @@ namespace GeometryGraph.Editor {
             });
             
             (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Scale", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false
+                "Scale", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, 
+                onDisconnect: (_, _) => RuntimeNode.UpdateDefaultValue(defaultScale, WhichDefaultValue.Scale)
             );
             scaleField.SetValueWithoutNotify(float3_util.one);
             scaleField.RegisterValueChangedCallback(evt => {

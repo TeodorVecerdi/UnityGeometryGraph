@@ -51,11 +51,11 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Rotate", EditorView.DefaultNodePosition);
 
-            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
-            (centerPort, centerField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Center", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
-            (axisPort, axisField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Axis", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
-            (eulerAnglesPort, eulerAnglesField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Euler", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
-            (anglePort, angleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Angle", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
+            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector, Which.Vector));
+            (centerPort, centerField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Center", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(center, Which.Center));
+            (axisPort, axisField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Axis", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(axis, Which.Axis));
+            (eulerAnglesPort, eulerAnglesField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Euler", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(eulerAngles, Which.Euler));
+            (anglePort, angleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Angle", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(angle, Which.Angle));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
 
             rotationTypeButton = new EnumSelectionButton<RotationType>(rotationType, compareOperationTree);

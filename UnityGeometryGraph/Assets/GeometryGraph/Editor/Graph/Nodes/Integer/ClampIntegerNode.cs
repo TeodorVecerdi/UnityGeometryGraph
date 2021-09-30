@@ -26,9 +26,9 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Clamp", EditorView.DefaultNodePosition);
 
-            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Input", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
-            (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
-            (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Max", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Input", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue, Which.Input));
+            (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(minValue, Which.Min));
+            (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Max", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(maxValue, Which.Max));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Integer, edgeConnectorListener, this);
 
             inputField.RegisterValueChangedCallback(evt => {

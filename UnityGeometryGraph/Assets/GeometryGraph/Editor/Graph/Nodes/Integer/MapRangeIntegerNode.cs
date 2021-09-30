@@ -34,11 +34,11 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Map Range", EditorView.DefaultNodePosition);
 
-            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Input", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
-            (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("From Min", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
-            (fromMaxPort, fromMaxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("From Max", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
-            (toMinPort, toMinField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("To Min", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
-            (toMaxPort, toMaxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("To Max", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Input", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue, Which.Input));
+            (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("From Min", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(fromMin, Which.FromMin));
+            (fromMaxPort, fromMaxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("From Max", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(fromMax, Which.FromMax));
+            (toMinPort, toMinField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("To Min", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(toMin, Which.ToMin));
+            (toMaxPort, toMaxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("To Max", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(toMax, Which.ToMax));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Integer, edgeConnectorListener, this);
 
             clampField = new Toggle("Clamp");

@@ -40,8 +40,8 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Compare", EditorView.DefaultNodePosition);
 
-            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("A", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
-            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("B", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("A", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(a, Which.A));
+            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("B", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(b, Which.B));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
             operationButton = new EnumSelectionButton<CompareOperation>(operation, compareOperationTree);

@@ -26,9 +26,9 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Plane Primitive", EditorView.DefaultNodePosition);
 
-            (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Width", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this);
-            (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Subdivisions", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this);
+            (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Width", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.x, Which.Width));
+            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.y, Which.Height));
+            (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Subdivisions", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions));
             resultPort = GraphFrameworkPort.Create("Plane", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             widthField.RegisterValueChangedCallback(evt => {

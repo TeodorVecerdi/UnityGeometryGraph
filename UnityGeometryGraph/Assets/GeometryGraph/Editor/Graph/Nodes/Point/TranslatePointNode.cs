@@ -42,8 +42,8 @@ namespace GeometryGraph.Editor {
             Initialize("Translate Points", EditorView.DefaultNodePosition);
 
             inputPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener, this);
-            (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
-            (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this);
+            (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(translation, Which.Translation));
+            (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(attributeName, Which.AttributeName));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             modeButton = new EnumSelectionButton<Mode>(mode, tree);

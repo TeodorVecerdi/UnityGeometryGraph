@@ -37,8 +37,8 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Boolean Math", EditorView.DefaultNodePosition);
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("X", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this);
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Y", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this);
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("X", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(x, Which.A));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Y", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(y, Which.B));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
             operationButton = new EnumSelectionButton<Operation>(operation, compareOperationTree);

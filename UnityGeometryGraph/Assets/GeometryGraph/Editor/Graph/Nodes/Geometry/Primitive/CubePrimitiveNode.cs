@@ -21,7 +21,7 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Cube Primitive", EditorView.DefaultNodePosition);
 
-            (sizePort, sizeField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Size", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false);
+            (sizePort, sizeField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Size", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateSize(size));
             resultPort = GraphFrameworkPort.Create("Cube", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             sizeField.RegisterValueChangedCallback(evt => {
