@@ -75,7 +75,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
-            result = GeometryData.MakePlane(size, subdivisions);
+            result = Primitive.Plane(size, subdivisions);
         }
         
         public override string GetCustomData() {

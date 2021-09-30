@@ -44,7 +44,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
-            result = GeometryData.MakeCube(size);
+            result = Primitive.Cube(size);
         }
 
         public override string GetCustomData() {

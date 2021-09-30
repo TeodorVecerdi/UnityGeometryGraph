@@ -35,7 +35,7 @@ namespace GeometryGraph.Runtime.Geometry {
             submeshCount = 0;
         }
 
-        private GeometryData(IEnumerable<Edge> edges, IEnumerable<Face> faces, IEnumerable<FaceCorner> faceCorners, int submeshCount,
+        public GeometryData(IEnumerable<Edge> edges, IEnumerable<Face> faces, IEnumerable<FaceCorner> faceCorners, int submeshCount,
                              IEnumerable<float3> vertexPositions, IEnumerable<float3> faceNormals, IEnumerable<int> materialIndices,
                              IEnumerable<bool> smoothShaded, IEnumerable<float> creases, IEnumerable<float2> uvs) {
             vertices = new List<Vertex>();

@@ -63,7 +63,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
-            result = GeometryData.MakeCircle(radius, points);
+            result = Primitive.Circle(radius, points);
         }
         
         public override string GetCustomData() {

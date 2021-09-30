@@ -75,7 +75,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
-            result = GeometryData.MakeCone(radius, height, points);
+            result = Primitive.Cone(radius, height, points);
         }
         
         public override string GetCustomData() {
