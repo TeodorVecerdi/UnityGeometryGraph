@@ -6,6 +6,8 @@
         Boolean,
         Geometry,
         Collection,
-        Any
+        String,
+        
+        Any = int.MaxValue
     }
 }
