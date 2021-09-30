@@ -59,7 +59,7 @@ namespace GeometryGraph.Runtime.Graph {
             foreach (var connection in port.Connections) {
                 var value = connection.Output.Node.GetValueForPort(connection.Output);
                 if (value is T tValue) yield return tValue;
-                yield return (T)PortValueConverter.Convert(value, connection.Output.Type, connection.Input.Type);
+                else yield return (T)PortValueConverter.Convert(value, connection.Output.Type, connection.Input.Type);
             }
         }
 

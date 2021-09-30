@@ -28,6 +28,8 @@ namespace GeometryGraph.Runtime {
             return ((x - min) % (max - min) + (max - min)) % (max - min) + min;
         }
 
+        public static int Mod(this int a, int n) => a % n < 0 ? a + n : a;
+
         public static Vector3 WrapPI(Vector3 a) {
             if (a.x < -180.0f) a.x += 360.0f;
             else if (a.x > 180.0f) a.x -= 360.0f;
@@ -57,6 +59,8 @@ namespace GeometryGraph.Runtime {
 
     public static class float2_util {
         public static readonly float2 one = new float2(1);
+        public static readonly float2 right = new float2(1, 0);
+        public static readonly float2 up = new float2(0, 1);
     }
 }
 // ReSharper restore InconsistentNaming
