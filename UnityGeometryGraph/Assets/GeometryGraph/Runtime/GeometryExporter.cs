@@ -110,9 +110,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var v0 = positionAttr[face.VertA];
             var v1 = positionAttr[face.VertB];
             var v2 = positionAttr[face.VertC];
-            var uv0 = uvAttr[face.FaceCornerA];
-            var uv1 = uvAttr[face.FaceCornerB];
-            var uv2 = uvAttr[face.FaceCornerC];
+            
             var t0 = 0 + triangleOffset;
             var t1 = 1 + triangleOffset;
             var t2 = 2 + triangleOffset;
@@ -124,9 +122,19 @@ namespace GeometryGraph.Runtime.Geometry {
             normals.Add(normal0);
             normals.Add(normal1);
             normals.Add(normal2);
-            uvs.Add(uv0);
-            uvs.Add(uv1);
-            uvs.Add(uv2);
+            
+            if (uvAttr != null) {
+                var uv0 = uvAttr[face.FaceCornerA];
+                var uv1 = uvAttr[face.FaceCornerB];
+                var uv2 = uvAttr[face.FaceCornerC];
+                uvs.Add(uv0);
+                uvs.Add(uv1);
+                uvs.Add(uv2);
+            } else {
+                uvs.Add(Vector2.zero);
+                uvs.Add(Vector2.right);
+                uvs.Add(Vector2.up);
+            }
 
             var faceNormal = normalAttr[faceIndex];
             var calculatedNormal = math.normalize(math.cross(vertices[t1] - vertices[t0], vertices[t2] - vertices[t0]));
@@ -200,7 +208,7 @@ namespace GeometryGraph.Runtime.Geometry {
             }
             
             var otherVertex = positionAttr[otherVertexIndex];
-            var otherUV = uvAttr[otherFaceCornerIndex];
+            var otherUV = uvAttr != null ? uvAttr[otherFaceCornerIndex] : float2.zero;
             var normal = !shadeSmoothAttr[sharedA] 
                 ? normalAttr[sharedA]
                 : math.normalize(geometry.Vertices[otherVertexIndex].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));

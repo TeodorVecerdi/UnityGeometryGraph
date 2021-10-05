@@ -49,7 +49,7 @@ public class DoubleQuadMeshGenerator : MonoBehaviour {
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
 
-        if (target.sharedMesh.name.StartsWith("$$_", StringComparison.InvariantCulture)) {
+        if (target.sharedMesh != null && target.sharedMesh.name.StartsWith("$$_", StringComparison.InvariantCulture)) {
             DestroyImmediate(target.sharedMesh);
         }
         target.sharedMesh = mesh;
