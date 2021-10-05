@@ -94,7 +94,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public void Calculate() {
             if (geometry == null) return;
-            result = (GeometryData) geometry.Clone();
+            result = geometry.Clone();
             var scaleAttr = result.GetAttribute<Vector3Attribute>("scale", AttributeDomain.Vertex);
             scaleAttr ??= Enumerable.Repeat(float3_util.one, result.Vertices.Count).Into<Vector3Attribute>("scale", AttributeDomain.Vertex);
             

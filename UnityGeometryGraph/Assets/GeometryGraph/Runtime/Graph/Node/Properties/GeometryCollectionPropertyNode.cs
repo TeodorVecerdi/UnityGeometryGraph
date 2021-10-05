@@ -24,7 +24,7 @@ namespace GeometryGraph.Runtime.Graph {
             if ((Object)value != null) {
                 objectValue = (GeometryCollection)value;
             }
-            return objectValue == null ? (IEnumerable<GeometryData>)Array.Empty<GeometryData>() : (IEnumerable<GeometryData>)objectValue.Collection.Select(data => (GeometryData)data.Clone());
+            return objectValue == null ? (IEnumerable<GeometryData>)Array.Empty<GeometryData>() : (IEnumerable<GeometryData>)objectValue.Collection.Select(data => data.Clone());
         }
         
         public override void RebindPorts() {

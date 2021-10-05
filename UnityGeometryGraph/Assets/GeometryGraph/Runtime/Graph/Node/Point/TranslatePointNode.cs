@@ -81,7 +81,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public void Calculate() {
             if (geometry == null) return;
-            result = (GeometryData) geometry.Clone();
+            result = geometry.Clone();
             var positionAttr = result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             if (mode == TranslatePointNode_Mode.Vector) {
                 positionAttr.Yield(position => position + translation).Into(positionAttr);
