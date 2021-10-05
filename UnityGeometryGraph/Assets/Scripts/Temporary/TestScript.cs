@@ -1,21 +1,22 @@
-﻿using System.Text;
-using GeometryGraph.Runtime.Graph;
+﻿using GeometryGraph.Runtime.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
-    public class TestScript : MonoBehaviour {
-        public RuntimeGraphObject RuntimeGraphObject;
-        
-        [Button]
-        private void PrintChildHierarchy() {
-            var allChildTransforms = GetComponentsInChildren<Transform>(true);
-            var sb = new StringBuilder();
-            foreach (var childTransform in allChildTransforms) {
-                sb.AppendLine($"{childTransform.gameObject.name} {childTransform.gameObject.activeSelf}");
-            }
+    public class TestScript : SerializedMonoBehaviour, IGeometryProvider {
+        public IGeometryProvider GeometryProvider;
+        public GeometryExporter Exporter;
+        public int Levels = 1;
+        public GeometryData Subdivided;
 
-            Debug.Log(sb.ToString());
+        [Button]
+        private void Subdivide() {
+            if (GeometryProvider == null) return;
+            Subdivided = SimpleSubdivision.Subdivide(GeometryProvider.Geometry, Levels);
+            Exporter.Export(Subdivided);
         }
+
+        public GeometryData Geometry => Subdivided;
+        public Matrix4x4 LocalToWorldMatrix => transform.localToWorldMatrix;
     }
 }
