@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,8 +13,8 @@ namespace GeometryGraph.Editor {
         private readonly BlackboardField field;
         private readonly EditorView editorView;
         private AbstractProperty property;
+        private VisualElement defaultValueField;
 
-        private TextField referenceNameField;
         private List<VisualElement> rows;
         public List<VisualElement> Rows => rows;
 
@@ -48,54 +50,60 @@ namespace GeometryGraph.Editor {
                     evt.StopPropagation();
                 }
 
-                // Dont record Undo again until input field is unfocused
+                // Don't record Undo again until input field is unfocused
                 undoGroup++;
                 MarkDirtyRepaint();
             };
 
-            focusOutCallback = evt => undoGroup = -1;
+            focusOutCallback = _ => undoGroup = -1;
 
-            // BuildFields(property);
+            BuildFields(property);
             AddToClassList("blackboardPropertyView");
         }
 
         private void BuildFields(AbstractProperty property) {
-            referenceNameField = new TextField(512, false, false, ' ') {isDelayed = true, value = property.ReferenceName};
-            referenceNameField.AddStyleSheet("Styles/PropertyView/ReferenceNameField");
-            referenceNameField.RegisterValueChangedCallback(evt => {
-                editorView.GraphObject.RegisterCompleteObjectUndo("Change Reference Name");
-                editorView.GraphObject.GraphData.SanitizePropertyReference(property, evt.newValue);
-                referenceNameField.value = property.ReferenceName;
-                if (string.IsNullOrEmpty(property.OverrideReferenceName))
-                    referenceNameField.RemoveFromClassList("modified");
-                else
-                    referenceNameField.AddToClassList("modified");
+            switch (property) {
+                case GeometryObjectProperty:
+                case GeometryCollectionProperty:
+                    return;
 
-                Rebuild();
-                UpdateReferenceNameResetMenu();
-            });
-            if (!string.IsNullOrEmpty(property.OverrideReferenceName))
-                referenceNameField.AddToClassList("modified");
+                case IntegerProperty integerProperty: {
+                    defaultValueField = new IntegerField() {isDelayed = true, value = integerProperty.Value};
+                    var intField = (IntegerField) defaultValueField;
+                    intField.RegisterValueChangedCallback(evt => {
+                        editorView.GraphObject.RegisterCompleteObjectUndo($"Change {property.DisplayName} default value");
+                        integerProperty.Value = evt.newValue;
+                        editorView.GraphObject.RuntimeGraph.OnPropertyDefaultValueChanged(integerProperty.GUID, evt.newValue);
+                    });
+                    break;
+                }
+                case FloatProperty floatProperty: {
+                    defaultValueField = new FloatField() {isDelayed = true, value = floatProperty.Value};
+                    var floatField = (FloatField) defaultValueField;
+                    floatField.RegisterValueChangedCallback(evt => {
+                        editorView.GraphObject.RegisterCompleteObjectUndo($"Change {property.DisplayName} default value");
+                        floatProperty.Value = evt.newValue;
+                        editorView.GraphObject.RuntimeGraph.OnPropertyDefaultValueChanged(floatProperty.GUID, evt.newValue);
+                    });
+                    break;
+                }
+                case VectorProperty vectorProperty: {
+                    defaultValueField = new Vector3Field() {value = vectorProperty.Value};
+                    var vecField = (Vector3Field) defaultValueField;
+                    vecField.RegisterValueChangedCallback(evt => {
+                        editorView.GraphObject.RegisterCompleteObjectUndo($"Change {property.DisplayName} default value");
+                        vectorProperty.Value = evt.newValue;
+                        editorView.GraphObject.RuntimeGraph.OnPropertyDefaultValueChanged(vectorProperty.GUID, (float3)evt.newValue);
+                    });
+                    break;
+                }
 
-            AddRow("Reference Name", referenceNameField);
-        }
-
-        private void UpdateReferenceNameResetMenu() {
-            if (string.IsNullOrEmpty(property.OverrideReferenceName)) {
-                this.RemoveManipulator(resetReferenceMenu);
-                resetReferenceMenu = null;
-            } else {
-                resetReferenceMenu = (IManipulator) Activator.CreateInstance(contextualMenuManipulator, (Action<ContextualMenuPopulateEvent>) BuildContextualMenu);
-                this.AddManipulator(resetReferenceMenu);
+                default: throw new ArgumentOutOfRangeException(nameof(property), property, null);
             }
+            AddRow("Default Value", defaultValueField);
         }
 
         private void BuildContextualMenu(ContextualMenuPopulateEvent evt) {
-            evt.menu.AppendAction("Reset Reference", e => {
-                property.OverrideReferenceName = null;
-                referenceNameField.value = property.ReferenceName;
-                referenceNameField.RemoveFromClassList("modified");
-            }, DropdownMenuAction.AlwaysEnabled);
         }
 
         public VisualElement AddRow(string labelText, VisualElement control, bool enabled = true) {

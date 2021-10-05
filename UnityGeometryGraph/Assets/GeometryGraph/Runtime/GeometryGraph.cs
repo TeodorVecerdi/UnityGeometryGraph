@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private RuntimeGraphObject graph;
         [SerializeField] private GeometryGraphSceneData sceneData = new GeometryGraphSceneData();
         [SerializeField] private GeometryExporter exporter;
-        
+
         [SerializeField] private string graphGuid;
 
         public RuntimeGraphObject Graph {
@@ -23,12 +23,12 @@ namespace GeometryGraph.Runtime {
             get => graphGuid;
             set => graphGuid = value;
         }
-        
+
         public void Evaluate() {
             if(exporter == null) return;
             exporter.Export(graph.Evaluate(sceneData));
         }
-        
+
         public void OnPropertiesChanged(int newPropertyHashCode) {
             sceneData.PropertyHashCode = newPropertyHashCode;
             var toRemove = SceneData.PropertyData.Keys.Where(key => Graph.RuntimeData.Properties.All(property => !string.Equals(property.Guid, key, StringComparison.InvariantCulture))).ToList();
@@ -38,9 +38,13 @@ namespace GeometryGraph.Runtime {
 
             foreach (var property in Graph.RuntimeData.Properties) {
                 if (!SceneData.PropertyData.ContainsKey(property.Guid)) {
-                    SceneData.PropertyData[property.Guid] = new PropertyValue();
+                    SceneData.PropertyData[property.Guid] = new PropertyValue(property);
                 }
             }
+        }
+
+        public void OnDefaultPropertyValueChanged(Property property) {
+            sceneData.PropertyData[property.Guid].UpdateDefaultValue(property.Type, property.DefaultValue);
         }
 
     }
@@ -48,40 +52,66 @@ namespace GeometryGraph.Runtime {
     [Serializable] public class GeometryGraphSceneData {
         [SerializeField] private PropertyDataDictionary propertyData = new PropertyDataDictionary();
         [SerializeField] private int propertyHashCode;
-        
+
         public PropertyDataDictionary PropertyData => propertyData;
 
         public int PropertyHashCode {
             get => propertyHashCode;
             set => propertyHashCode = value;
         }
-        
+
         public void Reset() {
             Debug.Log("Reset");
             propertyData.Clear();
             propertyHashCode = 0;
         }
     }
-    
+
     [Serializable] public class PropertyDataDictionary : SerializedDictionary<string, PropertyValue> {}
 
     [Serializable] public class PropertyValue {
+        [SerializeField] public bool HasCustomValue;
         [SerializeField] public Object ObjectValue;
-        [SerializeField] public int IntValue; 
-        [SerializeField] public float FloatValue; 
-        [SerializeField] public float3 VectorValue; 
+        [SerializeField] public int IntValue;
+        [SerializeField] public float FloatValue;
+        [SerializeField] public float3 VectorValue;
         //!! Add more here as needed
+
+        public PropertyValue(Property property) {
+            HasCustomValue = false;
+            UpdateDefaultValue(property.Type, property.DefaultValue);
+        }
+
+        public void UpdateDefaultValue(PropertyType type, DefaultPropertyValue defaultPropertyValue) {
+            if (HasCustomValue) return;
+            switch(type) {
+                case PropertyType.GeometryObject:
+                case PropertyType.GeometryCollection:
+                    ObjectValue = null;
+                    break;
+                case PropertyType.Integer:
+                    IntValue = defaultPropertyValue.IntValue;
+                    break;
+                case PropertyType.Float:
+                    FloatValue = defaultPropertyValue.FloatValue;
+                    break;
+                case PropertyType.Vector:
+                    VectorValue = defaultPropertyValue.VectorValue;
+                    break;
+                default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
 
         public object GetValueForPropertyType(PropertyType type) {
             switch (type) {
                 case PropertyType.GeometryObject:
                 case PropertyType.GeometryCollection:
                     return ObjectValue;
-                
+
                 case PropertyType.Integer: return IntValue;
                 case PropertyType.Float:   return FloatValue;
                 case PropertyType.Vector:  return VectorValue;
-                
+
                 default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }

@@ -45,3 +45,8 @@ EnumSelectionButton.enum-dropdown-button .arrow-down {
     align-self: flex-end;
     background-image: resource("d_dropdown");
 }
+
+BlackboardRow.property-GeometryObject #expandButton, 
+BlackboardRow.property-GeometryCollection #expandButton {
+    display: none;
+}

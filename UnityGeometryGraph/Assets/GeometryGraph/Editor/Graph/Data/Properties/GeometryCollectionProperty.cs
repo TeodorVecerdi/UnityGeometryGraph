@@ -7,6 +7,8 @@ namespace GeometryGraph.Editor {
             Type = PropertyType.GeometryCollection;
         }
 
+        public override object DefaultValue => null;
+
         public override AbstractProperty Copy() {
             return new GeometryCollectionProperty {
                 DisplayName = DisplayName,

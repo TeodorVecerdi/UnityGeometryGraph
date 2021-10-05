@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using GeometryGraph.Runtime.Geometry;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
@@ -23,7 +24,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void OnPropertyAdded(Property property) {
-            if(RuntimeData.Properties.Any(p => p.Guid == property.Guid)) 
+            if(RuntimeData.Properties.Any(p => p.Guid == property.Guid))
                 return;
             RuntimeData.Properties.Add(property);
             RuntimeData.UpdatePropertyHashCode();
@@ -38,11 +39,38 @@ namespace GeometryGraph.Runtime.Graph {
         public void OnPropertyRemoved(string propertyGuid) {
             var removed = RuntimeData.Properties.RemoveAll(p => p.Guid == propertyGuid);
             if (removed != 0) RuntimeData.UpdatePropertyHashCode();
-            
+
 #if UNITY_EDITOR
             GeometryGraph graph;
             if (UnityEditor.Selection.activeGameObject == null || (graph = UnityEditor.Selection.activeGameObject.GetComponent<GeometryGraph>()) == null) return;
             graph.OnPropertiesChanged(RuntimeData.PropertyHashCode);
+#endif
+        }
+
+        public void OnPropertyDefaultValueChanged(string propertyGuid, object newValue) {
+            var property = RuntimeData.Properties.Find(p => p.Guid == propertyGuid);
+            if (property == null) {
+                Debug.LogError($"Updated value of non-existent property with guid {propertyGuid}");
+                return;
+            }
+
+            switch (property.Type) {
+                case PropertyType.GeometryObject:
+                case PropertyType.GeometryCollection:
+                    Debug.LogWarning($"Updating value of property type {property.Type} is not supported");
+                    break;
+                case PropertyType.Integer:
+                case PropertyType.Float:
+                case PropertyType.Vector:
+                    property.DefaultValue = new DefaultPropertyValue(property.Type, newValue);
+                    break;
+                default: throw new ArgumentOutOfRangeException(nameof(property.Type), property.Type, null);
+            }
+
+#if UNITY_EDITOR
+            GeometryGraph graph;
+            if (UnityEditor.Selection.activeGameObject == null || (graph = UnityEditor.Selection.activeGameObject.GetComponent<GeometryGraph>()) == null) return;
+            graph.OnDefaultPropertyValueChanged(property);
 #endif
         }
 
@@ -72,14 +100,14 @@ namespace GeometryGraph.Runtime.Graph {
                         break;
                     }
                 }
-                
+
                 foreach (var runtimePort in connection.Input.Node.Ports) {
                     if (string.Equals(runtimePort.Guid, inputGuid, StringComparison.InvariantCulture)) {
                         runtimePort.Connections.Remove(connection);
                         break;
                     }
                 }
-            } 
+            }
 
             RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
         }
@@ -87,7 +115,7 @@ namespace GeometryGraph.Runtime.Graph {
         public void OnPropertyUpdated(string propertyGuid, string newDisplayName) {
             foreach (var runtimeDataProperty in RuntimeData.Properties) {
                 if (runtimeDataProperty.Guid != propertyGuid) continue;
-            
+
                 runtimeDataProperty.DisplayName = newDisplayName;
                 break;
             }
@@ -107,7 +135,7 @@ namespace GeometryGraph.Runtime.Graph {
             foreach (var property in RuntimeData.Properties) {
                 property.Value = propertyData[property.Guid].GetValueForPropertyType(property.Type);
             }
-            
+
             // Call NotifyPortValueChanged on all property nodes
             foreach (var runtimeNode in RuntimeData.Nodes) {
                 switch (runtimeNode) {
@@ -123,7 +151,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         private void CleanupScenePropertyValues() {
             foreach (var property in RuntimeData.Properties) {
-                property.Value = null;
+                property.Value = property.DefaultValue;
             }
         }
     }

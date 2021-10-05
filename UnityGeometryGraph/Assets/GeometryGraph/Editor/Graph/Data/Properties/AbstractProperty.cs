@@ -11,7 +11,7 @@ namespace GeometryGraph.Editor {
         [SerializeField] private string defaultReferenceName;
         [SerializeField] private string overrideReferenceName;
         [SerializeField] private bool hidden;
-        
+
         public string DisplayName {
             get {
                 if (string.IsNullOrEmpty(name))
@@ -29,7 +29,7 @@ namespace GeometryGraph.Editor {
                     return defaultReferenceName;
                 }
                 return OverrideReferenceName;
-            }   
+            }
         }
 
         public string OverrideReferenceName {
@@ -45,7 +45,7 @@ namespace GeometryGraph.Editor {
         public virtual string GetDefaultReferenceName() {
             return $"{Type}_{ShortGuid}";
         }
-        
+
         public string ShortGuid {
             get {
                 if (string.IsNullOrEmpty(GUID))
@@ -56,18 +56,7 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        // public abstract object GetValue();
+        public abstract object DefaultValue { get; }
         public abstract AbstractProperty Copy();
-    }
-
-    [Serializable]
-    public abstract class AbstractProperty<T> : AbstractProperty {
-        private T value;
-        public T Value {
-            get => value;
-            set => this.value = value;
-        }
-
-        public T GetValue() => value;
     }
 }

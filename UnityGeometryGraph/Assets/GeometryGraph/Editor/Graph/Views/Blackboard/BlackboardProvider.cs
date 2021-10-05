@@ -13,14 +13,11 @@ namespace GeometryGraph.Editor {
         public Blackboard Blackboard { get; private set; }
         private readonly EditorView editorView;
         private readonly Dictionary<string, BlackboardRow> inputRows;
-        
+
         private readonly BlackboardSection section;
-        // private readonly BlackboardSection checkSection;
-        // private readonly BlackboardSection triggerSection;
-        // private readonly BlackboardSection actorSection;
-        
+
         private readonly List<Node> selectedNodes = new List<Node>();
-        
+
         public string AssetName {
             get => Blackboard.title;
             set => Blackboard.title = value;
@@ -97,8 +94,10 @@ namespace GeometryGraph.Editor {
                 editorView.GraphObject.GraphData.SanitizePropertyName(property);
             }
 
-            var field = new BlackboardField(exposedIcon, property.DisplayName, property.Type.ToString()) {userData = property};
+            var propertyTypeName = property.Type.ToString();
+            var field = new BlackboardField(exposedIcon, property.DisplayName, propertyTypeName) {userData = property};
             var row = new BlackboardRow(field, new BlackboardPropertyView(field, editorView, property)) {userData = property};
+            row.AddToClassList($"property-{propertyTypeName}");
             if (index < 0)
                 index = inputRows.Count;
             if (index == inputRows.Count)
@@ -112,10 +111,10 @@ namespace GeometryGraph.Editor {
             pill.RegisterCallback<DragUpdatedEvent>(OnDragUpdatedEvent);
 
             inputRows[property.GUID] = row;
-            
+
             if (!create)
                 return;
-            
+
             row.expanded = false;
             editorView.GraphObject.RegisterCompleteObjectUndo("Create Property");
             editorView.GraphObject.GraphData.AddProperty(property);
@@ -131,7 +130,7 @@ namespace GeometryGraph.Editor {
                         node.AddToClassList("hovered");
                     }
                 }
-            } else if (evt.eventTypeId == MouseLeaveEvent.TypeId() && selectedNodes.Any()) {
+            } else if (evt.eventTypeId == MouseLeaveEvent.TypeId() && selectedNodes.Count > 0) {
                 foreach (var node in selectedNodes) {
                     node.RemoveFromClassList("hovered");
                 }
@@ -141,7 +140,7 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnDragUpdatedEvent(DragUpdatedEvent evt) {
-            if (selectedNodes.Any()) {
+            if (selectedNodes.Count > 0) {
                 foreach (var node in selectedNodes) {
                     node.RemoveFromClassList("hovered");
                 }
@@ -157,23 +156,23 @@ namespace GeometryGraph.Editor {
 
                 row.RemoveFromHierarchy();
                 inputRows.Remove(property.GUID);
-                
+
                 editorView.GraphObject.RuntimeGraph.OnPropertyRemoved(property.GUID);
             }
 
             foreach (var property in editorView.GraphObject.GraphData.AddedProperties) {
                 AddInputRow(property, index: editorView.GraphObject.GraphData.Properties.IndexOf(property));
-                var runtimeProperty = new Property{Guid = property.GUID, DisplayName =  property.DisplayName, ReferenceName = property.ReferenceName, Type = property.Type};
+                var runtimeProperty = new Property{Guid = property.GUID, DisplayName =  property.DisplayName, ReferenceName = property.ReferenceName, Type = property.Type, DefaultValue = new DefaultPropertyValue(property.Type, property.DefaultValue)};
                 editorView.GraphObject.RuntimeGraph.OnPropertyAdded(runtimeProperty);
             }
 
-            if (editorView.GraphObject.GraphData.MovedProperties.Any()) {
+            if (editorView.GraphObject.GraphData.MovedProperties.Count > 0) {
                 foreach (var row in inputRows.Values)
                     row.RemoveFromHierarchy();
 
                 foreach (var property in editorView.GraphObject.GraphData.Properties) {
                     section.Add(inputRows[property.GUID]);
-                    // Note: Select the relevant section here 
+                    // Note: Select the relevant section here
                     // (property.Type == PropertyType.Actor ? actorSection : property.Type == PropertyType.Check ? checkSection : triggerSection).Add(inputRows[property.GUID]);
                 }
             }

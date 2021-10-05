@@ -57,7 +57,7 @@ namespace GeometryGraph.Editor {
         public void OnAfterDeserialize() {
             if (GraphData != null) return;
             GraphData = Deserialize();
-            
+
             if (RuntimeGraph != null && GraphData != null) GraphData.Load(RuntimeGraph);
         }
 
