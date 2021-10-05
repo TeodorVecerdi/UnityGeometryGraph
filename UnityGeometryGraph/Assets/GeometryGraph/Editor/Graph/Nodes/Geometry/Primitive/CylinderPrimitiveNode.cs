@@ -38,20 +38,26 @@ namespace GeometryGraph.Editor {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 if (evt.newValue < 0.01f) {
                     topRadius = 0.01f;
-                    topRadiusField.SetValueWithoutNotify(0.01f);
                 } else topRadius = evt.newValue;
 
                 RuntimeNode.UpdateValue(topRadius, Which.TopRadius);
+            });
+            
+            topRadiusField.RegisterCallback<FocusOutEvent>(_ => {
+                topRadiusField.SetValueWithoutNotify(topRadius);
             });
             
             bottomRadiusField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 if (evt.newValue < 0.01f) {
                     bottomRadius = 0.01f;
-                    bottomRadiusField.SetValueWithoutNotify(0.01f);
                 } else bottomRadius = evt.newValue;
 
                 RuntimeNode.UpdateValue(bottomRadius, Which.BottomRadius);
+            });
+            
+            bottomRadiusField.RegisterCallback<FocusOutEvent>(_ => {
+                bottomRadiusField.SetValueWithoutNotify(bottomRadius);
             });
 
             heightField.RegisterValueChangedCallback(evt => {
