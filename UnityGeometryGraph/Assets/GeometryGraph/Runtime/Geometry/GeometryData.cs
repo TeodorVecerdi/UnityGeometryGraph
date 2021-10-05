@@ -73,6 +73,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             attributeManager = new AttributeManager(this);
             FillBuiltinAttributes(vertices, uvs, new float[edges.Count], faceNormals, faceMaterialIndices, faceSmoothShaded);
+
         }
 
         public bool HasAttribute(string name) => attributeManager.HasAttribute(name);
@@ -142,6 +143,14 @@ namespace GeometryGraph.Runtime.Geometry {
             }
 
             FillElementMetadata();
+
+            Cleanup();
+        }
+
+        private void Cleanup() {
+            for (var i = 0; i < edges.Count; i++) {
+                edges[i].SelfIndex = i;
+            }
         }
 
         private void BuildElements(
@@ -542,7 +551,11 @@ namespace GeometryGraph.Runtime.Geometry {
             }
         }
 
-        public object Clone() {
+        object ICloneable.Clone() {
+            return Clone();
+        }
+
+        public GeometryData Clone() {
             // TODO: Should probably write a proper Clone method some time
             var clone = GeometryData.Empty;
             GeometryData.Merge(clone, this);
