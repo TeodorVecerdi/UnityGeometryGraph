@@ -22,6 +22,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void UpdateValue(int value, ClampIntegerNode_Which which) {
+            DebugUtility.Log($"Updated {which} to {value}");
             switch (which) {
                 case ClampIntegerNode_Which.Input: inputValue = value; break;
                 case ClampIntegerNode_Which.Min: minValue = value; break;
@@ -34,6 +35,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
+            DebugUtility.Log("Calculated and returned result");
             return inputValue.Clamped(minValue, maxValue);
         }
 
@@ -41,18 +43,21 @@ namespace GeometryGraph.Runtime.Graph {
             if(port == ResultPort) return;
             if (port == InputPort) {
                 var newValue = GetValue(InputPort, inputValue);
+                DebugUtility.Log($"Input value changed {inputValue}=>{newValue}");
                 if (newValue != inputValue) {
                     inputValue = newValue;
                     NotifyPortValueChanged(ResultPort);
                 } 
             } else if (port == MinPort) {
                 var newValue = GetValue(MinPort, minValue);
+                DebugUtility.Log($"Min value changed {minValue}=>{newValue}");
                 if (newValue != minValue) {
                     minValue = newValue;
                     NotifyPortValueChanged(ResultPort);
                 } 
             } else if (port == MaxPort) {
                 var newValue = GetValue(MaxPort, maxValue);
+                DebugUtility.Log($"Max value changed {maxValue}=>{newValue}");
                 if (newValue != maxValue) {
                     maxValue = newValue;
                     NotifyPortValueChanged(ResultPort);

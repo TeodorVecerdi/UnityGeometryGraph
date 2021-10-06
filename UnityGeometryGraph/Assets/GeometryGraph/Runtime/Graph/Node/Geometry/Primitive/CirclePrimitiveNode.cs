@@ -21,6 +21,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void UpdateValue(object value, CirclePrimitiveNode_Which which) {
+            DebugUtility.Log($"Updated {which} to {value}");
             switch (which) {
                 case CirclePrimitiveNode_Which.Radius: radius = (float)value; break;
                 case CirclePrimitiveNode_Which.Points: points = (int)value; break;
@@ -33,6 +34,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
+            DebugUtility.Log("Returning result");
             return result;
         }
 
@@ -41,6 +43,7 @@ namespace GeometryGraph.Runtime.Graph {
             
             if (port == RadiusPort) {
                 var newValue = GetValue(connection, radius);
+                DebugUtility.Log("Updated radius");
                 if (Math.Abs(newValue - radius) > 0.000001f) {
                     radius = newValue;
                     CalculateResult();
@@ -48,6 +51,7 @@ namespace GeometryGraph.Runtime.Graph {
                 }
             } else if (port == PointsPort) {
                 var newValue = GetValue(connection, points);
+                DebugUtility.Log("Updated points");
                 if (newValue < 3) newValue = 3;
                 if (newValue != points) {
                     points = newValue;
@@ -64,6 +68,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
+            DebugUtility.Log("Calculated result");
             result = Primitive.Circle(radius, points);
         }
         

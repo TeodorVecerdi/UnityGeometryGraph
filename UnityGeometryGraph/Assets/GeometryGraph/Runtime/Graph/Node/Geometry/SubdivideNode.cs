@@ -18,14 +18,25 @@ namespace GeometryGraph.Runtime.Graph {
 
         public void UpdateLevels(int newValue) {
             if (levels == newValue) return;
-
+            
+            DebugUtility.Log("Recalculating result / levels changed");
             levels = newValue;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
 
         public override object GetValueForPort(RuntimePort port) {
-            if (port != ResultPort) return null;
+            if (port != ResultPort) {
+                DebugUtility.Log("Attempting to get value for another port than the Result port");
+                return null;
+            }
+            DebugUtility.Log("Returning result");
+
+            if (result == null) {
+                DebugUtility.Log($"Result was null: Recalculating with parameters: [source:{source};levels:{levels}]");
+                CalculateResult();
+            }
+            
             return result;
         }
 
@@ -33,10 +44,12 @@ namespace GeometryGraph.Runtime.Graph {
             if (port == ResultPort) return;
             if (port == InputPort) {
                 source = GetValue(connection, GeometryData.Empty).Clone();
+                DebugUtility.Log("Input geometry changed");
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == LevelsPort) {
                 var newValue = GetValue(connection, levels);
+                DebugUtility.Log("Input levels changed");
                 if (newValue < 0) newValue = 0;
                 if (newValue != levels) {
                     levels = newValue;
@@ -53,6 +66,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
+            DebugUtility.Log("Calculate result");
             result = SimpleSubdivision.Subdivide(source, levels);
         }
     }

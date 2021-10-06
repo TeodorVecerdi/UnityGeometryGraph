@@ -17,9 +17,11 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public GeometryData EvaluateGraph() {
+            DebugUtility.Log("Evaluating Graph");
             var value = GetValue(Input, (GeometryData)null);
 
             if (value == null) {
+                DebugUtility.Log("Return value was null");
                 return GeometryData.Empty;
             }
 

@@ -104,30 +104,33 @@ namespace GeometryGraph.Runtime.Graph {
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
+            DebugUtility.Log("Port value changed");
             if (port == XPort) {
-                var newValue = GetValue(XPort, x);
+                var newValue = GetValue(connection, x);
                 if (Math.Abs(x - newValue) > 0.000001f) {
                     x = newValue;
                     NotifyPortValueChanged(ResultPort);
                 }
             } else if (port == YPort) {
-                var newValue = GetValue(YPort, y);
+                var newValue = GetValue(connection, y);
                 if (Math.Abs(y - newValue) > 0.000001f) {
                     y = newValue;
                     NotifyPortValueChanged(ResultPort);
                 }
             } else if (port == TolerancePort) {
-                var newValue = GetValue(TolerancePort, tolerance);
+                var newValue = GetValue(connection, tolerance);
                 if (Math.Abs(tolerance - newValue) > 0.000001f) {
                     tolerance = newValue;
                     NotifyPortValueChanged(ResultPort);
                 }
             } else if (port == ExtraPort) {
-                var newValue = GetValue(ExtraPort, extra);
+                var newValue = GetValue(connection, extra);
                 if (Math.Abs(extra - newValue) > 0.000001f) {
                     extra = newValue;
                     NotifyPortValueChanged(ResultPort);
                 }
+            } else {
+                DebugUtility.Log("Invalid port");
             }
         }
 

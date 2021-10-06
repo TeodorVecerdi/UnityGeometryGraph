@@ -19,6 +19,7 @@ namespace GeometryGraph.Editor {
         public GraphFrameworkData GraphData {
             get => graphData;
             set {
+                Debug.LogWarning("GraphFrameworkObject::set_GraphData");
                 graphData = value;
                 if (graphData != null)
                     graphData.Owner = this;
@@ -26,6 +27,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void Initialize(GraphFrameworkData graphData) {
+            Debug.LogWarning("GraphFrameworkObject::Initialize");
             GraphData = graphData;
             RuntimeGraph = CreateInstance<RuntimeGraphObject>();
             GraphData.Load(RuntimeGraph);
@@ -48,6 +50,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void OnBeforeSerialize() {
+            Debug.LogWarning($"GraphFrameworkObject::OnBeforeSerialize {GetInstanceID()}");
             if (graphData == null) return;
 
             serializedGraph = JsonUtility.ToJson(graphData);
@@ -55,13 +58,18 @@ namespace GeometryGraph.Editor {
         }
 
         public void OnAfterDeserialize() {
-            if (GraphData != null) return;
+            Debug.LogWarning($"GraphFrameworkObject::OnAfterDeserialize {GetInstanceID()}");
+            if (GraphData != null) {
+                Debug.LogWarning($"Graph data not null {GetInstanceID()}");
+                return;
+            }
             GraphData = Deserialize();
 
             if (RuntimeGraph != null && GraphData != null) GraphData.Load(RuntimeGraph);
         }
 
         public void HandleUndoRedo() {
+            Debug.LogWarning("GraphFrameworkObject::HandleUndoRedo");
             if (!WasUndoRedoPerformed) {
                 Debug.LogError("Trying to handle undo/redo when undo/redo was not performed", this);
                 return;
@@ -83,6 +91,10 @@ namespace GeometryGraph.Editor {
         public void RecalculateAssetGuid(string assetPath) {
             AssetGuid = AssetDatabase.AssetPathToGUID(assetPath);
             graphData.AssetGuid = AssetGuid;
+        }
+
+        public void OnAssetSaved() {
+            objectVersion = fileVersion;
         }
     }
 }

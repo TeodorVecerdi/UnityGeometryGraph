@@ -17,9 +17,7 @@ namespace GeometryGraph.Runtime {
         [SerializeField] public List<Property> Properties = new List<Property>();
         [SerializeField] private List<SerializedRuntimeNode> serializedRuntimeNodes = new List<SerializedRuntimeNode>();
 
-        [SerializeField] private int propertyHashCode = 0;
-
-        public int PropertyHashCode => propertyHashCode;
+        public int PropertyHashCode => Properties.Sum(property => property.Guid.GetHashCode());
 
         public RuntimeGraphObjectData() {
             Guid = System.Guid.NewGuid().ToString();
@@ -36,13 +34,6 @@ namespace GeometryGraph.Runtime {
             Properties.AddRange(runtimeData.Properties);
 
             OnBeforeSerialize();
-        }
-
-        public void UpdatePropertyHashCode() {
-            propertyHashCode = 0;
-            foreach (var property in Properties) {
-                propertyHashCode = propertyHashCode * 37 + property.Guid.GetHashCode();
-            }
         }
 
         [OnSerializing]
@@ -68,6 +59,8 @@ namespace GeometryGraph.Runtime {
         public void OnAfterDeserialize() {
             if (serializedRuntimeNodes == null) return;
 
+            // Debug.Log("Loading Graph");
+
             Nodes ??= new List<RuntimeNode>();
             Nodes.Clear();
             OutputNode = null;
@@ -82,17 +75,25 @@ namespace GeometryGraph.Runtime {
 
             var allPorts = Nodes.SelectMany(node => node.Ports).ToList();
             foreach (var connection in Connections) {
-                connection.Output = allPorts.Find(port => port.Guid == connection.OutputGuid);
-                connection.Input = allPorts.Find(port => port.Guid == connection.InputGuid);
+                var outputPort = allPorts.Find(port => port.Guid == connection.OutputGuid);
+                var inputPort = allPorts.Find(port => port.Guid == connection.InputGuid);
+                connection.Output = outputPort;
+                connection.Input = inputPort;
+
+                outputPort.Connections.Add(connection);
+                inputPort.Connections.Add(connection);
             }
 
-            foreach (var node in Nodes) {
-                foreach (var port in node.Ports) {
-                    port.Node = node;
-                    port.Connections = new List<Connection>(Connections.Where(connection => connection.OutputGuid == port.Guid || connection.InputGuid == port.Guid));
-                }
+            for (var i = 0; i < Nodes.Count; i++) {
+                var node = Nodes[i];
+                node.SetCustomData(serializedRuntimeNodes[i].CustomData);
                 
-                node.RebindPorts();
+                foreach (var port in node.Ports) {
+                    DebugUtility.Log($"Port on {node.GetType().Name} has {port.Connections.Count} connections");
+                }
+
+                // DebugUtility.Log($"Rebinding ports on {node.GetType().Name}");
+                // node.RebindPorts();
 
                 switch (node) {
                     case GeometryObjectPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;

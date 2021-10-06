@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using GeometryGraph.Runtime.Geometry;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class RuntimeGraphObject : ScriptableObject {
         [SerializeField] public RuntimeGraphObjectData RuntimeData = new RuntimeGraphObjectData();
+        public static bool DebugEnabled = false;
 
         public GeometryData Evaluate(GeometryGraphSceneData sceneData) {
             if (RuntimeData.OutputNode == null) {
@@ -16,6 +16,7 @@ namespace GeometryGraph.Runtime.Graph {
             LoadScenePropertyValues(sceneData.PropertyData);
             var result = RuntimeData.OutputNode.EvaluateGraph();
             CleanupScenePropertyValues();
+            
             return result;
         }
 
@@ -27,7 +28,6 @@ namespace GeometryGraph.Runtime.Graph {
             if(RuntimeData.Properties.Any(p => p.Guid == property.Guid))
                 return;
             RuntimeData.Properties.Add(property);
-            RuntimeData.UpdatePropertyHashCode();
 
 #if UNITY_EDITOR
             GeometryGraph graph;
@@ -38,8 +38,8 @@ namespace GeometryGraph.Runtime.Graph {
 
         public void OnPropertyRemoved(string propertyGuid) {
             var removed = RuntimeData.Properties.RemoveAll(p => p.Guid == propertyGuid);
-            if (removed != 0) RuntimeData.UpdatePropertyHashCode();
-
+            if (removed == 0) return;
+            
 #if UNITY_EDITOR
             GeometryGraph graph;
             if (UnityEditor.Selection.activeGameObject == null || (graph = UnityEditor.Selection.activeGameObject.GetComponent<GeometryGraph>()) == null) return;
@@ -132,10 +132,13 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void LoadScenePropertyValues(PropertyDataDictionary propertyData) {
+            DebugUtility.Log("Loading Scene Property Values");
             foreach (var property in RuntimeData.Properties) {
                 property.Value = propertyData[property.Guid].GetValueForPropertyType(property.Type);
+                DebugUtility.Log($"Set Property {property.DisplayName}/{property.Type} value to [{property.Value}]");
             }
 
+            DebugUtility.Log("Announcing port value changes on property nodes");
             // Call NotifyPortValueChanged on all property nodes
             foreach (var runtimeNode in RuntimeData.Nodes) {
                 switch (runtimeNode) {
@@ -151,7 +154,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         private void CleanupScenePropertyValues() {
             foreach (var property in RuntimeData.Properties) {
-                property.Value = property.DefaultValue;
+                property.Value = property.DefaultValue; 
             }
         }
     }

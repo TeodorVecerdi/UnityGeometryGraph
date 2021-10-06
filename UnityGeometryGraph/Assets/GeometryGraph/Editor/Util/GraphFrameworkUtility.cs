@@ -40,13 +40,14 @@ namespace GeometryGraph.Editor {
 
             var jsonString = JsonUtility.ToJson(graphObject.GraphData);
             WriteCompressed(jsonString, assetPath);
-            if (refreshAsset) AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
+            // if (refreshAsset) AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
+            if (refreshAsset) AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
             return true;
         }
 
         public static GraphFrameworkObject LoadGraphAtPath(string assetPath) {
             if (string.IsNullOrEmpty(assetPath)) return null;
-
+            Debug.LogWarning("GraphFrameworkUtility::LoadGraphAtPath");
             var jsonString = ReadCompressed(assetPath);
             try {
                 var graphData = JsonUtility.FromJson<GraphFrameworkData>(jsonString);
@@ -67,6 +68,27 @@ namespace GeometryGraph.Editor {
             if (string.IsNullOrEmpty(assetPath)) return null;
 
             return LoadGraphAtPath(assetPath);
+        }
+
+        public static GraphFrameworkObject FindGraphAtGuid(string assetGuid) {
+            if (string.IsNullOrEmpty(assetGuid)) return null;
+
+            var assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
+            if (string.IsNullOrEmpty(assetPath)) return null;
+            return FindGraphAtPath(assetPath);
+        }
+
+
+        public static GraphFrameworkObject FindGraphAtPath(string assetPath) {
+            if (string.IsNullOrEmpty(assetPath)) return null;
+            var allAssetsAtPath = AssetDatabase.LoadAllAssetsAtPath(assetPath);
+
+            foreach (var asset in allAssetsAtPath) {
+                if (asset is GraphFrameworkObject graphFrameworkObject) {
+                    return graphFrameworkObject;
+                }
+            }
+            return null;
         }
 
         internal static void WriteCompressed(string value, string path) {

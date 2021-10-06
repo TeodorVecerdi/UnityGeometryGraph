@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Object = UnityEngine.Object;
 
 namespace GeometryGraph.Editor {
@@ -37,7 +38,7 @@ namespace GeometryGraph.Editor {
             rootVisualElement.Clear();
             windowEvents = new GraphFrameworkWindowEvents {SaveRequested = SaveAsset, SaveAsRequested = SaveAs, ShowInProjectRequested = ShowInProject};
 
-            editorView = new EditorView(this, graphObject) {
+            editorView = new EditorView(this) {
                 name = "Graph",
                 IsBlackboardVisible = graphObject.IsBlackboardVisible
             };
@@ -54,12 +55,22 @@ namespace GeometryGraph.Editor {
                 if (shouldClose) return;
             }
 
+            // var justLoadedAsset = false;
             if (graphObject == null && selectedAssetGuid != null) {
+                Debug.LogError("graphObject == null && selectedAssetGuid != null");
                 var assetGuid = selectedAssetGuid;
                 selectedAssetGuid = null;
-                var newObject = GraphFrameworkUtility.LoadGraphAtGuid(assetGuid);
+                var newObject = GraphFrameworkUtility.FindGraphAtGuid(assetGuid);
+                if (newObject == null) {
+                    Debug.LogError("did not find graph, reimporting");
+                    AssetDatabase.ImportAsset(AssetDatabase.GUIDToAssetPath(assetGuid));
+                    newObject = GraphFrameworkUtility.FindGraphAtGuid(assetGuid);
+                }
+                Assert.IsNotNull(newObject);
                 SetGraphObject(newObject);
+                if(editorView == null) BuildWindow();
                 Refresh();
+                // justLoadedAsset = true;
             }
 
             if (graphObject == null) {
@@ -68,6 +79,18 @@ namespace GeometryGraph.Editor {
             }
 
             if (editorView == null && graphObject != null) {
+                /*if (!justLoadedAsset) {
+                    Debug.LogError("Reloaded asset");
+                    var newObject = GraphFrameworkUtility.FindGraphAtGuid(selectedAssetGuid);
+                    if (newObject == null) {
+                        Debug.LogError("did not find graph, reimporting");
+                        AssetDatabase.ImportAsset(AssetDatabase.GUIDToAssetPath(selectedAssetGuid));
+                        newObject = GraphFrameworkUtility.FindGraphAtGuid(selectedAssetGuid);
+                    }
+                    Assert.IsNotNull(newObject);
+                    SetGraphObject(newObject);
+                }*/
+                Debug.LogError("editorView == null && graphObject != null");
                 BuildWindow();
             }
 
@@ -175,6 +198,9 @@ namespace GeometryGraph.Editor {
         private void SaveAsset() {
             graphObject.GraphData.GraphVersion = GraphFrameworkVersion.Version.GetValue();
             GraphFrameworkUtility.SaveGraph(graphObject, false);
+            graphObject.OnAssetSaved();
+            // graphObject = GraphFrameworkUtility.FindGraphAtGuid(selectedAssetGuid);
+            // Refresh();
             // graphObject.ResetVersion();
             UpdateTitle();
         }

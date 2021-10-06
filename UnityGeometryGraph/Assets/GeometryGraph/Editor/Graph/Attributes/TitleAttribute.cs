@@ -1,7 +1,7 @@
 using System;
 
 namespace GeometryGraph.Editor {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class TitleAttribute : System.Attribute {
         public readonly string[] Title;
         public TitleAttribute(params string[] title) {

@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace GeometryGraph.Runtime.Graph {
-    [Serializable]
     public abstract class RuntimeNode {
         public string Guid;
         public List<RuntimePort> Ports;
@@ -14,6 +12,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public abstract object GetValueForPort(RuntimePort port);
+        // NOTE: Regex to yeet out this function out of every class if needed: `public override void RebindPorts\(\) \{(([\n]*.*?)*)?\}[\n\s]*`
         public abstract void RebindPorts();
         
         protected virtual void OnPortValueChanged(Connection connection, RuntimePort port) {}
@@ -39,14 +38,20 @@ namespace GeometryGraph.Runtime.Graph {
         public void NotifyPortValueChanged(RuntimePort port) {
             if(port.Direction != PortDirection.Output) return;
 
+            DebugUtility.Log($"Connection count: {port.Connections.Count}");
+
             foreach (var connection in port.Connections) {
+                DebugUtility.Log($"Notifying port value changed on: {connection.Input.Node.GetType().Name}");
                 connection.Input.Node.OnPortValueChanged(connection, connection.Input);
             }
         }
 
         protected T GetValue<T>(Connection connection, T defaultValue) {
             var outputPort = connection.Output;
-            if (outputPort == null) return defaultValue;
+            if (outputPort == null) {
+                DebugUtility.Log("GetValue: OutputPort was null");
+                return defaultValue;
+            }
 
             var value = outputPort.Node.GetValueForPort(outputPort);
             

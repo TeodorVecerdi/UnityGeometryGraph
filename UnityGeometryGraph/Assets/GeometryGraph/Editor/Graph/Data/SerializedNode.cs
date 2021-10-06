@@ -28,12 +28,12 @@ namespace GeometryGraph.Editor {
         public void BuildNode(EditorView editorView, EdgeConnectorListener edgeConnectorListener, bool buildPortData = true) {
             EditorView = editorView;
             Node = (AbstractNode) Activator.CreateInstance(System.Type.GetType(Type));
+            Node.Owner = this;
+            Node.GUID = GUID;
+            Node.viewDataKey = GUID;
             Node.InitializeNode(edgeConnectorListener);
             if (edgeConnectorListener != null) 
                 Node.BindPorts();
-            Node.GUID = GUID;
-            Node.viewDataKey = GUID;
-            Node.Owner = this;
             Node.SetExpandedWithoutNotify(DrawState.Expanded);
             Node.SetPosition(DrawState.Position);
             if (!string.IsNullOrEmpty(NodeData))

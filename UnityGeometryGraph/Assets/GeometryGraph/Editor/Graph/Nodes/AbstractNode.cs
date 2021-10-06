@@ -80,12 +80,17 @@ namespace GeometryGraph.Editor {
         protected void Initialize(string nodeTitle, Rect nodePosition) {
             base.title = nodeTitle;
             base.SetPosition(nodePosition);
-            
-            var guid = Guid.NewGuid().ToString();
-            if(EdgeConnectorListener != null)
-                RuntimeNode = (TRuntimeNode) Activator.CreateInstance(runtimeNodeType, guid);
-            GUID = guid;
-            viewDataKey = guid;
+
+            if (GUID == null) {
+                var guid = Guid.NewGuid().ToString();
+                GUID = guid;
+                viewDataKey = guid;
+            }
+
+            if (EdgeConnectorListener != null) {
+                var alreadyExisting = Owner.EditorView.GraphObject.RuntimeGraph.RuntimeData.Nodes.Find(node => node.Guid == GUID);
+                RuntimeNode = (TRuntimeNode) alreadyExisting ?? (TRuntimeNode)Activator.CreateInstance(runtimeNodeType, GUID);
+            }
             RuntimePortDictionary = new Dictionary<GraphFrameworkPort, RuntimePort>();
             
             this.AddStyleSheet("Styles/Node/Node");
