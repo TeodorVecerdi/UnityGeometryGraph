@@ -88,6 +88,16 @@ namespace GeometryGraph.Editor {
             return deserialized;
         }
 
+        public GraphFrameworkObject GetCloneForSerialization() {
+            var gfo = CreateInstance<GraphFrameworkObject>();
+
+            var cloneData = JsonUtility.FromJson<GraphFrameworkData>(JsonUtility.ToJson(graphData));
+            cloneData.AssetGuid = AssetGuid;
+            gfo.Initialize(cloneData);
+
+            return gfo;
+        }
+
         public void RecalculateAssetGuid(string assetPath) {
             AssetGuid = AssetDatabase.AssetPathToGUID(assetPath);
             graphData.AssetGuid = AssetGuid;
@@ -95,6 +105,10 @@ namespace GeometryGraph.Editor {
 
         public void OnAssetSaved() {
             objectVersion = fileVersion;
+        }
+
+        public void ResetGuids() {
+            graphData.RuntimeGraphData.Guid = Guid.NewGuid().ToString();
         }
     }
 }
