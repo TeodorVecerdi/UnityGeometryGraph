@@ -71,6 +71,9 @@ namespace GeometryGraph.Runtime.Graph {
             positionAttribute.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionAttribute);
             var normalAttribute = result.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
             normalAttribute.Yield(normal => math.normalize(math.mul(trsNormal, new float4(normal, 1.0f)).xyz)).Into(normalAttribute);
+
+            result.StoreAttribute(positionAttribute, AttributeDomain.Vertex);
+            result.StoreAttribute(normalAttribute, AttributeDomain.Face);
         }
 
         public override string GetCustomData() {
