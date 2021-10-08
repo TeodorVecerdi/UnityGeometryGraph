@@ -51,9 +51,15 @@ namespace GeometryGraph.Editor {
                 
                 GUILayout.Space(6);
                 if (GUILayout.Button("Debug", EditorStyles.toolbarButton)) {
-                    var goInstanceId = EditorWindow.GraphObject.GetInstanceID();
-                    var roInstanceId = EditorWindow.GraphObject.RuntimeGraph.GetInstanceID();
-                    Debug.Log($"{goInstanceId} ;; {roInstanceId}");
+                    var current = JsonUtility.ToJson(GraphObject.GraphData);
+                    var saved = GraphFrameworkUtility.ReadCompressed(AssetDatabase.GUIDToAssetPath(GraphObject.AssetGuid));
+                    Debug.Log($"{current}\n\n{saved}");
+                }
+                if (GUILayout.Button("Debug 2", EditorStyles.toolbarButton)) {
+                    var assetGuid = GraphObject.AssetGuid;
+                    var assetGuidSelected = EditorWindow.SelectedAssetGuid;
+                    var calculated = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(GraphObject));
+                    Debug.Log($"{assetGuid} ;; {assetGuidSelected} ;; {calculated}");
                 }
 
                 GUILayout.FlexibleSpace();

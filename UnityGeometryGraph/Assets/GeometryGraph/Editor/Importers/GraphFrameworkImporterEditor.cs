@@ -37,18 +37,7 @@ namespace GeometryGraph.Editor {
             if (extension != GraphFrameworkImporter.Extension)
                 return false;
 
-            var allAssetsAtPath = AssetDatabase.LoadAllAssetsAtPath(assetPath);
-            GraphFrameworkObject graphObject = null;
-            foreach (var asset in allAssetsAtPath) {
-                if (!(asset is GraphFrameworkObject frameworkObject)) continue;
-                graphObject = frameworkObject;
-                break;
-            }
-
-            if (graphObject == null) {
-                Debug.LogWarning("GRAPH OBJECT NULL AFTER LOAD");
-                graphObject = GraphFrameworkUtility.LoadGraphAtPath(assetPath);
-            }
+            var graphObject = GraphFrameworkUtility.FindOrLoadAtPath(assetPath);
             
             if (string.IsNullOrEmpty(graphObject.AssetGuid)) {
                 graphObject.RecalculateAssetGuid(assetPath);
@@ -59,7 +48,10 @@ namespace GeometryGraph.Editor {
                 if (activeWindow.SelectedAssetGuid != guid)
                     continue;
 
-                // TODO: Ask user if they want to replace the current window (maybe ask to save before opening)
+                if (activeWindow.IsDirty && !activeWindow.ShowReplaceGraphWindow()) {
+                    return true;
+                }
+                
                 activeWindow.SetGraphObject(graphObject);
                 activeWindow.BuildWindow();
                 activeWindow.Focus();

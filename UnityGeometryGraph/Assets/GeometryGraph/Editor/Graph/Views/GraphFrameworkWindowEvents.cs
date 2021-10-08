@@ -1,9 +1,9 @@
 using System;
 
-namespace GeometryGraph {
+namespace GeometryGraph.Editor {
     public class GraphFrameworkWindowEvents {
-        public Action SaveRequested;
-        public Func<bool> SaveAsRequested;
-        public Action ShowInProjectRequested;
+        internal Action SaveRequested;
+        internal Func<GraphFrameworkEditorWindow.SaveAsResult> SaveAsRequested;
+        internal Action ShowInProjectRequested;
     }
 }
