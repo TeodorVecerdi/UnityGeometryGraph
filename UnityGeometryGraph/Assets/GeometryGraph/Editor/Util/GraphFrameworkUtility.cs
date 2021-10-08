@@ -17,10 +17,11 @@ namespace GeometryGraph.Editor {
         
         public static bool CreateFile(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
             if (graphObject == null || string.IsNullOrEmpty(path)) return false;
-
+            
             var assetGuid = AssetDatabase.AssetPathToGUID(path);
             graphObject.GraphData.AssetGuid = assetGuid;
-
+            graphObject.RuntimeGraph.RuntimeData.Guid = Guid.NewGuid().ToString();
+            
             CreateFileNoUpdate(path, graphObject, refreshAsset);
             return true;
         }
@@ -54,6 +55,12 @@ namespace GeometryGraph.Editor {
                 var graphObject = ScriptableObject.CreateInstance<GraphFrameworkObject>();
                 graphObject.Initialize(graphData);
                 graphObject.AssetGuid = graphData.AssetGuid;
+                
+                if (string.IsNullOrEmpty(graphObject.AssetGuid)) {
+                    graphObject.RecalculateAssetGuid(assetPath);
+                    SaveGraph(graphObject, false);
+                }
+                
                 return graphObject;
             } catch (ArgumentNullException exception) {
                 Debug.LogException(exception);
@@ -85,10 +92,16 @@ namespace GeometryGraph.Editor {
 
             foreach (var asset in allAssetsAtPath) {
                 if (asset is GraphFrameworkObject graphFrameworkObject) {
+                    graphFrameworkObject.RecalculateAssetGuid(assetPath);
                     return graphFrameworkObject;
                 }
             }
             return null;
+        }
+
+        public static GraphFrameworkObject FindOrLoadAtPath(string assetPath) {
+            if (string.IsNullOrEmpty(assetPath)) return null;
+            return FindGraphAtPath(assetPath) ?? LoadGraphAtPath(assetPath);
         }
 
         internal static void WriteCompressed(string value, string path) {
