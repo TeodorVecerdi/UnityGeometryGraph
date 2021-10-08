@@ -175,7 +175,9 @@ namespace GeometryGraph.Runtime.Geometry {
                 e3 = edge3.SelfIndex;
             }
             
-            Debug.Assert(e1 != -1 && e2 != -1 && e3 != -1, "e1 != -1 && e2 != -1 && e3 != -1");
+            Debug.Assert(e1 != -1, $"e1 != -1 ;; with x:{x} y:{y} z:{z} ;; with e0A:{edge1.VertA} e0B:{edge1.VertB} e1A:{edge2.VertA} e1B:{edge2.VertB} e2A:{edge3.VertA} e2B:{edge3.VertB}");
+            Debug.Assert(e2 != -1, $"e2 != -1 ;; with x:{x} y:{y} z:{z} ;; with e0A:{edge1.VertA} e0B:{edge1.VertB} e1A:{edge2.VertA} e1B:{edge2.VertB} e2A:{edge3.VertA} e2B:{edge3.VertB}");
+            Debug.Assert(e3 != -1, $"e3 != -1 ;; with x:{x} y:{y} z:{z} ;; with e0A:{edge1.VertA} e0B:{edge1.VertB} e1A:{edge2.VertA} e1B:{edge2.VertB} e2A:{edge3.VertA} e2B:{edge3.VertB}");
 
             return (e1, e2, e3);
         }

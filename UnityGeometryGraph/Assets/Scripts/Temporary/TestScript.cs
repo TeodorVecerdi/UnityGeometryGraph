@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
     public class TestScript : SerializedMonoBehaviour, IGeometryProvider {
-        public IGeometryProvider GeometryProvider;
         public GeometryExporter Exporter;
-        public int Levels = 1;
-        public GeometryData Subdivided;
+        [MinValue(0.0f)] public float Radius = 0.5f;
+        [MinValue(0)] public int Subdivisions = 3;
+        public GeometryData Icosphere;
 
         [Button]
-        private void Subdivide() {
-            if (GeometryProvider == null) return;
-            Subdivided = SimpleSubdivision.Subdivide(GeometryProvider.Geometry, Levels);
-            Exporter.Export(Subdivided);
+        private void Generate() {
+            Icosphere = Primitive.Icosphere(Radius, Subdivisions);
+            // Icosphere = Primitive.IcosahedronHardcoded();
+            Exporter.Export(Icosphere);
         }
 
-        public GeometryData Geometry => Subdivided;
+        public GeometryData Geometry => Icosphere;
         public Matrix4x4 LocalToWorldMatrix => transform.localToWorldMatrix;
     }
 }
