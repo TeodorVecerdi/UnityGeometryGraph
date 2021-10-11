@@ -34,7 +34,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
         public void BaseAttribute_YieldWithAttributeFuncAndOtherNull() {
             var valuesA = Enumerable.Range(0, 100).Select(_ => Rand.Float).ToList();
             var attrA = new FloatAttribute("attrA", valuesA) { Domain = AttributeDomain.Vertex };
-            var result = attrA.YieldWithAttribute(null, null);
+            var result = attrA.YieldWithAttribute((FloatAttribute)null, null);
 
             Assert.IsTrue(result.SequenceEqual(valuesA), "result.SequenceEqual(valuesA)");
         }

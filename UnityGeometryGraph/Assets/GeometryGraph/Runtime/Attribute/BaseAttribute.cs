@@ -18,6 +18,8 @@ namespace GeometryGraph.Runtime.Attribute {
         public AttributeDomain Domain;
         public List<object> Values;
 
+        public int Count => Values.Count;
+
         protected BaseAttribute(string name) {
             Name = name;
             Values = new List<object>();
@@ -86,20 +88,19 @@ namespace GeometryGraph.Runtime.Attribute {
             }
         }
 
-        public IEnumerable<T> YieldWithAttribute(BaseAttribute other, Func<T, T, T> action) {
-            action ??= AttributeActions.NoOp<T, T>();
+        public IEnumerable<T> YieldWithAttribute<T0>(BaseAttribute<T0> other, Func<T, T0, T> action) {
+            action ??= AttributeActions.NoOp<T, T0>();
            
             if (other == null) {
-                foreach (var value in Values) {
-                    yield return action((T)value, default);
+                foreach (T value in Values) {
+                    yield return action(value, default);
                 }
                 yield break;
             }
             
             var otherIndex = 0;
-            foreach (var value in Values) {
-                var otherValue = AttributeConvert.ConvertType<T>(otherIndex >= other.Values.Count ? default(T) : other.Values[otherIndex], other.Type, Type);
-                yield return action((T)value, otherValue);
+            foreach (T value in Values) {
+                yield return action(value, otherIndex >= other.Values.Count ? default : other[otherIndex]);
 
                 otherIndex++;
             }
@@ -107,8 +108,58 @@ namespace GeometryGraph.Runtime.Attribute {
             if (otherIndex >= other.Values.Count) yield break;
             
             for (var i = otherIndex; i < other.Values.Count; i++) {
-                var otherValue = AttributeConvert.ConvertType<T>(other.Values[otherIndex], other.Type, Type);
-                yield return action(default, otherValue);
+                yield return action(default, other[i]);
+            }
+        }
+
+        public IEnumerable<T> YieldWithAttribute<T0, T1>(BaseAttribute<T0> attribute0, BaseAttribute<T1> attribute1, Func<T, T0, T1, T> action) {
+            action ??= AttributeActions.NoOp<T, T0, T1>();
+            
+            
+            if (attribute0 == null && attribute1 == null) {
+                foreach (T value in Values) {
+                    yield return action(value, default, default);
+                }
+                yield break;
+            }
+            
+            if (attribute0 == null && attribute1 != null) {
+                var index = 0;
+                foreach (T value in Values) {
+                    yield return action(value, default, index >= attribute1.Values.Count ? default : attribute1[index]);
+                }
+                
+                if (index >= attribute1.Count) yield break;
+                
+                for(var i = index; i < attribute1.Count; i++) {
+                    yield return action(default, default, attribute1[i]);
+                }
+                
+                yield break;
+            } 
+            
+            if (attribute0 != null && attribute1 == null) {
+                var index = 0;
+                foreach (T value in Values) {
+                    yield return action(value, index >= attribute0.Values.Count ? default : attribute0[index], default);
+                }
+                
+                if (index >= attribute0.Count) yield break;
+                
+                for(var i = index; i < attribute0.Count; i++) {
+                    yield return action(default, attribute0[i], default);
+                }
+                
+                yield break;
+            }
+
+            var currentIndex = 0;
+            var maxIndex = Mathf.Max(Count, attribute0.Count, attribute1.Count);
+            for (var i = 0; i < maxIndex; i++) {
+                var self = currentIndex < Count ? this[currentIndex] : default;
+                var a0 = currentIndex < attribute0.Count ? attribute0[currentIndex] : default;
+                var a1 = currentIndex < attribute1.Count ? attribute1[currentIndex] : default;
+                yield return action(self, a0, a1);
             }
         }
 
