@@ -100,6 +100,18 @@ namespace GeometryGraph.Runtime.Geometry {
         public TAttribute GetAttribute<TAttribute>(string name, AttributeDomain domain) where TAttribute : BaseAttribute {
             return (TAttribute)attributeManager.Request(name, AttributeUtility.SystemTypeToAttributeType(typeof(TAttribute)), domain);
         }
+        
+        public TAttribute GetAttributeOrDefault<TAttribute, T>(string name, AttributeDomain domain, T defaultValue) where TAttribute : BaseAttribute<T> {
+            if (HasAttribute(name, domain)) return GetAttribute<TAttribute>(name, domain);
+            var attribute = Enumerable.Repeat(defaultValue, domain switch {
+                AttributeDomain.Vertex => vertices.Count,
+                AttributeDomain.Edge => edges.Count,
+                AttributeDomain.Face => faces.Count,
+                AttributeDomain.FaceCorner => faceCorners.Count,
+                _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
+            }).Into<TAttribute>("name", domain);
+            return attribute;
+        }
 
         public bool StoreAttribute(BaseAttribute attribute) {
             return attributeManager.Store(attribute);
