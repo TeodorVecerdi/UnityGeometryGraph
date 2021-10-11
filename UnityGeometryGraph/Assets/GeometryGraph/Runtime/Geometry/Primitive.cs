@@ -493,7 +493,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
         }
 
-        public static GeometryData Icosahedron() {
+        public static GeometryData IcosahedronSphericalUV() {
             const int edgeCount = 30;
             const int faceCount = 20;
             const float x = 0.525731112119133606f;
@@ -597,7 +597,161 @@ namespace GeometryGraph.Runtime.Geometry {
                 faceCorners.Add(new GeometryData.FaceCorner(i) {Vert = face.VertB});
                 faceCorners.Add(new GeometryData.FaceCorner(i) {Vert = face.VertC});
             }
-            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, crease, uvs);
+            
+            var geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, crease, uvs);
+
+            var rotQuaternion = quaternion.Euler(math.radians(-30), 0, 0);
+            var trs = float4x4.TRS(float3.zero, rotQuaternion, float3_util.one);
+            var positionIcosahedron = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
+            positionIcosahedron.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionIcosahedron);
+            var normalIcosahedron = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
+            normalIcosahedron.Yield(normal => math.normalize(math.mul(trs, new float4(normal, 1.0f)).xyz)).Into(normalIcosahedron);
+            
+            geometry.StoreAttribute(positionIcosahedron, AttributeDomain.Vertex);
+            geometry.StoreAttribute(normalIcosahedron, AttributeDomain.Face);
+
+            return geometry;
+        }
+
+        public static GeometryData Icosahedron() {
+            const int edgeCount = 30;
+            const int faceCount = 20;
+            const float x = 0.525731112119133606f;
+            const float z = 0.850650808352039932f;
+            
+            var materialIndices = Enumerable.Repeat(0, faceCount).ToList();
+            var shadeSmooth = Enumerable.Repeat(false, faceCount).ToList();
+            var crease = Enumerable.Repeat(0.0f, edgeCount).ToList();
+            var vertexPositions = new List<float3> {
+                new float3(-x, 0.0f, z),
+                new float3(x, 0.0f, z),
+                new float3(-x, 0.0f, -z),
+                new float3(x, 0.0f, -z),
+                new float3(0.0f, z, x),
+                new float3(0.0f, z, -x),
+                new float3(0.0f, -z, x),
+                new float3(0.0f, -z, -x),
+                new float3(z, x, 0.0f),
+                new float3(-z, x, 0.0f),
+                new float3(z, -x, 0.0f),
+                new float3(-z, -x, 0.0f)
+            };
+            
+             var eI = 0;
+            var edges = new List<GeometryData.Edge> {
+                new GeometryData.Edge(0, 4, eI++) { FaceA = 0, FaceB = 1 },
+                new GeometryData.Edge(4, 1, eI++) { FaceA = 0, FaceB = 4 },
+                new GeometryData.Edge(1, 0, eI++) { FaceA = 0, FaceB = 14 },
+                new GeometryData.Edge(0, 9, eI++) { FaceA = 1, FaceB = 16 },
+                new GeometryData.Edge(9, 4, eI++) { FaceA = 1, FaceB = 2 },
+                new GeometryData.Edge(9, 5, eI++) { FaceA = 2, FaceB = 18 },
+                new GeometryData.Edge(5, 4, eI++) { FaceA = 2, FaceB = 3 },
+                new GeometryData.Edge(5, 8, eI++) { FaceA = 3, FaceB = 7 },
+                new GeometryData.Edge(8, 4, eI++) { FaceA = 3, FaceB = 4 },
+                new GeometryData.Edge(8, 1, eI++) { FaceA = 4, FaceB = 5 },
+                new GeometryData.Edge(8, 10, eI++) { FaceA = 5, FaceB = 6 },
+                new GeometryData.Edge(10, 1, eI++) { FaceA = 5, FaceB = 15 },
+                new GeometryData.Edge(8, 3, eI++) { FaceA = 6, FaceB = 7 },
+                new GeometryData.Edge(3, 10, eI++) { FaceA = 6, FaceB = 10 },
+                new GeometryData.Edge(5, 3, eI++) { FaceA = 7, FaceB = 8 },
+                new GeometryData.Edge(5, 2, eI++) { FaceA = 8, FaceB = 18 },
+                new GeometryData.Edge(2, 3, eI++) { FaceA = 8, FaceB = 9 },
+                new GeometryData.Edge(2, 7, eI++) { FaceA = 9, FaceB = 19 },
+                new GeometryData.Edge(7, 3, eI++) { FaceA = 9, FaceB = 10 },
+                new GeometryData.Edge(7, 10, eI++) { FaceA = 10, FaceB = 11 },
+                new GeometryData.Edge(7, 6, eI++) { FaceA = 11, FaceB = 12 },
+                new GeometryData.Edge(6, 10, eI++) { FaceA = 11, FaceB = 15 },
+                new GeometryData.Edge(7, 11, eI++) { FaceA = 12, FaceB = 19 },
+                new GeometryData.Edge(11, 6, eI++) { FaceA = 12, FaceB = 13 },
+                new GeometryData.Edge(11, 0, eI++) { FaceA = 13, FaceB = 16 },
+                new GeometryData.Edge(0, 6, eI++) { FaceA = 13, FaceB = 14 },
+                new GeometryData.Edge(1, 6, eI++) { FaceA = 14, FaceB = 15 },
+                new GeometryData.Edge(11, 9, eI++) { FaceA = 16, FaceB = 17 },
+                new GeometryData.Edge(11, 2, eI++) { FaceA = 17, FaceB = 19 },
+                new GeometryData.Edge(2, 9, eI++) { FaceA = 17, FaceB = 18 },
+            };
+
+            var fcIdx = 0;
+            var faces = new List<GeometryData.Face> {
+                new GeometryData.Face(4, 0, 1, fcIdx++, fcIdx++, fcIdx++, 0, 1, 2),
+                new GeometryData.Face(4, 9, 0, fcIdx++, fcIdx++, fcIdx++, 3, 4, 0),
+                new GeometryData.Face(4, 5, 9, fcIdx++, fcIdx++, fcIdx++, 5, 6, 4),
+                new GeometryData.Face(4, 8, 5, fcIdx++, fcIdx++, fcIdx++, 6, 7, 8),
+                new GeometryData.Face(4, 1, 8, fcIdx++, fcIdx++, fcIdx++, 8, 9, 1),
+
+                new GeometryData.Face(6, 1, 0, fcIdx++, fcIdx++, fcIdx++, 2, 26, 25),
+                new GeometryData.Face(0, 11, 6, fcIdx++, fcIdx++, fcIdx++, 24, 25, 23),
+                new GeometryData.Face(11, 0, 9, fcIdx++, fcIdx++, fcIdx++, 3, 24, 27),
+                new GeometryData.Face(9, 2, 11, fcIdx++, fcIdx++, fcIdx++, 27, 28, 29),
+                new GeometryData.Face(2, 9, 5, fcIdx++, fcIdx++, fcIdx++, 29, 15, 5),
+                new GeometryData.Face(5, 3, 2, fcIdx++, fcIdx++, fcIdx++, 15, 16, 14),
+                new GeometryData.Face(3, 5, 8, fcIdx++, fcIdx++, fcIdx++, 14, 12, 7),
+                new GeometryData.Face(8, 10, 3, fcIdx++, fcIdx++, fcIdx++, 12, 13, 10),
+                new GeometryData.Face(10, 8, 1, fcIdx++, fcIdx++, fcIdx++, 10, 11, 9),
+                new GeometryData.Face(1, 6, 10, fcIdx++, fcIdx++, fcIdx++, 26, 11, 21),
+
+                new GeometryData.Face(7, 6, 11, fcIdx++, fcIdx++, fcIdx++, 22, 23, 20),
+                new GeometryData.Face(7, 11, 2, fcIdx++, fcIdx++, fcIdx++, 17, 28, 22),
+                new GeometryData.Face(7, 2, 3, fcIdx++, fcIdx++, fcIdx++, 17, 18, 16),
+                new GeometryData.Face(7, 3, 10, fcIdx++, fcIdx++, fcIdx++, 19, 13, 18),
+                new GeometryData.Face(7, 10, 6, fcIdx++, fcIdx++, fcIdx++, 20, 21, 19),
+            };
+
+            var normals = new List<float3>();
+            var faceCorners = new List<GeometryData.FaceCorner>();
+            for (var i = 0; i < faces.Count; i++) {
+                var face = faces[i];
+                normals.Add(math.normalize(math.cross(vertexPositions[face.VertB] - vertexPositions[face.VertA], vertexPositions[face.VertC] - vertexPositions[face.VertA])));
+                faceCorners.Add(new GeometryData.FaceCorner(i) {Vert = face.VertA});
+                faceCorners.Add(new GeometryData.FaceCorner(i) {Vert = face.VertB});
+                faceCorners.Add(new GeometryData.FaceCorner(i) {Vert = face.VertC});
+            }
+            
+            // UV unwrapping
+            const float sideLength = 0.1818182F; // 1 / 5.5
+            const float height = 0.1574592F; // sqrt(3) / 11
+            var uvs = new List<float2>();
+            
+            // Bottom faces
+            for (var i = 0; i <= 4; i++) {
+                uvs.Add(new float2(sideLength * 0.5f + sideLength * i, 0.0f));
+                uvs.Add(new float2(sideLength * (i + 1), 1.0f * height));
+                uvs.Add(new float2(sideLength * i, 1.0f * height));
+            }
+
+            // Middle faces
+            for (int i = 0; i <= 4; i++) {
+                // Mid bottom
+                uvs.Add(new float2(sideLength * 0.5f + sideLength * i, 2.0f * height));
+                uvs.Add(new float2(sideLength * i, 1.0f * height));
+                uvs.Add(new float2(sideLength * (i+1), 1.0f * height));
+                
+                // Mid top
+                uvs.Add(new float2(sideLength * (i + 1), 1.0f * height));
+                uvs.Add(new float2(sideLength * 0.5f + sideLength * (i + 1), 2.0f * height));
+                uvs.Add(new float2(sideLength * 0.5f + sideLength * i, 2.0f * height));
+            }
+            
+            // Top faces
+            for (var i = 0; i <= 4; i++) {
+                uvs.Add(new float2(sideLength * (i + 1), 3.0f * height));
+                uvs.Add(new float2(sideLength * 0.5f + sideLength * i, 2.0f * height));
+                uvs.Add(new float2(sideLength * 0.5f + sideLength * (i + 1), 2.0f * height));
+            }
+            
+            var geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, crease, uvs);
+
+            var rotQuaternion = quaternion.Euler(math.radians(-30), 0, 0);
+            var trs = float4x4.TRS(float3.zero, rotQuaternion, float3_util.one);
+            var positionIcosahedron = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
+            positionIcosahedron.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionIcosahedron);
+            var normalIcosahedron = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
+            normalIcosahedron.Yield(normal => math.normalize(math.mul(trs, new float4(normal, 1.0f)).xyz)).Into(normalIcosahedron);
+            
+            geometry.StoreAttribute(positionIcosahedron, AttributeDomain.Vertex);
+            geometry.StoreAttribute(normalIcosahedron, AttributeDomain.Face);
+            
+            return geometry;
         }
 
         public static GeometryData IcosahedronHardcoded() {
@@ -630,6 +784,7 @@ namespace GeometryGraph.Runtime.Geometry {
             mesh.vertices = vertexPositions.Select(v => (Vector3)v).ToArray();
             mesh.triangles = triangles.ToArray();
             mesh.RecalculateNormals();
+
             return new GeometryData(mesh, 0.0f, 179.9f);
         }
 
@@ -638,22 +793,14 @@ namespace GeometryGraph.Runtime.Geometry {
             if (subdivisions < 0) subdivisions = 0;
 
             var icosphere = Icosahedron();
-            
-            // Rotate by -30 deg on the x axis to make the pole face up
-            var rotQuaternion = quaternion.Euler(math.radians(-30), 0, 0);
-            var trs = float4x4.TRS(float3.zero, rotQuaternion, float3_util.one);
-            var positionIcosahedron = icosphere.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
-            positionIcosahedron.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionIcosahedron);
-            var normalIcosahedron = icosphere.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
-            normalIcosahedron.Yield(normal => math.normalize(math.mul(trs, new float4(normal, 1.0f)).xyz)).Into(normalIcosahedron);
-            
-            icosphere.StoreAttribute(positionIcosahedron, AttributeDomain.Vertex);
-            icosphere.StoreAttribute(normalIcosahedron, AttributeDomain.Face);
+         
             icosphere.StoreAttribute(Enumerable.Repeat(true, icosphere.Faces.Count).Into<BoolAttribute>("shade_smooth", AttributeDomain.Face));
+            
             for (var i = 0; i < subdivisions; i++) {
                 icosphere = SimpleSubdivision.Subdivide(icosphere);
             }
             
+            // Project on sphere
             var positionAttribute = icosphere.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             positionAttribute.Yield(pos => math.normalize(pos) * radius).Into(positionAttribute);
                 
@@ -665,43 +812,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             icosphere.StoreAttribute(positionAttribute, AttributeDomain.Vertex);
             icosphere.StoreAttribute(newNormals.Into<Vector3Attribute>("normal", AttributeDomain.Face), AttributeDomain.Face);
-            // Recalculate UVs
-            var uvs = new List<float2>();
-            foreach (var faceCorner in icosphere.FaceCorners) {
-                var n = positionAttribute[faceCorner.Vert] / radius;
-                var u = 0.5f + math.atan2(n.z, n.x) / (2.0f * math.PI);
-                var v = 0.5f + math.asin(n.y) / math.PI/* + 0.5f*/;
-                uvs.Add(new float2(u, v));
-            }
-            
-            // Fix wrapped uvs
-            var wrappedFaces = new HashSet<int>();
-            for (var i = 0; i < icosphere.Faces.Count; i++) {
-                var face = icosphere.Faces[i];
-                var uvA = new float3(uvs[face.FaceCornerA], 0.0f);
-                var uvB = new float3(uvs[face.FaceCornerB], 0.0f);
-                var uvC = new float3(uvs[face.FaceCornerC], 0.0f);
-                var uvNormal = math.cross(uvB - uvA, uvC - uvA);
-                
-                // Problematic face
-                if (uvNormal.z > 0.0f) {
-                    wrappedFaces.Add(i);
-                    // uvs[face.FaceCornerA] = float2.zero;
-                    // uvs[face.FaceCornerB] = float2.zero;
-                    // uvs[face.FaceCornerC] = float2.zero;
-                }
-            }
-            
-            /*
-             * :Map<old vert, new vert>
-             * foreach wrapped face
-             *      add new vertices if they don't exist already,
-             *      map old vertex to new vertex
-             * 
-             */
 
-            icosphere.StoreAttribute(uvs.Into<Vector2Attribute>("uv", AttributeDomain.FaceCorner));
-            
             return icosphere;
         }
     }
