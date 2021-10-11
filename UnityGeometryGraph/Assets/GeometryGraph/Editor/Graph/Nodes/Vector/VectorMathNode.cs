@@ -26,7 +26,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort vectorResultPort;
         private GraphFrameworkPort floatResultPort;
 
-        private EnumSelectionButton<Operation> operationButton;
+        private EnumSelectionDropdown<Operation> operationDropdown;
         private Vector3Field xField;
         private Vector3Field yField;
         private Vector3Field wrapMaxField;
@@ -110,8 +110,8 @@ namespace GeometryGraph.Editor {
             vectorResultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
             floatResultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
 
-            operationButton = new EnumSelectionButton<Operation>(operation, mathOperationTree);
-            operationButton.RegisterCallback<ChangeEvent<Operation>>(evt => {
+            operationDropdown = new EnumSelectionDropdown<Operation>(operation, mathOperationTree);
+            operationDropdown.RegisterCallback<ChangeEvent<Operation>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
                 RuntimeNode.UpdateOperation(operation);
@@ -158,7 +158,7 @@ namespace GeometryGraph.Editor {
             scalePort.Add(scaleField);
             distancePort.Add(distanceField); 
             
-            inputContainer.Add(operationButton);
+            inputContainer.Add(operationDropdown);
             AddPort(xPort);
             inputContainer.Add(xField);
             AddPort(yPort);
@@ -250,7 +250,7 @@ namespace GeometryGraph.Editor {
             scale = jsonData.Value<float>("s");
             distance = jsonData.Value<float>("d");
             
-            operationButton.SetValueWithoutNotify(operation, 1);
+            operationDropdown.SetValueWithoutNotify(operation, 1);
             xField.SetValueWithoutNotify(x);
             yField.SetValueWithoutNotify(y);
             wrapMaxField.SetValueWithoutNotify(wrapMax);

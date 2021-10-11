@@ -69,6 +69,10 @@ namespace GeometryGraph.Editor {
 
             return dict;
         }
+
+        public static ulong ToUInt64<T>(this T value) where T : Enum {
+            return ToUInt64((object)value);
+        }
         
         private static ulong ToUInt64(object value)
         {
@@ -88,7 +92,7 @@ namespace GeometryGraph.Editor {
                 case TypeCode.Boolean:
                     return Convert.ToUInt64(value, CultureInfo.InvariantCulture);
 
-                default: throw new InvalidOperationException("UnknownEnumType");
+                default: throw new InvalidOperationException("Unknown Enum Type");
             }
         }
     }

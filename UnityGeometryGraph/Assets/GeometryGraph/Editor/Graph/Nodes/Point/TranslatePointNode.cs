@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort attributePort;
         private GraphFrameworkPort resultPort;
 
-        private EnumSelectionButton<Mode> modeButton;
+        private EnumSelectionDropdown<Mode> modeDropdown;
         private Vector3Field translationField;
         private TextField attributeNameField;
 
@@ -46,8 +46,8 @@ namespace GeometryGraph.Editor {
             (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(attributeName, Which.AttributeName));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
-            modeButton = new EnumSelectionButton<Mode>(mode, tree);
-            modeButton.RegisterCallback<ChangeEvent<Mode>>(evt => {
+            modeDropdown = new EnumSelectionDropdown<Mode>(mode, tree);
+            modeDropdown.RegisterCallback<ChangeEvent<Mode>>(evt => {
                 if (evt.newValue == mode) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change translation type");
@@ -72,7 +72,7 @@ namespace GeometryGraph.Editor {
 
             attributePort.Add(attributeNameField);
             
-            inputContainer.Add(modeButton);
+            inputContainer.Add(modeDropdown);
             AddPort(inputPort);
             AddPort(translationPort);
             inputContainer.Add(translationField);
@@ -118,7 +118,7 @@ namespace GeometryGraph.Editor {
             
             translationField.SetValueWithoutNotify(translation);
             attributeNameField.SetValueWithoutNotify(attributeName);
-            modeButton.SetValueWithoutNotify(mode);
+            modeDropdown.SetValueWithoutNotify(mode);
             
             RuntimeNode.UpdateValue(translation, Which.Translation);
             RuntimeNode.UpdateValue(attributeName, Which.AttributeName);

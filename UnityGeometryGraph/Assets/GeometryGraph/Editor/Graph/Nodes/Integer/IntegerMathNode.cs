@@ -20,7 +20,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort extraPort;
         private GraphFrameworkPort resultPort;
 
-        private EnumSelectionButton<MathOperation> operationButton;
+        private EnumSelectionDropdown<MathOperation> operationDropdown;
         private IntegerField xField;
         private IntegerField yField;
         private FloatField toleranceField;
@@ -72,8 +72,8 @@ namespace GeometryGraph.Editor {
             (extraPort, extraField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Extra", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(extra, Which.Extra));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Integer, edgeConnectorListener, this);
 
-            operationButton = new EnumSelectionButton<MathOperation>(operation, mathOperationTree);
-            operationButton.RegisterCallback<ChangeEvent<MathOperation>>(evt => {
+            operationDropdown = new EnumSelectionDropdown<MathOperation>(operation, mathOperationTree);
+            operationDropdown.RegisterCallback<ChangeEvent<MathOperation>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
                 RuntimeNode.UpdateOperation(operation);
@@ -109,7 +109,7 @@ namespace GeometryGraph.Editor {
             tolerancePort.Add(toleranceField); 
             extraPort.Add(extraField); 
             
-            inputContainer.Add(operationButton);
+            inputContainer.Add(operationDropdown);
             AddPort(xPort);
             AddPort(yPort);
             AddPort(tolerancePort);
@@ -225,7 +225,7 @@ namespace GeometryGraph.Editor {
             tolerance = jsonData.Value<float>("t");
             extra = jsonData.Value<int>("v");
             
-            operationButton.SetValueWithoutNotify(operation, 1);
+            operationDropdown.SetValueWithoutNotify(operation, 1);
             xField.SetValueWithoutNotify(x);
             yField.SetValueWithoutNotify(y);
             toleranceField.SetValueWithoutNotify(tolerance);

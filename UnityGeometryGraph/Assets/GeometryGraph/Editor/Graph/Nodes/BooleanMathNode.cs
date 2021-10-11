@@ -16,7 +16,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort yPort;
         private GraphFrameworkPort resultPort;
 
-        private EnumSelectionButton<Operation> operationButton;
+        private EnumSelectionDropdown<Operation> operationDropdown;
         private Toggle xField;
         private Toggle yField;
 
@@ -41,8 +41,8 @@ namespace GeometryGraph.Editor {
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Y", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(y, Which.B));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
-            operationButton = new EnumSelectionButton<Operation>(operation, compareOperationTree);
-            operationButton.RegisterCallback<ChangeEvent<Operation>>(evt => {
+            operationDropdown = new EnumSelectionDropdown<Operation>(operation, compareOperationTree);
+            operationDropdown.RegisterCallback<ChangeEvent<Operation>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
                 RuntimeNode.UpdateCompareOperation(operation);
@@ -64,7 +64,7 @@ namespace GeometryGraph.Editor {
             xPort.Add(xField);
             yPort.Add(yField);
             
-            inputContainer.Add(operationButton);
+            inputContainer.Add(operationDropdown);
             AddPort(xPort);
             AddPort(yPort);
             AddPort(resultPort);
@@ -103,7 +103,7 @@ namespace GeometryGraph.Editor {
             x = jsonData.Value<int>("a") == 1;
             y = jsonData.Value<int>("b") == 1;
             
-            operationButton.SetValueWithoutNotify(operation, 1);
+            operationDropdown.SetValueWithoutNotify(operation, 1);
             xField.SetValueWithoutNotify(x);
             yField.SetValueWithoutNotify(y);
             

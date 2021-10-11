@@ -21,7 +21,7 @@ namespace GeometryGraph.Editor {
 
         private IntegerField indexField;
         private IntegerField seedField;
-        private EnumSelectionButton<SampleType> sampleTypeButton;
+        private EnumSelectionDropdown<SampleType> sampleTypeDropdown;
 
         private int index;
         private int seed;
@@ -43,8 +43,8 @@ namespace GeometryGraph.Editor {
             (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(seed, Which.Seed));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
-            sampleTypeButton = new EnumSelectionButton<SampleType>(sampleType, tree);
-            sampleTypeButton.RegisterCallback<ChangeEvent<SampleType>>(evt => {
+            sampleTypeDropdown = new EnumSelectionDropdown<SampleType>(sampleType, tree);
+            sampleTypeDropdown.RegisterCallback<ChangeEvent<SampleType>>(evt => {
                 if (evt.newValue == sampleType) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change collection sample type");
                 sampleType = evt.newValue;
@@ -69,7 +69,7 @@ namespace GeometryGraph.Editor {
             indexPort.Add(indexField);
             seedPort.Add(seedField);
             
-            inputContainer.Add(sampleTypeButton);
+            inputContainer.Add(sampleTypeDropdown);
             AddPort(collectionPort);
             AddPort(indexPort);
             AddPort(seedPort);
@@ -114,7 +114,7 @@ namespace GeometryGraph.Editor {
             
             indexField.SetValueWithoutNotify(index);
             seedField.SetValueWithoutNotify(seed);
-            sampleTypeButton.SetValueWithoutNotify(sampleType);
+            sampleTypeDropdown.SetValueWithoutNotify(sampleType);
             
             RuntimeNode.UpdateValue(index, Which.Index);
             RuntimeNode.UpdateValue(seed, Which.Seed);

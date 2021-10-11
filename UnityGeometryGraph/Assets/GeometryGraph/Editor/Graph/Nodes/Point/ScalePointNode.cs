@@ -23,7 +23,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort attributePort;
         private GraphFrameworkPort resultPort;
 
-        private EnumSelectionButton<Mode> modeButton;
+        private EnumSelectionDropdown<Mode> modeDropdown;
         private Vector3Field vectorField;
         private FloatField scalarField;
         private TextField attributeNameField;
@@ -35,9 +35,9 @@ namespace GeometryGraph.Editor {
 
         private static readonly SelectionTree tree = new SelectionTree(new List<object>(Enum.GetValues(typeof(Mode)).Convert(o => o))) {
             new SelectionCategory("Type", false, SelectionCategory.CategorySize.Normal) {
-                new SelectionEntry("Scale every point using a vector", 0, false),
-                new SelectionEntry("Scale every point using a float value", 1, false),
-                new SelectionEntry("Translate each point using an attribute", 2, false)
+                new SelectionEntry("Scale each point using a vector", 0, false),
+                new SelectionEntry("Scale each point using a float value", 1, false),
+                new SelectionEntry("Scale each point using an attribute", 2, false)
             }
         };
 
@@ -51,8 +51,8 @@ namespace GeometryGraph.Editor {
             (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(attributeName, Which.AttributeName));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
-            modeButton = new EnumSelectionButton<Mode>(mode, tree);
-            modeButton.RegisterCallback<ChangeEvent<Mode>>(evt => {
+            modeDropdown = new EnumSelectionDropdown<Mode>(mode, tree);
+            modeDropdown.RegisterCallback<ChangeEvent<Mode>>(evt => {
                 if (evt.newValue == mode) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change scale type");
@@ -70,7 +70,7 @@ namespace GeometryGraph.Editor {
             scalarField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change scalar scale");
                 scalar = evt.newValue;
-                RuntimeNode.UpdateValue(vector, Which.Scalar);
+                RuntimeNode.UpdateValue(scalar, Which.Scalar);
             });
             
             attributeNameField.RegisterValueChangedCallback(evt => {
@@ -84,7 +84,7 @@ namespace GeometryGraph.Editor {
             scalarPort.Add(scalarField);
             attributePort.Add(attributeNameField);
 
-            inputContainer.Add(modeButton);
+            inputContainer.Add(modeDropdown);
             AddPort(inputPort);
             AddPort(vectorPort);
             inputContainer.Add(vectorField);
@@ -147,7 +147,7 @@ namespace GeometryGraph.Editor {
             vectorField.SetValueWithoutNotify(vector);
             scalarField.SetValueWithoutNotify(scalar);
             attributeNameField.SetValueWithoutNotify(attributeName);
-            modeButton.SetValueWithoutNotify(mode);
+            modeDropdown.SetValueWithoutNotify(mode);
             
             RuntimeNode.UpdateValue(vector, Which.Vector);
             RuntimeNode.UpdateValue(scalar, Which.Scalar);

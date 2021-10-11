@@ -28,25 +28,72 @@ EditorView > #content > GraphFrameworkGraphView > GridBackground {
     --thick-line-color: rgba(20, 20, 20, 0.4);
     --spacing: 20;
 }
-.node.collapsed EnumSelectionButton.enum-dropdown-button {
+
+BlackboardRow.property-GeometryObject #expandButton, 
+BlackboardRow.property-GeometryCollection #expandButton {
     display: none;
 }
 
-EnumSelectionButton.enum-dropdown-button {
+/* 
+    Region: Enum Selection Dropdown
+*/
+.node.collapsed EnumSelectionDropdown.enum-selection-dropdown {
+    display: none;
+}
+
+EnumSelectionDropdown.enum-selection-dropdown {
+    flex-direction: row;
+    align-items: center;
+}
+
+EnumSelectionDropdown.enum-selection-dropdown Label {
+    margin-left: 6px;
+}
+
+EnumSelectionDropdown.enum-selection-dropdown .enum-dropdown-button {
     padding: 2px 4px 2px 4px;
     margin-left: 3px;
     margin-right: 3px;
     -unity-text-align: middle-left;
+    flex-grow: 1;
 }
 
-EnumSelectionButton.enum-dropdown-button .arrow-down {
+EnumSelectionDropdown.enum-selection-dropdown .enum-dropdown-button .arrow-down {
     width: 14px;
     height: 14px;
     align-self: flex-end;
     background-image: resource("d_dropdown");
 }
 
-BlackboardRow.property-GeometryObject #expandButton, 
-BlackboardRow.property-GeometryCollection #expandButton {
-    display: none;
+/* 
+    Region: Enum Selection Toggle
+*/
+EnumSelectionToggle.enum-selection-toggle {
+    flex-direction: row;
+    padding: 3px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+EnumSelectionToggle.enum-selection-toggle .toggle-button {
+    margin: 0;
+    height: 20px;
+    border-radius: 0;
+    border-left-width: 0;
+    flex-grow: 1;
+}
+
+EnumSelectionToggle.enum-selection-toggle .toggle-button.selected {
+    background-color: #216bcb;
+}
+
+EnumSelectionToggle.enum-selection-toggle .toggle-button.first {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-left-width: 1px;
+}
+
+EnumSelectionToggle.enum-selection-toggle .toggle-button.last {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }

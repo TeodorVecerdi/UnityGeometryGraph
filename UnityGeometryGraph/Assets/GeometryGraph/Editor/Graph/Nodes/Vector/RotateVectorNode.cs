@@ -23,7 +23,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort anglePort;
         private GraphFrameworkPort resultPort;
 
-        private EnumSelectionButton<RotationType> rotationTypeButton;
+        private EnumSelectionDropdown<RotationType> rotationTypeDropdown;
         private Vector3Field vectorField;
         private Vector3Field centerField;
         private Vector3Field axisField;
@@ -58,8 +58,8 @@ namespace GeometryGraph.Editor {
             (anglePort, angleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Angle", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(angle, Which.Angle));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
 
-            rotationTypeButton = new EnumSelectionButton<RotationType>(rotationType, compareOperationTree);
-            rotationTypeButton.RegisterCallback<ChangeEvent<RotationType>>(evt => {
+            rotationTypeDropdown = new EnumSelectionDropdown<RotationType>(rotationType, compareOperationTree);
+            rotationTypeDropdown.RegisterCallback<ChangeEvent<RotationType>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 rotationType = evt.newValue;
                 RuntimeNode.UpdateType(rotationType);
@@ -92,7 +92,7 @@ namespace GeometryGraph.Editor {
             
             anglePort.Add(angleField);
             
-            inputContainer.Add(rotationTypeButton);
+            inputContainer.Add(rotationTypeDropdown);
             AddPort(vectorPort);
             inputContainer.Add(vectorField);
             AddPort(centerPort);
@@ -163,7 +163,7 @@ namespace GeometryGraph.Editor {
             eulerAngles = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("e"), float3Converter.Converter);
             angle = jsonData.Value<float>("a");
             
-            rotationTypeButton.SetValueWithoutNotify(rotationType, 1);
+            rotationTypeDropdown.SetValueWithoutNotify(rotationType, 1);
             vectorField.SetValueWithoutNotify(vector);
             centerField.SetValueWithoutNotify(center);
             axisField.SetValueWithoutNotify(axis);

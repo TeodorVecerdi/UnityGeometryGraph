@@ -17,7 +17,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort bPort;
         private GraphFrameworkPort resultPort;
 
-        private EnumSelectionButton<CompareOperation> operationButton;
+        private EnumSelectionDropdown<CompareOperation> operationDropdown;
         private IntegerField aField;
         private IntegerField bField;
 
@@ -44,8 +44,8 @@ namespace GeometryGraph.Editor {
             (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("B", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(b, Which.B));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
-            operationButton = new EnumSelectionButton<CompareOperation>(operation, compareOperationTree);
-            operationButton.RegisterCallback<ChangeEvent<CompareOperation>>(evt => {
+            operationDropdown = new EnumSelectionDropdown<CompareOperation>(operation, compareOperationTree);
+            operationDropdown.RegisterCallback<ChangeEvent<CompareOperation>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
                 RuntimeNode.UpdateCompareOperation(operation);
@@ -66,7 +66,7 @@ namespace GeometryGraph.Editor {
             aPort.Add(aField);
             bPort.Add(bField);
             
-            inputContainer.Add(operationButton);
+            inputContainer.Add(operationDropdown);
             AddPort(aPort);
             AddPort(bPort);
             AddPort(resultPort);
@@ -95,7 +95,7 @@ namespace GeometryGraph.Editor {
             a = jsonData.Value<int>("a");
             b = jsonData.Value<int>("b");
             
-            operationButton.SetValueWithoutNotify(operation, 1);
+            operationDropdown.SetValueWithoutNotify(operation, 1);
             aField.SetValueWithoutNotify(a);
             bField.SetValueWithoutNotify(b);
             
