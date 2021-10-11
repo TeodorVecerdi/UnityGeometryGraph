@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityCommons;
 
@@ -21,6 +22,16 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override object GetValueForPort(RuntimePort port) {
             return port == ValuePort ? Rand.FloatSeeded(seed) : 0.0f;
+        }
+
+        public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
+            if (port != ValuePort) yield break;
+            if (count < 0) yield break;
+            Rand.PushState(seed);
+            for (var i = 0; i < count; i++) {
+                yield return Rand.Float;
+            }
+            Rand.PopState();
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public abstract class RuntimeNode {
@@ -14,7 +15,15 @@ namespace GeometryGraph.Runtime.Graph {
         public abstract object GetValueForPort(RuntimePort port);
         // NOTE: Regex to yeet out this function out of every class if needed: `public override void RebindPorts\(\) \{(([\n]*.*?)*)?\}[\n\s]*`
         public abstract void RebindPorts();
-        
+
+        public virtual IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
+            if (count < 0) {
+                Debug.LogWarning($"GetValuesForPort with negative count at {GetType()}");
+                count = 0;
+            }
+            var value = GetValueForPort(port);
+            return Enumerable.Repeat(value, count);
+        }
         protected virtual void OnPortValueChanged(Connection connection, RuntimePort port) {}
         protected virtual void OnConnectionCreated(Connection connection, RuntimePort port) {}
         protected virtual void OnConnectionRemoved(Connection connection, RuntimePort port) {}
