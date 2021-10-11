@@ -159,23 +159,25 @@ namespace GeometryGraph.Runtime.Graph {
         public void Calculate() {
             if (geometry == null) return;
             result = geometry.Clone();
-            var scaleAttr = result.GetAttribute<Vector3Attribute>("scale", AttributeDomain.Vertex);
-            scaleAttr ??= Enumerable.Repeat(float3_util.one, result.Vertices.Count).Into<Vector3Attribute>("scale", AttributeDomain.Vertex);
-            
-            /*if (mode is RotatePointNode_Mode.Vector or RotatePointNode_Mode.Float) {
-                var multiplier = mode == RotatePointNode_Mode.Vector ? vector : new float3(scalar);
-                scaleAttr.Yield(scale => scale * multiplier).Into(scaleAttr);
-                result.StoreAttribute(scaleAttr);
-            } else {
-                if (!result.HasAttribute(attributeName)) {
-                    Debug.LogWarning($"Couldn't find attribute [{attributeName}]");
-                    return;
-                }
+            var rotAttribute = result.GetAttributeOrDefault<Vector3Attribute, float3>("rotation", AttributeDomain.Vertex, float3.zero);
+            if (rotationType == RotatePointNode_RotationType.Euler) {
+                var tmpAttribute = rotationMode == RotatePointNode_RotationMode.Vector 
+                    ? Enumerable.Repeat(rotation, rotAttribute.Count).Into<Vector3Attribute>("tmp", AttributeDomain.Vertex) 
+                    : result.GetAttributeOrDefault<Vector3Attribute, float3>(rotationAttribute, AttributeDomain.Vertex, float3.zero);
                 
-                var otherAttribute = result.GetAttribute<Vector3Attribute>(attributeName, AttributeDomain.Vertex);
-                scaleAttr.YieldWithAttribute(otherAttribute, (scale, multiplier) => scale * multiplier).Into(scaleAttr);
-                result.StoreAttribute(scaleAttr);
-            }*/
+                rotAttribute.YieldWithAttribute(tmpAttribute, (rot, euler) => math.rotate(quaternion.Euler(euler), rot)).Into(rotAttribute);
+            } else {
+                var axisAttribute = axisMode == RotatePointNode_AxisMode.Vector 
+                    ? Enumerable.Repeat(axis, rotAttribute.Count).Into<Vector3Attribute>("axisAttribute", AttributeDomain.Vertex) 
+                    : result.GetAttributeOrDefault<Vector3Attribute, float3>(this.axisAttribute, AttributeDomain.Vertex, float3_util.up);
+                var angleAttribute = angleMode == RotatePointNode_AngleMode.Float
+                    ? Enumerable.Repeat(angle, rotAttribute.Count).Into<FloatAttribute>("angleAttribute", AttributeDomain.Vertex)
+                    : result.GetAttributeOrDefault<FloatAttribute, float>(this.angleAttribute, AttributeDomain.Vertex, 0.0f);
+                rotAttribute.YieldWithAttribute(axisAttribute, angleAttribute,
+                                                     (rot, axis, angle) => math.rotate(quaternion.AxisAngle(axis, angle), rot))
+                                 .Into(rotAttribute);
+            }
+            result.StoreAttribute(rotAttribute);
         }
 
         public override string GetCustomData() {
