@@ -10,9 +10,15 @@ namespace GeometryGraph.Runtime.Geometry {
         public GeometryData Icosphere;
 
         [Button]
-        private void Generate() {
+        private void MakeIcosphere() {
             Icosphere = Primitive.Icosphere(Radius, Subdivisions);
             // Icosphere = Primitive.IcosahedronHardcoded();
+            Exporter.Export(Icosphere);
+        }
+
+        [Button]
+        private void MakeIcosahedron() {
+            Icosphere = Primitive.Icosahedron();
             Exporter.Export(Icosphere);
         }
 
