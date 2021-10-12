@@ -637,7 +637,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 new float3(-z, -x, 0.0f)
             };
             
-             var eI = 0;
+            var eI = 0;
             var edges = new List<GeometryData.Edge> {
                 new GeometryData.Edge(0, 4, eI++) { FaceA = 0, FaceB = 1 },
                 new GeometryData.Edge(4, 1, eI++) { FaceA = 0, FaceB = 4 },

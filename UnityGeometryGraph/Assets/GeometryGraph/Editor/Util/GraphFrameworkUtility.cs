@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GeometryGraph.Runtime;
 using K4os.Compression.LZ4;
 using K4os.Compression.LZ4.Streams;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
 
 namespace GeometryGraph.Editor {
     public static class GraphFrameworkUtility {
         #region IO Utilities
 
         private static readonly LZ4EncoderSettings EncoderSettings = new LZ4EncoderSettings { CompressionLevel = LZ4Level.L09_HC };
-        
+
         public static bool CreateFile(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
             if (graphObject == null || string.IsNullOrEmpty(path)) return false;
             
@@ -51,7 +53,9 @@ namespace GeometryGraph.Editor {
             Debug.LogWarning("GraphFrameworkUtility::LoadGraphAtPath");
             var jsonString = ReadCompressed(assetPath);
             try {
+                RuntimeGraphObjectData.DeserializingFromJson = true;
                 var graphData = JsonUtility.FromJson<GraphFrameworkData>(jsonString);
+                RuntimeGraphObjectData.DeserializingFromJson = false;
                 var graphObject = ScriptableObject.CreateInstance<GraphFrameworkObject>();
                 graphObject.Initialize(graphData);
                 graphObject.AssetGuid = graphData.AssetGuid;
@@ -85,7 +89,6 @@ namespace GeometryGraph.Editor {
             return FindGraphAtPath(assetPath);
         }
 
-
         public static GraphFrameworkObject FindGraphAtPath(string assetPath) {
             if (string.IsNullOrEmpty(assetPath)) return null;
             var allAssetsAtPath = AssetDatabase.LoadAllAssetsAtPath(assetPath);
@@ -118,7 +121,7 @@ namespace GeometryGraph.Editor {
 
             return System.Text.Encoding.UTF8.GetString(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
         }
-        
+
         #endregion
 
         /// <summary>
@@ -129,7 +132,7 @@ namespace GeometryGraph.Editor {
         public static void VersionConvert(SemVer fromVersion, GraphFrameworkObject graphObject) {
             VersionConverter.ConvertVersion(fromVersion, GraphFrameworkVersion.Version.GetValue(), graphObject);
         }
-        
+
         /**
     !!   * Found this nifty method inside the codebase of ShaderGraph while reverse engineering some functionality.
     !!   * I needed something like this so it didn't make sense to reinvent the wheel, so I took this and slightly modified it.

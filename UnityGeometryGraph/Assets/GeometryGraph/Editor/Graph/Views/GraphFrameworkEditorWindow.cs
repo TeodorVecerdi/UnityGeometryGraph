@@ -49,10 +49,9 @@ namespace GeometryGraph.Editor {
         }
 
         private void Update() {
-            // if (focusedWindow == this && deleted) {
             if (deleted) {
-                var shouldClose = DisplayDeletedFromDiskDialog();
-                if (shouldClose) return;
+                var closed = DisplayDeletedFromDiskDialog();
+                if (closed) return;
             }
             
             if (graphObject == null && selectedAssetGuid != null) {
@@ -82,6 +81,7 @@ namespace GeometryGraph.Editor {
 
             if (editorView == null) {
                 Close();
+                return;
             }
 
             var wasUndoRedoPerformed = graphObject.WasUndoRedoPerformed;
@@ -119,22 +119,22 @@ namespace GeometryGraph.Editor {
             return false;
         }
 
-        public void SetGraphObject(GraphFrameworkObject graphObject) {
+        internal void SetGraphObject(GraphFrameworkObject graphObject) {
             SelectedAssetGuid = graphObject.AssetGuid;
             this.graphObject = graphObject;
         }
 
-        public void Refresh() {
+        private void Refresh() {
             UpdateTitle();
             editorView.BuildGraph();
         }
 
-        public void GraphDeleted() {
+        internal void GraphDeleted() {
             Debug.Log("Graph deleted");
             deleted = true;
         }
 
-        private void UpdateTitle() {
+        internal void UpdateTitle() {
             titleContent.text = $"{graphObject.RuntimeGraph.name}{(IsDirty ? "*" : "")}";
         }
 

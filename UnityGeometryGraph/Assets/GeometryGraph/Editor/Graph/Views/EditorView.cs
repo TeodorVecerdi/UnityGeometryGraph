@@ -157,11 +157,12 @@ namespace GeometryGraph.Editor {
 
         public void BuildGraph() {
             // Remove existing elements
-            graphView.graphElements.ToList().OfType<Node>().ToList().ForEach(graphView.RemoveElement);
-            graphView.graphElements.ToList().OfType<Edge>().ToList().ForEach(graphView.RemoveElement);
-            graphView.graphElements.ToList().OfType<Group>().ToList().ForEach(graphView.RemoveElement);
-            graphView.graphElements.ToList().OfType<StickyNote>().ToList().ForEach(graphView.RemoveElement);
-            graphView.graphElements.ToList().OfType<BlackboardRow>().ToList().ForEach(graphView.RemoveElement);
+            graphView.graphElements.Where(el => el is Node or Edge or Group or StickyNote or BlackboardRow).ToList().ForEach(graphView.RemoveElement);
+            // graphView.graphElements.ToList().OfType<Node>().ToList().ForEach(graphView.RemoveElement);
+            // graphView.graphElements.ToList().OfType<Edge>().ToList().ForEach(graphView.RemoveElement);
+            // graphView.graphElements.ToList().OfType<Group>().ToList().ForEach(graphView.RemoveElement);
+            // graphView.graphElements.ToList().OfType<StickyNote>().ToList().ForEach(graphView.RemoveElement);
+            // graphView.graphElements.ToList().OfType<BlackboardRow>().ToList().ForEach(graphView.RemoveElement);
 
             // Create & add graph elements 
             GraphObject.GraphData.Nodes.ForEach(node => {
@@ -184,8 +185,8 @@ namespace GeometryGraph.Editor {
                     var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
                     var connection = new Connection { Output = runtimeOutput, Input = runtimeInput };
-                    runtimeOutput.Node.OnConnectionCreated(connection);
-                    runtimeInput.Node.OnConnectionCreated(connection);
+                    runtimeOutput.Node.NotifyConnectionCreated(connection, runtimeOutput);
+                    runtimeInput.Node.NotifyConnectionCreated(connection, runtimeInput);
                 } else {
                     Debug.Log("Edge ports were null");
                 }
@@ -218,16 +219,6 @@ namespace GeometryGraph.Editor {
             }
 
             foreach (var removedEdge in GraphObject.GraphData.RemovedEdges) {
-                var inputPort = (GraphFrameworkPort)removedEdge.Edge?.input;
-                var outputPort = (GraphFrameworkPort)removedEdge.Edge?.output;
-                
-                if (inputPort != null && outputPort != null) {
-                    var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
-                    var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    runtimeInput.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
-                    runtimeOutput.Node.OnConnectionRemoved(runtimeOutput, runtimeInput);
-                }
-
                 GraphObject.RuntimeGraph.OnConnectionRemoved(removedEdge.OutputPort, removedEdge.InputPort);
 
                 RemoveEdge(removedEdge);
@@ -258,8 +249,6 @@ namespace GeometryGraph.Editor {
                     var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
                     var connection = new Connection { Output = runtimeOutput, OutputGuid = runtimeOutput.Guid, Input = runtimeInput, InputGuid = runtimeInput.Guid};
-                    runtimeOutput.Node.OnConnectionCreated(connection);
-                    runtimeInput.Node.OnConnectionCreated(connection);
                     GraphObject.RuntimeGraph.OnConnectionAdded(connection);
                 }
             }
