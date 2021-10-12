@@ -22,7 +22,7 @@ namespace GeometryGraph.Runtime.Geometry {
         internal IReadOnlyDictionary<string, BaseAttribute> FaceAttributes => faceAttributes;
         internal IReadOnlyDictionary<string, BaseAttribute> FaceCornerAttributes => faceCornerAttributes;
 
-        [SerializeField, HideInInspector] private bool dirty;
+        private bool dirty;
         [SerializeField, HideInInspector] private SerializedAttributeDictionary serializedVertexAttributes;
         [SerializeField, HideInInspector] private SerializedAttributeDictionary serializedEdgeAttributes;
         [SerializeField, HideInInspector] private SerializedAttributeDictionary serializedFaceAttributes;
@@ -170,10 +170,6 @@ namespace GeometryGraph.Runtime.Geometry {
             return AttributeConvert.ConvertDomain(owner, clone, domain).Into(clone);
         }
 
-        /// <summary>
-        ///   <para>Implement this method to receive a callback before Unity serializes your object.</para>
-        /// </summary>
-        /// <footer><a href="file:///C:/Program%20Files/Unity/Hub/Editor/2021.1.19f1/Editor/Data/Documentation/en/ScriptReference/ISerializationCallbackReceiver.OnBeforeSerialize.html">External documentation for `ISerializationCallbackReceiver.OnBeforeSerialize`</a></footer>
         public void OnBeforeSerialize() {
             if (!dirty) return;
             
@@ -184,10 +180,6 @@ namespace GeometryGraph.Runtime.Geometry {
             SerializeDictionary(faceCornerAttributes, ref serializedFaceCornerAttributes);
         }
 
-        /// <summary>
-        ///   <para>Implement this method to receive a callback after Unity deserializes your object.</para>
-        /// </summary>
-        /// <footer><a href="file:///C:/Program%20Files/Unity/Hub/Editor/2021.1.19f1/Editor/Data/Documentation/en/ScriptReference/ISerializationCallbackReceiver.OnAfterDeserialize.html">External documentation for `ISerializationCallbackReceiver.OnAfterDeserialize`</a></footer>
         public void OnAfterDeserialize() {
             DeserializeDictionary(serializedVertexAttributes, ref vertexAttributes);
             DeserializeDictionary(serializedEdgeAttributes, ref edgeAttributes);
@@ -196,7 +188,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         private void SerializeDictionary(AttributeDictionary source, ref SerializedAttributeDictionary destination) {
-            if(source == null || source.Count == 0) return;
+            if(source == null) return;
             destination = new SerializedAttributeDictionary();
             
             foreach (var keyValuePair in source) {
@@ -205,8 +197,11 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         private void DeserializeDictionary(SerializedAttributeDictionary source, ref AttributeDictionary destination) {
-            if (source == null || destination == null) return;
-
+            if (source == null) {
+                return;
+            }
+            if (source.Count == 0) source.OnAfterDeserialize();
+            
             destination = new AttributeDictionary();
             foreach (var keyValuePair in source) {
                 destination[keyValuePair.Key] = SerializedAttribute.Deserialize(keyValuePair.Value);
