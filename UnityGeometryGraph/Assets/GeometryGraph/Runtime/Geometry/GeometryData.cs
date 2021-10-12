@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Attribute;
+using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityCommons;
 using UnityEngine;
@@ -76,40 +77,46 @@ namespace GeometryGraph.Runtime.Geometry {
 
         }
 
-        public bool HasAttribute(string name) => attributeManager.HasAttribute(name);
-        public bool HasAttribute(string name, AttributeType type) => attributeManager.HasAttribute(name, type);
-        public bool HasAttribute(string name, AttributeDomain domain) => attributeManager.HasAttribute(name, domain);
-        public bool HasAttribute(string name, AttributeType type, AttributeDomain domain) => attributeManager.HasAttribute(name, type, domain);
+        [Pure] public bool HasAttribute(string name) => attributeManager.HasAttribute(name);
+        [Pure] public bool HasAttribute(string name, AttributeType type) => attributeManager.HasAttribute(name, type);
+        [Pure] public bool HasAttribute(string name, AttributeDomain domain) => attributeManager.HasAttribute(name, domain);
+        [Pure] public bool HasAttribute(string name, AttributeType type, AttributeDomain domain) => attributeManager.HasAttribute(name, type, domain);
         
+        [CanBeNull, MustUseReturnValue]
         public BaseAttribute GetAttribute(string name) {
             return attributeManager.Request(name);
         }
 
+        [CanBeNull, MustUseReturnValue]
         public BaseAttribute GetAttribute(string name, AttributeDomain domain) {
             return attributeManager.Request(name, domain);
         }
         
+        [CanBeNull, MustUseReturnValue]
         public BaseAttribute GetAttribute(string name, AttributeType type, AttributeDomain domain) {
             return attributeManager.Request(name, type, domain);
         }
 
+        [CanBeNull, MustUseReturnValue]
         public TAttribute GetAttribute<TAttribute>(string name) where TAttribute : BaseAttribute {
             return (TAttribute)attributeManager.Request(name, AttributeUtility.SystemTypeToAttributeType(typeof(TAttribute)));
         }
 
+        [CanBeNull, MustUseReturnValue]
         public TAttribute GetAttribute<TAttribute>(string name, AttributeDomain domain) where TAttribute : BaseAttribute {
             return (TAttribute)attributeManager.Request(name, AttributeUtility.SystemTypeToAttributeType(typeof(TAttribute)), domain);
         }
         
+        [NotNull, MustUseReturnValue]
         public TAttribute GetAttributeOrDefault<TAttribute, T>(string name, AttributeDomain domain, T defaultValue) where TAttribute : BaseAttribute<T> {
-            if (HasAttribute(name, domain)) return GetAttribute<TAttribute>(name, domain);
+            if (HasAttribute(name, domain)) return GetAttribute<TAttribute>(name, domain)!;
             var attribute = Enumerable.Repeat(defaultValue, domain switch {
                 AttributeDomain.Vertex => vertices.Count,
                 AttributeDomain.Edge => edges.Count,
                 AttributeDomain.Face => faces.Count,
                 AttributeDomain.FaceCorner => faceCorners.Count,
                 _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
-            }).Into<TAttribute>("name", domain);
+            }).Into<TAttribute>(name, domain);
             return attribute;
         }
 
