@@ -83,13 +83,58 @@ namespace GeometryGraph.Runtime.Graph {
             return GetValue(firstConnection, defaultValue);
         }
 
+        protected IEnumerable<T> GetValues<T>(RuntimePort port, int count, T defaultValue) {
+            if (count <= 0) yield break;
+            var firstConnection = port.Connections.FirstOrDefault();
+            if (firstConnection == null) {
+                for (var i = 0; i < count; i++) {
+                    yield return defaultValue;
+                }
+                yield break;
+            }
+
+            var outputPort = firstConnection.Output;
+            if (outputPort == null) {
+                DebugUtility.Log("GetValues: OutputPort was null");
+                for (var i = 0; i < count; i++) {
+                    yield return defaultValue;
+                }
+                yield break;
+            }
+            
+            var values = outputPort.Node.GetValuesForPort(outputPort, count);
+            foreach (var value in values) {
+                if (PortTypeUtility.IsUnmanagedType(outputPort.Type) && value is T tValueUnmanaged) {
+                    yield return tValueUnmanaged;
+                    continue;
+                }
+
+                var tValue = (T)value;
+                if (tValue != null) {
+                    yield return tValue;
+                    continue;
+                }
+
+                yield return (T)PortValueConverter.Convert(value, outputPort.Type, firstConnection.Input.Type);
+            }
+        }
+
         protected IEnumerable<T> GetValues<T>(RuntimePort port, T defaultValue) {
             if (port.Connections.Count == 0) yield return defaultValue;
             foreach (var connection in port.Connections) {
                 var value = connection.Output.Node.GetValueForPort(connection.Output);
+                if (PortTypeUtility.IsUnmanagedType(connection.Output.Type) && value is T tValueUnmanaged) {
+                    yield return tValueUnmanaged;
+                    continue;
+                }
+
                 var tValue = (T)value;
-                if (tValue != null) yield return tValue;
-                else yield return (T)PortValueConverter.Convert(value, connection.Output.Type, connection.Input.Type);
+                if (tValue != null) {
+                    yield return tValue;
+                    continue;
+                }
+                
+                yield return (T)PortValueConverter.Convert(value, connection.Output.Type, connection.Input.Type);
             }
         }
 
