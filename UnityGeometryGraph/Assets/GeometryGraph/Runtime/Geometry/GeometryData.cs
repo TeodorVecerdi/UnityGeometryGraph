@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Attribute;
@@ -118,6 +118,16 @@ namespace GeometryGraph.Runtime.Geometry {
                 _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
             }).Into<TAttribute>(name, domain);
             return attribute;
+        }
+
+        public IEnumerable<BaseAttribute> GetAttributes(AttributeDomain domain) {
+            return domain switch {
+                AttributeDomain.Vertex => attributeManager.VertexAttributes.Values,
+                AttributeDomain.Edge => attributeManager.EdgeAttributes.Values,
+                AttributeDomain.Face => attributeManager.FaceAttributes.Values,
+                AttributeDomain.FaceCorner => attributeManager.FaceCornerAttributes.Values,
+                _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
+            };
         }
 
         public bool StoreAttribute(BaseAttribute attribute) {
