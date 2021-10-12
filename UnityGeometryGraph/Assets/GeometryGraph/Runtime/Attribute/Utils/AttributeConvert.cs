@@ -59,6 +59,10 @@ namespace GeometryGraph.Runtime.Attribute {
             return (IEnumerable<TValue>)ConvertDomain(geometry, sourceAttribute, to);
         }
 
+        internal static object Average(AttributeType type, params object[] values) {
+            return Average(type, (IEnumerable)values);
+        }
+
         //!! Vertex Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_VertexToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {

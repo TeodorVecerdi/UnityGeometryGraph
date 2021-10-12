@@ -20,27 +20,41 @@ namespace GeometryGraph.Runtime.Geometry {
         private static GeometryData Subdivide_Impl(GeometryData geometry) {
             var edgeDict = new Dictionary<int, (int, int)>();
             var midPointDict = new Dictionary<int, int>();
-            var vertexPositions = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex).ToList();
+            var vertexPositions = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex)!.ToList();
             
             List<float2> uvsOriginal;
             if (geometry.HasAttribute("uv", AttributeDomain.FaceCorner))
-                uvsOriginal = geometry.GetAttribute<Vector2Attribute>("uv", AttributeDomain.FaceCorner).ToList();
+                uvsOriginal = geometry.GetAttribute<Vector2Attribute>("uv", AttributeDomain.FaceCorner)!.ToList();
             else 
                 uvsOriginal = new float2[geometry.FaceCorners.Count].ToList();
             var uvs = new List<float2>();
             
-            var creaseOriginal = geometry.GetAttribute<ClampedFloatAttribute>("crease", AttributeDomain.Edge);
+            var creaseOriginal = geometry.GetAttribute<ClampedFloatAttribute>("crease", AttributeDomain.Edge)!;
             var crease = new List<float>();
-            var faceNormalsOriginal = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
+            var faceNormalsOriginal = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face)!;
             var faceNormals = new List<float3>();
-            var materialIndicesOriginal = geometry.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face);
+            var materialIndicesOriginal = geometry.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face)!;
             var materialIndices = new List<int>();
-            var shadeSmoothOriginal = geometry.GetAttribute<BoolAttribute>("shade_smooth", AttributeDomain.Face);
+            var shadeSmoothOriginal = geometry.GetAttribute<BoolAttribute>("shade_smooth", AttributeDomain.Face)!;
             var shadeSmooth = new List<bool>();
 
             var edges = new List<GeometryData.Edge>();
             var faces = new List<GeometryData.Face>();
             var faceCorners = new List<GeometryData.FaceCorner>();
+
+            var builtinFaceAttributeNames = new HashSet<string> { "normal", "material_index", "shade_smooth" };
+            var allVertexAttributes = geometry.GetAttributes(AttributeDomain.Vertex)
+                                              .Where(attribute => attribute.Name != "position")
+                                              .Select(attribute => (attribute.Name, attribute.Type, attribute.Values)).ToList();
+            var allEdgeAttributes = geometry.GetAttributes(AttributeDomain.Edge)
+                                            .Where(attribute => attribute.Name != "crease")
+                                            .Select(attribute => (attribute.Name, attribute.Type, attribute.Values, new List<object>())).ToList();
+            var allFaceAttributes = geometry.GetAttributes(AttributeDomain.Face)
+                                            .Where(attribute => !builtinFaceAttributeNames.Contains(attribute.Name))
+                                            .Select(attribute => (attribute.Name, attribute.Type, attribute.Values, new List<object>())).ToList();
+            var allFaceCornerAttributes = geometry.GetAttributes(AttributeDomain.FaceCorner)
+                                                  .Where(attribute => attribute.Name != "uv")
+                                                  .Select(attribute => (attribute.Name, attribute.Type, attribute.Values, new List<object>())).ToList();
 
             for (var i = 0; i < geometry.Edges.Count; i++) {
                 var edge = geometry.Edges[i];
@@ -48,10 +62,18 @@ namespace GeometryGraph.Runtime.Geometry {
                 var midPoint = (vertexPositions[edge.VertA] + vertexPositions[edge.VertB]) * 0.5f;
                 var edgeA = new GeometryData.Edge(edge.VertA, vertexPositions.Count, edges.Count);
                 var edgeB = new GeometryData.Edge(vertexPositions.Count, edge.VertB, edges.Count + 1);
+                foreach (var edgeAttribute in allEdgeAttributes) {
+                    edgeAttribute.Item4.Add(edgeAttribute.Values[edge.SelfIndex]);
+                    edgeAttribute.Item4.Add(edgeAttribute.Values[edge.SelfIndex]);
+                }
+                
+                foreach (var vertexAttribute in allVertexAttributes) {
+                    vertexAttribute.Values.Add(AttributeConvert.Average(vertexAttribute.Type, vertexAttribute.Values[edge.VertA], vertexAttribute.Values[edge.VertB]));
+                }
                 
                 edgeDict.Add(i, (edges.Count, edges.Count + 1));
                 midPointDict.Add(i, vertexPositions.Count);
-                crease.Add(creaseOriginal[i]);
+                crease.Add(creaseOriginal![i]);
                 crease.Add(creaseOriginal[i]);
                 vertexPositions.Add(midPoint);
                 edges.Add(edgeA);
@@ -117,6 +139,27 @@ namespace GeometryGraph.Runtime.Geometry {
                 uvs.Add(uZ);
                 uvs.Add(uZm);
                 
+                foreach (var faceCornerAttribute in allFaceCornerAttributes) {
+                    var attr_X = faceCornerAttribute.Values[face.FaceCornerA];
+                    var attr_Y = faceCornerAttribute.Values[face.FaceCornerB];
+                    var attr_Z = faceCornerAttribute.Values[face.FaceCornerC];
+                    var attr_Xm = AttributeConvert.Average(faceCornerAttribute.Type, faceCornerAttribute.Values[face.FaceCornerA], faceCornerAttribute.Values[face.FaceCornerB]);
+                    var attr_Ym = AttributeConvert.Average(faceCornerAttribute.Type, faceCornerAttribute.Values[face.FaceCornerB], faceCornerAttribute.Values[face.FaceCornerC]);
+                    var attr_Zm = AttributeConvert.Average(faceCornerAttribute.Type, faceCornerAttribute.Values[face.FaceCornerA], faceCornerAttribute.Values[face.FaceCornerC]);
+                    faceCornerAttribute.Item4.Add(attr_Xm);
+                    faceCornerAttribute.Item4.Add(attr_Ym);
+                    faceCornerAttribute.Item4.Add(attr_Zm);
+                    faceCornerAttribute.Item4.Add(attr_X);
+                    faceCornerAttribute.Item4.Add(attr_Xm);
+                    faceCornerAttribute.Item4.Add(attr_Zm);
+                    faceCornerAttribute.Item4.Add(attr_Xm);
+                    faceCornerAttribute.Item4.Add(attr_Y);
+                    faceCornerAttribute.Item4.Add(attr_Ym);
+                    faceCornerAttribute.Item4.Add(attr_Ym);
+                    faceCornerAttribute.Item4.Add(attr_Z);
+                    faceCornerAttribute.Item4.Add(attr_Zm);
+                }
+                
                 faces.Add(face0);
                 faces.Add(face1);
                 faces.Add(face2);
@@ -134,15 +177,43 @@ namespace GeometryGraph.Runtime.Geometry {
                 shadeSmooth.Add(shadeSmoothOriginal[i]);
                 shadeSmooth.Add(shadeSmoothOriginal[i]);
                 
+                foreach (var faceAttribute in allFaceAttributes) {
+                    faceAttribute.Item4.Add(faceAttribute.Values[i]);
+                    faceAttribute.Item4.Add(faceAttribute.Values[i]);
+                    faceAttribute.Item4.Add(faceAttribute.Values[i]);
+                    faceAttribute.Item4.Add(faceAttribute.Values[i]);
+                }
+                
                 edges.Add(edge_xy);
                 edges.Add(edge_yz);
                 edges.Add(edge_xz);
                 crease.Add(0.0f);
                 crease.Add(0.0f);
                 crease.Add(0.0f);
+                
+                foreach (var edgeAttribute in allEdgeAttributes) {
+                    edgeAttribute.Item4.Add(edgeAttribute.Values[e_xy]);
+                    edgeAttribute.Item4.Add(edgeAttribute.Values[e_yz]);
+                    edgeAttribute.Item4.Add(edgeAttribute.Values[e_xz]);
+                }
             }
             
-            return new GeometryData(edges, faces, faceCorners, geometry.SubmeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth,  crease, uvs);
+            var subdivided = new GeometryData(edges, faces, faceCorners, geometry.SubmeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth,  crease, uvs);
+            
+            foreach (var vertexAttribute in allVertexAttributes) {
+                subdivided.StoreAttribute(vertexAttribute.Values.Into(vertexAttribute.Name, vertexAttribute.Type, AttributeDomain.Vertex), AttributeDomain.Vertex);
+            }
+            foreach (var edgeAttribute in allEdgeAttributes) {
+                subdivided.StoreAttribute(edgeAttribute.Item4.Into(edgeAttribute.Name, edgeAttribute.Type, AttributeDomain.Edge), AttributeDomain.Edge);
+            }
+            foreach (var faceAttribute in allFaceAttributes) {
+                subdivided.StoreAttribute(faceAttribute.Item4.Into(faceAttribute.Name, faceAttribute.Type, AttributeDomain.Face), AttributeDomain.Face);
+            }
+            foreach (var faceCornerAttribute in allFaceCornerAttributes) {
+                subdivided.StoreAttribute(faceCornerAttribute.Item4.Into(faceCornerAttribute.Name, faceCornerAttribute.Type, AttributeDomain.FaceCorner), AttributeDomain.FaceCorner);
+            }
+            
+            return subdivided;
         }
 
         private static (int eA, int eB, int eC) SortEdges(int x, int y, int z, GeometryData.Edge edge1, GeometryData.Edge edge2, GeometryData.Edge edge3) {
