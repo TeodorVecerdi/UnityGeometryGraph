@@ -16,7 +16,6 @@ namespace GeometryGraph.Runtime.Graph {
 
         public BoundingBoxNode(string guid) : base(guid) {
             InputPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
-           
             MinPort = RuntimePort.Create(PortType.Vector, PortDirection.Output, this);
             MaxPort = RuntimePort.Create(PortType.Vector, PortDirection.Output, this);
             ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
@@ -27,6 +26,14 @@ namespace GeometryGraph.Runtime.Graph {
             if (port == MaxPort) return max;
             if (port == ResultPort) return boundingBox;
             return null;
+        }
+
+        protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
+            if (port != InputPort) return;
+            input = GeometryData.Empty;
+            min = float3.zero;
+            max = float3.zero;
+            boundingBox = GeometryData.Empty;
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
@@ -48,10 +55,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
-            var (min, max, boundingBox) = Geometry.Geometry.BoundingBox(input);
-            this.min = min;
-            this.max = max;
-            this.boundingBox = boundingBox;
+            (min, max, boundingBox) = Geometry.Geometry.BoundingBox(input);
         }
     }
 }

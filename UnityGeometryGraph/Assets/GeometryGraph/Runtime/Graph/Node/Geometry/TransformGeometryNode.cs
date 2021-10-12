@@ -40,9 +40,13 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(OutputGeometryPort);
         }
 
+        protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
+            if (port != InputGeometryPort) return;
+            result = GeometryData.Empty;
+        }
+
         public override object GetValueForPort(RuntimePort port) {
             if (port != OutputGeometryPort) return null;
-            CalculateResult();
             return result;
         }
 

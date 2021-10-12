@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using GeometryGraph.Runtime.Attribute;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Serialization;
@@ -28,7 +28,7 @@ namespace GeometryGraph.Runtime.Graph {
             VectorPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
             ScalarPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
             AttributePort = RuntimePort.Create(PortType.String, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
+            ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
 
         public void UpdateMode(ScalePointNode_Mode newMode) {
@@ -54,6 +54,14 @@ namespace GeometryGraph.Runtime.Graph {
         public override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
             return result;
+        }
+
+        protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
+            if (port == InputPort) {
+                geometry = GeometryData.Empty;
+                result = GeometryData.Empty;
+                NotifyPortValueChanged(ResultPort);
+            }
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {

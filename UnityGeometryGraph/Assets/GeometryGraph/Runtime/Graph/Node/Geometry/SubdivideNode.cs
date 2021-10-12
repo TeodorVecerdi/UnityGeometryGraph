@@ -27,6 +27,12 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(ResultPort);
         }
 
+        protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
+            if (port != InputPort) return;
+            source = GeometryData.Empty;
+            result = GeometryData.Empty;
+        }
+
         public override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) {
                 DebugUtility.Log("Attempting to get value for another port than the Result port");

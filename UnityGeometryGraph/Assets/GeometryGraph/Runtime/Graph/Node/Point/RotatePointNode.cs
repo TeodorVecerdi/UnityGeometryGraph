@@ -45,7 +45,7 @@ namespace GeometryGraph.Runtime.Graph {
             AxisAttributePort = RuntimePort.Create(PortType.String, PortDirection.Input, this);
             AngleAttributePort = RuntimePort.Create(PortType.String, PortDirection.Input, this);
             
-            ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
+            ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
 
         public void UpdateRotationType(RotatePointNode_RotationType newType) {
@@ -92,6 +92,12 @@ namespace GeometryGraph.Runtime.Graph {
 
             Calculate();
             NotifyPortValueChanged(ResultPort);
+        }
+
+        protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
+            if (port != InputPort) return;
+            geometry = GeometryData.Empty;
+            result = GeometryData.Empty;
         }
 
         public override object GetValueForPort(RuntimePort port) {

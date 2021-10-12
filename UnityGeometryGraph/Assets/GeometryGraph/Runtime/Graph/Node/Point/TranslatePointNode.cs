@@ -25,7 +25,7 @@ namespace GeometryGraph.Runtime.Graph {
             InputPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
             TranslationPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
             AttributePort = RuntimePort.Create(PortType.String, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
+            ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
 
         public void UpdateMode(TranslatePointNode_Mode newMode) {
@@ -45,6 +45,12 @@ namespace GeometryGraph.Runtime.Graph {
 
             Calculate();
             NotifyPortValueChanged(ResultPort);
+        }
+
+        protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
+            if (port != InputPort) return;
+            geometry = GeometryData.Empty;
+            result = GeometryData.Empty;
         }
 
         public override object GetValueForPort(RuntimePort port) {
