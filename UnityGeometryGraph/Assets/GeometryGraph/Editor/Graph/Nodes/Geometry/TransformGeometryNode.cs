@@ -1,5 +1,6 @@
 ﻿using GeometryGraph.Runtime;
 using GeometryGraph.Runtime.Graph;
+using GeometryGraph.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
@@ -89,18 +90,18 @@ namespace GeometryGraph.Editor {
         public override JObject GetNodeData() {
             var root = base.GetNodeData();
 
-            root["t"] = JsonConvert.SerializeObject(defaultTranslation, Formatting.None);
-            root["r"] = JsonConvert.SerializeObject(defaultEulerRotation, Formatting.None);
-            root["s"] = JsonConvert.SerializeObject(defaultScale, Formatting.None);
+            root["t"] = JsonConvert.SerializeObject(defaultTranslation, Formatting.None, float3Converter.Converter);
+            root["r"] = JsonConvert.SerializeObject(defaultEulerRotation, Formatting.None, float3Converter.Converter);
+            root["s"] = JsonConvert.SerializeObject(defaultScale, Formatting.None, float3Converter.Converter);
             
             return root;
         }
 
         public override void SetNodeData(JObject jsonData) {
 
-            defaultTranslation = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("t")!);
-            defaultEulerRotation = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("r")!);
-            defaultScale = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("s")!);
+            defaultTranslation = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("t")!, float3Converter.Converter);
+            defaultEulerRotation = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("r")!, float3Converter.Converter);
+            defaultScale = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("s")!, float3Converter.Converter);
             
             translationField.SetValueWithoutNotify(defaultTranslation);
             eulerRotationField.SetValueWithoutNotify(defaultEulerRotation);

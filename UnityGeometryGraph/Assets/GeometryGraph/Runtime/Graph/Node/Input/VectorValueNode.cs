@@ -35,7 +35,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override void SetCustomData(string json) {
             var data = JObject.Parse(json);
-            value = JsonConvert.DeserializeObject<float3>(data.Value<string>("v"), float3Converter.Converter);
+            value = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);
             NotifyPortValueChanged(ValuePort);
         }
     }

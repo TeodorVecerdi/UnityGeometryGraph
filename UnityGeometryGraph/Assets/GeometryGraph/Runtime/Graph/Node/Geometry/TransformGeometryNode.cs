@@ -89,9 +89,9 @@ namespace GeometryGraph.Runtime.Graph {
             if(string.IsNullOrEmpty(json)) return;
             
             var data = JObject.Parse(json);
-            defaultTranslation = JsonConvert.DeserializeObject<float3>(data.Value<string>("t"), float3Converter.Converter);
-            defaultRotation = JsonConvert.DeserializeObject<float3>(data.Value<string>("r"), float3Converter.Converter);
-            defaultScale = JsonConvert.DeserializeObject<float3>(data.Value<string>("s"), float3Converter.Converter);
+            defaultTranslation = JsonConvert.DeserializeObject<float3>(data.Value<string>("t")!, float3Converter.Converter);
+            defaultRotation = JsonConvert.DeserializeObject<float3>(data.Value<string>("r")!, float3Converter.Converter);
+            defaultScale = JsonConvert.DeserializeObject<float3>(data.Value<string>("s")!, float3Converter.Converter);
             NotifyPortValueChanged(OutputGeometryPort);
         }
 

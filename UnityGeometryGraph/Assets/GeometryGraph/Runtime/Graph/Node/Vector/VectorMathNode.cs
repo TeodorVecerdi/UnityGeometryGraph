@@ -207,9 +207,9 @@ namespace GeometryGraph.Runtime.Graph {
 
             var data = JObject.Parse(json);
             operation = (VectorMathNode_Operation)data.Value<int>("o");
-            x = JsonConvert.DeserializeObject<float3>(data.Value<string>("x"), float3Converter.Converter);
-            y = JsonConvert.DeserializeObject<float3>(data.Value<string>("y"), float3Converter.Converter);
-            wrapMax = JsonConvert.DeserializeObject<float3>(data.Value<string>("w"), float3Converter.Converter);
+            x = JsonConvert.DeserializeObject<float3>(data.Value<string>("x")!, float3Converter.Converter);
+            y = JsonConvert.DeserializeObject<float3>(data.Value<string>("y")!, float3Converter.Converter);
+            wrapMax = JsonConvert.DeserializeObject<float3>(data.Value<string>("w")!, float3Converter.Converter);
             ior = data.Value<float>("i");
             scale = data.Value<float>("s");
             distance = data.Value<float>("d");

@@ -1,4 +1,5 @@
 ﻿using GeometryGraph.Runtime.Graph;
+using GeometryGraph.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
@@ -36,12 +37,12 @@ namespace GeometryGraph.Editor {
 
         public override JObject GetNodeData() {
             var root =  base.GetNodeData();
-            root["v"] = JsonConvert.SerializeObject(value, Formatting.None);
+            root["v"] = JsonConvert.SerializeObject(value, Formatting.None, float3Converter.Converter);
             return root;
         }
 
         public override void SetNodeData(JObject jsonData) {
-            value = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v"));
+            value = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v")!, float3Converter.Converter);
             valueField.SetValueWithoutNotify(value);
             RuntimeNode.UpdateValue(value);
             

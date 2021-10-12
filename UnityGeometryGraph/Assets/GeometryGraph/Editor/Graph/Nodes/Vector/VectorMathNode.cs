@@ -243,9 +243,9 @@ namespace GeometryGraph.Editor {
 
         public override void SetNodeData(JObject jsonData) {
             operation = (Operation)jsonData.Value<int>("o");
-            x = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("x"), float3Converter.Converter);
-            y = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("y"), float3Converter.Converter);
-            wrapMax = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("w"), float3Converter.Converter);
+            x = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("x")!, float3Converter.Converter);
+            y = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("y")!, float3Converter.Converter);
+            wrapMax = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("w")!, float3Converter.Converter);
             ior = jsonData.Value<float>("i");
             scale = jsonData.Value<float>("s");
             distance = jsonData.Value<float>("d");

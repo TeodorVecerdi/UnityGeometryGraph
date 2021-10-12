@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using GeometryGraph.Runtime.Attribute;
 using GeometryGraph.Runtime.Geometry;
@@ -119,6 +119,7 @@ namespace GeometryGraph.Runtime.Graph {
                 ["v"] = JsonConvert.SerializeObject(vector, Formatting.None, float3Converter.Converter),
                 ["s"] = scalar,
                 ["a"] = attributeName,
+                ["m"] = (int)mode,
             };
             return data.ToString(Formatting.None);
         }
@@ -127,9 +128,10 @@ namespace GeometryGraph.Runtime.Graph {
             if(string.IsNullOrEmpty(json)) return;
             
             var data = JObject.Parse(json);
-            vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v"), float3Converter.Converter);
+            vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);
             scalar = data.Value<float>("s");
             attributeName = data.Value<string>("a");
+            mode = (ScalePointNode_Mode) data.Value<int>("m");
            
             Calculate();
             NotifyPortValueChanged(ResultPort);

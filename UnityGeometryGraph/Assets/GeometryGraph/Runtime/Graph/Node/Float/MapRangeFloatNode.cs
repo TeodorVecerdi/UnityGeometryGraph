@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityCommons;
@@ -31,8 +31,8 @@ namespace GeometryGraph.Runtime.Graph {
         public void UpdateClamped(bool newValue) {
             if (clamp == newValue) return;
             
-            NotifyPortValueChanged(ResultPort);
             clamp = newValue;
+            NotifyPortValueChanged(ResultPort);
         }
 
         public void UpdateValue(float value, MapRangeFloatNode_Which which) {

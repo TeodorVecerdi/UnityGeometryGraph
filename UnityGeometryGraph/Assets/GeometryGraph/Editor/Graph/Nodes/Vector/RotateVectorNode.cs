@@ -157,10 +157,10 @@ namespace GeometryGraph.Editor {
         
         public override void SetNodeData(JObject jsonData) {
             rotationType = (RotationType)jsonData.Value<int>("t");
-            vector = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v"), float3Converter.Converter);
-            center = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("c"), float3Converter.Converter);
-            axis = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("x"), float3Converter.Converter);
-            eulerAngles = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("e"), float3Converter.Converter);
+            vector = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v")!, float3Converter.Converter);
+            center = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("c")!, float3Converter.Converter);
+            axis = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("x")!, float3Converter.Converter);
+            eulerAngles = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("e")!, float3Converter.Converter);
             angle = jsonData.Value<float>("a");
             
             rotationTypeDropdown.SetValueWithoutNotify(rotationType, 1);

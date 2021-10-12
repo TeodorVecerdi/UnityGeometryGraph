@@ -113,6 +113,7 @@ namespace GeometryGraph.Runtime.Graph {
             var data = new JObject {
                 ["t"] = JsonConvert.SerializeObject(translation, Formatting.None, float3Converter.Converter),
                 ["a"] = attributeName,
+                ["m"] = (int) mode,
             };
             return data.ToString(Formatting.None);
         }
@@ -121,8 +122,9 @@ namespace GeometryGraph.Runtime.Graph {
             if(string.IsNullOrEmpty(json)) return;
             
             var data = JObject.Parse(json);
-            translation = JsonConvert.DeserializeObject<float3>(data.Value<string>("t"), float3Converter.Converter);
+            translation = JsonConvert.DeserializeObject<float3>(data.Value<string>("t")!, float3Converter.Converter);
             attributeName = data.Value<string>("a");
+            mode = (TranslatePointNode_Mode)data.Value<int>("m");
             Calculate();
             NotifyPortValueChanged(ResultPort);
         }

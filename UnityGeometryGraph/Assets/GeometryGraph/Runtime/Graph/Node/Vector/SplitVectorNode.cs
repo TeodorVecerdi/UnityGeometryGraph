@@ -60,7 +60,7 @@ namespace GeometryGraph.Runtime.Graph {
             if(string.IsNullOrEmpty(json)) return;
             
             var data = JObject.Parse(json);
-            vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v"), float3Converter.Converter);
+            vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);
             NotifyPortValueChanged(XPort);
             NotifyPortValueChanged(YPort);
             NotifyPortValueChanged(ZPort);

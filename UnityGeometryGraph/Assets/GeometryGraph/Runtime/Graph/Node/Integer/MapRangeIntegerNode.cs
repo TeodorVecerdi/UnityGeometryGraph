@@ -31,8 +31,8 @@ namespace GeometryGraph.Runtime.Graph {
         public void UpdateClamped(bool newValue) {
             if (clamp == newValue) return;
             
-            NotifyPortValueChanged(ResultPort);
             clamp = newValue;
+            NotifyPortValueChanged(ResultPort);
         }
 
         public void UpdateValue(int value, MapRangeIntegerNode_Which which) {

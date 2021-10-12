@@ -1,4 +1,6 @@
 ﻿using GeometryGraph.Runtime.Geometry;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GeometryGraph.Runtime.Graph {
     public class SubdivideNode : RuntimeNode {
@@ -68,6 +70,17 @@ namespace GeometryGraph.Runtime.Graph {
         private void CalculateResult() {
             DebugUtility.Log("Calculate result");
             result = SimpleSubdivision.Subdivide(source, levels);
+        }
+
+        public override string GetCustomData() {
+            return new JObject {
+                ["l"] = levels
+            }.ToString(Formatting.None);
+        }
+
+        public override void SetCustomData(string json) {
+            levels = JObject.Parse(json).Value<int>("l");
+            NotifyPortValueChanged(ResultPort);
         }
     }
 }
