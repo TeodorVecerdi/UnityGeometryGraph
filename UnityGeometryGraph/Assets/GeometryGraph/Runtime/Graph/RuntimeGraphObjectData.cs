@@ -9,6 +9,8 @@ using UnityEngine;
 namespace GeometryGraph.Runtime {
     [Serializable]
     public class RuntimeGraphObjectData : ISerializationCallbackReceiver {
+        public static bool DeserializingFromJson;
+        
         [SerializeField] public string Guid;
         
         [NonSerialized, ShowInInspector] public List<RuntimeNode> Nodes = new List<RuntimeNode>();
@@ -59,12 +61,10 @@ namespace GeometryGraph.Runtime {
         public void OnAfterDeserialize() {
             if (serializedRuntimeNodes == null) return;
 
-            // Debug.Log("Loading Graph");
-
             Nodes ??= new List<RuntimeNode>();
             Nodes.Clear();
             OutputNode = null;
-            
+
             foreach (var serializedRuntimeNode in serializedRuntimeNodes) {
                 var node = SerializedRuntimeNode.FromSerializedNode(serializedRuntimeNode);
                 if (node is OutputNode outputNode) {
@@ -79,6 +79,8 @@ namespace GeometryGraph.Runtime {
                 var inputPort = allPorts.Find(port => port.Guid == connection.InputGuid);
                 connection.Output = outputPort;
                 connection.Input = inputPort;
+                
+                if (outputPort == null || inputPort == null) return;
 
                 outputPort.Connections.Add(connection);
                 inputPort.Connections.Add(connection);
@@ -86,7 +88,9 @@ namespace GeometryGraph.Runtime {
 
             for (var i = 0; i < Nodes.Count; i++) {
                 var node = Nodes[i];
-                node.SetCustomData(serializedRuntimeNodes[i].CustomData);
+                if (!DeserializingFromJson) {
+                    node.SetCustomData(serializedRuntimeNodes[i].CustomData);
+                }
                 
                 foreach (var port in node.Ports) {
                     DebugUtility.Log($"Port on {node.GetType().Name} has {port.Connections.Count} connections");

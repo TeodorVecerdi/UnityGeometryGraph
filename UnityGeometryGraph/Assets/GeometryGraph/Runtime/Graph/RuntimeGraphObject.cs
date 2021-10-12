@@ -86,30 +86,26 @@ namespace GeometryGraph.Runtime.Graph {
 
         public void OnConnectionAdded(Connection connection) {
             RuntimeData.Connections.Add(connection);
-            var ports = RuntimeData.Nodes.SelectMany(node => node.Ports).Where(port => port.Guid == connection.OutputGuid || port.Guid == connection.InputGuid);
-            foreach (var runtimePort in ports) {
-                runtimePort.Connections.Add(connection);
-            }
+            connection.Output.Connections.Add(connection);
+            connection.Input.Connections.Add(connection);
+            connection.Output.Node.NotifyConnectionCreated(connection, connection.Output);
+            connection.Input.Node.NotifyConnectionCreated(connection, connection.Input);
         }
 
         public void OnConnectionRemoved(string outputGuid, string inputGuid) {
-            foreach (var connection in RuntimeData.Connections.Where(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid)) {
-                foreach (var runtimePort in connection.Output.Node.Ports) {
-                    if (string.Equals(runtimePort.Guid, outputGuid, StringComparison.InvariantCulture)) {
-                        runtimePort.Connections.Remove(connection);
-                        break;
-                    }
-                }
-
-                foreach (var runtimePort in connection.Input.Node.Ports) {
-                    if (string.Equals(runtimePort.Guid, inputGuid, StringComparison.InvariantCulture)) {
-                        runtimePort.Connections.Remove(connection);
-                        break;
-                    }
-                }
+            var connection = RuntimeData.Connections.FirstOrDefault(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
+            if (connection == null) {
+                return;
             }
+            
+            connection.Output.Node.NotifyConnectionRemoved(connection, connection.Output);
+            connection.Input.Node.NotifyConnectionRemoved(connection, connection.Input);
+            connection.Output.Connections.Remove(connection);
+            connection.Input.Connections.Remove(connection);
+            RuntimeData.Connections.Remove(connection);
 
-            RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
+            var removed = RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
+            if (removed != 0) Debug.LogWarning("Removed connection when it was supposed to already be removed");
         }
 
         public void OnPropertyUpdated(string propertyGuid, string newDisplayName) {
