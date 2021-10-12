@@ -11,6 +11,8 @@ namespace GeometryGraph.Runtime.Graph {
         [NonSerialized] public RuntimeNode Node;
         [NonSerialized, ShowInInspector] public List<Connection> Connections;
 
+        public bool IsConnected => Connections?.Count > 0;
+
         private RuntimePort() {
         }
 

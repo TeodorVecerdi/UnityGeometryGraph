@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityCommons;
@@ -57,11 +58,15 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
             if (port != ResultPort) yield break;
-            if (count < 0) yield break;
+            if (count <= 0) yield break;
+
+            IEnumerable<float> values;
+            if (InputPort.IsConnected) values = GetValues(InputPort, count, inputValue);
+            else values = Enumerable.Repeat(inputValue, count);
             
-            foreach (var inputValue in GetValues(port, count, fromMin)) {
-                var value = inputValue.Map(fromMin, fromMax, toMin, toMax);
-                yield return clamp ? value.Clamped(toMin, toMax) : value;
+            foreach (var value in values) {
+                var mapped = value.Map(fromMin, fromMax, toMin, toMax);
+                yield return clamp ? mapped.Clamped(toMin, toMax) : mapped;
             }
         }
 

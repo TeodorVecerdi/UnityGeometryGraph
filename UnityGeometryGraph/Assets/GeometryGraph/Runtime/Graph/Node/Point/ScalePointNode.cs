@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using GeometryGraph.Runtime.Attribute;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Serialization;
@@ -74,7 +73,7 @@ namespace GeometryGraph.Runtime.Graph {
                     Calculate();
                     NotifyPortValueChanged(ResultPort);
                 }
-            }else if (port == AttributePort) {
+            } else if (port == AttributePort) {
                 var newValue = GetValue(connection, attributeName);
                 if (!string.Equals(newValue, attributeName, StringComparison.InvariantCulture)) {
                     attributeName = newValue;
@@ -95,13 +94,22 @@ namespace GeometryGraph.Runtime.Graph {
         public void Calculate() {
             if (geometry == null) return;
             result = geometry.Clone();
-            var scaleAttr = result.GetAttribute<Vector3Attribute>("scale", AttributeDomain.Vertex);
-            scaleAttr ??= Enumerable.Repeat(float3_util.one, result.Vertices.Count).Into<Vector3Attribute>("scale", AttributeDomain.Vertex);
+            var scaleAttr = result.GetAttributeOrDefault<Vector3Attribute, float3>("scale", AttributeDomain.Vertex, float3_util.one);
             
-            if (mode == ScalePointNode_Mode.Vector || mode == ScalePointNode_Mode.Float) {
-                var multiplier = mode == ScalePointNode_Mode.Vector ? vector : new float3(scalar);
-                scaleAttr.Yield(scale => scale * multiplier).Into(scaleAttr);
-                result.StoreAttribute(scaleAttr);
+            if (mode is ScalePointNode_Mode.Vector or ScalePointNode_Mode.Float) {
+                if (mode is ScalePointNode_Mode.Float) {
+                    var multiplier = GetValues(ScalarPort, geometry.Vertices.Count, scalar).Into<FloatAttribute>("multiplier", AttributeDomain.Vertex);
+                    scaleAttr.YieldWithAttribute(multiplier, (scale, scalar) => scale * scalar).Into(scaleAttr);
+                    result.StoreAttribute(scaleAttr);
+                } else {
+                    var multiplier = GetValues(VectorPort, geometry.Vertices.Count, vector).Into<Vector3Attribute>("multiplier", AttributeDomain.Vertex);
+                    scaleAttr.YieldWithAttribute(multiplier, (scale, mul) => scale * mul).Into(scaleAttr);
+                    result.StoreAttribute(scaleAttr);
+                }
+                
+                // var multiplier = mode == ScalePointNode_Mode.Vector ? vector : new float3(scalar);
+                // scaleAttr.Yield(scale => scale * multiplier).Into(scaleAttr);
+                // result.StoreAttribute(scaleAttr);
             } else {
                 if (!result.HasAttribute(attributeName)) {
                     Debug.LogWarning($"Couldn't find attribute [{attributeName}]");

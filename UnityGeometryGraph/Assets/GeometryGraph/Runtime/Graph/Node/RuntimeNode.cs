@@ -17,12 +17,13 @@ namespace GeometryGraph.Runtime.Graph {
         public abstract void RebindPorts();
 
         public virtual IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
-            if (count < 0) {
-                Debug.LogWarning($"GetValuesForPort with negative count at {GetType()}");
-                count = 0;
+            if (count <= 0) {
+                yield break;
             }
             var value = GetValueForPort(port);
-            return Enumerable.Repeat(value, count);
+            for (var i = 0; i < count; i++) {
+                yield return value;
+            }
         }
         protected virtual void OnPortValueChanged(Connection connection, RuntimePort port) {}
         protected virtual void OnConnectionCreated(Connection connection, RuntimePort port) {}
