@@ -32,6 +32,7 @@ namespace GeometryGraph.Runtime.Graph {
             var values = GetValues(APort, GeometryData.Empty).ToList();
             result = GeometryData.Empty;
             foreach (var geometryData in values) {
+                if (geometryData == null) continue;
                 result.MergeWith(geometryData);
             }
         }

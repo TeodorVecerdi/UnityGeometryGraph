@@ -19,13 +19,13 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected override object GetValueForPort(RuntimePort port) {
-            if (Property?.Value == null) return float3.zero;
-            return (float3)Property.Value;
+            if (Property?.Value is not float3 value) return float3.zero;
+            return value;
         }
 
         public override string GetCustomData() {
             return new JObject {
-                ["p"] = Property.Guid
+                ["p"] = Property?.Guid
             }.ToString(Formatting.None);
         }
 

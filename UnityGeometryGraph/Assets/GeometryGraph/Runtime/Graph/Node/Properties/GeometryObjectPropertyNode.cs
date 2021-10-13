@@ -33,7 +33,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override string GetCustomData() {
             return new JObject {
-                ["p"] = Property.Guid
+                ["p"] = Property?.Guid
             }.ToString(Formatting.None);
         }
 

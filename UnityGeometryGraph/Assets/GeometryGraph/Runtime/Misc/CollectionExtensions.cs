@@ -32,9 +32,9 @@ namespace GeometryGraph.Runtime {
             }
         }
 
-        public static IEnumerable<IEnumerable<T>> KSubSets<T>(this IEnumerable<T> list, int length) where T : IComparable {
+        public static IEnumerable<IEnumerable<T>> SubSetsN<T>(this IList<T> list, int length) where T : IComparable {
             if (length == 1) return list.Select(t => new[] { t });
-            return KSubSets(list, length - 1).SelectMany(t => list.Where(e => t.All(g => g.CompareTo(e) == -1)), (t1, t2) => t1.Concat(new T[] { t2 }));
+            return SubSetsN(list, length - 1).SelectMany(t => list.Where(e => t.All(g => g.CompareTo(e) == -1)), (t1, t2) => t1.Concat(new T[] { t2 }));
         }
     }
 }

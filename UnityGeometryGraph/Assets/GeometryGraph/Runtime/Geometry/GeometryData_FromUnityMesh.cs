@@ -9,7 +9,7 @@ namespace GeometryGraph.Runtime.Geometry {
         public GeometryData(Mesh mesh, float duplicateNormalAngleThreshold) {
             using var method = Profiler.ProfileMethod();
             submeshCount = mesh.subMeshCount;
-            var vertices = new List<float3>(mesh.vertices.Select(vertex => new float3(vertex.x, vertex.y, vertex.z)));
+            var vertexPositions = new List<float3>(mesh.vertices.Select(vertex => new float3(vertex.x, vertex.y, vertex.z)));
             var meshUvs = new List<float2>(mesh.uv.Select(uv => new float2(uv.x, uv.y)));
 
             var faceNormals = new List<float3>();
@@ -17,25 +17,25 @@ namespace GeometryGraph.Runtime.Geometry {
             var faceMaterialIndices = new List<int>();
             var faceSmoothShaded = new List<bool>();
 
-            BuildMetadata(mesh, vertices, meshUvs, /*out*/faceNormals, /*out*/uvs, /*out*/faceMaterialIndices, /*out*/faceSmoothShaded, duplicateNormalAngleThreshold);
+            BuildGeometry(mesh, vertexPositions, meshUvs, /*out*/faceNormals, /*out*/uvs, /*out*/faceMaterialIndices, /*out*/faceSmoothShaded, duplicateNormalAngleThreshold);
 
             attributeManager = new AttributeManager(this);
-            FillBuiltinAttributes(vertices, uvs, new float[edges.Count], faceNormals, faceMaterialIndices, faceSmoothShaded);
+            FillBuiltinAttributes(vertexPositions, uvs, new float[edges.Count], faceNormals, faceMaterialIndices, faceSmoothShaded);
         }
         
-        private void BuildMetadata(
-            Mesh mesh, List<float3> vertices, List<float2> uvs, 
+        private void BuildGeometry(
+            Mesh mesh, List<float3> vertexPositions, List<float2> uvs, 
             /*out*/ List<float3> faceNormals, List<float2> correctUvs, List<int> faceMaterialIndices, List<bool> smoothShaded, float duplicateNormalAngleThreshold
         ) {
             using var method = Profiler.ProfileMethod();
             edges = new List<Edge>(mesh.triangles.Length);
             faces = new List<Face>(mesh.triangles.Length / 3);
             faceCorners = new List<FaceCorner>(mesh.triangles.Length);
-            BuildElements(mesh, vertices, uvs, faceNormals, correctUvs, faceMaterialIndices, smoothShaded);
-            RemoveDuplicates(vertices, faceNormals, duplicateNormalAngleThreshold);
+            BuildElements(mesh, vertexPositions, uvs, faceNormals, correctUvs, faceMaterialIndices, smoothShaded);
+            RemoveDuplicates(vertexPositions, faceNormals, duplicateNormalAngleThreshold);
 
-            this.vertices = new List<Vertex>(vertices.Count);
-            for (var i = 0; i < vertices.Count; i++) {
+            this.vertices = new List<Vertex>(vertexPositions.Count);
+            for (var i = 0; i < vertexPositions.Count; i++) {
                 this.vertices.Add(new Vertex());
             }
 
@@ -46,7 +46,7 @@ namespace GeometryGraph.Runtime.Geometry {
         
         
         private void BuildElements(
-            Mesh mesh, List<float3> vertices, List<float2> uvs, 
+            Mesh mesh, List<float3> vertexPositions, List<float2> uvs, 
             List<float3> faceNormals, List<float2> correctUvs, List<int> materialIndices, List<bool> smoothShaded
         ) {
             using var method = Profiler.ProfileMethod();
@@ -60,9 +60,9 @@ namespace GeometryGraph.Runtime.Geometry {
                     var idxB = triangles[i + 1];
                     var idxC = triangles[i + 2];
 
-                    var vertA = vertices[idxA];
-                    var vertB = vertices[idxB];
-                    var vertC = vertices[idxC];
+                    var vertA = vertexPositions[idxA];
+                    var vertB = vertexPositions[idxB];
+                    var vertC = vertexPositions[idxC];
 
                     var AB = vertB - vertA;
                     var AC = vertC - vertA;
@@ -104,30 +104,37 @@ namespace GeometryGraph.Runtime.Geometry {
             }
         }
 
-        private void RemoveDuplicates(List<float3> vertices, List<float3> faceNormals, float duplicateNormalAngleThreshold) {
+        private void RemoveDuplicates(List<float3> vertexPositions, List<float3> faceNormals, float duplicateNormalAngleThreshold) {
             using var method = Profiler.ProfileMethod();
-            var duplicates = GetDuplicateEdges(vertices, faceNormals, duplicateNormalAngleThreshold);
             
-            /*unique vertex => [duplicate vertices]*/
+            // Find out which edges are duplicates of each other based on vertex position 
+            var duplicates = GetDuplicateEdges(vertexPositions, faceNormals, duplicateNormalAngleThreshold);
+            
+            // unique vertex => [duplicate vertices...] (Dict<int, List<int>>)
             var duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
             
-            /*duplicate vertex => unique vertex*/
+            // duplicate vertex => unique vertex (Dict<int, int>)
             var reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
-            RemapDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
-            RemoveDuplicateElements(vertices, duplicates, reverseDuplicatesMap);
-            CheckForErrors(vertices.Count);
+            
+            // Remap indices from old/duplicate index to unique index
+            RemapDuplicateElements(vertexPositions, duplicates, reverseDuplicatesMap);
+            
+            // Remove all duplicates from geometry
+            RemoveDuplicateElements(vertexPositions, duplicates, reverseDuplicatesMap);
+            
+            CheckForErrors(vertexPositions.Count);
         }
         
-        private List<(int, int, bool)> GetDuplicateEdges(List<float3> vertices, List<float3> faceNormals, float duplicateNormalAngleThreshold) {
+        private List<(int, int, bool)> GetDuplicateEdges(List<float3> vertexPositions, List<float3> faceNormals, float duplicateNormalAngleThreshold) {
             using var method = Profiler.ProfileMethod();
-            var equalityComparer = new EdgeEqualityComparer(vertices);
+            var equalityComparer = new EdgeEqualityComparer(vertexPositions);
             // NOTE: I don't actually care about the HashSet, everything I need is stored in the comparer lol
             var _ = new HashSet<Edge>(edges, equalityComparer);
 
             IEnumerable<(int EdgeA, int EdgeB)> potentialDuplicates = equalityComparer.Duplicates
-                                                      // Convert (Key, {values}) to {Key, ...values}
+                                                      // Convert (Key => [values]) to [Key, ...values]
                                                       .Select(pair => pair.Value.Prepend(pair.Key).ToList()) 
-                                                      // Get all subsets of length 2, so {1,2,3} becomes {{1,2}, {1,3}, {2,3}}
+                                                      // Get all subsets of length 2, so [1,2,3] becomes [(1,2), (1,3), (2,3)]
                                                       .SelectMany(values => values.SubSets2());
 
             var excluded = new HashSet<int>();
@@ -145,10 +152,10 @@ namespace GeometryGraph.Runtime.Geometry {
                 excluded.Add(edgeAIndex);
                 excluded.Add(edgeBIndex);
                 
-                var edgeAVertA = vertices[edgeA.VertA];
-                var edgeAVertB = vertices[edgeA.VertB];
-                var edgeBVertA = vertices[edgeB.VertA];
-                var edgeBVertB = vertices[edgeB.VertB];
+                var edgeAVertA = vertexPositions[edgeA.VertA];
+                var edgeAVertB = vertexPositions[edgeA.VertB];
+                var edgeBVertA = vertexPositions[edgeB.VertA];
+                var edgeBVertB = vertexPositions[edgeB.VertB];
 
                 actualDuplicates.Add((edgeAIndex, edgeBIndex, edgeAVertA.Equals(edgeBVertA) && edgeAVertB.Equals(edgeBVertB)));
                 edgeA.FaceB = edgeB.FaceA;
@@ -203,12 +210,12 @@ namespace GeometryGraph.Runtime.Geometry {
             using var method = Profiler.ProfileMethod();
             // Remove trivial invalid entries
             var removalList = new List<int>();
-            foreach (var pair in duplicateVerticesMap) {
-                pair.Value.RemoveAll(value => value == pair.Key);
-                if (pair.Value.Count == 0) removalList.Add(pair.Key);
+            foreach (var (unique, duplicates) in duplicateVerticesMap) {
+                duplicates.RemoveAll(duplicate => duplicate == unique);
+                if (duplicates.Count == 0) removalList.Add(unique);
             }
 
-            removalList.ForEach(key => duplicateVerticesMap.Remove(key));
+            removalList.ForEach(unique => duplicateVerticesMap.Remove(unique));
 
             // Remove remaining invalid entries by joining all duplicate entries
             // For example (1=>{2, 3}, 3=>{7,12}, 4=>{12, 14}) becomes (1=>{2, 3, 4, 7, 8, 12, 14})
@@ -334,17 +341,17 @@ namespace GeometryGraph.Runtime.Geometry {
             }
         }
 
-        private void RemoveDuplicateElements(List<float3> vertices, List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
+        private void RemoveDuplicateElements(List<float3> vertexPositions, List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
             using var method = Profiler.ProfileMethod();
             // Remove duplicate edges
-            foreach (var edge in duplicates.Select(t=>edges[t.Item2]).ToList()) {
+            foreach (var edge in duplicates.Select(tuple=>edges[tuple.Item2]).ToList()) {
                 edges.Remove(edge);
             }
 
             // Remove duplicate vertices
-            var sortedDuplicateVertices = reverseDuplicatesMap.Keys.ToList().QuickSorted((i, i1) => i1.CompareTo(i));
+            var sortedDuplicateVertices = reverseDuplicatesMap.Keys.ToList().QuickSorted((key1, key2) => key2.CompareTo(key1));
             foreach (var vertexIndex in sortedDuplicateVertices) {
-                vertices.RemoveAt(vertexIndex);
+                vertexPositions.RemoveAt(vertexIndex);
             }
         }
 
@@ -370,6 +377,8 @@ namespace GeometryGraph.Runtime.Geometry {
                     Debug.LogError($"Face at index {i} contains invalid vertices");
                 }
             }
+            
+            // TODO: maybe add checks for FaceCorners having vert idx and face idx in range, and for Faces having FaceCorners in range
         }
     }
 }

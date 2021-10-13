@@ -19,7 +19,18 @@ namespace GeometryGraph.Runtime {
         [SerializeField] public List<Property> Properties = new List<Property>();
         [SerializeField] private List<SerializedRuntimeNode> serializedRuntimeNodes = new List<SerializedRuntimeNode>();
 
-        public int PropertyHashCode => Properties.Sum(property => property.Guid.GetHashCode());
+        public int PropertyHashCode {
+            get {
+                unchecked {
+                    var sum = 0;
+                    foreach (var property in Properties) {
+                        sum += property.Guid.GetHashCode();
+                    }
+
+                    return sum;
+                }
+            }
+        }
 
         public RuntimeGraphObjectData() {
             Guid = System.Guid.NewGuid().ToString();
