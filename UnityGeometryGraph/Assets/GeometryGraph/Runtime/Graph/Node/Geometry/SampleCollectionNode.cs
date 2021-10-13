@@ -41,9 +41,8 @@ namespace GeometryGraph.Runtime.Graph {
             sampleType = newSampleType;
             NotifyPortValueChanged(ResultPort);
         }
-        
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
             
             var geometry = GetValue(CollectionPort, Enumerable.Empty<GeometryData>());

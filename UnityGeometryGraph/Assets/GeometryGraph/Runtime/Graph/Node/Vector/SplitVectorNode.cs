@@ -26,7 +26,7 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(ZPort);
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             if (port == XPort) return vector.x;
             if (port == YPort) return vector.y;
             if (port == ZPort) return vector.z;

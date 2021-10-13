@@ -20,7 +20,7 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(ValuePort);
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             return port == ValuePort ? Rand.FloatSeeded(seed) : 0.0f;
         }
 

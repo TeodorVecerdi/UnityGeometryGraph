@@ -18,7 +18,7 @@ namespace GeometryGraph.Runtime.Graph {
             Port = RuntimePort.Create(PortType.Collection, PortDirection.Output, this);
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             GeometryCollection objectValue = null;
             var value = Property?.Value;
             if ((Object)value != null) {

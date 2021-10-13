@@ -4,14 +4,14 @@ using System.Linq;
 namespace GeometryGraph.Runtime.Graph {
     public abstract class RuntimeNode {
         public string Guid;
-        public List<RuntimePort> Ports;
+        public readonly List<RuntimePort> Ports;
 
-        public RuntimeNode(string guid) {
+        protected RuntimeNode(string guid) {
             Guid = guid;
             Ports = new List<RuntimePort>();
         }
 
-        public abstract object GetValueForPort(RuntimePort port);
+        protected abstract object GetValueForPort(RuntimePort port);
         
         // NOTE: This is probably not needed anymore since I fixed the desync issues.
         // Regex to yeet out this function out of every class if needed: !! `public override void RebindPorts\(\) \{(([\n]*.*?)*)?\}[\n\s]*`
@@ -21,6 +21,9 @@ namespace GeometryGraph.Runtime.Graph {
             if (count <= 0) {
                 yield break;
             }
+            
+            // Here I'm just returning the same value `count` times.
+            // Nodes that override this method can return whatever they want.
             var value = GetValueForPort(port);
             for (var i = 0; i < count; i++) {
                 yield return value;
@@ -140,26 +143,15 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
 
+        // I probably don't need this method unless I add event methods like `OnConnectionRemoved/Created` but for nodes.
+        // Also, I'm pretty sure nodes will already be notified that the connection is removed since deleting a
+        // node also deletes the connections to that node so there's no need to do it here again.
         public void OnNodeRemoved() {
             foreach (var port in Ports) {
                 foreach (var connection in port.Connections) {
                     var otherPort = port.Direction == PortDirection.Input ? connection.Output : connection.Input;
                     otherPort.Node.NotifyConnectionRemoved(connection, port);
                 }
-            }
-        }
-
-        public void OnConnectionCreated(Connection connection) {
-            var selfPort = connection.Output.Node == this ? connection.Output : connection.Input;
-            NotifyConnectionCreated(connection, selfPort);
-        }
-
-        public void OnConnectionRemoved(RuntimePort output, RuntimePort input) {
-            var selfPort = output.Node == this ? output : input;
-            var index = selfPort.Connections.FindIndex(connection => connection.Output == output && connection.Input == input);
-            if (index != -1) {
-                var connection = selfPort.Connections[index];
-                NotifyConnectionRemoved(connection, selfPort);
             }
         }
     }

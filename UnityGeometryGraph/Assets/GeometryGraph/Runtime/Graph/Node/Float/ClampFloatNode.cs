@@ -32,7 +32,7 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(ResultPort);
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
             return inputValue.Clamped(minValue, maxValue);
         }

@@ -21,7 +21,7 @@ namespace GeometryGraph.Runtime.Graph {
             ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             if (port == MinPort) return min;
             if (port == MaxPort) return max;
             if (port == ResultPort) return boundingBox;

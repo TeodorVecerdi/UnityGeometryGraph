@@ -17,7 +17,7 @@ namespace GeometryGraph.Runtime.Graph {
             Port = Ports[0];
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             if (Property?.Value == null) return 0.0f;
             return (float)Property.Value;
         }

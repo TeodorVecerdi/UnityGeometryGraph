@@ -13,7 +13,7 @@ namespace GeometryGraph.Runtime.Graph {
             ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
             CalculateResult();
             return result;

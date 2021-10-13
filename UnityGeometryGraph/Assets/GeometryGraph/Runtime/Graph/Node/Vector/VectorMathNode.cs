@@ -71,7 +71,7 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(VectorResultPort);
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             if (port == FloatResultPort) return CalculateFloat();
             if (port == VectorResultPort) return CalculateVector();
             return null;

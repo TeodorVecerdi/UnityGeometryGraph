@@ -8,7 +8,7 @@ namespace GeometryGraph.Runtime.Graph {
             Input = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             return null;
         }
 

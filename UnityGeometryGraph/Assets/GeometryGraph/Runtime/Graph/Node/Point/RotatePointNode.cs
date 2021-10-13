@@ -100,7 +100,7 @@ namespace GeometryGraph.Runtime.Graph {
             result = GeometryData.Empty;
         }
 
-        public override object GetValueForPort(RuntimePort port) {
+        protected override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
             return result;
         }
