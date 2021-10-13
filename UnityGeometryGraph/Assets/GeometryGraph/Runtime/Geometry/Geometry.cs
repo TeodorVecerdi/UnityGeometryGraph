@@ -22,7 +22,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var center = (min + max) * 0.5f;
             var boundingBox = Primitive.Cube(size);
             var bbPosition = boundingBox.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
-            bbPosition.Yield(position => position + center).Into(bbPosition);
+            bbPosition!.Yield(position => position + center).Into(bbPosition);
 
             return (min, max, boundingBox);
         }

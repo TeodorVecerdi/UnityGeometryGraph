@@ -199,7 +199,6 @@ namespace GeometryGraph.Runtime.Attribute {
             object IEnumerator.Current => Current;
 
             public void Dispose() {
-                
             }
         }
     }
