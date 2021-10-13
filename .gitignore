@@ -167,8 +167,8 @@ sysinfo.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all,unity
 
-UnityGeometryGraph/Assets/Plugins/Sirenix/
-
-UnityGeometryGraph/Assets/Plugins/Sirenix.meta
+#UnityGeometryGraph/Assets/Plugins/Sirenix/
+#
+#UnityGeometryGraph/Assets/Plugins/Sirenix.meta
 
 UnityGeometryGraph/Assets/Backup~/
