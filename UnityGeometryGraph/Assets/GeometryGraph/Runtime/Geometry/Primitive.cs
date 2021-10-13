@@ -785,7 +785,7 @@ namespace GeometryGraph.Runtime.Geometry {
             mesh.triangles = triangles.ToArray();
             mesh.RecalculateNormals();
 
-            return new GeometryData(mesh, 0.0f, 179.9f);
+            return new GeometryData(mesh, 179.9f);
         }
 
         public static GeometryData Icosphere(float radius, int subdivisions) {

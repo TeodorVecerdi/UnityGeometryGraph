@@ -27,7 +27,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             using var session = Profiler.BeginSession($"Generate Geometry from '{geometrySource.sharedMesh.name}'", true);
             var sw = Stopwatch.StartNew();
-            geometryData = new GeometryData(geometrySource.sharedMesh, 0.0f, 179.9f);
+            geometryData = new GeometryData(geometrySource.sharedMesh, 179.9f);
             Debug.Log(sw.Elapsed.TotalMilliseconds);
         }
     }
