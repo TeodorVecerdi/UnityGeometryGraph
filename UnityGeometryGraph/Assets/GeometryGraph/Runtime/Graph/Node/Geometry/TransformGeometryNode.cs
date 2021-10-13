@@ -47,6 +47,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override object GetValueForPort(RuntimePort port) {
             if (port != OutputGeometryPort) return null;
+            CalculateResult();
             return result;
         }
 

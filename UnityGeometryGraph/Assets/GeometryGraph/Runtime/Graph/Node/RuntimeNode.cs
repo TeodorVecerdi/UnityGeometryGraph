@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public abstract class RuntimeNode {
@@ -13,7 +12,9 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public abstract object GetValueForPort(RuntimePort port);
-        // NOTE: Regex to yeet out this function out of every class if needed: `public override void RebindPorts\(\) \{(([\n]*.*?)*)?\}[\n\s]*`
+        
+        // NOTE: This is probably not needed anymore since I fixed the desync issues.
+        // Regex to yeet out this function out of every class if needed: !! `public override void RebindPorts\(\) \{(([\n]*.*?)*)?\}[\n\s]*`
         public abstract void RebindPorts();
 
         public virtual IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
