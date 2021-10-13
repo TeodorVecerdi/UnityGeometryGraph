@@ -67,6 +67,8 @@ namespace GeometryGraph.Runtime.Geometry {
             GeometryData.Merge(clone, this);
             return clone;
         }
+        
+        public static GeometryData Empty => new GeometryData();
 
         private void FillBuiltinAttributes(
             IEnumerable<float3> vertices, List<float2> uvs, IEnumerable<float> creases,
