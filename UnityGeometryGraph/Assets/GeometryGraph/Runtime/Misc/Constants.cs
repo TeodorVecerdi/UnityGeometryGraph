@@ -9,6 +9,7 @@ namespace GeometryGraph.Runtime {
         public const int MAX_CURVE_RESOLUTION = 1024;
         public const int MIN_LINE_CURVE_RESOLUTION = 1;
         public const int MIN_CIRCLE_CURVE_RESOLUTION = 3;
+        public const int MIN_BEZIER_CURVE_RESOLUTION = 1;
 
         public const float MIN_CIRCULAR_CURVE_RADIUS = 0.01f;
     }
