@@ -18,8 +18,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected override object GetValueForPort(RuntimePort port) {
-            if (Property?.Value == null) return 0.0f;
-            return (float)Property.Value;
+            return Property.GetValueOrDefault<float>(Property, 0.0f);
         }
 
         public override string GetCustomData() {

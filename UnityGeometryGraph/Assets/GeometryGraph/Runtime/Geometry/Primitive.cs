@@ -789,7 +789,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public static GeometryData Icosphere(float radius, int subdivisions) {
-            if (radius < 0.0f) radius = 0.0f;
+            if (radius < 0.01f) radius = 0.01f;
             if (subdivisions < 0) subdivisions = 0;
 
             var icosphere = Icosahedron();

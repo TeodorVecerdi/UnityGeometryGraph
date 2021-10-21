@@ -19,8 +19,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         protected override object GetValueForPort(RuntimePort port) {
             DebugUtility.Log($"Returning property value {Property} => [{Property?.Value}]");
-            if (Property?.Value == null) return 0;
-            return (int)Property.Value;
+            return Property.GetValueOrDefault<int>(Property, 0);
         }
 
         public override string GetCustomData() {

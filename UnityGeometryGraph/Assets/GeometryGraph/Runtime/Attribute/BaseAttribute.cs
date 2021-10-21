@@ -56,7 +56,7 @@ namespace GeometryGraph.Runtime.Attribute {
     [Serializable]
     public abstract class BaseAttribute<T> : BaseAttribute, IEnumerable<T> {
         private static readonly Type elementType = typeof(T);
-        public override Type ElementType => elementType;
+        public sealed override Type ElementType => elementType;
         
         public new T GetValue(int index) {
             return (T) Values[index];
@@ -114,8 +114,7 @@ namespace GeometryGraph.Runtime.Attribute {
 
         public IEnumerable<T> YieldWithAttribute<T0, T1>(BaseAttribute<T0> attribute0, BaseAttribute<T1> attribute1, Func<T, T0, T1, T> action) {
             action ??= AttributeActions.NoOp<T, T0, T1>();
-            
-            
+
             if (attribute0 == null && attribute1 == null) {
                 foreach (T value in Values) {
                     yield return action(value, default, default);
@@ -127,6 +126,7 @@ namespace GeometryGraph.Runtime.Attribute {
                 var index = 0;
                 foreach (T value in Values) {
                     yield return action(value, default, index >= attribute1.Values.Count ? default : attribute1[index]);
+                    index++;
                 }
                 
                 if (index >= attribute1.Count) yield break;
@@ -142,6 +142,7 @@ namespace GeometryGraph.Runtime.Attribute {
                 var index = 0;
                 foreach (T value in Values) {
                     yield return action(value, index >= attribute0.Values.Count ? default : attribute0[index], default);
+                    index++;
                 }
                 
                 if (index >= attribute0.Count) yield break;
@@ -160,6 +161,7 @@ namespace GeometryGraph.Runtime.Attribute {
                 var a0 = currentIndex < attribute0.Count ? attribute0[currentIndex] : default;
                 var a1 = currentIndex < attribute1.Count ? attribute1[currentIndex] : default;
                 yield return action(self, a0, a1);
+                currentIndex++;
             }
         }
 

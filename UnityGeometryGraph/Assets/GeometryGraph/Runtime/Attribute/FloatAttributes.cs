@@ -22,7 +22,7 @@ namespace GeometryGraph.Runtime.Attribute {
         public override void Fill(IEnumerable<float> values) {
             Values.Clear();
             foreach (var value in values) {
-                Values.Add(Convert.ToSingle(value).Clamped01());
+                Values.Add(value.Clamped01());
             }
         }
 

@@ -67,8 +67,9 @@ namespace GeometryGraph.Runtime.Graph {
                 return defaultValue;
             }
 
+            DebugUtility.Log($"GetValue: Getting value from {outputPort.Node} as {typeof(T)}");
             var value = outputPort.Node.GetValueForPort(outputPort);
-            
+
             if (PortTypeUtility.IsUnmanagedType(outputPort.Type)) {
                 if (value is T tValueUnmanaged) return tValueUnmanaged;
             } else {
