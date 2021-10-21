@@ -69,7 +69,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         private void CalculateResult() {
             DebugUtility.Log("Calculated result");
-            result = Primitive.Circle(radius, points);
+            result = GeometryPrimitive.Circle(radius, points);
         }
         
         public override string GetCustomData() {

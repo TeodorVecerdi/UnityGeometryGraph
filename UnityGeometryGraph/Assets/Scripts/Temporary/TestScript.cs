@@ -11,14 +11,14 @@ namespace GeometryGraph.Runtime.Geometry {
 
         [Button]
         private void MakeIcosphere() {
-            Icosphere = Primitive.Icosphere(Radius, Subdivisions);
+            Icosphere = GeometryPrimitive.Icosphere(Radius, Subdivisions);
             // Icosphere = Primitive.IcosahedronHardcoded();
             Exporter.Export(Icosphere);
         }
 
         [Button]
         private void MakeIcosahedron() {
-            Icosphere = Primitive.Icosahedron();
+            Icosphere = GeometryPrimitive.Icosahedron();
             Exporter.Export(Icosphere);
         }
 

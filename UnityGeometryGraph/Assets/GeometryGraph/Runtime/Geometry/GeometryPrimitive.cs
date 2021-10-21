@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
-    public static class Primitive {
+    public static class GeometryPrimitive {
         public static GeometryData Circle(float radius, int points) {
             if (points < 3) points = 3;
             if (Math.Abs(radius) < 0.001f) radius = 0.001f;
@@ -23,7 +23,7 @@ namespace GeometryGraph.Runtime.Geometry {
             
             for (var i = 0; i < points; i++) {
                 var t = i / (float)(points);
-                var angle = 2.0f * Mathf.PI * t;
+                var angle = math_util.TWO_PI * t;
                 var circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(radius * circlePosition);
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
@@ -298,7 +298,7 @@ namespace GeometryGraph.Runtime.Geometry {
             
             for (var i = 0; i < points; i++) {
                 var t = i / (float)points;
-                var angle = 2.0f * Mathf.PI * t;
+                var angle = math_util.TWO_PI * t;
                 var circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(radius * circlePosition);
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
@@ -388,7 +388,7 @@ namespace GeometryGraph.Runtime.Geometry {
             
             for (var i = 0; i < points; i++) {
                 var t = i / (float)points;
-                var angle = 2.0f * Mathf.PI * t;
+                var angle = math_util.TWO_PI * t;
                 var circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(bottomRadius * circlePosition);
                 vertexPositions.Add(topRadius * circlePosition + float3_util.up * height);
@@ -521,7 +521,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var vertexUvs = new List<float2>();
             foreach(var pos in vertexPositions) {
                 var n = math.normalize(pos);
-                var u = 0.5f + math.atan2(n.z, n.x) / (2.0f * math.PI);
+                var u = 0.5f + math.atan2(n.z, n.x) / (math_util.TWO_PI);
                 var v = 0.5f - math.asin(n.y) / math.PI;
                 vertexUvs.Add(new float2(u, v));
             }

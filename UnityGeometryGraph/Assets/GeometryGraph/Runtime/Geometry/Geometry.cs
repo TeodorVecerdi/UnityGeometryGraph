@@ -20,7 +20,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             var size = max - min;
             var center = (min + max) * 0.5f;
-            var boundingBox = Primitive.Cube(size);
+            var boundingBox = GeometryPrimitive.Cube(size);
             var bbPosition = boundingBox.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             bbPosition!.Yield(position => position + center).Into(bbPosition);
 

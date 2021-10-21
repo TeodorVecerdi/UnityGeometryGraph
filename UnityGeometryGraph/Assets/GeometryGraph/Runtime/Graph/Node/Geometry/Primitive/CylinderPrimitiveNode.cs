@@ -88,7 +88,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
-            result = Primitive.Cylinder(bottomRadius, topRadius, height, points);
+            result = GeometryPrimitive.Cylinder(bottomRadius, topRadius, height, points);
         }
         
         public override string GetCustomData() {

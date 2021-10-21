@@ -91,7 +91,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (geometryDirty || result == null) {
                 DebugUtility.Log("Regenerated geometry");
                 // Recalculate new geometry
-                result = Primitive.Icosphere(radius, subdivisions);
+                result = GeometryPrimitive.Icosphere(radius, subdivisions);
                 geometryDirty = false;
             } else {
                 DebugUtility.Log("Recalculated radius on existing geometry");
