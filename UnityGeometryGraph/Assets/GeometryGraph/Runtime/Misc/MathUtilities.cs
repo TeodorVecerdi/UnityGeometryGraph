@@ -44,6 +44,8 @@ namespace GeometryGraph.Runtime {
     //!! Utilities for Unity.Mathematics
     // ReSharper disable InconsistentNaming
     public static class math_util {
+        public const float TWO_PI = 6.28318530717959f;
+
         public static float angle(float3 from, float3 to) {
             var num = math.sqrt(math.lengthsq(from) * (double)math.lengthsq(to));
             return num < 1.00000000362749E-15 ? 0.0f : (float)math.acos(math.clamp(math.dot(from, to) / num, -1f, 1f)) * 57.29578f;
