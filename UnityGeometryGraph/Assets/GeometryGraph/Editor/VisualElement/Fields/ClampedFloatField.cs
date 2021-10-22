@@ -24,7 +24,7 @@ namespace GeometryGraph.Editor {
             AddToClassList("clamped-field");
             labelElement.AddToClassList(FloatField.labelUssClassName);
             FloatInput.AddToClassList(FloatField.inputUssClassName);
-            AddLabelDragger<int>();
+            AddLabelDragger<float>();
 
             RegisterCallback<BlurEvent>(_ => ClampWithoutNotify());
         }
@@ -51,15 +51,15 @@ namespace GeometryGraph.Editor {
 
         private void ClampWithoutNotify() {
             var val = value;
-            if (min != null) val = val.Min((int)min);
-            if (max != null) val = val.Max((int)max);
+            if (min != null) val = val.Min((float)min);
+            if (max != null) val = val.Max((float)max);
             SetValueWithoutNotify(val);
         }
 
         private void Clamp() {
             var val = value;
-            if (min != null) val = val.Min((int)min);
-            if (max != null) val = val.Max((int)max);
+            if (min != null) val = val.Min((float)min);
+            if (max != null) val = val.Max((float)max);
             if (Math.Abs(val - value) > Constants.FLOAT_TOLERANCE) value = val;
         }
 
@@ -98,9 +98,8 @@ namespace GeometryGraph.Editor {
                 var num = MathUtils.RoundBasedOnMinimumDifference(StringToValue(text) + NumericFieldDraggerUtility.NiceDelta(delta, acceleration) * dragSensitivity,
                                                                   dragSensitivity);
 
-                if (ParentField.min != null) num = num.Min((long)ParentField.min);
-
-                if (ParentField.max != null) num = num.Max((long)ParentField.max);
+                if (ParentField.min != null) num = num.Min((double)ParentField.min);
+                if (ParentField.max != null) num = num.Max((double)ParentField.max);
 
                 if (ParentField.isDelayed) text = ValueToString(MathUtils.ClampToFloat(num));
                 else ParentField.value = MathUtils.ClampToFloat(num);
