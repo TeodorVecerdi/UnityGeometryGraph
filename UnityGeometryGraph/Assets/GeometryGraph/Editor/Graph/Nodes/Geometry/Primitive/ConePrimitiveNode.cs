@@ -17,8 +17,8 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort pointsPort;
         private GraphFrameworkPort resultPort;
 
-        private FloatField radiusField;
-        private FloatField heightField;
+        private ClampedFloatField radiusField;
+        private ClampedFloatField heightField;
         private ClampedIntegerField pointsField;
 
         private float radius = 1.0f;
@@ -29,11 +29,12 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Cone Primitive");
 
-            (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(radius, Which.Radius));
-            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(height, Which.Height));
+            (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(radius, Which.Radius));
+            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(height, Which.Height));
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(points, Which.Points));
             resultPort = GraphFrameworkPort.Create("Cone", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
+            radiusField.Min = Constants.MIN_CIRCULAR_GEOMETRY_RADIUS;
             radiusField.RegisterValueChangedCallback(evt => {
                 var newValue = evt.newValue.Min(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if (MathF.Abs(newValue - radius) < Constants.FLOAT_TOLERANCE) return;
@@ -42,7 +43,8 @@ namespace GeometryGraph.Editor {
                 radius = newValue;
                 RuntimeNode.UpdateValue(radius, Which.Radius);
             });
-            
+
+            heightField.Min = Constants.MIN_GEOMETRY_HEIGHT;
             heightField.RegisterValueChangedCallback(evt => {
                 var newValue = evt.newValue.Min(Constants.MIN_GEOMETRY_HEIGHT);
                 if (MathF.Abs(newValue - height) < Constants.FLOAT_TOLERANCE) return;

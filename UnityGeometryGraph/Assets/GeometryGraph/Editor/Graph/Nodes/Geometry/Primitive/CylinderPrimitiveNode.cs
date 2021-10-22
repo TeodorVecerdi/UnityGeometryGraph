@@ -17,9 +17,9 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort pointsPort;
         private GraphFrameworkPort resultPort;
 
-        private FloatField bottomRadiusField;
-        private FloatField topRadiusField;
-        private FloatField heightField;
+        private ClampedFloatField bottomRadiusField;
+        private ClampedFloatField topRadiusField;
+        private ClampedFloatField heightField;
         private ClampedIntegerField pointsField;
 
         private float bottomRadius = 1.0f;
@@ -31,12 +31,13 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Cylinder Primitive");
 
-            (bottomRadiusPort, bottomRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Bottom Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(bottomRadius, Which.BottomRadius));
-            (topRadiusPort, topRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Top Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(topRadius, Which.TopRadius));
-            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(height, Which.Height));
+            (bottomRadiusPort, bottomRadiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Bottom Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(bottomRadius, Which.BottomRadius));
+            (topRadiusPort, topRadiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Top Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(topRadius, Which.TopRadius));
+            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(height, Which.Height));
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(points, Which.Points));
             resultPort = GraphFrameworkPort.Create("Cylinder", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
+            topRadiusField.Min = Constants.MIN_CIRCULAR_GEOMETRY_RADIUS;
             topRadiusField.RegisterValueChangedCallback(evt => {
                 var newValue = evt.newValue.Min(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if (MathF.Abs(newValue - topRadius) < Constants.FLOAT_TOLERANCE) return;
@@ -46,6 +47,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateValue(topRadius, Which.TopRadius);
             });
 
+            bottomRadiusField.Min = Constants.MIN_CIRCULAR_GEOMETRY_RADIUS;
             bottomRadiusField.RegisterValueChangedCallback(evt => {
                 var newValue = evt.newValue.Min(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if (MathF.Abs(newValue - bottomRadius) < Constants.FLOAT_TOLERANCE) return;
@@ -55,6 +57,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateValue(bottomRadius, Which.BottomRadius);
             });
 
+            heightField.Min = Constants.MIN_GEOMETRY_HEIGHT;
             heightField.RegisterValueChangedCallback(evt => {
                 var newValue = evt.newValue.Min(Constants.MIN_GEOMETRY_HEIGHT);
                 if (MathF.Abs(newValue - height) < Constants.FLOAT_TOLERANCE) return;

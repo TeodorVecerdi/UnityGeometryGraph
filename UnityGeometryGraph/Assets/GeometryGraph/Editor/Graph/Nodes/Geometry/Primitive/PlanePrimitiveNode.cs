@@ -18,8 +18,8 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort subdivisionsPort;
         private GraphFrameworkPort resultPort;
 
-        private FloatField widthField;
-        private FloatField heightField;
+        private ClampedFloatField widthField;
+        private ClampedFloatField heightField;
         private ClampedIntegerField subdivisionsField;
 
         private float2 size = float2_util.one;
@@ -29,11 +29,12 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Plane Primitive");
 
-            (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Width", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.x, Which.Width));
-            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.y, Which.Height));
+            (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Width", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.x, Which.Width));
+            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.y, Which.Height));
             (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Subdivisions", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions));
             resultPort = GraphFrameworkPort.Create("Plane", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
+            widthField.Min = 0.0f;
             widthField.RegisterValueChangedCallback(evt => {
                 var newValue = evt.newValue.Min(0.0f);
                 if (MathF.Abs(newValue - size.x) < Constants.FLOAT_TOLERANCE) return;
@@ -43,6 +44,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateValue(size.x, Which.Width);
             });
             
+            heightField.Min = 0.0f;
             heightField.RegisterValueChangedCallback(evt => {
                 var newValue = evt.newValue.Min(0.0f);
                 if (MathF.Abs(newValue - size.y) < Constants.FLOAT_TOLERANCE) return;
