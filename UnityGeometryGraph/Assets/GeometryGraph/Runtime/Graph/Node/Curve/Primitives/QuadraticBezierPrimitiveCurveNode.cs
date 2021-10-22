@@ -95,7 +95,7 @@ namespace GeometryGraph.Runtime.Graph {
             points = new MinMaxInt(data.Value<int>(0), Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             isClosed = data.Value<int>(1) == 1;
             start = JsonConvert.DeserializeObject<float3>(data.Value<string>(2)!, float3Converter.Converter);
-            start = JsonConvert.DeserializeObject<float3>(data.Value<string>(3)!, float3Converter.Converter);
+            control = JsonConvert.DeserializeObject<float3>(data.Value<string>(3)!, float3Converter.Converter);
             end = JsonConvert.DeserializeObject<float3>(data.Value<string>(4)!, float3Converter.Converter);
             NotifyPortValueChanged(ResultPort);
         }

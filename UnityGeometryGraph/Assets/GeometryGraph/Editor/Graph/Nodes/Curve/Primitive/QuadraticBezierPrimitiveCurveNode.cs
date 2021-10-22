@@ -41,7 +41,7 @@ namespace GeometryGraph.Editor {
             (startPort, startField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Start", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateStart(start));
             (controlPort, controlField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Control", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateControl(control));
             (endPort, endField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("End", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateEnd(end));
-            resultPort = GraphFrameworkPort.Create("Line Curve", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Curve, edgeConnectorListener, this);
+            resultPort = GraphFrameworkPort.Create("Curve", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Curve, edgeConnectorListener, this);
 
             pointsField.Min = Constants.MIN_LINE_CURVE_RESOLUTION + 1;
             pointsField.Max = Constants.MAX_CURVE_RESOLUTION + 1;
@@ -90,9 +90,13 @@ namespace GeometryGraph.Editor {
             endField.SetValueWithoutNotify(end);
             
             pointsPort.Add(pointsField);
+            closedPort.Add(closedToggle);
+            AddPort(closedPort);
             AddPort(pointsPort);
             AddPort(startPort);
             inputContainer.Add(startField);
+            AddPort(controlPort);
+            inputContainer.Add(controlField);
             AddPort(endPort);
             inputContainer.Add(endField);
             AddPort(resultPort);
