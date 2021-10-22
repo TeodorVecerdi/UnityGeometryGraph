@@ -68,18 +68,6 @@ Vector3Field.port-backing-field .unity-vector3-field__input FloatField Label {
 }
 
 /*
-.node > #node-border > #contents, .node > #node-border > #contents > #top, 
-.node > #node-border > #contents > #top > #input {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-.node > #node-border > #contents > #top {
-    flex-direction: column-reverse;
-}
-*/
-
-/*
  * @section General Node
  */
 
@@ -123,7 +111,6 @@ PropertyNode #title, #collapsible-area {
 
 PropertyNode #title-label {
     margin-left: 6px;
-    /*margin-right: -4px;*/
 }
 
 PropertyNode #collapse-button {
