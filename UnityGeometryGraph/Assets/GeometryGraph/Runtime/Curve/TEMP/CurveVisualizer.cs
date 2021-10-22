@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace GeometryGraph.Runtime.Curve.TEMP {
     public class CurveVisualizer : MonoBehaviour {
+        /*
+         * TODO: Move into GeometryGraph MonoBehaviour and integrate it into the custom editor.  
+         */
         public bool ShowSpline = true;
         [ShowIf(nameof(ShowSpline))] public float SplineWidth = 2.0f;
         [ShowIf(nameof(ShowSpline))] public Color SplineColor = Color.white;
@@ -20,20 +23,24 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         [ShowIf(nameof(ShowDirectionVectors))] public Color DirectionBinormalColor = Color.green;
 
         public bool Enabled;
-        public CurveGenerator Generator;
+
+        private CurveData curveData;
+
+        public void Load(CurveData curveData) {
+            this.curveData = curveData;
+        }
 
         private void OnDrawGizmos() {
-            if (!Enabled || Generator == null || Generator.CurveData == null) return;
+            if (!Enabled || curveData == null) return;
 
             Handles.matrix = Gizmos.matrix = transform.localToWorldMatrix;
 
-            var curve = Generator.CurveData;
             if (ShowPoints || ShowSpline) {
-                var points = curve.Position.Select(float3 => (Vector3)float3).ToArray();
+                var points = curveData.Position.Select(float3 => (Vector3)float3).ToArray();
                 Handles.color = SplineColor;
                 if (ShowSpline) {
                     Handles.DrawAAPolyLine(SplineWidth, points);
-                    if (curve.IsClosed) Handles.DrawAAPolyLine(SplineWidth, points[0], points[^1]);
+                    if (curveData.IsClosed) Handles.DrawAAPolyLine(SplineWidth, points[0], points[^1]);
                 }
 
                 if (ShowPoints) {
@@ -45,11 +52,11 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
             }
 
             if (ShowDirectionVectors) {
-                for (var i = 0; i < curve.Position.Count; i++) {
-                    var p = curve.Position[i];
-                    var t = curve.Tangent[i];
-                    var n = curve.Normal[i];
-                    var b = curve.Binormal[i];
+                for (var i = 0; i < curveData.Position.Count; i++) {
+                    var p = curveData.Position[i];
+                    var t = curveData.Tangent[i];
+                    var n = curveData.Normal[i];
+                    var b = curveData.Binormal[i];
 
                     Handles.color = DirectionTangentColor;
                     Handles.DrawAAPolyLine(DirectionVectorWidth, p, p + t * DirectionVectorLength);

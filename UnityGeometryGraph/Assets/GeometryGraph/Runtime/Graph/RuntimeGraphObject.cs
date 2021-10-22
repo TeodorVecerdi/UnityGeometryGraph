@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using GeometryGraph.Runtime.Geometry;
+using GeometryGraph.Runtime.Data;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
@@ -8,16 +8,17 @@ namespace GeometryGraph.Runtime.Graph {
         [SerializeField] public RuntimeGraphObjectData RuntimeData = new RuntimeGraphObjectData();
         public static bool DebugEnabled = false;
 
-        public GeometryData Evaluate(GeometryGraphSceneData sceneData) {
+        public GeometryGraphEvaluationResult Evaluate(GeometryGraphSceneData sceneData) {
             if (RuntimeData.OutputNode == null) {
-                return GeometryData.Empty;
+                return GeometryGraphEvaluationResult.Empty;
             }
 
             LoadScenePropertyValues(sceneData.PropertyData);
             var result = RuntimeData.OutputNode.EvaluateGraph();
+            var curve = RuntimeData.OutputNode.GetDisplayCurve();
             CleanupScenePropertyValues();
             
-            return result;
+            return new GeometryGraphEvaluationResult(result, curve);
         }
 
         public void Load(RuntimeGraphObjectData runtimeData) {

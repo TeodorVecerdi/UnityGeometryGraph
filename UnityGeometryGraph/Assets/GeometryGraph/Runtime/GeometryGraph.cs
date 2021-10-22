@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using GeometryGraph.Runtime.Curve.TEMP;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
 using Unity.Mathematics;
@@ -10,7 +11,9 @@ namespace GeometryGraph.Runtime {
     public class GeometryGraph : MonoBehaviour {
         [SerializeField] private RuntimeGraphObject graph;
         [SerializeField] private GeometryGraphSceneData sceneData = new GeometryGraphSceneData();
+        [Space]
         [SerializeField] private GeometryExporter exporter;
+        [SerializeField] private CurveVisualizer curveVisualizer;
 
         [SerializeField] private string graphGuid;
 
@@ -26,7 +29,9 @@ namespace GeometryGraph.Runtime {
 
         public void Evaluate() {
             if(exporter == null) return;
-            exporter.Export(graph.Evaluate(sceneData));
+            var evaluationResult = graph.Evaluate(sceneData);
+            exporter.Export(evaluationResult.GeometryData ?? GeometryData.Empty);
+            curveVisualizer.Load(evaluationResult.CurveData);
         }
 
         public void OnPropertiesChanged(int newPropertyHashCode) {

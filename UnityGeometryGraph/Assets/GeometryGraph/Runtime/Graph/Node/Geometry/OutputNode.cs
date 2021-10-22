@@ -1,11 +1,14 @@
-﻿using GeometryGraph.Runtime.Geometry;
+﻿using GeometryGraph.Runtime.Curve;
+using GeometryGraph.Runtime.Geometry;
 
 namespace GeometryGraph.Runtime.Graph {
     public class OutputNode : RuntimeNode {
-        public RuntimePort Input { get; private set; }
+        public RuntimePort GeometryPort { get; private set; }
+        public RuntimePort CurvePort { get; private set; }
 
         public OutputNode(string guid) : base(guid) {
-            Input = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
+            GeometryPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
+            CurvePort = RuntimePort.Create(PortType.Curve, PortDirection.Input, this);
         }
 
         protected override object GetValueForPort(RuntimePort port) {
@@ -13,12 +16,18 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override void RebindPorts() {
-            Input = Ports[0];
+            GeometryPort = Ports[0];
+        }
+
+        public CurveData GetDisplayCurve() {
+            DebugUtility.Log("Getting display curve");
+            var curve = GetValue(CurvePort, (CurveData) null);
+            return curve;
         }
 
         public GeometryData EvaluateGraph() {
             DebugUtility.Log("Evaluating Graph");
-            var value = GetValue(Input, (GeometryData)null);
+            var value = GetValue(GeometryPort, (GeometryData)null);
 
             if (value == null) {
                 DebugUtility.Log("Return value was null");
