@@ -5,20 +5,22 @@
 .optional #connector #cap {
     border-radius: 1px;
 }
+
 #connector #cap {
     border-width: 1px;
     margin: -1px;
 }
+
 GraphFrameworkPort.input {
     margin-left: -12px;
 }
 
-GraphFrameworkPort.check-port {
-    margin-left: -16px;
-}
-
 GraphFrameworkPort.output {
     margin-right: -12px;
+}
+
+GraphFrameworkPort {
+    --port-color: #000;
 }
 
 GraphFrameworkPort.portType-Boolean {
@@ -43,4 +45,8 @@ GraphFrameworkPort.portType-Geometry {
 
 GraphFrameworkPort.portType-Collection {
     --port-color: #00f;
+}
+
+GraphFrameworkPort.portType-Curve {
+    --port-color: #00c738;
 }

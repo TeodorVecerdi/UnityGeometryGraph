@@ -7,6 +7,7 @@
         Geometry,
         Collection,
         String,
+        Curve,
         
         Any = int.MaxValue
     }
