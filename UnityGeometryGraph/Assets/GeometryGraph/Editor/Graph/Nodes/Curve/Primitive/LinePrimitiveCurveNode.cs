@@ -44,11 +44,6 @@ namespace GeometryGraph.Editor {
                 points = newValue;
                 RuntimeNode.UpdatePoints(points);
             });
-            
-            pointsField.RegisterCallback<BlurEvent>(_ => {
-                if (pointsField.value.Between(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1)) return;
-                pointsField.SetValueWithoutNotify(pointsField.value.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1));
-            });
 
             startField.RegisterValueChangedCallback(evt => {
                 var newValue = (float3)evt.newValue;

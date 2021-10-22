@@ -1,4 +1,5 @@
 ﻿using GeometryGraph.Runtime.Curve;
+using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -7,7 +8,7 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     public class LinePrimitiveCurveNode : RuntimeNode {
-        private int points = 2;
+        private MinMaxInt points = new MinMaxInt(2, Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
         private float3 start = float3.zero;
         private float3 end = float3_util.right;
         private CurveData lineCurve;
@@ -31,9 +32,9 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == PointsPort) {
-                var newValue = GetValue(connection, points);
+                var newValue = GetValue(connection, (int)points);
                 if (newValue == points) return;
-                points = newValue;
+                points.Value = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == StartPort) {
@@ -59,7 +60,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override string GetCustomData() {
             var array = new JArray {
-                points,
+                (int)points,
                 JsonConvert.SerializeObject(start, float3Converter.Converter),
                 JsonConvert.SerializeObject(end, float3Converter.Converter),
             };
@@ -70,7 +71,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (string.IsNullOrEmpty(json)) return;
 
             var data = JArray.Parse(json);
-            points = data.Value<int>(0);
+            points = new MinMaxInt(data.Value<int>(0), Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             start = JsonConvert.DeserializeObject<float3>(data.Value<string>(1)!, float3Converter.Converter);
             end = JsonConvert.DeserializeObject<float3>(data.Value<string>(2)!, float3Converter.Converter);
             NotifyPortValueChanged(ResultPort);
@@ -80,7 +81,7 @@ namespace GeometryGraph.Runtime.Graph {
             newPoints = newPoints.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             if (newPoints == points) return;
             
-            points = newPoints;
+            points.Value = newPoints;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
