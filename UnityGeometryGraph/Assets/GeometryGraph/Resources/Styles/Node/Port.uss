@@ -48,5 +48,5 @@ GraphFrameworkPort.portType-Collection {
 }
 
 GraphFrameworkPort.portType-Curve {
-    --port-color: #00c738;
+    --port-color: #0ac778;
 }
