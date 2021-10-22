@@ -2,6 +2,7 @@
 using GeometryGraph.Runtime.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
@@ -64,40 +65,41 @@ namespace GeometryGraph.Runtime.Graph {
                 FloatMathNode_MathOperation.Subtract => x - y,
                 FloatMathNode_MathOperation.Multiply => x * y,
                 FloatMathNode_MathOperation.Divide => x / y,
-                FloatMathNode_MathOperation.Power => Mathf.Pow(x, y),
-                FloatMathNode_MathOperation.Logarithm => Mathf.Log(x, y),
-                FloatMathNode_MathOperation.SquareRoot => Mathf.Sqrt(x),
-                FloatMathNode_MathOperation.InverseSquareRoot => 1.0f / Mathf.Sqrt(x),
-                FloatMathNode_MathOperation.Absolute => Mathf.Abs(x),
-                FloatMathNode_MathOperation.Exponent => Mathf.Exp(x),
+                FloatMathNode_MathOperation.Power => math.pow(x, y),
+                FloatMathNode_MathOperation.Logarithm => MathF.Log(x, y),
+                FloatMathNode_MathOperation.SquareRoot => math.sqrt(x),
+                FloatMathNode_MathOperation.InverseSquareRoot => math.rsqrt(x),
+                FloatMathNode_MathOperation.Absolute => math.abs(x),
+                FloatMathNode_MathOperation.Exponent => math.exp(x),
 
-                FloatMathNode_MathOperation.Minimum => Mathf.Min(x, y),
-                FloatMathNode_MathOperation.Maximum => Mathf.Max(x, y),
+                FloatMathNode_MathOperation.Minimum => math.min(x, y),
+                FloatMathNode_MathOperation.Maximum => math.max(x, y),
                 FloatMathNode_MathOperation.LessThan => x < y ? 1.0f : 0.0f,
                 FloatMathNode_MathOperation.GreaterThan => x > y ? 1.0f : 0.0f,
                 FloatMathNode_MathOperation.Sign => x < 0 ? -1.0f : x == 0.0f ? 0.0f : 1.0f,
-                FloatMathNode_MathOperation.Compare => Mathf.Abs(x - y) < tolerance ? 1.0f : 0.0f,
+                FloatMathNode_MathOperation.Compare => math.abs(x - y) < tolerance ? 1.0f : 0.0f,
                 FloatMathNode_MathOperation.SmoothMinimum => ExtraMath.SmoothMinimum(x, y, tolerance),
                 FloatMathNode_MathOperation.SmoothMaximum => ExtraMath.SmoothMaximum(x, y, tolerance),
 
-                FloatMathNode_MathOperation.Round => Mathf.Round(x),
-                FloatMathNode_MathOperation.Floor => Mathf.Floor(x),
-                FloatMathNode_MathOperation.Ceil => Mathf.Ceil(x),
+                FloatMathNode_MathOperation.Round => math.round(x),
+                FloatMathNode_MathOperation.Floor => math.floor(x),
+                FloatMathNode_MathOperation.Ceil => math.ceil(x),
                 FloatMathNode_MathOperation.Truncate => (int)x,
                 FloatMathNode_MathOperation.Fraction => x - (int)x,
                 FloatMathNode_MathOperation.Modulo => (float)Math.IEEERemainder(x, y),
                 FloatMathNode_MathOperation.Wrap => x = ExtraMath.Wrap(x, y, extra),
-                FloatMathNode_MathOperation.Snap => Mathf.Round(x / y) * y,
+                FloatMathNode_MathOperation.Snap => math.round(x / y) * y,
 
-                FloatMathNode_MathOperation.Sine => Mathf.Sin(x),
-                FloatMathNode_MathOperation.Cosine => Mathf.Cos(x),
-                FloatMathNode_MathOperation.Tangent => Mathf.Tan(x),
-                FloatMathNode_MathOperation.Arcsine => Mathf.Asin(x),
-                FloatMathNode_MathOperation.Arccosine => Mathf.Acos(x),
-                FloatMathNode_MathOperation.Arctangent => Mathf.Atan(x),
-                FloatMathNode_MathOperation.Atan2 => Mathf.Atan2(x, y),
-                FloatMathNode_MathOperation.ToRadians => Mathf.Deg2Rad * x,
-                FloatMathNode_MathOperation.ToDegrees => Mathf.Rad2Deg * x,
+                FloatMathNode_MathOperation.Sine => math.sin(x),
+                FloatMathNode_MathOperation.Cosine => math.cos(x),
+                FloatMathNode_MathOperation.Tangent => math.tan(x),
+                FloatMathNode_MathOperation.Arcsine => math.asin(x),
+                FloatMathNode_MathOperation.Arccosine => math.acos(x),
+                FloatMathNode_MathOperation.Arctangent => math.atan(x),
+                FloatMathNode_MathOperation.Atan2 => math.atan2(x, y),
+                FloatMathNode_MathOperation.ToRadians => math.radians(x),
+                FloatMathNode_MathOperation.ToDegrees => math.degrees(x),
+                FloatMathNode_MathOperation.Lerp => math.lerp(x, y, extra),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -185,7 +187,10 @@ namespace GeometryGraph.Runtime.Graph {
             Arcsine = 29, Arccosine = 30, Arctangent = 31, [DisplayName("Atan2")] Atan2 = 32,
 
             // Conversion
-            ToRadians = 33, ToDegrees = 34
+            ToRadians = 33, ToDegrees = 34,
+            
+            // Added later, was too lazy to redo numbers
+            Lerp = 35,
         }
     }
 }

@@ -44,6 +44,7 @@ namespace GeometryGraph.Editor {
                 new SelectionEntry("1 / Square root of x", 7, false),
                 new SelectionEntry("Absolute value of x", 8, false),
                 new SelectionEntry("e to the power of x", 9, false),
+                new SelectionEntry("Linear interpolation between x and y using t", 35, false),
             },
             new SelectionCategory("Rounding", false, SelectionCategory.CategorySize.Normal) {
                 new SelectionEntry("x rounded to the nearest integer", 18, false),
@@ -160,14 +161,9 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnOperationChanged() {
-            var showTolerance = operation == MathOperation.Compare || operation == MathOperation.SmoothMinimum || operation == MathOperation.SmoothMaximum;
-            var showExtra = operation == MathOperation.Wrap;
-            var showY = !(operation == MathOperation.SquareRoot || operation == MathOperation.InverseSquareRoot || operation == MathOperation.Absolute ||
-                          operation == MathOperation.Exponent || operation == MathOperation.Sign || operation == MathOperation.Round ||
-                          operation == MathOperation.Floor || operation == MathOperation.Ceil || operation == MathOperation.Truncate ||
-                          operation == MathOperation.Fraction || operation == MathOperation.Sine || operation == MathOperation.Cosine ||
-                          operation == MathOperation.Tangent || operation == MathOperation.Arcsine || operation == MathOperation.Arccosine ||
-                          operation == MathOperation.Arctangent || operation == MathOperation.ToRadians || operation == MathOperation.ToDegrees);
+            var showTolerance = operation is MathOperation.Compare or MathOperation.SmoothMinimum or MathOperation.SmoothMaximum;
+            var showExtra = operation is MathOperation.Wrap or MathOperation.Lerp;
+            var showY = !(operation is MathOperation.SquareRoot or MathOperation.InverseSquareRoot or MathOperation.Absolute or MathOperation.Exponent or MathOperation.Sign or MathOperation.Round or MathOperation.Floor or MathOperation.Ceil or MathOperation.Truncate or MathOperation.Fraction or MathOperation.Sine or MathOperation.Cosine or MathOperation.Tangent or MathOperation.Arcsine or MathOperation.Arccosine or MathOperation.Arctangent or MathOperation.ToRadians or MathOperation.ToDegrees);
             
             if (showTolerance) {
                 tolerancePort.Show();
@@ -245,7 +241,8 @@ namespace GeometryGraph.Editor {
                     SetPortNames("Radians", "", "", ""); break;
                 case MathOperation.ToRadians:
                     SetPortNames("Degrees", "", "", ""); break;
-                
+                case MathOperation.Lerp:
+                    SetPortNames("X", "Y", "", "T"); break;
                 default: throw new ArgumentOutOfRangeException();
             }
         }

@@ -59,6 +59,7 @@ namespace GeometryGraph.Editor {
                 new SelectionEntry("x projected on y", 12, false),
                 new SelectionEntry("x reflected around y", 13, false),
                 new SelectionEntry("x refracted on y, using IOR", 14, false),
+                new SelectionEntry("Linear interpolation between x and y using t", 41, false),
             },
             new SelectionCategory("Rounding", false, SelectionCategory.CategorySize.Normal) {
                 new SelectionEntry("x's components rounded to the nearest integers", 24, false),
@@ -204,7 +205,7 @@ namespace GeometryGraph.Editor {
         private void OnOperationChanged() {
             var showIOR = operation == Operation.Refract;
             var showWrapMax = operation == Operation.Wrap;
-            var showDistance = operation == Operation.SmoothMinimum || operation == Operation.SmoothMaximum;
+            var showDistance = operation == Operation.SmoothMinimum || operation == Operation.SmoothMaximum || operation == Operation.Lerp;
             var showScale = operation == Operation.Scale;
             var showY =
                 !(operation == Operation.Length || operation == Operation.LengthSquared || operation == Operation.Scale || operation == Operation.Sine || 
@@ -221,6 +222,7 @@ namespace GeometryGraph.Editor {
             if (showWrapMax) wrapMaxPort.Show();
             else wrapMaxPort.HideAndDisconnect();
 
+            distancePort.Label = operation == Operation.Lerp ? "T" : "Distance";
             if (showDistance) distancePort.Show();
             else distancePort.HideAndDisconnect();
             

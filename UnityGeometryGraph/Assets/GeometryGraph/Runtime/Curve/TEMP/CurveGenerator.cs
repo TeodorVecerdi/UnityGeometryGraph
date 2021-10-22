@@ -14,9 +14,9 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         [ShowIf("@Type == CurveType.Helix")] public float TopRadius;
         [ShowIf("@Type == CurveType.Helix")] public float Rotations;
         [ShowIf("@Type == CurveType.Helix")] public float Pitch;
+        [SerializeField] private CurveVisualizer visualizer;
 
         public CurveData CurveData;
-
 
         private int __MinResolution() {
             return Type switch {
@@ -31,14 +31,14 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
 
         [Button]
         public void Generate() {
-            CurveData = Type switch {
+            visualizer.Load(CurveData = Type switch {
                 CurveType.Line => CurvePrimitive.Line(Resolution, Start, End),
                 CurveType.Circle => CurvePrimitive.Circle(Resolution, Radius),
                 CurveType.QuadraticBezier => CurvePrimitive.QuadraticBezier(Resolution, false, Start, ControlA, End),
                 CurveType.CubicBezier => CurvePrimitive.CubicBezier(Resolution, false, Start, ControlA, ControlB, End),
                 CurveType.Helix => CurvePrimitive.Helix(Resolution, Rotations, Pitch, TopRadius, Radius),
                 _ => throw new ArgumentOutOfRangeException()
-            };
+            });
         }
     }
 }

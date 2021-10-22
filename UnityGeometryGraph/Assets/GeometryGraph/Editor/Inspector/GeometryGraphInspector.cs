@@ -35,6 +35,7 @@ namespace GeometryGraph.Editor {
             var graphProperty = serializedObject.FindProperty("graph");
             EditorGUILayout.PropertyField(graphProperty);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("exporter"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("curveVisualizer"));
             var changed = serializedObject.ApplyModifiedProperties();
 
             if (changed) {

@@ -136,6 +136,7 @@ namespace GeometryGraph.Runtime.Graph {
                 VectorMathNode_Operation.Atan2 => math.atan2(x, y),
                 VectorMathNode_Operation.ToRadians => math.radians(x),
                 VectorMathNode_Operation.ToDegrees => math.degrees(x),
+                VectorMathNode_Operation.Lerp => math.lerp(x, y, distance),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -241,7 +242,10 @@ namespace GeometryGraph.Runtime.Graph {
             Arcsine = 35, Arccosine = 36, Arctangent = 37, [DisplayName("Atan2")] Atan2 = 38,
             
             // Conversion
-            ToRadians = 39, ToDegrees = 40
+            ToRadians = 39, ToDegrees = 40,
+            
+            // Added later, was too lazy to redo numbers
+            Lerp = 41,
         }
     }
 }
