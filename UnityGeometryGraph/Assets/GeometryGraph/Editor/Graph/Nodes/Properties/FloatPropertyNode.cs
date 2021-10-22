@@ -34,7 +34,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize(property != null ? property.DisplayName : "ERROR", EditorView.DefaultNodePosition);
+            Initialize(property != null ? property.DisplayName : "ERROR");
 
             propertyPort = GraphFrameworkPort.Create("Value", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
             AddPort(propertyPort);

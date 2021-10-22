@@ -16,7 +16,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Vector Value", EditorView.DefaultNodePosition);
+            Initialize("Vector Value");
 
             valuePort = GraphFrameworkPort.Create("Value", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
             valueField = new Vector3Field("Value");

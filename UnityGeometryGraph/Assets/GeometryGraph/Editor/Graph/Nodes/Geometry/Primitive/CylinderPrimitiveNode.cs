@@ -26,7 +26,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Cylinder Primitive", EditorView.DefaultNodePosition);
+            Initialize("Cylinder Primitive");
 
             (bottomRadiusPort, bottomRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Bottom Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(bottomRadius, Which.BottomRadius));
             (topRadiusPort, topRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Top Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(topRadius, Which.TopRadius));
