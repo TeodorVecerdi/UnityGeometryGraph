@@ -8,7 +8,7 @@ using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace GeometryGraph.Editor {
-    [Title("Curve", "Primitive", "Circle")]
+    [Title("Curve", "Primitive", "Helix")]
     public class HelixPrimitiveCurveNode : AbstractNode<GeometryGraph.Runtime.Graph.HelixPrimitiveCurveNode> {
         private GraphFrameworkPort pointsPort;
         private GraphFrameworkPort rotationsPort;
