@@ -1,5 +1,8 @@
-﻿using GeometryGraph.Runtime.Graph;
+﻿using System;
+using GeometryGraph.Runtime;
+using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
+using UnityCommons;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -17,7 +20,7 @@ namespace GeometryGraph.Editor {
         private FloatField bottomRadiusField;
         private FloatField topRadiusField;
         private FloatField heightField;
-        private IntegerField pointsField;
+        private ClampedIntegerField pointsField;
 
         private float bottomRadius = 1.0f;
         private float topRadius = 1.0f;
@@ -31,54 +34,45 @@ namespace GeometryGraph.Editor {
             (bottomRadiusPort, bottomRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Bottom Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(bottomRadius, Which.BottomRadius));
             (topRadiusPort, topRadiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Top Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(topRadius, Which.TopRadius));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(height, Which.Height));
-            (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(points, Which.Points));
+            (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(points, Which.Points));
             resultPort = GraphFrameworkPort.Create("Cylinder", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             topRadiusField.RegisterValueChangedCallback(evt => {
+                var newValue = evt.newValue.Min(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
+                if (MathF.Abs(newValue - topRadius) < Constants.FLOAT_TOLERANCE) return;
+                
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
-                if (evt.newValue < 0.01f) {
-                    topRadius = 0.01f;
-                } else topRadius = evt.newValue;
-
+                topRadius = newValue;
                 RuntimeNode.UpdateValue(topRadius, Which.TopRadius);
             });
-            
-            topRadiusField.RegisterCallback<FocusOutEvent>(_ => {
-                topRadiusField.SetValueWithoutNotify(topRadius);
-            });
-            
-            bottomRadiusField.RegisterValueChangedCallback(evt => {
-                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
-                if (evt.newValue < 0.01f) {
-                    bottomRadius = 0.01f;
-                } else bottomRadius = evt.newValue;
 
+            bottomRadiusField.RegisterValueChangedCallback(evt => {
+                var newValue = evt.newValue.Min(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
+                if (MathF.Abs(newValue - bottomRadius) < Constants.FLOAT_TOLERANCE) return;
+                
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
+                bottomRadius = newValue;
                 RuntimeNode.UpdateValue(bottomRadius, Which.BottomRadius);
-            });
-            
-            bottomRadiusField.RegisterCallback<FocusOutEvent>(_ => {
-                bottomRadiusField.SetValueWithoutNotify(bottomRadius);
             });
 
             heightField.RegisterValueChangedCallback(evt => {
+                var newValue = evt.newValue.Min(Constants.MIN_GEOMETRY_HEIGHT);
+                if (MathF.Abs(newValue - height) < Constants.FLOAT_TOLERANCE) return;
+                
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
-                if (evt.newValue < 0.01f) {
-                    height = 0.01f;
-                    heightField.SetValueWithoutNotify(0.01f);
-                } else height = evt.newValue;
-
+                height = newValue;
                 RuntimeNode.UpdateValue(height, Which.Height);
             });
 
+            pointsField.Min = Constants.MIN_CIRCULAR_GEOMETRY_POINTS;
+            pointsField.Max = Constants.MAX_CIRCULAR_GEOMETRY_POINTS;
             pointsField.RegisterValueChangedCallback(evt => {
+                var newValue = evt.newValue.Clamped(Constants.MIN_CIRCULAR_GEOMETRY_POINTS, Constants.MAX_CIRCULAR_GEOMETRY_POINTS);
+                if (newValue == points) return;
+                
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
-                points = evt.newValue < 3 ? 3 : evt.newValue;
-
+                points = newValue;
                 RuntimeNode.UpdateValue(points, Which.Points);
-            });
-            pointsField.RegisterCallback<BlurEvent>(_ => {
-                if (pointsField.value >= 3) return;
-                pointsField.SetValueWithoutNotify(3);
             });
 
             topRadiusField.SetValueWithoutNotify(1.0f);

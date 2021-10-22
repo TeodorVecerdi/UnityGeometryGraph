@@ -1,4 +1,5 @@
-﻿using GeometryGraph.Runtime;
+﻿using System;
+using GeometryGraph.Runtime;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityCommons;
@@ -15,7 +16,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort resultPort;
 
         private FloatField radiusField;
-        private IntegerField subdivisionsField;
+        private ClampedIntegerField subdivisionsField;
 
         private float radius = 1.0f;
         private int subdivisions = 2;
@@ -25,34 +26,27 @@ namespace GeometryGraph.Editor {
             Initialize("Icosphere Primitive");
 
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(radius, Which.Radius));
-            (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Subdivisions", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions));
+            (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Subdivisions", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions));
             resultPort = GraphFrameworkPort.Create("Icosphere", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             radiusField.RegisterValueChangedCallback(evt => {
+                var newValue = evt.newValue.Min(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
+                if (MathF.Abs(newValue - radius) < Constants.FLOAT_TOLERANCE) return;
+                
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change radius");
-                if (evt.newValue < 0.0f) {
-                    radius = 0.0f;
-                    radiusField.SetValueWithoutNotify(0.0f);
-                } else radius = evt.newValue;
-
+                radius = newValue;
                 RuntimeNode.UpdateValue(radius, Which.Radius);
             });
 
+            subdivisionsField.Min = 0;
+            subdivisionsField.Max = Constants.MAX_ICOSPHERE_SUBDIVISIONS;
             subdivisionsField.RegisterValueChangedCallback(evt => {
+                var newValue = evt.newValue.Clamped(0, Constants.MAX_ICOSPHERE_SUBDIVISIONS);
+                if (newValue == subdivisions) return;
+                
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivisions");
-                if (!evt.newValue.Between(0, Constants.MAX_ICOSPHERE_SUBDIVISIONS)) {
-                    subdivisions = evt.newValue.Clamped(0, 5);
-                    subdivisionsField.SetValueWithoutNotify(subdivisions);
-                } else {
-                    subdivisions = evt.newValue;
-                }
-
+                subdivisions = newValue;
                 RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions);
-            });
-            
-            subdivisionsField.RegisterCallback<BlurEvent>(_ => {
-                if (subdivisionsField.value.Between(0, Constants.MAX_ICOSPHERE_SUBDIVISIONS)) return;
-                subdivisionsField.SetValueWithoutNotify(subdivisionsField.value.Clamped(0, Constants.MAX_ICOSPHERE_SUBDIVISIONS));
             });
 
             radiusField.SetValueWithoutNotify(1.0f);

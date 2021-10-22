@@ -1,9 +1,12 @@
-﻿using GeometryGraph.Runtime;
+﻿using System;
+using GeometryGraph.Runtime;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
+using UnityCommons;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 using Which = GeometryGraph.Runtime.Graph.PlanePrimitiveNode.PlanePrimitiveNode_Which;
 
@@ -17,7 +20,7 @@ namespace GeometryGraph.Editor {
 
         private FloatField widthField;
         private FloatField heightField;
-        private IntegerField subdivisionsField;
+        private ClampedIntegerField subdivisionsField;
 
         private float2 size = float2_util.one;
         private int subdivisions;
@@ -28,39 +31,35 @@ namespace GeometryGraph.Editor {
 
             (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Width", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.x, Which.Width));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.y, Which.Height));
-            (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Subdivisions", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions));
+            (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Subdivisions", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions));
             resultPort = GraphFrameworkPort.Create("Plane", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             widthField.RegisterValueChangedCallback(evt => {
-                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
-                if (evt.newValue < 0.0f) {
-                    size.x = 0.0f;
-                    widthField.SetValueWithoutNotify(0.0f);
-                } else size.x = evt.newValue;
-
+                var newValue = evt.newValue.Min(0.0f);
+                if (MathF.Abs(newValue - size.x) < Constants.FLOAT_TOLERANCE) return;
+                
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change width");
+                size.x = newValue;
                 RuntimeNode.UpdateValue(size.x, Which.Width);
             });
             
             heightField.RegisterValueChangedCallback(evt => {
-                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
-                if (evt.newValue < 0.0f) {
-                    size.y = 0.0f;
-                    heightField.SetValueWithoutNotify(0.0f);
-                } else size.y = evt.newValue;
-
+                var newValue = evt.newValue.Min(0.0f);
+                if (MathF.Abs(newValue - size.y) < Constants.FLOAT_TOLERANCE) return;
+                
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change height");
+                size.y = newValue;
                 RuntimeNode.UpdateValue(size.y, Which.Height);
             });
 
+            subdivisionsField.Min = 0;
             subdivisionsField.RegisterValueChangedCallback(evt => {
-                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
-                subdivisions = evt.newValue < 0 ? 0 : evt.newValue;
-
+                var newValue = evt.newValue.Min(0);
+                if (newValue == subdivisions) return;
+                
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivisions");
+                subdivisions = newValue;
                 RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions);
-            });
-            
-            subdivisionsField.RegisterCallback<BlurEvent>(_ => {
-                if (subdivisionsField.value >= 0) return;
-                subdivisionsField.SetValueWithoutNotify(0);
             });
 
             widthField.SetValueWithoutNotify(1.0f);

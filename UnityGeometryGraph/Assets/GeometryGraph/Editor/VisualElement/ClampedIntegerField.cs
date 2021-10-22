@@ -13,12 +13,20 @@ namespace GeometryGraph.Editor {
 
         public int? Min {
             get => min;
-            set => min = value;
+            set {
+                min = value;
+                if (value == null) return;
+                if (this.value < min) this.value = (int)value;
+            }
         }
 
         public int? Max {
             get => max;
-            set => max = value;
+            set {
+                max = value;
+                if (value == null) return;
+                if (this.value > max) this.value = (int)value;
+            }
         }
 
         public ClampedIntegerField() : this(null) {
@@ -30,12 +38,29 @@ namespace GeometryGraph.Editor {
             this.max = max;
             
             AddToClassList(IntegerField.ussClassName);
+            AddToClassList("clamped-field");
             labelElement.AddToClassList(IntegerField.labelUssClassName);
             integerInput.AddToClassList(IntegerField.inputUssClassName);
             AddLabelDragger<int>();
+            
+            RegisterCallback<BlurEvent>(_ => ClampWithoutNotify());
         }
 
         private IntegerInput integerInput => (IntegerInput)textInputBase;
+
+        private void ClampWithoutNotify() {
+            var val = value;
+            if (min != null) val = val.Min((int)min);
+            if (max != null) val = val.Max((int)max);
+            SetValueWithoutNotify(val);
+        }
+
+        private void Clamp() {
+            var val = value;
+            if (min != null) val = val.Min((int)min);
+            if (max != null) val = val.Max((int)max);
+            if (val != value) value = val;
+        }
         
         protected override string ValueToString(int v) {
             return v.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);

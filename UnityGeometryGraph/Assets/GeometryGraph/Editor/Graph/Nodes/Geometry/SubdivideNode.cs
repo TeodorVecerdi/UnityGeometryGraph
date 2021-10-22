@@ -1,5 +1,6 @@
 ﻿using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
+using UnityCommons;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -11,7 +12,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort levelsPort;
         private GraphFrameworkPort resultPort;
 
-        private IntegerField levelsField;
+        private ClampedIntegerField levelsField;
 
         private int levels = 1;
 
@@ -20,16 +21,17 @@ namespace GeometryGraph.Editor {
             Initialize("Subdivide (Simple)");
 
             inputPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener, this);
-            (levelsPort, levelsField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Levels", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateLevels(levels));
+            (levelsPort, levelsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Levels", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateLevels(levels));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
+            levelsField.Min = 0;
             levelsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue;
-                if (newValue < 0) newValue = 0;
-               
+                var newValue = evt.newValue.Min(0);
                 if (newValue == levels) return;
+                
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivision levels");
                 levels = newValue;
+                RuntimeNode.UpdateLevels(levels);
             });
 
             levelsPort.Add(levelsField);
