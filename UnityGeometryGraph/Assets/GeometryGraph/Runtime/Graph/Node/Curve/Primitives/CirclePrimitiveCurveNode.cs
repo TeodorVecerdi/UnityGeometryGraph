@@ -7,7 +7,7 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     public class CirclePrimitiveCurveNode : RuntimeNode {
-        private MinMaxInt points = new (8, Constants.MIN_CIRCLE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+        private MinMaxInt points = new (32, Constants.MIN_CIRCLE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
         private MinMaxFloat radius = new (1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
         private CurveData circleCurve;
 

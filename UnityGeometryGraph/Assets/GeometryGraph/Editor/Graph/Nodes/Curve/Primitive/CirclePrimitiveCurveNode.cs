@@ -16,7 +16,7 @@ namespace GeometryGraph.Editor {
         private ClampedIntegerField pointsField;
         private ClampedFloatField radiusField;
 
-        private int points = 8;
+        private int points = 32;
         private float radius = 1.0f;
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {

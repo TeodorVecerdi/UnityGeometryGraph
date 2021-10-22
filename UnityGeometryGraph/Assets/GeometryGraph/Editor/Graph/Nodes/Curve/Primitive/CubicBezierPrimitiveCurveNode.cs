@@ -28,8 +28,8 @@ namespace GeometryGraph.Editor {
         private Vector3Field controlBField;
         private Vector3Field endField;
 
-        private int points = 2;
-        private bool closed = false;
+        private int points = 32;
+        private bool closed;
         private float3 start = float3.zero;
         private float3 controlA = float3_util.forward;
         private float3 controlB = float3_util.right + float3_util.forward;

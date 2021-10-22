@@ -7,7 +7,7 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     public class HelixPrimitiveCurveNode : RuntimeNode {
-        private MinMaxInt points = new (32, Constants.MIN_HELIX_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+        private MinMaxInt points = new (64, Constants.MIN_HELIX_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
         private MinMaxFloat topRadius = new (1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
         private MinMaxFloat bottomRadius = new (1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
         private float rotations = 2.0f;

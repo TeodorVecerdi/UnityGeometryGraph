@@ -23,7 +23,7 @@ namespace GeometryGraph.Editor {
         private ClampedFloatField topRadiusField;
         private ClampedFloatField bottomRadiusField;
 
-        private int points = 32;
+        private int points = 64;
         private float rotations = 2.0f;
         private float pitch = 1.0f;
         private float topRadius = 1.0f;
