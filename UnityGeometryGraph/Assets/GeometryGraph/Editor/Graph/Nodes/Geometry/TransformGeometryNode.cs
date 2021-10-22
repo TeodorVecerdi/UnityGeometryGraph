@@ -12,7 +12,7 @@ using UnityEngine.UIElements;
 using WhichDefaultValue = GeometryGraph.Runtime.Graph.TransformGeometryNode.WhichDefaultValue;
 
 namespace GeometryGraph.Editor {
-    [Title("Transform Geometry")]
+    [Title("Geometry", "Transform Geometry")]
     public class TransformGeometryNode : AbstractNode<GeometryGraph.Runtime.Graph.TransformGeometryNode> {
         private float3 defaultTranslation;
         private float3 defaultEulerRotation;

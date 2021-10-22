@@ -2,7 +2,7 @@
 using UnityEditor.Experimental.GraphView;
 
 namespace GeometryGraph.Editor {
-    [Title("Join Geometry")]
+    [Title("Geometry", "Join Geometry")]
     public class JoinGeometryNode : AbstractNode<GeometryGraph.Runtime.Graph.JoinGeometryNode> {
         private GraphFrameworkPort aPort;
         private GraphFrameworkPort resultPort;
