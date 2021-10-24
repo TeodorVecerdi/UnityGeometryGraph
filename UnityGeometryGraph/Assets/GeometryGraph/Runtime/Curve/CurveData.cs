@@ -45,5 +45,7 @@ namespace GeometryGraph.Runtime.Curve {
         internal CurveData Clone() {
             return new CurveData(type, points, isClosed, position, tangent, normal, binormal);
         }
+
+        internal static CurveData Empty => new (CurveType.None, 0, false, new List<float3>(), new List<float3>(), new List<float3>(), new List<float3>());
     }
 }

@@ -5,5 +5,7 @@
         QuadraticBezier,
         CubicBezier,
         Helix,
+        None,
+        Unknown,
     }
 }
