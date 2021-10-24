@@ -20,7 +20,7 @@ namespace GeometryGraph.Runtime.Geometry {
             BuildGeometry(mesh, vertexPositions, meshUvs, /*out*/faceNormals, /*out*/uvs, /*out*/faceMaterialIndices, /*out*/faceSmoothShaded, duplicateNormalAngleThreshold);
 
             attributeManager = new AttributeManager(this);
-            FillBuiltinAttributes(vertexPositions, uvs, new float[edges.Count], faceNormals, faceMaterialIndices, faceSmoothShaded);
+            FillBuiltinAttributes(vertexPositions, uvs, new List<float>(new float[edges.Count]), faceNormals, faceMaterialIndices, faceSmoothShaded);
         }
         
         private void BuildGeometry(
