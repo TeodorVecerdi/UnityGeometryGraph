@@ -1,0 +1,356 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.Geometry;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
+using UnityEngine.Assertions;
+
+namespace GeometryGraph.Runtime.Curve {
+    internal static class CurveToGeometry {
+        // Returns a `GeometryData` object composed of only vertices and edges, representing the curve
+        internal static GeometryData WithoutProfile(CurveData curve) {
+            if (curve.Points == 0) return GeometryData.Empty;
+            var vertexPositions = new List<float3>();
+            var crease = new float[curve.Points - 1].ToList();
+
+            for (var i = 0; i < curve.Points; i++) {
+                vertexPositions.Add(curve.Position[i]);
+            }
+
+            var edges = new List<GeometryData.Edge>();
+            for (var i = 0; i < curve.Points - 1; i++) {
+                edges.Add(new GeometryData.Edge(i, i + 1, i));
+            }
+
+            if (curve.IsClosed) {
+                edges.Add(new GeometryData.Edge(curve.Points - 1, 0, edges.Count));
+            }
+
+            var geometry = new GeometryData(edges, new List<GeometryData.Face>(), new List<GeometryData.FaceCorner>(), 1, vertexPositions,
+                                            new List<float3>(), new List<int>(), new List<bool>(), crease, new List<float2>());
+
+            geometry.StoreAttribute(curve.Tangent.Into("tangent", AttributeType.Vector3, AttributeDomain.Vertex));
+            geometry.StoreAttribute(curve.Normal.Into("normal", AttributeType.Vector3, AttributeDomain.Vertex));
+            geometry.StoreAttribute(curve.Binormal.Into("binormal", AttributeType.Vector3, AttributeDomain.Vertex));
+            return geometry;
+        }
+
+        internal static GeometryData WithProfile(CurveData curve, CurveData profile, bool closeCaps, float rotationOffset) {
+            if (!profile.IsClosed) closeCaps = false;
+
+            int edgeCount = (profile.Points - (profile.IsClosed ? 0 : 1)) * curve.Points
+                          + profile.Points * (curve.Points - 1)
+                          + (profile.Points - (curve.IsClosed ? 0 : 1)) * (curve.Points - 1)
+                          + (closeCaps ? 2 * GetCapEdgeCount(profile) : 0);
+
+            int faceCount = 2 * (profile.Points - (profile.IsClosed ? 0 : 1)) * (curve.Points - 1) + (closeCaps ? 2 * GetCapFaceCount(profile) : 0);
+
+            // Prepare burst job native arrays
+            if (profile.Points > kBurstAlignPointsThreshold) {
+                burstAlign_positionSrc = new NativeArray<float4>(profile.Points, Allocator.Persistent);
+                burstAlign_tangentSrc = new NativeArray<float4>(profile.Points, Allocator.Persistent);
+                burstAlign_normalSrc = new NativeArray<float4>(profile.Points, Allocator.Persistent);
+                burstAlign_binormalSrc = new NativeArray<float4>(profile.Points, Allocator.Persistent);
+                burstAlign_positionDst = new NativeArray<float3>(profile.Points, Allocator.Persistent);
+                burstAlign_tangentDst = new NativeArray<float3>(profile.Points, Allocator.Persistent);
+                burstAlign_normalDst = new NativeArray<float3>(profile.Points, Allocator.Persistent);
+                burstAlign_binormalDst = new NativeArray<float3>(profile.Points, Allocator.Persistent);
+
+                for (var i = 0; i < profile.Points; i++) {
+                    burstAlign_positionSrc[i] = profile.Position[i].float4(1.0f);
+                    burstAlign_tangentSrc[i] = profile.Tangent[i].float4();
+                    burstAlign_normalSrc[i] = profile.Normal[i].float4();
+                    burstAlign_binormalSrc[i] = profile.Binormal[i].float4();
+                }
+            }
+
+            List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
+            List<GeometryData.Face> faces = new List<GeometryData.Face>();
+            List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
+
+            List<float3> faceNormals = new List<float3>();
+            List<int> materialIndices = new int[faceCount].ToList();
+            // TODO: Add settings to customize smooth shading
+            // Maybe you would want flat shading on caps and smooth shading on rest
+            List<bool> shadeSmooth = Enumerable.Repeat(false, faceCount).ToList();
+            List<float> creases = new float[edgeCount].ToList();
+            List<float2> uvs = new List<float2>();
+
+            List<float3> vertexPositions = new List<float3>();
+
+            // First iteration done outside of loop
+            var current = Align(curve, profile, 0, rotationOffset);
+            // Add points and edges
+            for (var i = 0; i < current.Points; i++) {
+                vertexPositions.Add(current.Position[i]);
+            }
+
+            for (var i = 0; i < current.Points - 1; i++) {
+                edges.Add(new GeometryData.Edge(i, i + 1, i) {
+                    FaceA = i * 2 + 1
+                });
+            }
+
+            if (current.IsClosed) {
+                edges.Add(new GeometryData.Edge(vertexPositions.Count - 1, 0, edges.Count) {
+                    FaceA = (current.Points - 1) * 2 + 1
+                });
+            }
+
+            int fcIdx = 0;
+            int facesPerIteration = 2 * current.Points - (current.IsClosed ? 0 : 1);
+            int middleEdgeCount = current.Points - (current.IsClosed ? 0 : 1);
+            int verticalEdgeCount = current.Points;
+            int profileEdgeCount = middleEdgeCount;
+            int faceIterations = middleEdgeCount;
+            for (var index = 1; index < curve.Points; index++) {
+                current = Align(curve, profile, index, rotationOffset);
+                int faceOffset = (index - 1) * facesPerIteration;
+                int edgeOffset = edges.Count;
+                int vertexOffset = vertexPositions.Count;
+
+                // Middle edges
+                for (var i = 0; i < middleEdgeCount; i++) {
+                    int fromVertex = vertexOffset - current.Points + i;
+                    int toVertex = vertexOffset + (i + 1).Mod(current.Points);
+                    edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
+                        FaceA = faceOffset + i * 2,
+                        FaceB = faceOffset + i * 2 + 1
+                    });
+                }
+
+                // Vertical edges (from profile to profile)
+                for (var i = 0; i < verticalEdgeCount; i++) {
+                    int fromVertex = vertexOffset - current.Points + i;
+                    int toVertex = vertexOffset + i;
+                    int faceA, faceB;
+                    if (i > 0 && i < verticalEdgeCount - 1) {
+                        faceA = faceOffset + 2 * (i - 1) + 1;
+                        faceB = faceOffset + i * 2;
+                    } else {
+                        if (i == 0) {
+                            faceB = faceOffset + i * 2;
+                            if (current.IsClosed) {
+                                faceA = faceOffset + 2 * (i - 1).Mod(current.Points) + 1;
+                            } else {
+                                faceA = -1;
+                            }
+                        } else {
+                            faceA = faceOffset + 2 * (i - 1) + 1;
+                            if (current.IsClosed) {
+                                faceB = faceOffset + i * 2;
+                            } else {
+                                faceB = -1;
+                            }
+                        }
+                    }
+
+                    edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
+                        FaceA = faceA,
+                        FaceB = faceB
+                    });
+                }
+
+                // Profile edges
+                for (var i = 0; i < profileEdgeCount; i++) {
+                    int fromVertex = vertexOffset + i;
+                    int toVertex = vertexOffset + (i + 1).Mod(current.Points);
+                    edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
+                        FaceA = faceOffset + facesPerIteration + i * 2 + 1,
+                        FaceB = faceOffset + i * 2
+                    });
+                }
+
+                // Vertices
+                for (var i = 0; i < current.Points; i++) {
+                    vertexPositions.Add(current.Position[i]);
+                }
+
+                // Faces
+                for (var i = 0; i < faceIterations; i++) {
+                    // First face
+                    faces.Add(new GeometryData.Face(
+                                  vertexOffset + i,
+                                  vertexOffset + (i + 1).Mod(current.Points),
+                                  vertexOffset - current.Points + i,
+                                  fcIdx++,
+                                  fcIdx++,
+                                  fcIdx++,
+                                  edgeOffset + middleEdgeCount + verticalEdgeCount + i,
+                                  edgeOffset + middleEdgeCount + i,
+                                  edgeOffset + i
+                              )
+                    );
+                    // Second face
+                    faces.Add(new GeometryData.Face(
+                                  vertexOffset - current.Points + i,
+                                  vertexOffset + (i + 1).Mod(current.Points),
+                                  vertexOffset - current.Points + (i + 1).Mod(current.Points),
+                                  fcIdx++,
+                                  fcIdx++,
+                                  fcIdx++,
+                                  edgeOffset + i,
+                                  edgeOffset - profileEdgeCount + i,
+                                  edgeOffset + middleEdgeCount + (i + 1).Mod(current.Points)
+                              )
+                    );
+
+                    faceNormals.Add(
+                        math.normalizesafe(
+                            math.cross(
+                                vertexPositions[vertexOffset + (i + 1).Mod(current.Points)] - vertexPositions[vertexOffset + i],
+                                vertexPositions[vertexOffset - current.Points + i] - vertexPositions[vertexOffset + i]
+                            ), float3_util.up
+                        )
+                    );
+                    faceNormals.Add(
+                        math.normalizesafe(
+                            math.cross(
+                                vertexPositions[vertexOffset + (i + 1).Mod(current.Points)] - vertexPositions[vertexOffset - current.Points + i],
+                                vertexPositions[vertexOffset - current.Points + (i + 1).Mod(current.Points)] - vertexPositions[vertexOffset - current.Points + i]
+                            ), float3_util.up
+                        )
+                    );
+
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 2));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 2));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 2));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
+                    uvs.Add(float2_util.one);
+                    uvs.Add(float2_util.up);
+                    uvs.Add(float2.zero);
+                    uvs.Add(float2_util.one);
+                    uvs.Add(float2.zero);
+                    uvs.Add(float2_util.right);
+                }
+            }
+
+            if (closeCaps) {
+                // TODO: Add caps
+                // Other things to do:
+                //     - Update FaceB on first profileEdgeCount edges
+                //     - Update FaceA on last profileEdgeCount edges
+            } else {
+            }
+
+            // TODO: Move this into else of if(closeCaps){...} else {...} 
+            for (var i = edges.Count - 1; i >= edges.Count - profileEdgeCount; i--) {
+                edges[i].FaceA = -1;
+            }
+
+            // Dispose burst native arrays
+            if (profile.Points > kBurstAlignPointsThreshold) {
+                burstAlign_positionSrc.Dispose();
+                burstAlign_tangentSrc.Dispose();
+                burstAlign_normalSrc.Dispose();
+                burstAlign_binormalSrc.Dispose();
+                burstAlign_positionDst.Dispose();
+                burstAlign_tangentDst.Dispose();
+                burstAlign_normalDst.Dispose();
+                burstAlign_binormalDst.Dispose();
+            }
+
+            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, shadeSmooth, creases, uvs);
+        }
+
+        private static CurveData Align(CurveData alignOn, CurveData toAlign, int index, float rotationOffset) {
+            Assert.IsTrue(index.InRange(..alignOn.Points));
+
+            var rotation = float4x4.RotateY(math.radians(rotationOffset));
+            var align = new float4x4(alignOn.Normal[index].float4(), alignOn.Tangent[index].float4(), alignOn.Binormal[index].float4(), alignOn.Position[index].float4(1.0f));
+            var matrix = math.mul(align, rotation);
+
+            if (toAlign.Points > kBurstAlignPointsThreshold) {
+                var job = new AlignCurveJob(burstAlign_positionDst, burstAlign_tangentDst, burstAlign_normalDst, burstAlign_binormalDst,
+                                            burstAlign_positionSrc, burstAlign_tangentSrc, burstAlign_normalSrc, burstAlign_binormalSrc,
+                                            matrix);
+                job.Schedule(toAlign.Points, Environment.ProcessorCount).Complete();
+                return new CurveData(toAlign.Type, toAlign.Points, toAlign.IsClosed, burstAlign_positionDst.ToList(), burstAlign_tangentDst.ToList(),
+                                     burstAlign_normalDst.ToList(), burstAlign_binormalDst.ToList());
+            }
+
+            var position = new List<float3>();
+            var tangent = new List<float3>();
+            var normal = new List<float3>();
+            var binormal = new List<float3>();
+            for (var i = 0; i < toAlign.Points; i++) {
+                position.Add(math.mul(matrix, toAlign.Position[i].float4(1.0f)).xyz);
+                tangent.Add(math.mul(matrix, toAlign.Tangent[i].float4()).xyz);
+                normal.Add(math.mul(matrix, toAlign.Normal[i].float4()).xyz);
+                binormal.Add(math.mul(matrix, toAlign.Binormal[i].float4()).xyz);
+            }
+
+            return new CurveData(toAlign.Type, toAlign.Points, toAlign.IsClosed, position, tangent, normal, binormal);
+        }
+
+        private static int GetCapEdgeCount(CurveData profile) {
+            // TODO: Calculate edge count for a profile cap
+            // Maybe I shouldn't do this as it's effectively the same amount of work as generating the caps.
+            // Or I could return more data than just edge cap count. Something like new edges/faces etc 
+            return 0;
+        }
+
+        private static int GetCapFaceCount(CurveData profile) {
+            // TODO: Calculate face count for a profile cap
+            // Maybe I shouldn't do this as it's effectively the same amount of work as generating the caps.
+            // Or I could return more data than just face cap count. Something like new edges/faces etc
+            // Also merge into `GetCapEdgeCount`
+            return 0;
+        }
+
+        private const int kBurstAlignPointsThreshold = 8;
+        private static NativeArray<float4> burstAlign_positionSrc;
+        private static NativeArray<float4> burstAlign_tangentSrc;
+        private static NativeArray<float4> burstAlign_normalSrc;
+        private static NativeArray<float4> burstAlign_binormalSrc;
+        private static NativeArray<float3> burstAlign_positionDst;
+        private static NativeArray<float3> burstAlign_tangentDst;
+        private static NativeArray<float3> burstAlign_normalDst;
+        private static NativeArray<float3> burstAlign_binormalDst;
+
+        [BurstCompile(CompileSynchronously = true)]
+        private struct AlignCurveJob : IJobParallelFor {
+            [ReadOnly] private NativeArray<float4> positionSrc;
+            [ReadOnly] private NativeArray<float4> tangentSrc;
+            [ReadOnly] private NativeArray<float4> normalSrc;
+            [ReadOnly] private NativeArray<float4> binormalSrc;
+
+            [WriteOnly] private NativeArray<float3> positionDst;
+            [WriteOnly] private NativeArray<float3> tangentDst;
+            [WriteOnly] private NativeArray<float3> normalDst;
+            [WriteOnly] private NativeArray<float3> binormalDst;
+
+            private readonly float4x4 matrix;
+
+            public AlignCurveJob(
+                NativeArray<float3> positionDst, NativeArray<float3> tangentDst, NativeArray<float3> normalDst, NativeArray<float3> binormalDst,
+                NativeArray<float4> positionSrc, NativeArray<float4> tangentSrc, NativeArray<float4> normalSrc, NativeArray<float4> binormalSrc,
+                float4x4 matrix) {
+                this.positionDst = positionDst;
+                this.tangentDst = tangentDst;
+                this.normalDst = normalDst;
+                this.binormalDst = binormalDst;
+
+                this.positionSrc = positionSrc;
+                this.tangentSrc = tangentSrc;
+                this.normalSrc = normalSrc;
+                this.binormalSrc = binormalSrc;
+
+                this.matrix = matrix;
+            }
+
+            public void Execute(int index) {
+                positionDst[index] = math.mul(matrix, positionSrc[index]).xyz;
+                tangentDst[index] = math.mul(matrix, tangentSrc[index]).xyz;
+                normalDst[index] = math.mul(matrix, normalSrc[index]).xyz;
+                binormalDst[index] = math.mul(matrix, binormalSrc[index]).xyz;
+            }
+        }
+    }
+}
