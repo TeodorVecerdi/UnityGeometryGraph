@@ -50,6 +50,10 @@ namespace GeometryGraph.Runtime {
             var num = math.sqrt(math.lengthsq(from) * (double)math.lengthsq(to));
             return num < 1.00000000362749E-15 ? 0.0f : (float)math.acos(math.clamp(math.dot(from, to) / num, -1f, 1f)) * 57.29578f;
         }
+
+        public static float4 float4(this float3 float3, float w = 0.0f) {
+            return new float4(float3, w);
+        }
     }
 
     public static class float3_util {
