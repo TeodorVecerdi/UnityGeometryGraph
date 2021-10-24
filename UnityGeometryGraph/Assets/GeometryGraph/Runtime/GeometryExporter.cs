@@ -138,9 +138,9 @@ namespace GeometryGraph.Runtime.Geometry {
 
             var faceNormal = normalAttr[faceIndex];
             var calculatedNormal = math.normalize(math.cross(vertices[t1] - vertices[t0], vertices[t2] - vertices[t0]));
-            var eqNegX = Math.Abs(faceNormal.x) > 0.0001f && Math.Abs(faceNormal.x - -calculatedNormal.x) < 0.001f;
-            var eqNegY = Math.Abs(faceNormal.y) > 0.0001f && Math.Abs(faceNormal.y - -calculatedNormal.y) < 0.001f;
-            var eqNegZ = Math.Abs(faceNormal.z) > 0.0001f && Math.Abs(faceNormal.z - -calculatedNormal.z) < 0.001f;
+            var eqNegX = Math.Abs(faceNormal.x) > Constants.FLOAT_TOLERANCE && Math.Abs(faceNormal.x + calculatedNormal.x) < Constants.FLOAT_TOLERANCE;
+            var eqNegY = Math.Abs(faceNormal.y) > Constants.FLOAT_TOLERANCE && Math.Abs(faceNormal.y + calculatedNormal.y) < Constants.FLOAT_TOLERANCE;
+            var eqNegZ = Math.Abs(faceNormal.z) > Constants.FLOAT_TOLERANCE && Math.Abs(faceNormal.z + calculatedNormal.z) < Constants.FLOAT_TOLERANCE;
 
             if (eqNegX || eqNegY || eqNegZ) {
                 triangles[submesh].Add(t1);
@@ -220,9 +220,9 @@ namespace GeometryGraph.Runtime.Geometry {
 
             var sharedFaceNormal = normalAttr[sharedA];
             var calculatedNormal = math.normalize(math.cross(vertices[triangle1] - vertices[triangle0], vertices[triangle2] - vertices[triangle0]));
-            var eqNegX = Math.Abs(sharedFaceNormal.x) > 0.0001f && Math.Abs(sharedFaceNormal.x - -calculatedNormal.x) < 0.001f;
-            var eqNegY = Math.Abs(sharedFaceNormal.y) > 0.0001f && Math.Abs(sharedFaceNormal.y - -calculatedNormal.y) < 0.001f;
-            var eqNegZ = Math.Abs(sharedFaceNormal.z) > 0.0001f && Math.Abs(sharedFaceNormal.z - -calculatedNormal.z) < 0.001f;
+            var eqNegX = Math.Abs(sharedFaceNormal.x) > Constants.FLOAT_TOLERANCE && Math.Abs(sharedFaceNormal.x + calculatedNormal.x) < Constants.FLOAT_TOLERANCE;
+            var eqNegY = Math.Abs(sharedFaceNormal.y) > Constants.FLOAT_TOLERANCE && Math.Abs(sharedFaceNormal.y + calculatedNormal.y) < Constants.FLOAT_TOLERANCE;
+            var eqNegZ = Math.Abs(sharedFaceNormal.z) > Constants.FLOAT_TOLERANCE && Math.Abs(sharedFaceNormal.z + calculatedNormal.z) < Constants.FLOAT_TOLERANCE;
             
             if (eqNegX || eqNegY || eqNegZ) {
                 triangles[submesh].Add(triangle1);
@@ -238,23 +238,23 @@ namespace GeometryGraph.Runtime.Geometry {
         private (int triA0, int triA1, int triB0, int triB1, int triC0, int triC1) GetActualSharedTriangles(GeometryData.Face face, int t0, int t1, int t2) {
             int triA0 = -1, triA1 = -1, triB0 = -1, triB1 = -1, triC0 = -1, triC1 = -1;
             if (geometry.Edges[face.EdgeA].VertA == face.VertA) triA0 = t0;
-            if (geometry.Edges[face.EdgeA].VertA == face.VertB) triA0 = t1;
-            if (geometry.Edges[face.EdgeA].VertA == face.VertC) triA0 = t2;
+            else if (geometry.Edges[face.EdgeA].VertA == face.VertB) triA0 = t1;
+            else if (geometry.Edges[face.EdgeA].VertA == face.VertC) triA0 = t2;
             if (geometry.Edges[face.EdgeA].VertB == face.VertA) triA1 = t0;
-            if (geometry.Edges[face.EdgeA].VertB == face.VertB) triA1 = t1;
-            if (geometry.Edges[face.EdgeA].VertB == face.VertC) triA1 = t2;
+            else if (geometry.Edges[face.EdgeA].VertB == face.VertB) triA1 = t1;
+            else if (geometry.Edges[face.EdgeA].VertB == face.VertC) triA1 = t2;
             if (geometry.Edges[face.EdgeB].VertA == face.VertA) triB0 = t0;
-            if (geometry.Edges[face.EdgeB].VertA == face.VertB) triB0 = t1;
-            if (geometry.Edges[face.EdgeB].VertA == face.VertC) triB0 = t2;
+            else if (geometry.Edges[face.EdgeB].VertA == face.VertB) triB0 = t1;
+            else if (geometry.Edges[face.EdgeB].VertA == face.VertC) triB0 = t2;
             if (geometry.Edges[face.EdgeB].VertB == face.VertA) triB1 = t0;
-            if (geometry.Edges[face.EdgeB].VertB == face.VertB) triB1 = t1;
-            if (geometry.Edges[face.EdgeB].VertB == face.VertC) triB1 = t2;
+            else if (geometry.Edges[face.EdgeB].VertB == face.VertB) triB1 = t1;
+            else if (geometry.Edges[face.EdgeB].VertB == face.VertC) triB1 = t2;
             if (geometry.Edges[face.EdgeC].VertA == face.VertA) triC0 = t0;
-            if (geometry.Edges[face.EdgeC].VertA == face.VertB) triC0 = t1;
-            if (geometry.Edges[face.EdgeC].VertA == face.VertC) triC0 = t2;
+            else if (geometry.Edges[face.EdgeC].VertA == face.VertB) triC0 = t1;
+            else if (geometry.Edges[face.EdgeC].VertA == face.VertC) triC0 = t2;
             if (geometry.Edges[face.EdgeC].VertB == face.VertA) triC1 = t0;
-            if (geometry.Edges[face.EdgeC].VertB == face.VertB) triC1 = t1;
-            if (geometry.Edges[face.EdgeC].VertB == face.VertC) triC1 = t2;
+            else if (geometry.Edges[face.EdgeC].VertB == face.VertB) triC1 = t1;
+            else if (geometry.Edges[face.EdgeC].VertB == face.VertC) triC1 = t2;
             return (triA0, triA1, triB0, triB1, triC0, triC1);
         }
 
