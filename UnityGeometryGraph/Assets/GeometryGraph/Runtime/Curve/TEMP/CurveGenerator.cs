@@ -3,7 +3,8 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Curve.TEMP {
-    public class CurveGenerator : MonoBehaviour {
+    
+    public class CurveGenerator : MonoBehaviour, ICurveProvider {
         public CurveType Type;
         [MinValue(nameof(__MinResolution))] public int Resolution;
         [ShowIf("@Type == CurveType.CubicBezier || Type == CurveType.QuadraticBezier || Type == CurveType.Line")] public Vector3 Start;
@@ -17,6 +18,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         [SerializeField] private CurveVisualizer visualizer;
 
         public CurveData CurveData;
+        public CurveData Curve => CurveData;
 
         private int __MinResolution() {
             return Type switch {
@@ -31,14 +33,15 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
 
         [Button]
         public void Generate() {
-            visualizer.Load(CurveData = Type switch {
+            CurveData = Type switch {
                 CurveType.Line => CurvePrimitive.Line(Resolution, Start, End),
                 CurveType.Circle => CurvePrimitive.Circle(Resolution, Radius),
                 CurveType.QuadraticBezier => CurvePrimitive.QuadraticBezier(Resolution, false, Start, ControlA, End),
                 CurveType.CubicBezier => CurvePrimitive.CubicBezier(Resolution, false, Start, ControlA, ControlB, End),
                 CurveType.Helix => CurvePrimitive.Helix(Resolution, Rotations, Pitch, TopRadius, Radius),
                 _ => throw new ArgumentOutOfRangeException()
-            });
+            };
+            if (visualizer != null) visualizer.Load(CurveData);
         }
     }
 }

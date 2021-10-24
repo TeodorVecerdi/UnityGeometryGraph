@@ -24,9 +24,10 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
 
         public bool Enabled;
 
-        private CurveData curveData;
+        [ShowInInspector] private CurveData curveData;
 
         public void Load(CurveData curveData) {
+            DebugUtility.Log("Loaded curve into visualizer");
             this.curveData = curveData;
         }
 
