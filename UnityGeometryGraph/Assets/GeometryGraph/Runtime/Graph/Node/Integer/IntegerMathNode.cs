@@ -56,7 +56,7 @@ namespace GeometryGraph.Runtime.Graph {
             return Calculate();
         }
 
-        private float Calculate() {
+        private int Calculate() {
             return operation switch {
                 IntegerMathNode_MathOperation.Add => x + y,
                 IntegerMathNode_MathOperation.Subtract => x - y,
