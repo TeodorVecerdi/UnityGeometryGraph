@@ -632,13 +632,21 @@
             </summary>
             <param name="ptr"></param>
         </member>
+        <member name="M:K4os.Compression.LZ4.Internal.Mem.CloneAnyArray``1(``0[])">
+            <summary>Clones managed array to unmanaged one.
+            Allows quicker yet less safe unchecked access.</summary>
+            <param name="array">Input array.</param>
+            <returns>Cloned array.</returns>
+        </member>
         <member name="M:K4os.Compression.LZ4.Internal.Mem.CloneArray(System.Int32[])">
-            <summary>Clones managed array to unmanaged one. Allows quicker yet less safe unchecked access.</summary>
+            <summary>Clones managed array to unmanaged one.
+            Allows quicker yet less safe unchecked access.</summary>
             <param name="array">Input array.</param>
             <returns>Cloned array.</returns>
         </member>
         <member name="M:K4os.Compression.LZ4.Internal.Mem.CloneArray(System.UInt32[])">
-            <summary>Clones managed array to unmanaged one. Allows quicker yet less safe unchecked access.</summary>
+            <summary>Clones managed array to unmanaged one.
+            Allows quicker yet less safe unchecked access.</summary>
             <param name="array">Input array.</param>
             <returns>Cloned array.</returns>
         </member>
@@ -931,10 +939,27 @@
             <param name="targetLength">Output buffer length.</param>
             <returns>Number of bytes written, or negative value if output buffer is too small.</returns>
         </member>
+        <member name="M:K4os.Compression.LZ4.LZ4Codec.Decode(System.Byte*,System.Int32,System.Byte*,System.Int32,System.Byte*,System.Int32)">
+            <summary>Decompresses data from given buffer.</summary>
+            <param name="source">Input buffer.</param>
+            <param name="sourceLength">Input buffer length.</param>
+            <param name="target">Output buffer.</param>
+            <param name="targetLength">Output buffer length.</param>
+            <param name="dictionary">Dictionary buffer.</param>
+            <param name="dictionaryLength">Dictionary buffer length.</param>
+            <returns>Number of bytes written, or negative value if output buffer is too small.</returns>
+        </member>
         <member name="M:K4os.Compression.LZ4.LZ4Codec.Decode(System.ReadOnlySpan{System.Byte},System.Span{System.Byte})">
             <summary>Decompresses data from given buffer.</summary>
             <param name="source">Input buffer.</param>
             <param name="target">Output buffer.</param>
+            <returns>Number of bytes written, or negative value if output buffer is too small.</returns>
+        </member>
+        <member name="M:K4os.Compression.LZ4.LZ4Codec.Decode(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>Decompresses data from given buffer.</summary>
+            <param name="source">Input buffer.</param>
+            <param name="target">Output buffer.</param>
+            <param name="dictionary">Dictionary buffer.</param>
             <returns>Number of bytes written, or negative value if output buffer is too small.</returns>
         </member>
         <member name="M:K4os.Compression.LZ4.LZ4Codec.Decode(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
@@ -945,6 +970,19 @@
             <param name="target">Output buffer.</param>
             <param name="targetOffset">Output buffer offset.</param>
             <param name="targetLength">Output buffer length.</param>
+            <returns>Number of bytes written, or negative value if output buffer is too small.</returns>
+        </member>
+        <member name="M:K4os.Compression.LZ4.LZ4Codec.Decode(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <summary>Decompresses data from given buffer.</summary>
+            <param name="source">Input buffer.</param>
+            <param name="sourceOffset">Input buffer offset.</param>
+            <param name="sourceLength">Input buffer length.</param>
+            <param name="target">Output buffer.</param>
+            <param name="targetOffset">Output buffer offset.</param>
+            <param name="targetLength">Output buffer length.</param>
+            <param name="dictionary">Dictionary buffer.</param>
+            <param name="dictionaryOffset">Dictionary buffer offset.</param>
+            <param name="dictionaryLength">Dictionary buffer length.</param>
             <returns>Number of bytes written, or negative value if output buffer is too small.</returns>
         </member>
         <member name="T:K4os.Compression.LZ4.LZ4Level">
