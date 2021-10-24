@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime.Graph {
         private MinMaxInt points = new MinMaxInt(2, Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
         private float3 start = float3.zero;
         private float3 end = float3_util.right;
-        private CurveData lineCurve;
+        private CurveData curve;
 
         public RuntimePort PointsPort { get; private set; }
         public RuntimePort StartPort { get; private set; }
@@ -26,7 +26,12 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
-            lineCurve = CurvePrimitive.Line(points - 1, start, end);
+            if (RuntimeGraphObjectData.IsDuringSerialization) {
+                DebugUtility.Log("Attempting to generate curve during serialization. Aborting.");
+                curve = null;
+                return;
+            }
+            curve = CurvePrimitive.Line(points - 1, start, end);
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
@@ -54,8 +59,8 @@ namespace GeometryGraph.Runtime.Graph {
 
         protected override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
-            if (lineCurve == null) CalculateResult();
-            return lineCurve.Clone();
+            if (curve == null) CalculateResult();
+            return curve == null ? CurveData.Empty : curve.Clone();
         }
 
         public override string GetCustomData() {

@@ -36,6 +36,11 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
+            if (RuntimeGraphObjectData.IsDuringSerialization) {
+                DebugUtility.Log("Attempting to generate curve during serialization. Aborting.");
+                curve = null;
+                return;
+            }
             curve = CurvePrimitive.CubicBezier(points - 1, isClosed, start, controlA, controlB, end);
         }
 
@@ -83,7 +88,7 @@ namespace GeometryGraph.Runtime.Graph {
         protected override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
             if (curve == null) CalculateResult();
-            return curve.Clone();
+            return curve == null ? CurveData.Empty : curve.Clone();
         }
 
         public override string GetCustomData() {

@@ -10,6 +10,7 @@ namespace GeometryGraph.Runtime {
     [Serializable]
     public class RuntimeGraphObjectData : ISerializationCallbackReceiver {
         public static bool DeserializingFromJson;
+        public static bool IsDuringSerialization;
         
         [SerializeField] public string Guid;
         
@@ -62,16 +63,22 @@ namespace GeometryGraph.Runtime {
         public void OnBeforeSerialize() {
             if (Nodes == null) return;
 
+            IsDuringSerialization = true;
+
             serializedRuntimeNodes ??= new List<SerializedRuntimeNode>();
             serializedRuntimeNodes.Clear();
             foreach (var runtimeNode in Nodes) {
                 serializedRuntimeNodes.Add(SerializedRuntimeNode.FromRuntimeNode(runtimeNode));
             }
+
+            IsDuringSerialization = false;
         }
 
         public void OnAfterDeserialize() {
             if (serializedRuntimeNodes == null) return;
 
+            IsDuringSerialization = true;
+            
             Nodes ??= new List<RuntimeNode>();
             Nodes.Clear();
             OutputNode = null;
@@ -118,6 +125,8 @@ namespace GeometryGraph.Runtime {
                     case VectorPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
                 }
             }
+
+            IsDuringSerialization = false;
         }
     }
 }

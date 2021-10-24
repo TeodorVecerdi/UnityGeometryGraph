@@ -7,9 +7,9 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     public class CirclePrimitiveCurveNode : RuntimeNode {
-        private MinMaxInt points = new (32, Constants.MIN_CIRCLE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+        private MinMaxInt points = new (32, Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
         private MinMaxFloat radius = new (1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
-        private CurveData circleCurve;
+        private CurveData curve;
 
         public RuntimePort PointsPort { get; private set; }
         public RuntimePort RadiusPort { get; private set; }
@@ -22,7 +22,12 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CalculateResult() {
-            circleCurve = CurvePrimitive.Circle(points - 1, radius);
+            if (RuntimeGraphObjectData.IsDuringSerialization) {
+                DebugUtility.Log("Attempting to generate curve during serialization. Aborting.");
+                curve = null;
+                return;
+            }
+            curve = CurvePrimitive.Circle(points, radius);
         }
 
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
@@ -44,8 +49,8 @@ namespace GeometryGraph.Runtime.Graph {
 
         protected override object GetValueForPort(RuntimePort port) {
             if (port != ResultPort) return null;
-            if (circleCurve == null) CalculateResult();
-            return circleCurve.Clone();
+            if (curve == null) CalculateResult();
+            return curve == null ? CurveData.Empty : curve.Clone();
         }
 
         public override string GetCustomData() {
