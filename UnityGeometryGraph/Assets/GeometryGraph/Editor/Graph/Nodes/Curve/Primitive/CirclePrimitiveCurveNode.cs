@@ -27,10 +27,10 @@ namespace GeometryGraph.Editor {
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));
             resultPort = GraphFrameworkPort.Create("Curve", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Curve, edgeConnectorListener, this);
 
-            pointsField.Min = Constants.MIN_LINE_CURVE_RESOLUTION + 1;
-            pointsField.Max = Constants.MAX_CURVE_RESOLUTION + 1;
+            pointsField.Min = Constants.MIN_CIRCLE_CURVE_RESOLUTION;
+            pointsField.Max = Constants.MAX_CURVE_RESOLUTION;
             pointsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+                var newValue = evt.newValue.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
                 if (newValue == points) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change circle curve points");
                 points = newValue;

@@ -9,7 +9,6 @@ using K4os.Compression.LZ4.Streams;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-using Object = UnityEngine.Object;
 
 namespace GeometryGraph.Editor {
     public static class GraphFrameworkUtility {

@@ -58,7 +58,7 @@ namespace GeometryGraph.Editor.Utils {
             var digits = Math.Max(0, (int)(5.0 - Math.Log10(Math.Abs(v))));
             try {
                 return Math.Round(v, digits);
-            } catch (ArgumentOutOfRangeException ex) {
+            } catch (ArgumentOutOfRangeException) {
                 return 0.0;
             }
         }

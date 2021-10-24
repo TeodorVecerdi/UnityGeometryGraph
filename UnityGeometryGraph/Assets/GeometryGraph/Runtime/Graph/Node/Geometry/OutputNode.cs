@@ -22,6 +22,9 @@ namespace GeometryGraph.Runtime.Graph {
         public CurveData GetDisplayCurve() {
             DebugUtility.Log("Getting display curve");
             var curve = GetValue(CurvePort, (CurveData) null);
+            if (curve == null) {
+                DebugUtility.Log("Curve was null");
+            }
             return curve;
         }
 

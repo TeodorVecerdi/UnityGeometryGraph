@@ -86,7 +86,7 @@ namespace GeometryGraph.Editor {
             OnDisconnect?.Invoke(edge, this);
         }
 
-        public static GraphFrameworkPort Create(string name, Orientation portOrientation, Direction portDirection, Capacity portCapacity, PortType type, EdgeConnectorListener edgeConnectorListener, AbstractNode ownerNode, bool hideLabel = false) {
+        public static GraphFrameworkPort Create(string name, Orientation portOrientation, Direction portDirection, Capacity portCapacity, PortType type, EdgeConnectorListener edgeConnectorListener, AbstractNode ownerNode, bool hideLabel = false, Action<Edge, GraphFrameworkPort> onConnect = null, Action<Edge, GraphFrameworkPort> onDisconnect = null) {
             var port = new GraphFrameworkPort(name, ownerNode, portOrientation, portDirection, portCapacity);
             if (edgeConnectorListener != null) {
                 port.m_EdgeConnector = new EdgeConnector<Edge>(edgeConnectorListener);
@@ -99,6 +99,9 @@ namespace GeometryGraph.Editor {
             port.Type = type;
             port.GUID = Guid.NewGuid().ToString();
             port.portName = name;
+            
+            if(onConnect != null) port.OnConnect += onConnect;
+            if(onDisconnect != null) port.OnDisconnect += onDisconnect;
 
             if (hideLabel) {
                 var label = port.Q<Label>();
