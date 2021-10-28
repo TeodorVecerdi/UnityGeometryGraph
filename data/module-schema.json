@@ -6,8 +6,12 @@
         {
             "name": "dev.vecerdi.example",
             "displayName": "Example",
-            "description": "",
+            "description": "Example module.",
             "version": "1.0.0",
+            "assemblies": {
+                "runtime": "Example.Runtime",
+                "editor": "Example.Editor"
+            },
             "dependencies": [
                 "dev.vecerdi.dependency1",
                 "dev.vecerdi.dependency2"
