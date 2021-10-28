@@ -23,7 +23,8 @@
     "required": [
         "name",
         "displayName",
-        "version"
+        "version",
+        "assemblies"
     ],
     "properties": {
         "name": {
@@ -94,6 +95,48 @@
                         ]
                     }
                 ]
+            }
+        },
+        "assemblies": {
+            "$id": "#/properties/assemblies",
+            "type": "object",
+            "title": "",
+            "description": "",
+            "default": {
+                "runtime": "",
+                "editor": ""
+            },
+            "examples": [
+                {
+                    "runtime": "Example.Runtime",
+                    "editor": "Example.Editor"
+                }
+            ],
+            "anyOf": [
+                { "required": ["runtime"] },
+                { "required": ["editor"] }
+            ],
+            "properties": {
+                "runtime": {
+                    "$id": "#/properties/assemblies/properties/runtime",
+                    "type": "string",
+                    "title": "Runtime Assembly",
+                    "description": "The name of the assembly that contains the runtime code for this module.",
+                    "default": "",
+                    "examples": [
+                        "Example.Runtime"
+                    ]
+                },
+                "editor": {
+                    "$id": "#/properties/assemblies/properties/editor",
+                    "type": "string",
+                    "title": "Editor Assembly",
+                    "description": "The name of the assembly that contains the editor code for this module.",
+                    "default": "",
+                    "examples": [
+                        "Example.Editor"
+                    ]
+                }
             }
         },
         "author": {
