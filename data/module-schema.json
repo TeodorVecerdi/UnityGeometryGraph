@@ -1,0 +1,148 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "title": "JSON Schema for GeometryGraph module.json files",
+    "examples": [
+        {
+            "name": "dev.vecerdi.example",
+            "displayName": "Example",
+            "description": "",
+            "version": "1.0.0",
+            "dependencies": [
+                "dev.vecerdi.dependency1",
+                "dev.vecerdi.dependency2"
+            ],
+            "author": "",
+            "license": "",
+            "urls": {
+                "bugs": "https://github.com/username/repo/issues",
+                "homepage": "https://github.com/username/repo"
+            }
+        }
+    ],
+    "required": [
+        "name",
+        "displayName",
+        "description",
+        "version"
+    ],
+    "properties": {
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "Module ID",
+            "description": "The ID (or name) of the module.",
+            "default": "",
+            "examples": [
+                "dev.vecerdi.example"
+            ]
+        },
+        "displayName": {
+            "$id": "#/properties/displayName",
+            "type": "string",
+            "title": "Module Display Name",
+            "description": "Module Name that is displayed in the module browser.",
+            "default": "",
+            "examples": [
+                "Example"
+            ]
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "type": "string",
+            "title": "Module Description",
+            "description": "Displayed in module browser to provide more information about the module.",
+            "default": "",
+            "examples": [
+                ""
+            ]
+        },
+        "version": {
+            "$id": "#/properties/version",
+            "type": "string",
+            "title": "Module Version",
+            "description": "Must be a valid semver.",
+            "default": "",
+            "examples": [
+                "1.0.0"
+            ]
+        },
+        "dependencies": {
+            "$id": "#/properties/dependencies",
+            "type": "array",
+            "title": "Module Dependencies",
+            "description": "IDs of modules that this module depends on. These will automatically get enabled if your module is also enabled.",
+            "default": [],
+            "examples": [
+                [
+                    "dev.vecerdi.dependency1",
+                    "dev.vecerdi.dependency2"
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/dependencies/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/dependencies/items/anyOf/0",
+                        "type": "string",
+                        "title": "Module Dependency",
+                        "description": "The ID of a module.",
+                        "default": "",
+                        "examples": [
+                            "dev.vecerdi.dependency1",
+                            "dev.vecerdi.dependency2"
+                        ]
+                    }
+                ]
+            }
+        },
+        "author": {
+            "$id": "#/properties/author",
+            "type": "string",
+            "title": "Module Author",
+            "description": "The author of this module. Displayed in module browser.",
+            "default": "",
+            "examples": [
+                ""
+            ]
+        },
+        "urls": {
+            "$id": "#/properties/urls",
+            "type": "object",
+            "title": "URLs",
+            "description": "Optional URLs that get displayed in module browser.",
+            "default": {},
+            "examples": [
+                {
+                    "bugs": "https://github.com/username/repo/issues",
+                    "homepage": "https://github.com/username/repo"
+                }
+            ],
+            "properties": {
+                "bugs": {
+                    "$id": "#/properties/urls/properties/bugs",
+                    "type": "string",
+                    "title": "Bugs URL",
+                    "description": "URL to the website where users can submit bug reports.",
+                    "default": "",
+                    "examples": [
+                        "https://github.com/username/repo/issues"
+                    ]
+                },
+                "homepage": {
+                    "$id": "#/properties/urls/properties/homepage",
+                    "type": "string",
+                    "title": "Homepage URL",
+                    "description": "URL of this module's homepage.",
+                    "default": "",
+                    "examples": [
+                        "https://github.com/username/repo"
+                    ]
+                }
+            },
+            "additionalProperties": true
+        }
+    },
+    "additionalProperties": true
+}
