@@ -1,194 +1,191 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "type": "object",
-    "title": "JSON Schema for GeometryGraph module.json files",
-    "definitions": {
-      "nonEmptyString": {
-        "type": "string",
-        "minLength": 1
-      },
-      "url": {
-        "type": "string",
-        "format": "uri",
-        "pattern": "^https?://"
-      }
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "JSON Schema for GeometryGraph module.json files",
+  "definitions": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
     },
-    "examples": [
-      {
-        "name": "dev.vecerdi.example",
-        "displayName": "Example",
-        "description": "Example module.",
-        "version": "1.0.0",
-        "assemblies": {
-          "runtime": "Example.Runtime",
-          "editor": "Example.Editor"
-        },
-        "dependencies": [
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://"
+    }
+  },
+  "examples": [
+    {
+      "name": "dev.vecerdi.example",
+      "displayName": "Example",
+      "description": "Example module.",
+      "version": "1.0.0",
+      "assemblies": {
+        "runtime": "Example.Runtime",
+        "editor": "Example.Editor"
+      },
+      "dependencies": [
+        "dev.vecerdi.dependency1",
+        "dev.vecerdi.dependency2"
+      ],
+      "author": "",
+      "license": "",
+      "urls": {
+        "bugs": "https://github.com/username/repo/issues",
+        "homepage": "https://github.com/username/repo"
+      }
+    }
+  ],
+  "required": [
+    "name",
+    "displayName",
+    "version",
+    "assemblies"
+  ],
+  "properties": {
+    "name": {
+      "$id": "#/properties/name",
+      "$ref": "#/definitions/nonEmptyString",
+      "title": "Module ID",
+      "description": "The ID (or name) of the module.",
+      "default": "",
+      "examples": [
+        "dev.vecerdi.example"
+      ]
+    },
+    "displayName": {
+      "$id": "#/properties/displayName",
+      "$ref": "#/definitions/nonEmptyString",
+      "title": "Module Display Name",
+      "description": "Module Name that is displayed in the module browser.",
+      "default": "",
+      "examples": [
+        "Example"
+      ]
+    },
+    "description": {
+      "$id": "#/properties/description",
+      "type": "string",
+      "title": "Module Description",
+      "description": "Displayed in module browser to provide more information about the module.",
+      "default": "",
+      "examples": [
+        ""
+      ]
+    },
+    "version": {
+      "$id": "#/properties/version",
+      "$ref": "#/definitions/nonEmptyString",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
+      "title": "Module Version",
+      "description": "Must be a valid semver.",
+      "default": "",
+      "examples": [
+        "1.0.0"
+      ]
+    },
+    "dependencies": {
+      "$id": "#/properties/dependencies",
+      "type": "array",
+      "uniqueItems": true,
+      "title": "Module Dependencies",
+      "description": "IDs of modules that this module depends on. These will automatically get enabled if your module is also enabled.",
+      "default": [],
+      "examples": [
+        [
           "dev.vecerdi.dependency1",
           "dev.vecerdi.dependency2"
-        ],
-        "author": "",
-        "license": "",
-        "urls": {
+        ]
+      ],
+      "items": {
+        "$id": "#/properties/dependencies/items",
+        "$ref": "#/definitions/nonEmptyString"
+      }
+    },
+    "assemblies": {
+      "$id": "#/properties/assemblies",
+      "type": "object",
+      "title": "Module Assemblies",
+      "description": "Names of assemblies for this module",
+      "default": {},
+      "examples": [
+        {
+          "runtime": "Example.Runtime",
+          "editor": "Example.Editor"
+        }
+      ],
+      "anyOf": [
+        { "required": ["runtime"] },
+        { "required": ["editor"] }
+      ],
+      "properties": {
+        "runtime": {
+          "$id": "#/properties/assemblies/properties/runtime",
+          "$ref": "#/definitions/nonEmptyString",
+          "title": "Runtime Assembly",
+          "description": "The name of the assembly that contains the runtime code for this module.",
+          "default": "",
+          "examples": [
+            "Example.Runtime"
+          ]
+        },
+        "editor": {
+          "$id": "#/properties/assemblies/properties/editor",
+          "$ref": "#/definitions/nonEmptyString",
+          "title": "Editor Assembly",
+          "description": "The name of the assembly that contains the editor code for this module.",
+          "default": "",
+          "examples": [
+            "Example.Editor"
+          ]
+        }
+      }
+    },
+    "author": {
+      "$id": "#/properties/author",
+      "$ref": "#/definitions/nonEmptyString",
+      "title": "Module Author",
+      "description": "The author of this module. Displayed in module browser.",
+      "default": "",
+      "examples": [
+        ""
+      ]
+    },
+    "urls": {
+      "$id": "#/properties/urls",
+      "type": "object",
+      "title": "URLs",
+      "description": "Optional URLs that get displayed in module browser.",
+      "default": {},
+      "examples": [
+        {
           "bugs": "https://github.com/username/repo/issues",
           "homepage": "https://github.com/username/repo"
         }
-      }
-    ],
-    "required": [
-      "name",
-      "displayName",
-      "version",
-      "assemblies"
-    ],
-    "properties": {
-      "name": {
-        "$id": "#/properties/name",
-        "$ref": "#/definitions/nonEmptyString",
-        "title": "Module ID",
-        "description": "The ID (or name) of the module.",
-        "default": "",
-        "examples": [
-          "dev.vecerdi.example"
-        ]
-      },
-      "displayName": {
-        "$id": "#/properties/displayName",
-        "$ref": "#/definitions/nonEmptyString",
-        "title": "Module Display Name",
-        "description": "Module Name that is displayed in the module browser.",
-        "default": "",
-        "examples": [
-          "Example"
-        ]
-      },
-      "description": {
-        "$id": "#/properties/description",
-        "type": "string",
-        "title": "Module Description",
-        "description": "Displayed in module browser to provide more information about the module.",
-        "default": "",
-        "examples": [
-          ""
-        ]
-      },
-      "version": {
-        "$id": "#/properties/version",
-        "$ref": "#/definitions/nonEmptyString",
-        "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
-        "title": "Module Version",
-        "description": "Must be a valid semver.",
-        "default": "",
-        "examples": [
-          "1.0.0"
-        ]
-      },
-      "dependencies": {
-        "$id": "#/properties/dependencies",
-        "type": "array",
-        "uniqueItems": true,
-        "title": "Module Dependencies",
-        "description": "IDs of modules that this module depends on. These will automatically get enabled if your module is also enabled.",
-        "default": [],
-        "examples": [
-          [
-            "dev.vecerdi.dependency1",
-            "dev.vecerdi.dependency2"
+      ],
+      "properties": {
+        "bugs": {
+          "$id": "#/properties/urls/properties/bugs",
+          "$ref": "#/definitions/url",
+          "title": "Bugs URL",
+          "description": "URL to the website where users can submit bug reports.",
+          "default": "",
+          "examples": [
+            "https://github.com/username/repo/issues"
           ]
-        ],
-        "items": {
-          "$id": "#/properties/dependencies/items",
-          "$ref": "#/definitions/nonEmptyString"
+        },
+        "homepage": {
+          "$id": "#/properties/urls/properties/homepage",
+          "$ref": "#/definitions/url",
+          "title": "Homepage URL",
+          "description": "URL of this module's homepage.",
+          "default": "",
+          "examples": [
+            "https://github.com/username/repo"
+          ]
         }
       },
-      "assemblies": {
-        "$id": "#/properties/assemblies",
-        "type": "object",
-        "title": "",
-        "description": "",
-        "default": {
-          "runtime": "",
-          "editor": ""
-        },
-        "examples": [
-          {
-            "runtime": "Example.Runtime",
-            "editor": "Example.Editor"
-          }
-        ],
-        "anyOf": [
-          { "required": ["runtime"] },
-          { "required": ["editor"] }
-        ],
-        "properties": {
-          "runtime": {
-            "$id": "#/properties/assemblies/properties/runtime",
-            "$ref": "#/definitions/nonEmptyString",
-            "title": "Runtime Assembly",
-            "description": "The name of the assembly that contains the runtime code for this module.",
-            "default": "",
-            "examples": [
-              "Example.Runtime"
-            ]
-          },
-          "editor": {
-            "$id": "#/properties/assemblies/properties/editor",
-            "$ref": "#/definitions/nonEmptyString",
-            "title": "Editor Assembly",
-            "description": "The name of the assembly that contains the editor code for this module.",
-            "default": "",
-            "examples": [
-              "Example.Editor"
-            ]
-          }
-        }
-      },
-      "author": {
-        "$id": "#/properties/author",
-        "$ref": "#/definitions/nonEmptyString",
-        "title": "Module Author",
-        "description": "The author of this module. Displayed in module browser.",
-        "default": "",
-        "examples": [
-          ""
-        ]
-      },
-      "urls": {
-        "$id": "#/properties/urls",
-        "type": "object",
-        "title": "URLs",
-        "description": "Optional URLs that get displayed in module browser.",
-        "default": {},
-        "examples": [
-          {
-            "bugs": "https://github.com/username/repo/issues",
-            "homepage": "https://github.com/username/repo"
-          }
-        ],
-        "properties": {
-          "bugs": {
-            "$id": "#/properties/urls/properties/bugs",
-            "$ref": "#/definitions/url",
-            "title": "Bugs URL",
-            "description": "URL to the website where users can submit bug reports.",
-            "default": "",
-            "examples": [
-              "https://github.com/username/repo/issues"
-            ]
-          },
-          "homepage": {
-            "$id": "#/properties/urls/properties/homepage",
-            "$ref": "#/definitions/url",
-            "title": "Homepage URL",
-            "description": "URL of this module's homepage.",
-            "default": "",
-            "examples": [
-              "https://github.com/username/repo"
-            ]
-          }
-        },
-        "additionalProperties": true
-      }
-    },
-    "additionalProperties": false
-  }
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
