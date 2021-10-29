@@ -135,20 +135,20 @@
     },
     "assemblies": {
       "$id": "#/properties/assemblies",
-      "type": "object",
+      "type": "array",
       "title": "Module Assemblies",
       "description": "Names of assemblies for this module",
-      "minProperties": 1,
-      "default": {},
-      "examples": [
-        {
-          "runtime": "Example.Runtime",
-          "editor": "Example.Editor"
-        }
-      ],
-      "additionalProperties": {
+      "minItems": 1,
+      "default": [],
+      "items": {
         "$ref": "#/definitions/nonEmptyString"
-      }
+      },
+      "examples": [
+        [
+          "Example.Runtime",
+          "Example.Editor"
+        ]
+      ]
     },
     "author": {
       "$id": "#/properties/author",
