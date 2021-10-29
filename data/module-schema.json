@@ -11,6 +11,38 @@
       "type": "string",
       "format": "uri",
       "pattern": "^https?://"
+    },
+    "url-object": {
+      "type": "object",
+      "title": "URL",
+      "description": "An URL.",
+      "additionalProperties": false,
+      "examples": [
+        {}
+      ],
+      "required": ["title", "url"],
+      "properties": {
+        "title": {
+          "$id": "#/properties/urls/properties/additionalProperties/properties/title",
+          "$ref": "#/definitions/nonEmptyString",
+          "title": "Title",
+          "description": "Title of the URL.",
+          "default": "",
+          "examples": [
+            "Changelog"
+          ]
+        },
+        "url": {
+          "$id": "#/properties/urls/properties/additionalProperties/properties/url",
+          "$ref": "#/definitions/url",
+          "title": "URL",
+          "description": "The URL itself.",
+          "default": "",
+          "examples": [
+            "https://github.com/username/repo/releases"
+          ]
+        }
+      }
     }
   },
   "examples": [
@@ -106,6 +138,7 @@
       "type": "object",
       "title": "Module Assemblies",
       "description": "Names of assemblies for this module",
+      "minProperties": 1,
       "default": {},
       "examples": [
         {
@@ -113,31 +146,8 @@
           "editor": "Example.Editor"
         }
       ],
-      "anyOf": [
-        { "required": ["runtime"] },
-        { "required": ["editor"] }
-      ],
-      "properties": {
-        "runtime": {
-          "$id": "#/properties/assemblies/properties/runtime",
-          "$ref": "#/definitions/nonEmptyString",
-          "title": "Runtime Assembly",
-          "description": "The name of the assembly that contains the runtime code for this module.",
-          "default": "",
-          "examples": [
-            "Example.Runtime"
-          ]
-        },
-        "editor": {
-          "$id": "#/properties/assemblies/properties/editor",
-          "$ref": "#/definitions/nonEmptyString",
-          "title": "Editor Assembly",
-          "description": "The name of the assembly that contains the editor code for this module.",
-          "default": "",
-          "examples": [
-            "Example.Editor"
-          ]
-        }
+      "additionalProperties": {
+        "$ref": "#/definitions/nonEmptyString"
       }
     },
     "author": {
@@ -158,15 +168,15 @@
       "default": {},
       "examples": [
         {
-          "bugs": "https://github.com/username/repo/issues",
+          "issues": "https://github.com/username/repo/issues",
           "homepage": "https://github.com/username/repo"
         }
       ],
       "properties": {
-        "bugs": {
-          "$id": "#/properties/urls/properties/bugs",
+        "issues": {
+          "$id": "#/properties/urls/properties/issues",
           "$ref": "#/definitions/url",
-          "title": "Bugs URL",
+          "title": "Issues URL",
           "description": "URL to the website where users can submit bug reports.",
           "default": "",
           "examples": [
@@ -184,7 +194,9 @@
           ]
         }
       },
-      "additionalProperties": true
+      "additionalProperties": {
+        "$ref": "#/definitions/url-object"
+      }
     }
   },
   "additionalProperties": false
