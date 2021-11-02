@@ -80,8 +80,8 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
                 
                 points[index] = Position(t);
                 tangents[index] = tangent;
-                binormals[index] = binormal;
-                normals[index] = math.cross(tangent, binormal);
+                normals[index] = binormal;
+                binormals[index] = math.cross(tangent, binormal);
             }
 
             public float3 Position(float t) {

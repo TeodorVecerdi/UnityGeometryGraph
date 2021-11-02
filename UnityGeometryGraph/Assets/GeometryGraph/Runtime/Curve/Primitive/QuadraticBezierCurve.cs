@@ -77,8 +77,8 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
                 var binormal = Binormal(t);
                 var normal = math.cross(tangent, binormal);
                 tangents[index] = tangent;
-                normals[index] = normal;
-                binormals[index] = binormal;
+                normals[index] = binormal;
+                binormals[index] = normal;
             }
 
             public float3 Position(float t) {
