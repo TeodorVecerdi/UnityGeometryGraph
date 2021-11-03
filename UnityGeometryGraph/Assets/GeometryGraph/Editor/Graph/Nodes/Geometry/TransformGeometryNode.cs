@@ -16,7 +16,7 @@ namespace GeometryGraph.Editor {
     public class TransformGeometryNode : AbstractNode<GeometryGraph.Runtime.Graph.TransformGeometryNode> {
         private float3 defaultTranslation;
         private float3 defaultEulerRotation;
-        private float3 defaultScale = float3_util.one;
+        private float3 defaultScale = float3_ext.one;
 
         private Vector3Field translationField;
         private Vector3Field eulerRotationField;
@@ -59,7 +59,7 @@ namespace GeometryGraph.Editor {
                 "Scale", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, 
                 onDisconnect: (_, _) => RuntimeNode.UpdateDefaultValue(defaultScale, WhichDefaultValue.Scale)
             );
-            scaleField.SetValueWithoutNotify(float3_util.one);
+            scaleField.SetValueWithoutNotify(float3_ext.one);
             scaleField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Scale value");
                 defaultScale = evt.newValue;

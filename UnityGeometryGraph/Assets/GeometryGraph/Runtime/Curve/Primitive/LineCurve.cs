@@ -69,9 +69,9 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
                 this.start = start;
                 this.end = end;
                 
-                tangent = math.normalizesafe(end - start, float3_util.forward);
-                binormal = math.normalizesafe(math.cross(math.cross(tangent, float3_util.up), tangent), float3_util.up);
-                normal = math.normalizesafe(math.cross(binormal, tangent), float3_util.right);
+                tangent = math.normalizesafe(end - start, float3_ext.forward);
+                binormal = math.normalizesafe(math.cross(math.cross(tangent, float3_ext.up), tangent), float3_ext.up);
+                normal = math.normalizesafe(math.cross(binormal, tangent), float3_ext.right);
             }
 
             public void Execute(int index) {

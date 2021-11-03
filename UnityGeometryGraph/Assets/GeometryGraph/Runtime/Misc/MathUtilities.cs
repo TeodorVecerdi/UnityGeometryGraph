@@ -43,7 +43,7 @@ namespace GeometryGraph.Runtime {
 
     //!! Utilities for Unity.Mathematics
     // ReSharper disable InconsistentNaming
-    public static class math_util {
+    public static class math_ext {
         public const float TWO_PI = 6.28318530717959f;
 
         public static float angle(float3 from, float3 to) {
@@ -56,7 +56,7 @@ namespace GeometryGraph.Runtime {
         }
     }
 
-    public static class float3_util {
+    public static class float3_ext {
         public static readonly float3 zero = float3.zero;
         public static readonly float3 one = new float3(1);
         public static readonly float3 right = new float3(1, 0, 0);
@@ -64,7 +64,7 @@ namespace GeometryGraph.Runtime {
         public static readonly float3 forward = new float3(0, 0, 1);
     }
 
-    public static class float2_util {
+    public static class float2_ext {
         public static readonly float2 zero = float2.zero;
         public static readonly float2 one = new float2(1);
         public static readonly float2 right = new float2(1, 0);

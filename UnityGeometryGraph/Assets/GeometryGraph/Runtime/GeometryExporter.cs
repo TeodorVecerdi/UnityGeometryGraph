@@ -184,7 +184,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var sharedFaceIndex = edge.FaceA != faceIndex ? edge.FaceA : edge.FaceB;
             
             if (exportedFaces.Contains(sharedFaceIndex)) return -1;
-            if (sharedFaceIndex != -1 && math_util.angle(normalAttr[sharedFaceIndex], normal) < normalAngleThreshold) {
+            if (sharedFaceIndex != -1 && math_ext.angle(normalAttr[sharedFaceIndex], normal) < normalAngleThreshold) {
             // if (sharedFaceIndex != -1 && normalAttr[sharedFaceIndex].Equals(normal)) {
                 return sharedFaceIndex;
             }

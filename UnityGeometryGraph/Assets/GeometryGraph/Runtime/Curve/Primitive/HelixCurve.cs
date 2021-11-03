@@ -15,8 +15,8 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
         private float b;
         
         public HelixCurve(int resolution, float rotations, float pitch, float topRadius, float bottomRadius) : base(resolution.Clamped(Constants.MIN_HELIX_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION)) {
-            time = rotations * math_util.TWO_PI;
-            b = pitch / math_util.TWO_PI;
+            time = rotations * math_ext.TWO_PI;
+            b = pitch / math_ext.TWO_PI;
             this.topRadius = topRadius.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             this.bottomRadius = bottomRadius.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             
@@ -92,13 +92,13 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             public float3 Tangent(float t) {
                 var radius = math.lerp(bottomRadius, topRadius, t / time);
                 math.sincos(t, out var sin, out var cos);
-                return math.normalizesafe(new float3(-radius * sin, b, radius * cos), float3_util.forward);
+                return math.normalizesafe(new float3(-radius * sin, b, radius * cos), float3_ext.forward);
             }
 
             public float3 Normal(float t) {
                 var radius = math.lerp(bottomRadius, topRadius, t / time);
                 math.sincos(t, out var sin, out var cos);
-                return math.normalizesafe(new float3(radius * cos, 0.0f, radius * sin), float3_util.right);
+                return math.normalizesafe(new float3(radius * cos, 0.0f, radius * sin), float3_ext.right);
             }
 
             public float3 Binormal(float t) {

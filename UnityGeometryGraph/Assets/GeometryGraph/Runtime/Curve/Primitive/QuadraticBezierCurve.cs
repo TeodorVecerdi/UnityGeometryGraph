@@ -92,16 +92,16 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
 
             public float3 Tangent(float t) {
                 // first derivative with respect to `t`
-                return math.normalizesafe(2.0f * (1.0f - t) * (control - start) + 2.0f * t * (end - control), float3_util.forward);
+                return math.normalizesafe(2.0f * (1.0f - t) * (control - start) + 2.0f * t * (end - control), float3_ext.forward);
             }
 
             public float3 Normal(float t) {
                 // second derivative with respect to `t`
-                return math.normalizesafe(2.0f * (end - 2.0f * control + start), float3_util.right);
+                return math.normalizesafe(2.0f * (end - 2.0f * control + start), float3_ext.right);
             }
 
             public float3 Binormal(float t) {
-                return math.normalizesafe(math.cross(Tangent(t), Normal(t)), float3_util.up);
+                return math.normalizesafe(math.cross(Tangent(t), Normal(t)), float3_ext.up);
             }
         }
     }

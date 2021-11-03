@@ -175,7 +175,7 @@ namespace GeometryGraph.Runtime.Graph {
             } else {
                 var axisAttribute = axisMode == RotatePointNode_AxisMode.Vector 
                     ? Enumerable.Repeat(axis, rotAttribute.Count).Into<Vector3Attribute>("axisAttribute", AttributeDomain.Vertex) 
-                    : result.GetAttributeOrDefault<Vector3Attribute, float3>(this.axisAttribute, AttributeDomain.Vertex, float3_util.up);
+                    : result.GetAttributeOrDefault<Vector3Attribute, float3>(this.axisAttribute, AttributeDomain.Vertex, float3_ext.up);
                 var angleAttribute = angleMode == RotatePointNode_AngleMode.Float
                     ? Enumerable.Repeat(angle, rotAttribute.Count).Into<FloatAttribute>("angleAttribute", AttributeDomain.Vertex)
                     : result.GetAttributeOrDefault<FloatAttribute, float>(this.angleAttribute, AttributeDomain.Vertex, 0.0f);

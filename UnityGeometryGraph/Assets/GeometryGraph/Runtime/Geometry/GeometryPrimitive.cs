@@ -13,17 +13,17 @@ namespace GeometryGraph.Runtime.Geometry {
 
             var faceCount = points;
             var edgeCount = 2 * points;
-            var faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_util.up).ToList();
+            var faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_ext.up).ToList();
             var materialIndices = new int[faceCount].ToList();
             var smoothShaded = new bool[faceCount].ToList();
             var creases = new float[edgeCount].ToList();
             
             var vertexPositions = new List<float3> { float3.zero };
-            var vertexUvs = new List<float2> { float2_util.one * 0.5f };
+            var vertexUvs = new List<float2> { float2_ext.one * 0.5f };
             
             for (var i = 0; i < points; i++) {
                 var t = i / (float)(points);
-                var angle = math_util.TWO_PI * t;
+                var angle = math_ext.TWO_PI * t;
                 var circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(radius * circlePosition);
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
@@ -84,7 +84,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var faceCount = 2 * subdivisions * subdivisions;
             var edgeCount = (subdivisions - 1) * (3 * subdivisions - 1);
             
-            var faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_util.up).ToList();
+            var faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_ext.up).ToList();
             var materialIndices = new int[faceCount].ToList();
             var smoothShaded = new bool[faceCount].ToList();
             var creases = new float[edgeCount].ToList();
@@ -216,22 +216,22 @@ namespace GeometryGraph.Runtime.Geometry {
             } // Offset center
             .Select(p => p - size * 0.5f).ToList();
             
-            var down = -float3_util.up;
-            var left = -float3_util.right;
-            var back = -float3_util.forward;
+            var down = -float3_ext.up;
+            var left = -float3_ext.right;
+            var back = -float3_ext.forward;
             var faceNormals = new List<float3> {
                 down, down,
                 back, back,
-                float3_util.right, float3_util.right, 
-                float3_util.forward, float3_util.forward,
+                float3_ext.right, float3_ext.right, 
+                float3_ext.forward, float3_ext.forward,
                 left, left,
-                float3_util.up, float3_util.up
+                float3_ext.up, float3_ext.up
             };
 
-            var right = float2_util.right;
+            var right = float2_ext.right;
             var zero = float2.zero;
-            var up = float2_util.up;
-            var one = float2_util.one;
+            var up = float2_ext.up;
+            var one = float2_ext.one;
             var uvs = new List<float2> {
                 zero, right, up, one, up, right,
                 zero, right, up, one, up, right, 
@@ -293,12 +293,12 @@ namespace GeometryGraph.Runtime.Geometry {
             var smoothShaded = Enumerable.Repeat((false, true), points).SelectMany(pair => new[] { pair.Item1, pair.Item2 }).ToList();
             var creases = new float[edgeCount].ToList();
             
-            var vertexPositions = new List<float3> { float3.zero, float3_util.up * height };
-            var vertexUvs = new List<float2> { float2_util.one * 0.5f, float2_util.one * 0.5f };
+            var vertexPositions = new List<float3> { float3.zero, float3_ext.up * height };
+            var vertexUvs = new List<float2> { float2_ext.one * 0.5f, float2_ext.one * 0.5f };
             
             for (var i = 0; i < points; i++) {
                 var t = i / (float)points;
-                var angle = math_util.TWO_PI * t;
+                var angle = math_ext.TWO_PI * t;
                 var circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(radius * circlePosition);
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
@@ -346,7 +346,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 uvs.Add(vertexUvs[v]);
                 uvs.Add(vertexUvs[0]);
                 uvs.Add(vertexUvs[i+2]);
-                faceNormals.Add(-float3_util.up);
+                faceNormals.Add(-float3_ext.up);
                 faces.Add(face);
                 
                 var faceV = new GeometryData.Face(
@@ -383,15 +383,15 @@ namespace GeometryGraph.Runtime.Geometry {
             var smoothShaded = Enumerable.Repeat(0, points).SelectMany(_ => new [] {false, false, true, true}).ToList();
             var creases = new float[edgeCount].ToList();
             
-            var vertexPositions = new List<float3> { float3.zero, float3_util.up * height };
-            var vertexUvs = new List<float2> { float2_util.one * 0.5f, float2_util.one * 0.5f };
+            var vertexPositions = new List<float3> { float3.zero, float3_ext.up * height };
+            var vertexUvs = new List<float2> { float2_ext.one * 0.5f, float2_ext.one * 0.5f };
             
             for (var i = 0; i < points; i++) {
                 var t = i / (float)points;
-                var angle = math_util.TWO_PI * t;
+                var angle = math_ext.TWO_PI * t;
                 var circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(bottomRadius * circlePosition);
-                vertexPositions.Add(topRadius * circlePosition + float3_util.up * height);
+                vertexPositions.Add(topRadius * circlePosition + float3_ext.up * height);
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
             }
@@ -451,14 +451,14 @@ namespace GeometryGraph.Runtime.Geometry {
                 uvs.Add(vertexUvs[((i + 1) % points + 1) * 2 + 1]);
                 
                 uvs.Add(float2.zero);
-                uvs.Add(float2_util.up);
-                uvs.Add(float2_util.right);
-                uvs.Add(float2_util.up);
-                uvs.Add(float2_util.one);
-                uvs.Add(float2_util.right);
+                uvs.Add(float2_ext.up);
+                uvs.Add(float2_ext.right);
+                uvs.Add(float2_ext.up);
+                uvs.Add(float2_ext.one);
+                uvs.Add(float2_ext.right);
                 
-                faceNormals.Add(-float3_util.up);
-                faceNormals.Add(float3_util.up);
+                faceNormals.Add(-float3_ext.up);
+                faceNormals.Add(float3_ext.up);
                 faceNormals.Add(
                     math.normalize(
                         math.cross(
@@ -521,7 +521,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var vertexUvs = new List<float2>();
             foreach(var pos in vertexPositions) {
                 var n = math.normalize(pos);
-                var u = 0.5f + math.atan2(n.z, n.x) / (math_util.TWO_PI);
+                var u = 0.5f + math.atan2(n.z, n.x) / (math_ext.TWO_PI);
                 var v = 0.5f - math.asin(n.y) / math.PI;
                 vertexUvs.Add(new float2(u, v));
             }
@@ -601,7 +601,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, crease, uvs);
 
             var rotQuaternion = quaternion.Euler(math.radians(-30), 0, 0);
-            var trs = float4x4.TRS(float3.zero, rotQuaternion, float3_util.one);
+            var trs = float4x4.TRS(float3.zero, rotQuaternion, float3_ext.one);
             var positionIcosahedron = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             positionIcosahedron.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionIcosahedron);
             var normalIcosahedron = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
@@ -742,7 +742,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, crease, uvs);
 
             var rotQuaternion = quaternion.Euler(math.radians(-30), 0, 0);
-            var trs = float4x4.TRS(float3.zero, rotQuaternion, float3_util.one);
+            var trs = float4x4.TRS(float3.zero, rotQuaternion, float3_ext.one);
             var positionIcosahedron = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             positionIcosahedron.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionIcosahedron);
             var normalIcosahedron = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);

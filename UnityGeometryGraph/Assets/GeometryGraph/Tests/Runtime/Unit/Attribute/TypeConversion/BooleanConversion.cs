@@ -42,7 +42,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
 
             Assert.IsTrue(
                 boolAttribute.Zip(vec2Attribute, (boolean, vec2) => (boolean, vec2))
-                             .All(pair => pair.boolean ? pair.vec2.Equals(float2_util.one) : pair.vec2.Equals(float2.zero)), 
+                             .All(pair => pair.boolean ? pair.vec2.Equals(float2_ext.one) : pair.vec2.Equals(float2.zero)), 
                 "boolAttribute.Zip(vec2Attribute, (boolean, vec2) => (boolean, vec2)).All(pair => pair.boolean ? pair.vec2.Equals(float2_util.one) : pair.vec2.Equals(float2.zero))"
             );
         }
@@ -55,7 +55,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
 
             Assert.IsTrue(
                 boolAttribute.Zip(vec3Attribute, (boolean, vec3) => (boolean, vec3))
-                             .All(pair => pair.boolean ? pair.vec3.Equals(float3_util.one) : pair.vec3.Equals(float3.zero)), 
+                             .All(pair => pair.boolean ? pair.vec3.Equals(float3_ext.one) : pair.vec3.Equals(float3.zero)), 
                 "boolAttribute.Zip(vec3Attribute, (boolean, vec3) => (boolean, vec3)).All(pair => pair.boolean ? pair.vec3.Equals(float3_util.one) : pair.vec3.Equals(float3.zero))"
             );
         }

@@ -100,17 +100,17 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
                 var tangent = 3.0f * t1 * (controlA - start) +
                               6.0f * t0 * t * (controlB - controlA) +
                               3.0f * t * t * (end - controlB);
-                return math.normalizesafe(tangent, float3_util.forward);
+                return math.normalizesafe(tangent, float3_ext.forward);
             }
 
             public float3 Normal(float t) {
                 var normal = 6.0f * (1.0f - t) * (controlB - 2.0f * controlA + start) + 
                              6.0f * t * (end - 2.0f * controlB + controlA);
-                return math.normalizesafe(normal, float3_util.right);
+                return math.normalizesafe(normal, float3_ext.right);
             }
 
             public float3 Binormal(float t) {
-                return math.normalizesafe(math.cross(Tangent(t), Normal(t)), float3_util.up);
+                return math.normalizesafe(math.cross(Tangent(t), Normal(t)), float3_ext.up);
             }
         }
     }

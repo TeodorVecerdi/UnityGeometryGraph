@@ -11,8 +11,8 @@ namespace GeometryGraph.Runtime.Graph {
         private MinMaxInt points = new MinMaxInt(32, Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
         private bool isClosed;
         private float3 start = float3.zero;
-        private float3 control = float3_util.right;
-        private float3 end = float3_util.forward;
+        private float3 control = float3_ext.right;
+        private float3 end = float3_ext.forward;
         
         private CurveData curve;
 

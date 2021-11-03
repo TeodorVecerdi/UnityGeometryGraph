@@ -15,7 +15,7 @@ namespace GeometryGraph.Editor {
 
         private Vector3Field sizeField;
 
-        private float3 size = float3_util.one;
+        private float3 size = float3_ext.one;
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
@@ -30,7 +30,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateSize(size);
             });
 
-            sizeField.SetValueWithoutNotify(float3_util.one);
+            sizeField.SetValueWithoutNotify(float3_ext.one);
 
             AddPort(sizePort);
             inputContainer.Add(sizeField);

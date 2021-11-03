@@ -145,7 +145,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 
                 var edgeA = edges[edgeAIndex];
                 var edgeB = edges[edgeBIndex];
-                var normalAngle = math_util.angle(faceNormals[edgeA.FaceA], faceNormals[edgeB.FaceA]);
+                var normalAngle = math_ext.angle(faceNormals[edgeA.FaceA], faceNormals[edgeB.FaceA]);
 
                 if (normalAngle > duplicateNormalAngleThreshold) continue;
 

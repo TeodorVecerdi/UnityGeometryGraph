@@ -24,7 +24,7 @@ namespace GeometryGraph.Editor {
 
         private int points = 2;
         private float3 start = float3.zero;
-        private float3 end = float3_util.right;
+        private float3 end = float3_ext.right;
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);

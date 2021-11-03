@@ -59,9 +59,9 @@ namespace GeometryGraph.Runtime.Graph {
             return type switch {
                 RotateVectorNode_Type.AxisAngle => math.rotate(quaternion.AxisAngle(axis, angle), vector - center) + center,
                 RotateVectorNode_Type.Euler => math.rotate(quaternion.Euler(eulerAngles), vector - center) + center,
-                RotateVectorNode_Type.X_Axis => math.rotate(quaternion.AxisAngle(float3_util.right, angle), vector - center) + center,
-                RotateVectorNode_Type.Y_Axis => math.rotate(quaternion.AxisAngle(float3_util.up, angle), vector - center) + center,
-                RotateVectorNode_Type.Z_Axis => math.rotate(quaternion.AxisAngle(float3_util.forward, angle), vector - center) + center,
+                RotateVectorNode_Type.X_Axis => math.rotate(quaternion.AxisAngle(float3_ext.right, angle), vector - center) + center,
+                RotateVectorNode_Type.Y_Axis => math.rotate(quaternion.AxisAngle(float3_ext.up, angle), vector - center) + center,
+                RotateVectorNode_Type.Z_Axis => math.rotate(quaternion.AxisAngle(float3_ext.forward, angle), vector - center) + center,
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
         }

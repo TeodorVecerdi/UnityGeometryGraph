@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime.Graph {
         private GeometryData result;
         private float3 defaultTranslation = float3.zero;
         private float3 defaultRotation = float3.zero;
-        private float3 defaultScale = float3_util.one;
+        private float3 defaultScale = float3_ext.one;
 
         public RuntimePort InputGeometryPort { get; private set; }
         public RuntimePort TranslationPort { get; private set; }

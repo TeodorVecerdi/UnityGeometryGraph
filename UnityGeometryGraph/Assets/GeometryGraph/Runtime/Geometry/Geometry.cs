@@ -10,8 +10,8 @@ namespace GeometryGraph.Runtime.Geometry {
                 return (float3.zero, float3.zero, GeometryData.Empty);
             }
 
-            var min = float3_util.one * float.MaxValue;
-            var max = float3_util.one * float.MinValue;
+            var min = float3_ext.one * float.MaxValue;
+            var max = float3_ext.one * float.MinValue;
             
             foreach (var position in positionAttribute) {
                 min = math.min(min, position);

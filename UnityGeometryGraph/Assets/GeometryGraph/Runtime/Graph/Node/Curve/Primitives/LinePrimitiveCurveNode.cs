@@ -10,7 +10,7 @@ namespace GeometryGraph.Runtime.Graph {
     public class LinePrimitiveCurveNode : RuntimeNode {
         private MinMaxInt points = new MinMaxInt(2, Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
         private float3 start = float3.zero;
-        private float3 end = float3_util.right;
+        private float3 end = float3_ext.right;
         private CurveData curve;
 
         public RuntimePort PointsPort { get; private set; }

@@ -102,7 +102,7 @@ namespace GeometryGraph.Runtime.Graph {
         public void Calculate() {
             if (geometry == null) return;
             result = geometry.Clone();
-            var scaleAttr = result.GetAttributeOrDefault<Vector3Attribute, float3>("scale", AttributeDomain.Vertex, float3_util.one);
+            var scaleAttr = result.GetAttributeOrDefault<Vector3Attribute, float3>("scale", AttributeDomain.Vertex, float3_ext.one);
             
             if (mode is ScalePointNode_Mode.Vector or ScalePointNode_Mode.Float) {
                 if (mode is ScalePointNode_Mode.Float) {

@@ -66,16 +66,16 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
                 points[index] = Position(t);
                 tangents[index] = Tangent(t);
                 normals[index] = Normal(t);
-                binormals[index] = float3_util.up;
+                binormals[index] = float3_ext.up;
             }
 
             public float3 Position(float t) {
-                var angle = math_util.TWO_PI * t;
+                var angle = math_ext.TWO_PI * t;
                 return new float3(radius * math.cos(angle), 0.0f, radius * math.sin(angle));
             }
 
             private float Slope(float t) {
-                var angle = math_util.TWO_PI * t;
+                var angle = math_ext.TWO_PI * t;
                 var x = math.cos(angle);
                 var z = math.sin(angle);
                 if (z == 0.0f) return t > 0.5f ? float.PositiveInfinity : float.NegativeInfinity;
@@ -84,8 +84,8 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
 
             public float3 Tangent(float t) {
                 var slope = Slope(t);
-                if (float.IsPositiveInfinity(slope)) return -float3_util.forward;
-                if (float.IsNegativeInfinity(slope)) return float3_util.forward;
+                if (float.IsPositiveInfinity(slope)) return -float3_ext.forward;
+                if (float.IsNegativeInfinity(slope)) return float3_ext.forward;
 
                 var tangent = math.normalize(new float3(1.0f, 0.0f, slope));
                 if (t >= 0.5) return tangent;

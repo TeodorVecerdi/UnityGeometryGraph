@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
         private ClampedFloatField heightField;
         private ClampedIntegerField subdivisionsField;
 
-        private float2 size = float2_util.one;
+        private float2 size = float2_ext.one;
         private int subdivisions;
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {

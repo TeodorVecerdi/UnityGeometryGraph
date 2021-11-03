@@ -6,7 +6,7 @@ using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
     public class PlanePrimitiveNode : RuntimeNode {
-        private float2 size = float2_util.one;
+        private float2 size = float2_ext.one;
         private int subdivisions;
         
         private GeometryData result;

@@ -31,9 +31,9 @@ namespace GeometryGraph.Editor {
         private int points = 32;
         private bool closed;
         private float3 start = float3.zero;
-        private float3 controlA = float3_util.forward;
-        private float3 controlB = float3_util.right + float3_util.forward;
-        private float3 end = float3_util.right;
+        private float3 controlA = float3_ext.forward;
+        private float3 controlB = float3_ext.right + float3_ext.forward;
+        private float3 end = float3_ext.right;
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);

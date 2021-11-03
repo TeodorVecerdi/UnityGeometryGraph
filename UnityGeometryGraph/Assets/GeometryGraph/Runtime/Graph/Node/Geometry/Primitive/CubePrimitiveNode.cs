@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
     public class CubePrimitiveNode : RuntimeNode {
-        private float3 size = float3_util.one;
+        private float3 size = float3_ext.one;
 
         private GeometryData result;
 

@@ -210,7 +210,7 @@ namespace GeometryGraph.Runtime.Curve {
                             math.cross(
                                 vertexPositions[vertexOffset - current.Points + i] - vertexPositions[vertexOffset + i],
                                 vertexPositions[vertexOffset + (i + 1).Mod(current.Points)] - vertexPositions[vertexOffset + i]
-                            ), float3_util.up
+                            ), float3_ext.up
                         )
                     );
                     faceNormals.Add(
@@ -218,7 +218,7 @@ namespace GeometryGraph.Runtime.Curve {
                             math.cross(
                                 vertexPositions[vertexOffset - current.Points + (i + 1).Mod(current.Points)] - vertexPositions[vertexOffset - current.Points + i],
                                 vertexPositions[vertexOffset + (i + 1).Mod(current.Points)] - vertexPositions[vertexOffset - current.Points + i]
-                            ), float3_util.up
+                            ), float3_ext.up
                         )
                     );
 
@@ -228,12 +228,12 @@ namespace GeometryGraph.Runtime.Curve {
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
-                    uvs.Add(float2_util.zero);
-                    uvs.Add(float2_util.right);
-                    uvs.Add(float2_util.up);
-                    uvs.Add(float2_util.right);
-                    uvs.Add(float2_util.one);
-                    uvs.Add(float2_util.up);
+                    uvs.Add(float2_ext.zero);
+                    uvs.Add(float2_ext.right);
+                    uvs.Add(float2_ext.up);
+                    uvs.Add(float2_ext.right);
+                    uvs.Add(float2_ext.one);
+                    uvs.Add(float2_ext.up);
                 }
             }
 
@@ -324,7 +324,7 @@ namespace GeometryGraph.Runtime.Curve {
                             math.cross(
                                 vertexPositions[(i + 1).Mod(profile.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i],
                                 vertexPositions[i] - vertexPositions[vertexPositions.Count - profile.Points + i]
-                            ), float3_util.up
+                            ), float3_ext.up
                         )
                     );
                     faceNormals.Add(
@@ -332,7 +332,7 @@ namespace GeometryGraph.Runtime.Curve {
                             math.cross(
                                 vertexPositions[vertexPositions.Count - profile.Points + (i + 1).Mod(profile.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i],
                                 vertexPositions[(i + 1).Mod(profile.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i]
-                            ), float3_util.up
+                            ), float3_ext.up
                         )
                     );
 
@@ -342,12 +342,12 @@ namespace GeometryGraph.Runtime.Curve {
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
-                    uvs.Add(float2_util.right);
-                    uvs.Add(float2_util.up);
-                    uvs.Add(float2_util.zero);
-                    uvs.Add(float2_util.right);
-                    uvs.Add(float2_util.one);
-                    uvs.Add(float2_util.up);
+                    uvs.Add(float2_ext.right);
+                    uvs.Add(float2_ext.up);
+                    uvs.Add(float2_ext.zero);
+                    uvs.Add(float2_ext.right);
+                    uvs.Add(float2_ext.one);
+                    uvs.Add(float2_ext.up);
                 }
 
             }
@@ -404,15 +404,15 @@ namespace GeometryGraph.Runtime.Curve {
                     math.cross(
                         vertexPositions[2] - vertexPositions[0],
                         vertexPositions[1] - vertexPositions[0]
-                    ), float3_util.up
+                    ), float3_ext.up
                 )
             );
             faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
             faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
             faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
-            uvs.Add(float2_util.one);
+            uvs.Add(float2_ext.one);
             uvs.Add(float2.zero);
-            uvs.Add(float2_util.up);
+            uvs.Add(float2_ext.up);
 
             edges[0].FaceB = faces.Count - 1;
             edges[1].FaceB = faces.Count - 1;
@@ -432,15 +432,15 @@ namespace GeometryGraph.Runtime.Curve {
                         math.cross(
                             vertexPositions[i + 2] - vertexPositions[0],
                             vertexPositions[i + 1] - vertexPositions[0]
-                        ), float3_util.up
+                        ), float3_ext.up
                     )
                 );
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
-                uvs.Add(float2_util.one);
+                uvs.Add(float2_ext.one);
                 uvs.Add(float2.zero);
-                uvs.Add(float2_util.up);
+                uvs.Add(float2_ext.up);
 
                 edges[i + 1].FaceB = faces.Count - 1;
             }
@@ -458,15 +458,15 @@ namespace GeometryGraph.Runtime.Curve {
                         math.cross(
                             vertexPositions[0] - vertexPositions[profile.Points - 2],
                             vertexPositions[profile.Points - 1] - vertexPositions[profile.Points - 2]
-                        ), float3_util.up
+                        ), float3_ext.up
                     )
                 );
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
-                uvs.Add(float2_util.one);
+                uvs.Add(float2_ext.one);
                 uvs.Add(float2.zero);
-                uvs.Add(float2_util.up);
+                uvs.Add(float2_ext.up);
 
                 edges[profile.Points - 2].FaceB = faces.Count - 1;
                 edges[profile.Points - 1].FaceB = faces.Count - 1;
@@ -504,15 +504,15 @@ namespace GeometryGraph.Runtime.Curve {
                     math.cross(
                         vertexPositions[vertexStart + 0] - vertexPositions[vertexStart + 2],
                         vertexPositions[vertexStart + 1] - vertexPositions[vertexStart + 2]
-                    ), float3_util.up
+                    ), float3_ext.up
                 )
             );
             faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
             faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
             faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
             uvs.Add(float2.zero);
-            uvs.Add(float2_util.one);
-            uvs.Add(float2_util.up);
+            uvs.Add(float2_ext.one);
+            uvs.Add(float2_ext.up);
             edges[edgeStart].FaceA = faces.Count - 1;
             edges[edgeStart + 1].FaceA = faces.Count - 1;
             if (profile.Points == 3)
@@ -531,15 +531,15 @@ namespace GeometryGraph.Runtime.Curve {
                         math.cross(
                             vertexPositions[vertexStart] - vertexPositions[vertexStart + i + 2],
                             vertexPositions[vertexStart + i + 1] - vertexPositions[vertexStart + i + 2]
-                        ), float3_util.up
+                        ), float3_ext.up
                     )
                 );
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 uvs.Add(float2.zero);
-                uvs.Add(float2_util.one);
-                uvs.Add(float2_util.up);
+                uvs.Add(float2_ext.one);
+                uvs.Add(float2_ext.up);
                 edges[edgeStart + i + 1].FaceA = faces.Count - 1;
             }
             
@@ -556,15 +556,15 @@ namespace GeometryGraph.Runtime.Curve {
                         math.cross(
                             vertexPositions[vertexStart] - vertexPositions[vertexStart + profile.Points - 1],
                             vertexPositions[vertexStart + profile.Points - 2] - vertexPositions[vertexStart + profile.Points - 1]
-                        ), float3_util.up
+                        ), float3_ext.up
                     )
                 );
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                 uvs.Add(float2.zero);
-                uvs.Add(float2_util.one);
-                uvs.Add(float2_util.up);
+                uvs.Add(float2_ext.one);
+                uvs.Add(float2_ext.up);
                 edges[edgeStart + profile.Points - 1].FaceA = faces.Count - 1;
                 edges[edgeStart + profile.Points - 2].FaceA = faces.Count - 1;
             }
