@@ -1,7 +1,7 @@
 ﻿using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime {
-    //!! Utilities for Unity.Mathematics
+    //* Utilities for Unity.Mathematics
     // ReSharper disable InconsistentNaming
     public static class math_ext {
         public const float TWO_PI = 6.28318530717959f;
