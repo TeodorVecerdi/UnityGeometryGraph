@@ -78,8 +78,8 @@ namespace GeometryGraph.Runtime.Graph {
                 FloatMathNode_MathOperation.GreaterThan => x > y ? 1.0f : 0.0f,
                 FloatMathNode_MathOperation.Sign => x < 0 ? -1.0f : x == 0.0f ? 0.0f : 1.0f,
                 FloatMathNode_MathOperation.Compare => math.abs(x - y) < tolerance ? 1.0f : 0.0f,
-                FloatMathNode_MathOperation.SmoothMinimum => ExtraMath.SmoothMinimum(x, y, tolerance),
-                FloatMathNode_MathOperation.SmoothMaximum => ExtraMath.SmoothMaximum(x, y, tolerance),
+                FloatMathNode_MathOperation.SmoothMinimum => math_ext.smooth_min(x, y, tolerance),
+                FloatMathNode_MathOperation.SmoothMaximum => math_ext.smooth_max(x, y, tolerance),
 
                 FloatMathNode_MathOperation.Round => math.round(x),
                 FloatMathNode_MathOperation.Floor => math.floor(x),
@@ -87,7 +87,7 @@ namespace GeometryGraph.Runtime.Graph {
                 FloatMathNode_MathOperation.Truncate => (int)x,
                 FloatMathNode_MathOperation.Fraction => x - (int)x,
                 FloatMathNode_MathOperation.Modulo => (float)Math.IEEERemainder(x, y),
-                FloatMathNode_MathOperation.Wrap => x = ExtraMath.Wrap(x, y, extra),
+                FloatMathNode_MathOperation.Wrap => x = math_ext.wrap(x, y, extra),
                 FloatMathNode_MathOperation.Snap => math.round(x / y) * y,
 
                 FloatMathNode_MathOperation.Sine => math.sin(x),

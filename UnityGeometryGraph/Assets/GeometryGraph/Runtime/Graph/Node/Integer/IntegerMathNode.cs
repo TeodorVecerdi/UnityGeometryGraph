@@ -75,8 +75,8 @@ namespace GeometryGraph.Runtime.Graph {
                 IntegerMathNode_MathOperation.GreaterThan => x > y ? 1 : 0,
                 IntegerMathNode_MathOperation.Sign => x < 0 ? -1 : x == 0 ? 0 : 1,
                 IntegerMathNode_MathOperation.Compare => x == y ? 1 : 0,
-                IntegerMathNode_MathOperation.SmoothMinimum => (int)ExtraMath.SmoothMinimum(x, y, tolerance),
-                IntegerMathNode_MathOperation.SmoothMaximum => (int)ExtraMath.SmoothMaximum(x, y, tolerance),
+                IntegerMathNode_MathOperation.SmoothMinimum => (int)math_ext.smooth_min(x, y, tolerance),
+                IntegerMathNode_MathOperation.SmoothMaximum => (int)math_ext.smooth_max(x, y, tolerance),
 
                 IntegerMathNode_MathOperation.Modulo => x % y,
                 IntegerMathNode_MathOperation.Wrap => x = ((x - y) % (extra - y) + (extra - y)) % (extra - y) + y,

@@ -1,46 +1,7 @@
-﻿using System;
+﻿using Unity.Burst;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime {
-    public static class ExtraMath {
-        public static float DistanceSqr(Vector3 a, Vector3 b) {
-            var num1 = a.x - b.x;
-            var num2 = a.y - b.y;
-            var num3 = a.z - b.z;
-            return num1 * num1 + num2 * num2 + num3 * num3;
-        }
-
-        public static float SmoothMaximum(float x, float y, float distance) {
-            return SmoothMinimum(x, y, -distance);
-            /*var inverseDistance = 1.0 / distance;
-            var expX = Math.Exp(distance * x);
-            var expY = Math.Exp(distance * y);
-            return (float) Math.Log(expX + expY - 1);*/
-        }
-
-        public static float SmoothMinimum(float x, float y, float distance) {
-            var h = Math.Clamp(0.5 + 0.5 * (x - y) / distance, 0.0, 1.0);
-            return (float)(x * (1 - h) + y * h - distance * h * (1 - h));
-        }
-        
-        public static float Wrap(float x, float min, float max) {
-            return ((x - min) % (max - min) + (max - min)) % (max - min) + min;
-        }
-
-        public static int Mod(this int a, int n) => a % n < 0 ? a % n + n : a % n;
-
-        public static Vector3 WrapPI(Vector3 a) {
-            if (a.x < -180.0f) a.x += 360.0f;
-            else if (a.x > 180.0f) a.x -= 360.0f;
-            if (a.y < -180.0f) a.y += 360.0f;
-            else if (a.y > 180.0f) a.y -= 360.0f;
-            if (a.z < -180.0f) a.z += 360.0f;
-            else if (a.z > 180.0f) a.z -= 360.0f;
-            return a;
-        }
-    }
-
     //!! Utilities for Unity.Mathematics
     // ReSharper disable InconsistentNaming
     public static class math_ext {
@@ -49,6 +10,31 @@ namespace GeometryGraph.Runtime {
         public static float angle(float3 from, float3 to) {
             var num = math.sqrt(math.lengthsq(from) * (double)math.lengthsq(to));
             return num < 1.00000000362749E-15 ? 0.0f : (float)math.acos(math.clamp(math.dot(from, to) / num, -1f, 1f)) * 57.29578f;
+        }
+        
+        public static float smooth_max(float x, float y, float distance) {
+            return smooth_min(x, y, -distance);
+        }
+
+        public static float smooth_min(float x, float y, float distance) {
+            float h = math.clamp(0.5f + 0.5f * (x - y) / distance, 0.0f, 1.0f);
+            return x * (1.0f - h) + y * h - distance * h * (1.0f - h);
+        }
+        
+        public static float wrap(float x, float min, float max) {
+            return ((x - min) % (max - min) + (max - min)) % (max - min) + min;
+        }
+
+        public static int mod(this int a, int n) {
+            return (a % n + n) % n;
+        }
+
+        public static float3 wrap(float3 a, float min, float max) {
+            return new float3(
+                wrap(a.x, min, max),
+                wrap(a.y, min, max),
+                wrap(a.z, min, max)
+            );
         }
 
         public static float4 float4(this float3 float3, float w = 0.0f) {

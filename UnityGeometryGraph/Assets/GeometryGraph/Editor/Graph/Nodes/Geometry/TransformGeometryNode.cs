@@ -51,7 +51,7 @@ namespace GeometryGraph.Editor {
             );
             eulerRotationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Changed Rotation value");
-                defaultEulerRotation = ExtraMath.WrapPI(evt.newValue);
+                defaultEulerRotation = math_ext.wrap(evt.newValue, -180.0f, 180.0f);
                 RuntimeNode.UpdateDefaultValue(defaultEulerRotation, WhichDefaultValue.Rotation);
             });
             

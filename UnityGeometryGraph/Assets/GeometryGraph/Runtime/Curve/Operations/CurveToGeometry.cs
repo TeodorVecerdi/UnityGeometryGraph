@@ -122,7 +122,7 @@ namespace GeometryGraph.Runtime.Curve {
                 // Middle edges
                 for (var i = 0; i < middleEdgeCount; i++) {
                     int fromVertex = vertexOffset - current.Points + i;
-                    int toVertex = vertexOffset + (i + 1).Mod(current.Points);
+                    int toVertex = vertexOffset + (i + 1).mod(current.Points);
                     edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
                         FaceA = faceOffset + i * 2,
                         FaceB = faceOffset + i * 2 + 1
@@ -141,7 +141,7 @@ namespace GeometryGraph.Runtime.Curve {
                         if (i == 0) {
                             faceB = faceOffset + i * 2;
                             if (current.IsClosed) {
-                                faceA = faceOffset + 2 * (i - 1).Mod(current.Points) + 1;
+                                faceA = faceOffset + 2 * (i - 1).mod(current.Points) + 1;
                             } else {
                                 faceA = -1;
                             }
@@ -164,7 +164,7 @@ namespace GeometryGraph.Runtime.Curve {
                 // Profile edges
                 for (var i = 0; i < profileEdgeCount; i++) {
                     int fromVertex = vertexOffset + i;
-                    int toVertex = vertexOffset + (i + 1).Mod(current.Points);
+                    int toVertex = vertexOffset + (i + 1).mod(current.Points);
                     edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
                         FaceA = faceOffset + facesPerIteration + i * 2 + 1,
                         FaceB = faceOffset + i * 2
@@ -182,7 +182,7 @@ namespace GeometryGraph.Runtime.Curve {
                     faces.Add(new GeometryData.Face(
                                   vertexOffset + i,
                                   vertexOffset - current.Points + i,
-                                  vertexOffset + (i + 1).Mod(current.Points),
+                                  vertexOffset + (i + 1).mod(current.Points),
                                   fcIdx++,
                                   fcIdx++,
                                   fcIdx++,
@@ -194,13 +194,13 @@ namespace GeometryGraph.Runtime.Curve {
                     // Second face
                     faces.Add(new GeometryData.Face(
                                   vertexOffset - current.Points + i,
-                                  vertexOffset - current.Points + (i + 1).Mod(current.Points),
-                                  vertexOffset + (i + 1).Mod(current.Points),
+                                  vertexOffset - current.Points + (i + 1).mod(current.Points),
+                                  vertexOffset + (i + 1).mod(current.Points),
                                   fcIdx++,
                                   fcIdx++,
                                   fcIdx++,
                                   edgeOffset + i,
-                                  edgeOffset + middleEdgeCount + (i + 1).Mod(current.Points),
+                                  edgeOffset + middleEdgeCount + (i + 1).mod(current.Points),
                                   edgeOffset - profileEdgeCount + i
                               )
                     );
@@ -209,15 +209,15 @@ namespace GeometryGraph.Runtime.Curve {
                         math.normalizesafe(
                             math.cross(
                                 vertexPositions[vertexOffset - current.Points + i] - vertexPositions[vertexOffset + i],
-                                vertexPositions[vertexOffset + (i + 1).Mod(current.Points)] - vertexPositions[vertexOffset + i]
+                                vertexPositions[vertexOffset + (i + 1).mod(current.Points)] - vertexPositions[vertexOffset + i]
                             ), float3_ext.up
                         )
                     );
                     faceNormals.Add(
                         math.normalizesafe(
                             math.cross(
-                                vertexPositions[vertexOffset - current.Points + (i + 1).Mod(current.Points)] - vertexPositions[vertexOffset - current.Points + i],
-                                vertexPositions[vertexOffset + (i + 1).Mod(current.Points)] - vertexPositions[vertexOffset - current.Points + i]
+                                vertexPositions[vertexOffset - current.Points + (i + 1).mod(current.Points)] - vertexPositions[vertexOffset - current.Points + i],
+                                vertexPositions[vertexOffset + (i + 1).mod(current.Points)] - vertexPositions[vertexOffset - current.Points + i]
                             ), float3_ext.up
                         )
                     );
@@ -242,7 +242,7 @@ namespace GeometryGraph.Runtime.Curve {
                 
                 // Add edges for diagonals
                 for (var i = 0; i < middleEdgeCount; i++) {
-                    int fromVertex = (i + 1).Mod(profile.Points);
+                    int fromVertex = (i + 1).mod(profile.Points);
                     int toVertex = vertexPositions.Count - profile.Points + i;
                     edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
                         FaceA = faces.Count + i * 2,
@@ -262,7 +262,7 @@ namespace GeometryGraph.Runtime.Curve {
                         if (i == 0) {
                             faceB = faces.Count + i * 2;
                             if (profile.IsClosed) {
-                                faceA = faces.Count + 2 * (i - 1).Mod(profile.Points) + 1;
+                                faceA = faces.Count + 2 * (i - 1).mod(profile.Points) + 1;
                             } else {
                                 faceA = -1;
                             }
@@ -287,7 +287,7 @@ namespace GeometryGraph.Runtime.Curve {
                     // First face
                     faces.Add(new GeometryData.Face(
                                   vertexPositions.Count - profile.Points + i,
-                                  (i + 1).Mod(profile.Points),
+                                  (i + 1).mod(profile.Points),
                                   i,
                                   fcIdx++,
                                   fcIdx++,
@@ -300,29 +300,29 @@ namespace GeometryGraph.Runtime.Curve {
                     // Second face
                     faces.Add(new GeometryData.Face(
                                   vertexPositions.Count - profile.Points + i,
-                                  vertexPositions.Count - profile.Points + (i + 1).Mod(profile.Points),
-                                  (i + 1).Mod(profile.Points),
+                                  vertexPositions.Count - profile.Points + (i + 1).mod(profile.Points),
+                                  (i + 1).mod(profile.Points),
                                   fcIdx++,
                                   fcIdx++,
                                   fcIdx++,
                                   edgeOffset + i,
-                                  edgeOffset + middleEdgeCount + (i + 1).Mod(profile.Points),
+                                  edgeOffset + middleEdgeCount + (i + 1).mod(profile.Points),
                                   edgeOffset - profileEdgeCount + i
                               )
                     );
                     
                     Assert.IsTrue(vertexPositions.Count - profile.Points + i >= 0 && vertexPositions.Count - profile.Points + i < vertexPositions.Count);
                     Assert.IsTrue(i >= 0 && i < vertexPositions.Count);
-                    Assert.IsTrue((i + 1).Mod(profile.Points) >= 0 && (i + 1).Mod(profile.Points) < vertexPositions.Count);
+                    Assert.IsTrue((i + 1).mod(profile.Points) >= 0 && (i + 1).mod(profile.Points) < vertexPositions.Count);
                     Assert.IsTrue(vertexPositions.Count - profile.Points + i >= 0 && vertexPositions.Count - profile.Points + i < vertexPositions.Count);
-                    Assert.IsTrue((i + 1).Mod(profile.Points) >= 0 && (i + 1).Mod(profile.Points) < vertexPositions.Count);
-                    Assert.IsTrue(vertexPositions.Count - profile.Points + (i + 1).Mod(profile.Points) >= 0 && vertexPositions.Count - profile.Points + (i + 1).Mod(profile.Points) < vertexPositions.Count);
+                    Assert.IsTrue((i + 1).mod(profile.Points) >= 0 && (i + 1).mod(profile.Points) < vertexPositions.Count);
+                    Assert.IsTrue(vertexPositions.Count - profile.Points + (i + 1).mod(profile.Points) >= 0 && vertexPositions.Count - profile.Points + (i + 1).mod(profile.Points) < vertexPositions.Count);
                     
                     
                     faceNormals.Add(
                         math.normalizesafe(
                             math.cross(
-                                vertexPositions[(i + 1).Mod(profile.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i],
+                                vertexPositions[(i + 1).mod(profile.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i],
                                 vertexPositions[i] - vertexPositions[vertexPositions.Count - profile.Points + i]
                             ), float3_ext.up
                         )
@@ -330,8 +330,8 @@ namespace GeometryGraph.Runtime.Curve {
                     faceNormals.Add(
                         math.normalizesafe(
                             math.cross(
-                                vertexPositions[vertexPositions.Count - profile.Points + (i + 1).Mod(profile.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i],
-                                vertexPositions[(i + 1).Mod(profile.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i]
+                                vertexPositions[vertexPositions.Count - profile.Points + (i + 1).mod(profile.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i],
+                                vertexPositions[(i + 1).mod(profile.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i]
                             ), float3_ext.up
                         )
                     );

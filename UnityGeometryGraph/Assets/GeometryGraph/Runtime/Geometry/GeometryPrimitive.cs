@@ -37,7 +37,7 @@ namespace GeometryGraph.Runtime.Geometry {
             for (var i = 0; i < points; i++) {
                 var edge = new GeometryData.Edge(0, i + 1, i) {
                     FaceA = i,
-                    FaceB = (i - 1).Mod(points)
+                    FaceB = (i - 1).mod(points)
                 };
                 edges.Add(edge);
             }
@@ -312,11 +312,11 @@ namespace GeometryGraph.Runtime.Geometry {
             for (var i = 0; i < points; i++) {
                 var edge = new GeometryData.Edge(0, i + 2, i) {
                     FaceA = i * 2,
-                    FaceB = (i - 1).Mod(points) * 2
+                    FaceB = (i - 1).mod(points) * 2
                 };
                 var edgeV = new GeometryData.Edge(1, i + 2, i) {
                     FaceA = i * 2 + 1,
-                    FaceB = (i - 1).Mod(points) * 2 + 1
+                    FaceB = (i - 1).mod(points) * 2 + 1
                 };
                 edges.Add(edge);
                 edges.Add(edgeV);
