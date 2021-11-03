@@ -11,6 +11,10 @@ using UnityEngine.Assertions;
 
 namespace GeometryGraph.Runtime.Curve {
     internal static class CurveToGeometry {
+        private static readonly HashSet<CurveType> closeCapsSupportedTypes = new() {
+            CurveType.Circle
+        };
+
         // Returns a `GeometryData` object composed of only vertices and edges, representing the curve
         internal static GeometryData WithoutProfile(CurveData curve) {
             if (curve.Points == 0) return GeometryData.Empty;
@@ -40,7 +44,7 @@ namespace GeometryGraph.Runtime.Curve {
         }
 
         internal static GeometryData WithProfile(CurveData curve, CurveData profile, bool closeCaps, float rotationOffset) {
-            if (curve.IsClosed || !profile.IsClosed || profile.Points < 3) closeCaps = false;
+            if (curve.IsClosed || !profile.IsClosed || !closeCapsSupportedTypes.Contains(profile.Type) || profile.Points < 3) closeCaps = false;
 
             int edgeCount = (profile.Points - (profile.IsClosed ? 0 : 1)) * curve.Points
                           + profile.Points * (curve.Points - 1)
