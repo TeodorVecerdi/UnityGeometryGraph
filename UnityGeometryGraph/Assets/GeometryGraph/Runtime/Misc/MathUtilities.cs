@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime {
     //* Utilities for Unity.Mathematics
@@ -20,12 +21,9 @@ namespace GeometryGraph.Runtime {
             return math.lerp(y, x, h) - distance * h * (1.0f - h);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float wrap(float x, float min, float max) {
             return ((x - min) % (max - min) + (max - min)) % (max - min) + min;
-        }
-
-        public static int mod(this int a, int n) {
-            return (a % n + n) % n;
         }
 
         public static float3 wrap(float3 a, float min, float max) {
@@ -34,6 +32,16 @@ namespace GeometryGraph.Runtime {
                 wrap(a.y, min, max),
                 wrap(a.z, min, max)
             );
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int mod(this int x, int y) {
+            return (x % y + y) % y;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float fmod(this float x, float y) {
+            return (x % y + y) % y;
         }
 
         public static float4 float4(this float3 float3, float w = 0.0f) {
