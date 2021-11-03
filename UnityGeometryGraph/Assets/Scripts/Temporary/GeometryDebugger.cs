@@ -4,6 +4,7 @@ using GeometryGraph.Runtime.Attribute;
 using GeometryGraph.Runtime.Data;
 using Sirenix.OdinInspector;
 using UnityCommons;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -29,6 +30,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return gizmoType switch {
                 ElementGizmoType.Vertices => source.Geometry.Vertices.Count - 1,
                 ElementGizmoType.Edges => source.Geometry.Edges.Count - 1,
+                ElementGizmoType.EdgeAdjacentFaces => source.Geometry.Edges.Count - 1,
                 ElementGizmoType.Faces => source.Geometry.Faces.Count - 1,
                 ElementGizmoType.FaceEdges => source.Geometry.Faces.Count - 1,
                 ElementGizmoType.FaceFaceCorners => source.Geometry.Faces.Count - 1,
@@ -72,7 +74,10 @@ namespace GeometryGraph.Runtime.Geometry {
                         Gizmos.DrawSphere(vertex, size);
                     }
                 }
-            } else if (gizmoType == ElementGizmoType.Edges) {
+            } else if (gizmoType is ElementGizmoType.Edges or ElementGizmoType.EdgeAdjacentFaces) {
+                var dist = faceDistanceOffset * UnityEditor.HandleUtility.GetHandleSize(transform.position);
+                var faceNormals = data.GetAttribute<Vector3Attribute>("normal");
+                
                 if (showByElement) {
                     var edge = data.Edges[index];
                     var v0 = vertices[edge.VertA];
@@ -80,6 +85,32 @@ namespace GeometryGraph.Runtime.Geometry {
                     var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                     Gizmos.color = UnityEditor.Handles.color = color;
                     UnityEditor.Handles.DrawAAPolyLine(4.0f, v0, v1);
+
+                    if (gizmoType is ElementGizmoType.EdgeAdjacentFaces) {
+                        if (edge.FaceA != -1) {
+                            var colorA = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                            Gizmos.color = UnityEditor.Handles.color = color;
+                            var face = data.Faces[edge.FaceA];
+                            
+                            var normal = faceNormals[edge.FaceA];
+                            var vf0 = vertices[face.VertA] + normal * dist;
+                            var vf1 = vertices[face.VertB] + normal * dist;
+                            var vf2 = vertices[face.VertC] + normal * dist;
+                            Handles.DrawAAConvexPolygon(vf0, vf1, vf2);
+                        }
+                        
+                        if (edge.FaceB != -1) {
+                            var colorB = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                            Gizmos.color = UnityEditor.Handles.color = color;
+                            var face = data.Faces[edge.FaceB];
+                            
+                            var normal = faceNormals[edge.FaceB];
+                            var vf0 = vertices[face.VertA] + normal * dist;
+                            var vf1 = vertices[face.VertB] + normal * dist;
+                            var vf2 = vertices[face.VertC] + normal * dist;
+                            Handles.DrawAAConvexPolygon(vf0, vf1, vf2);
+                        }
+                    }
                 } else {
                     foreach (var edge in data.Edges) {
                         var v0 = vertices[edge.VertA];
@@ -87,6 +118,32 @@ namespace GeometryGraph.Runtime.Geometry {
                         var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                         Gizmos.color = UnityEditor.Handles.color = color;
                         UnityEditor.Handles.DrawAAPolyLine(4.0f, v0, v1);
+                        
+                        if (gizmoType is ElementGizmoType.EdgeAdjacentFaces) {
+                            if (edge.FaceA != -1) {
+                                var colorA = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                                Gizmos.color = UnityEditor.Handles.color = colorA;
+                                var face = data.Faces[edge.FaceA];
+                            
+                                var normal = faceNormals[edge.FaceA];
+                                var vf0 = vertices[face.VertA] + normal * dist;
+                                var vf1 = vertices[face.VertB] + normal * dist;
+                                var vf2 = vertices[face.VertC] + normal * dist;
+                                Handles.DrawAAConvexPolygon(vf0, vf1, vf2);
+                            }
+                        
+                            if (edge.FaceB != -1) {
+                                var colorB = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
+                                Gizmos.color = UnityEditor.Handles.color = colorB;
+                                var face = data.Faces[edge.FaceB];
+                            
+                                var normal = faceNormals[edge.FaceB];
+                                var vf0 = vertices[face.VertA] + normal * dist;
+                                var vf1 = vertices[face.VertB] + normal * dist;
+                                var vf2 = vertices[face.VertC] + normal * dist;
+                                Handles.DrawAAConvexPolygon(vf0, vf1, vf2);
+                            }
+                        }
                     }
                 }
             } else if (gizmoType == ElementGizmoType.Faces || gizmoType == ElementGizmoType.FacesByMaterial || gizmoType == ElementGizmoType.FacesByShadeSmooth) {
@@ -252,5 +309,6 @@ namespace GeometryGraph.Runtime.Geometry {
         FaceFaceCorners,
         FacesByMaterial,
         FacesByShadeSmooth,
+        EdgeAdjacentFaces,
     }
 }
