@@ -40,14 +40,19 @@ namespace GeometryGraph.Runtime.Curve {
         }
 
         internal static GeometryData WithProfile(CurveData curve, CurveData profile, bool closeCaps, float rotationOffset) {
-            if (!profile.IsClosed || profile.Points < 3) closeCaps = false;
+            if (curve.IsClosed || !profile.IsClosed || profile.Points < 3) closeCaps = false;
 
             int edgeCount = (profile.Points - (profile.IsClosed ? 0 : 1)) * curve.Points
                           + profile.Points * (curve.Points - 1)
                           + (profile.Points - (curve.IsClosed ? 0 : 1)) * (curve.Points - 1)
-                          + (closeCaps ? 2 * GetCapEdgeCount(profile) : 0);
+                          + (closeCaps ? 2 * GetCapEdgeCount(profile) : 0) 
+                            // extra edges if the curve is closed
+                          + (2 * profile.Points - (profile.IsClosed ? 0 : 1)) * (curve.IsClosed ? 1 : 0); 
 
-            int faceCount = 2 * (profile.Points - (profile.IsClosed ? 0 : 1)) * (curve.Points - 1) + (closeCaps ? 2 * GetCapFaceCount(profile) : 0);
+            int faceCount = 2 * (profile.Points - (profile.IsClosed ? 0 : 1)) * (curve.Points - 1) 
+                          + (closeCaps ? 2 * GetCapFaceCount(profile) : 0) 
+                            // extra faces if the curve is closed
+                          + 2 * (profile.Points - (profile.IsClosed ? 0 : 1)) * (curve.IsClosed ? 1 : 0);
 
             // Prepare burst job native arrays
             if (profile.Points > kBurstAlignPointsThreshold) {
@@ -230,6 +235,113 @@ namespace GeometryGraph.Runtime.Curve {
                     uvs.Add(float2_util.right);
                     uvs.Add(float2.zero);
                 }
+            }
+
+            if (curve.IsClosed) {
+                int edgeOffset = edges.Count;
+                
+                // Add edges for diagonals
+                for (var i = 0; i < middleEdgeCount; i++) {
+                    int fromVertex = i;
+                    int toVertex = vertexPositions.Count - profile.Points + (i + 1).Mod(profile.Points);
+                    edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
+                        FaceA = faces.Count + i * 2,
+                        FaceB = faces.Count + i * 2 + 1
+                    });
+                }
+                
+                // Add edges from start to end
+                for (var i = 0; i < verticalEdgeCount; i++) {
+                    int fromVertex = i;
+                    int toVertex = vertexPositions.Count - profile.Points + i;
+                    int faceA, faceB;
+                    if (i > 0 && i < verticalEdgeCount - 1) {
+                        faceA = faces.Count + 2 * (i - 1) + 1;
+                        faceB = faces.Count + i * 2;
+                    } else {
+                        if (i == 0) {
+                            faceB = faces.Count + i * 2;
+                            if (profile.IsClosed) {
+                                faceA = faces.Count + 2 * (i - 1).Mod(profile.Points) + 1;
+                            } else {
+                                faceA = -1;
+                            }
+                        } else {
+                            faceA = faces.Count + 2 * (i - 1) + 1;
+                            if (profile.IsClosed) {
+                                faceB = faces.Count + i * 2;
+                            } else {
+                                faceB = -1;
+                            }
+                        }
+                    }
+                    
+                    edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
+                        FaceA = faceA,
+                        FaceB = faceB
+                    });
+                }
+                
+                // Faces
+                for (var i = 0; i < faceIterations; i++) {
+                    // First face
+                    faces.Add(new GeometryData.Face(
+                                  vertexPositions.Count - profile.Points + i,
+                                  vertexPositions.Count - profile.Points + (i + 1).Mod(current.Points),
+                                  i,
+                                  fcIdx++,
+                                  fcIdx++,
+                                  fcIdx++,
+                                  edgeOffset + middleEdgeCount + i,
+                                  edgeOffset + i,
+                                  edgeOffset - profileEdgeCount + i
+                              )
+                    );
+                    // Second face
+                    faces.Add(new GeometryData.Face(
+                                  i,
+                                  vertexPositions.Count - profile.Points + (i + 1).Mod(current.Points),
+                                  (i + 1).Mod(current.Points),
+                                  fcIdx++,
+                                  fcIdx++,
+                                  fcIdx++,
+                                  i,
+                                  edgeOffset + middleEdgeCount + (i + 1).Mod(current.Points),
+                                  edgeOffset + i
+                              )
+                    );
+
+                    faceNormals.Add(
+                        math.normalizesafe(
+                            math.cross(
+                                vertexPositions[vertexPositions.Count - profile.Points + (i + 1).Mod(current.Points)] - vertexPositions[vertexPositions.Count - profile.Points + i],
+                                vertexPositions[i] - vertexPositions[vertexPositions.Count - profile.Points + i]
+                            ), float3_util.up
+                        )
+                    );
+                    faceNormals.Add(
+                        math.normalizesafe(
+                            math.cross(
+                                vertexPositions[vertexPositions.Count - profile.Points + (i + 1).Mod(current.Points)] - vertexPositions[i],
+                                vertexPositions[(i + 1).Mod(current.Points)] - vertexPositions[i]
+                            ), float3_util.up
+                        )
+                    );
+
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 2));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 2));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 2));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
+                    faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
+                    uvs.Add(float2.zero);
+                    uvs.Add(float2_util.one);
+                    uvs.Add(float2_util.up);
+                    uvs.Add(float2_util.one);
+                    uvs.Add(float2.zero);
+                    uvs.Add(float2_util.right);
+                }
+
             }
 
             if (closeCaps) {
