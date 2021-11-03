@@ -16,8 +16,8 @@ namespace GeometryGraph.Runtime {
         }
 
         public static float smooth_min(float x, float y, float distance) {
-            float h = math.clamp(0.5f + 0.5f * (x - y) / distance, 0.0f, 1.0f);
-            return x * (1.0f - h) + y * h - distance * h * (1.0f - h);
+            float h = math.clamp(0.5f + 0.5f * (y - x) / distance, 0.0f, 1.0f);
+            return math.lerp(y, x, h) - distance * h * (1.0f - h);
         }
         
         public static float wrap(float x, float min, float max) {
