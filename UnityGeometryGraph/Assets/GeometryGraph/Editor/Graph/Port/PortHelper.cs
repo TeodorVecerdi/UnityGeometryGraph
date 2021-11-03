@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using GeometryGraph.Runtime.Graph;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 
 namespace GeometryGraph.Editor {
     public static class PortHelper {

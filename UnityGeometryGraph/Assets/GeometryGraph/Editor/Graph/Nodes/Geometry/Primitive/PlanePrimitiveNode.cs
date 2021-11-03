@@ -5,8 +5,6 @@ using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
 using UnityCommons;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 using Which = GeometryGraph.Runtime.Graph.PlanePrimitiveNode.PlanePrimitiveNode_Which;
 

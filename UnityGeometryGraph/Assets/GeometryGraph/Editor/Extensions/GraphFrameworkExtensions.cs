@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using UnityEngine.UIElements;
 
 namespace GeometryGraph.Editor {
     public static class GraphFrameworkExtensions {

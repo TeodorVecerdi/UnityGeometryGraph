@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GeometryGraph.Runtime.Graph;
+﻿using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;

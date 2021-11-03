@@ -1,6 +1,5 @@
 ﻿using GeometryGraph.Runtime.Geometry;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Curve.TEMP {
     public class CurveToMeshGenerator : SerializedMonoBehaviour {

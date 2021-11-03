@@ -1,5 +1,4 @@
 using System;
-using Sirenix.OdinInspector;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {

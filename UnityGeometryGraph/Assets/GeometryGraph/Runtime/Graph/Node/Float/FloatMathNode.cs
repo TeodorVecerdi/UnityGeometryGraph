@@ -3,7 +3,6 @@ using GeometryGraph.Runtime.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class FloatMathNode : RuntimeNode {

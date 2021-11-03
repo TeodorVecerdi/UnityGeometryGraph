@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using GeometryGraph.Runtime;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
