@@ -107,7 +107,7 @@ namespace GeometryGraph.Runtime.Graph {
                 return;
             }
             DebugUtility.Log("Generated mesh with profile");
-            result = CurveToGeometry.WithProfile(source, profile, closeCaps, rotationOffset);
+            result = CurveToGeometry.WithProfile(source, profile, new CurveToGeometrySettings(closeCaps, false, false, false, rotationOffset, 0.0f));
         }
 
         public override string GetCustomData() {

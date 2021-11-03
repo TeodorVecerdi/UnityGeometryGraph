@@ -43,7 +43,8 @@ namespace GeometryGraph.Runtime.Curve {
             return geometry;
         }
 
-        internal static GeometryData WithProfile(CurveData curve, CurveData profile, bool closeCaps, float rotationOffset) {
+        internal static GeometryData WithProfile(CurveData curve, CurveData profile, CurveToGeometrySettings settings) {
+            bool closeCaps = settings.CloseCaps;
             if (curve.IsClosed || !profile.IsClosed || !closeCapsSupportedTypes.Contains(profile.Type) || profile.Points < 3) closeCaps = false;
 
             int edgeCount = (profile.Points - (profile.IsClosed ? 0 : 1)) * curve.Points
@@ -77,20 +78,41 @@ namespace GeometryGraph.Runtime.Curve {
                 }
             }
 
+            List<int> materialIndices;
+            List<bool> shadeSmooth;
+            int capsFaceCount = 2 * GetCapFaceCount(profile);
+            int submeshCount = closeCaps && settings.SeparateMaterialsForCaps ? 2 : 1;
+            
+            if (closeCaps && settings.SeparateMaterialsForCaps) {
+                materialIndices = Enumerable.Repeat(0, faceCount - capsFaceCount).ToList();
+                for (var i = 0; i < capsFaceCount; i++) {
+                    materialIndices.Add(1);
+                }
+            } else {
+                materialIndices = Enumerable.Repeat(0, faceCount).ToList();
+            }
+
+            if (closeCaps) {
+                shadeSmooth = Enumerable.Repeat(settings.ShadeSmoothCurve, faceCount - capsFaceCount).ToList();
+                for (var i = 0; i < capsFaceCount; i++) {
+                    shadeSmooth.Add(settings.ShadeSmoothCaps);
+                }
+            } else {
+                shadeSmooth = Enumerable.Repeat(settings.ShadeSmoothCurve, faceCount).ToList();
+            }
+            
+            List<float> creases = new float[edgeCount].ToList();
+            List<float2> uvs = new List<float2>();
+            List<float3> vertexPositions = new List<float3>();
+            List<float3> faceNormals = new List<float3>();
+            
             List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
             List<GeometryData.Face> faces = new List<GeometryData.Face>();
             List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
-
-            List<float3> faceNormals = new List<float3>();
-            List<int> materialIndices = new int[faceCount].ToList();
             
-            // TODO: Add settings to customize smooth shading
-            // Maybe you would want flat shading on caps and smooth shading on rest
-            List<bool> shadeSmooth = Enumerable.Repeat(false, faceCount).ToList();
-            List<float> creases = new float[edgeCount].ToList();
-            List<float2> uvs = new List<float2>();
-
-            List<float3> vertexPositions = new List<float3>();
+            float rotationOffset = settings.RotationOffset;
+            float incrementalRotationOffset = settings.IncrementalRotationOffset;
+            incrementalRotationOffset = 0.0f; //debug: disable incremental rotation until I handle closed curves better
 
             // First iteration done outside of loop
             var current = Align(curve, profile, 0, rotationOffset);
@@ -118,6 +140,7 @@ namespace GeometryGraph.Runtime.Curve {
             int profileEdgeCount = middleEdgeCount;
             int faceIterations = middleEdgeCount;
             for (var index = 1; index < curve.Points; index++) {
+                rotationOffset += incrementalRotationOffset;
                 current = Align(curve, profile, index, rotationOffset);
                 int faceOffset = (index - 1) * facesPerIteration;
                 int edgeOffset = edges.Count;
@@ -381,7 +404,7 @@ namespace GeometryGraph.Runtime.Curve {
                 burstAlign_binormalDst.Dispose();
             }
 
-            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, shadeSmooth, creases, uvs);
+            return new GeometryData(edges, faces, faceCorners, submeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth, creases, uvs);
         }
 
         private static void CloseCapsStart(CurveData profile, List<GeometryData.Edge> edges, List<GeometryData.Face> faces, ref int fcIdx, List<float3> faceNormals, List<float3> vertexPositions, List<GeometryData.FaceCorner> faceCorners, List<float2> uvs) {
