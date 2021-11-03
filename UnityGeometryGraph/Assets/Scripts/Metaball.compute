@@ -1,0 +1,91 @@
+﻿#pragma kernel CSMain
+
+RWTexture2D<float4> Result;
+float Resolution;
+
+bool DoSmooth;
+float SmoothDistance;
+bool DoSmoothMin;
+int SmoothMinType;
+
+float4 CircleColor;
+float4 BackgroundColor;
+float CirclePower;
+float CircleThreshold;
+
+float CircleARadius;
+float CircleACenterX;
+float CircleACenterY;
+
+float CircleBRadius;
+float CircleBCenterX;
+float CircleBCenterY;
+
+float draw_circle(const uint3 pixel, const float circleRadius, const float2 circlePosition) {
+	float2 p = float2(pixel.x, pixel.y) - circlePosition;
+	float distance = dot(p, p);
+	if (distance < circleRadius * circleRadius) {
+		return pow(1.0 - sqrt(distance) / circleRadius, max(CirclePower, 0.0));
+	}
+	return 0.0;
+}
+
+float smin_poly(const float a, const float b, const float k) {
+	float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+	return lerp(b, a, h) - k * h * (1.0 - h);
+}
+
+float smin_pow(float a, float b, const float k) {
+	a = pow(a, k);
+	b = pow(b, k);
+	return pow(a * b / (a + b), 1.0 / k);
+}
+
+float smin_exp(const float a, const float b, const float k) {
+	float res = exp(-k * a) + exp(-k * b);
+	return -log(res) / k;
+}
+
+
+float smin(const float x, const float y, const float distance) {
+	SmoothMinType = clamp(SmoothMinType, 0, 2);
+	if (SmoothMinType == 0) {
+        return smin_poly(x, y, distance);
+    }
+	if (SmoothMinType == 1) {
+        return smin_pow(x, y, distance);
+    } 
+    return smin_exp(x, y, distance);
+}
+
+float smax(const float a, const float b, const float distance) {
+    return smin(a, b, -distance);
+}
+
+[numthreads(8,8,1)]
+void CSMain(uint3 id: SV_DispatchThreadID) {
+	// Draw circles
+	const float circleA = draw_circle(id, CircleARadius, float2(CircleACenterX, CircleACenterY));
+	const float circleB = draw_circle(id, CircleBRadius, float2(CircleBCenterX, CircleBCenterY));
+
+	float circle;
+	if (DoSmooth) {
+		if (DoSmoothMin) {
+			circle = smin(circleA, circleB, SmoothDistance);
+		} else {
+			circle = smax(circleA, circleB, SmoothDistance);
+		}
+	} else {
+		circle = max(circleA, circleB);
+	}
+
+	// CircleThreshold
+	if (circle > CircleThreshold) {
+        Result[id.xy] = CircleColor;
+    } else {
+        Result[id.xy] = BackgroundColor;
+    }
+	
+	// const float4 color = lerp(CircleColor, BackgroundColor, circle);
+ //    Result[id.xy] = float4(circle, circle, circle, 1);
+}
