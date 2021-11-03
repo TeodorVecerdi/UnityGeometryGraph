@@ -228,12 +228,12 @@ namespace GeometryGraph.Runtime.Curve {
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
-                    uvs.Add(float2_util.one);
-                    uvs.Add(float2.zero);
-                    uvs.Add(float2_util.up);
-                    uvs.Add(float2_util.one);
+                    uvs.Add(float2_util.zero);
                     uvs.Add(float2_util.right);
-                    uvs.Add(float2.zero);
+                    uvs.Add(float2_util.up);
+                    uvs.Add(float2_util.right);
+                    uvs.Add(float2_util.one);
+                    uvs.Add(float2_util.up);
                 }
             }
 
@@ -342,12 +342,12 @@ namespace GeometryGraph.Runtime.Curve {
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
-                    uvs.Add(float2.zero);
-                    uvs.Add(float2_util.up);
-                    uvs.Add(float2_util.one);
-                    uvs.Add(float2_util.one);
-                    uvs.Add(float2.zero);
                     uvs.Add(float2_util.right);
+                    uvs.Add(float2_util.up);
+                    uvs.Add(float2_util.zero);
+                    uvs.Add(float2_util.right);
+                    uvs.Add(float2_util.one);
+                    uvs.Add(float2_util.up);
                 }
 
             }
