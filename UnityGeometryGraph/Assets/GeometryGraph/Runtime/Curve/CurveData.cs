@@ -17,7 +17,10 @@ namespace GeometryGraph.Runtime.Curve {
 
         public CurveType Type => type;
         public int Points => points;
-        public bool IsClosed => isClosed;
+        public bool IsClosed {
+            get => isClosed;
+            internal set => isClosed = value;
+        }
         public IReadOnlyList<float3> Position => position;
         public IReadOnlyList<float3> Tangent => tangent;
         public IReadOnlyList<float3> Normal => normal;
