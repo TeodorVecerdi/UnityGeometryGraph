@@ -28,8 +28,10 @@ namespace GeometryGraph.Runtime.Data {
         }
 
         protected virtual int ComputeChildrenHashCode(Transform transform) {
-            // TODO: Write a better hashcode. Include transform data, childCount/child components.
-            // Currently it reacts only to adding/removing object and disabling/enabling objects
+            // TODO(#14): Write a better ComputeChildrenHashCode function for GameObjectProcessor.
+            // It should include things like transform data, childCount/child components.
+            // Currently it changes only if you add/remove objects or disable/enable objects
+            
             unchecked {
                 var hashCode = transform.gameObject.GetHashCode() * 137 + transform.gameObject.activeSelf.GetHashCode();
                 if (transform.childCount == 0) return hashCode;
