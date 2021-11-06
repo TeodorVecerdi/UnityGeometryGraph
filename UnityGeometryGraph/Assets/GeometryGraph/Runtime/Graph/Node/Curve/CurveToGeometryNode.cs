@@ -108,7 +108,7 @@ namespace GeometryGraph.Runtime.Graph {
             }
             DebugUtility.Log("Generated mesh with profile");
             
-            // TODO#(#11): Re-enable Curve-to-Geometry settings after implementing settings in Node UI 
+            // TODO(#11): Re-enable Curve-to-Geometry settings after implementing settings in Node UI 
             result = CurveToGeometry.WithProfile(source, profile, new CurveToGeometrySettings(closeCaps, false, false, false, rotationOffset, 0.0f));
         }
 

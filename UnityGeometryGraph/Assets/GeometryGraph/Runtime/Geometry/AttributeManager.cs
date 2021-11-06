@@ -128,7 +128,7 @@ namespace GeometryGraph.Runtime.Geometry {
             if (edgeAttributes.ContainsKey(name) && edgeAttributes[name].Type == type) return edgeAttributes[name];
             if (faceAttributes.ContainsKey(name) && faceAttributes[name].Type == type) return faceAttributes[name];
             if (faceCornerAttributes.ContainsKey(name) && faceCornerAttributes[name].Type == type) return faceCornerAttributes[name];
-            // note: Maybe I should do `else find any attribute with name and convert to type`
+            // NOTE: Maybe I should do `else find any attribute with name and convert to type`
             return null;
         }
         
@@ -141,7 +141,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
             };
             if (searchDict.ContainsKey(name)) return searchDict[name];
-            // note: Maybe I should do `else find any attribute with name and convert to domain`
+            // NOTE: Maybe I should do `else find any attribute with name and convert to domain`
             return null;
         }
         

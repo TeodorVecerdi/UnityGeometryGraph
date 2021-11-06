@@ -54,7 +54,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 var edge = (Edge) e.Clone();
                 edge.VertA += rhsVertexOffset;
                 edge.VertB += rhsVertexOffset;
-                // Note: SelfIndex is no longer used after edge duplicate detection, so there really isn't any point in updating it here
+                // NOTE: SelfIndex is no longer used after edge duplicate detection, so there really isn't any point in updating it here
                 edge.SelfIndex += rhsEdgeOffset;
                 edge.FaceA += rhsFaceOffset;
                 if(edge.FaceB != -1) edge.FaceB += rhsFaceOffset;

@@ -77,10 +77,10 @@ namespace GeometryGraph.Editor {
             base.BuildContextualMenu(evt);
             evt.menu.AppendSeparator();
             if (evt.target is Node || evt.target is StickyNote) {
-                // TODO: GROUP
+                // TODO/NOTE: GROUP
                 evt.menu.AppendAction("Group Selection %g", _ => { }, actionStatusCallback => DropdownMenuAction.Status.Disabled);
 
-                // TODO: UNGROUP
+                // TODO/NOTE: UNGROUP
                 evt.menu.AppendAction("Ungroup Selection %u", _ => { }, actionStatusCallback => DropdownMenuAction.Status.Disabled);
             }
 

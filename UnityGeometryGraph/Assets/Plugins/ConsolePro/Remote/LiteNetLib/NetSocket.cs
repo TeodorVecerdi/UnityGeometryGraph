@@ -177,7 +177,6 @@ namespace FlyingWormConsole3.LiteNetLib
             catch (SocketException ex)
             {
                 NetUtils.DebugWriteError("[B]Bind exception: {0}", ex.ToString());
-                //TODO: very temporary hack for iOS (Unity3D)
                 if (ex.SocketErrorCode == SocketError.AddressFamilyNotSupported)
                 {
                     return true;

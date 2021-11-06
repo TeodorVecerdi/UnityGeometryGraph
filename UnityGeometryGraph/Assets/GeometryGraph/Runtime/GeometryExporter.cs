@@ -54,7 +54,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 var face = geometry.Faces[faceIndex];
                 
                 // Get shared faces' indices, -1 if no adjacent face or if normal doesn't match
-                // TODO#(#12): Re-enable sharing vertices with adjacent quad-like faces
+                // TODO(#12): Re-enable sharing vertices with adjacent quad-like faces
                 // Disabled because UVs are not correct in some cases (GeometryExporter.cs)
                 var sharedA = -1; // GetSharedFace(faceIndex, face.EdgeA, faceNormal);
                 var sharedB = -1; // GetSharedFace(faceIndex, face.EdgeB, faceNormal);

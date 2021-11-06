@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Attribute {
         internal static IEnumerable ConvertDomain(GeometryData geometry, BaseAttribute sourceAttribute, AttributeDomain to) {
             if (sourceAttribute.Domain == AttributeDomain.Spline || to == AttributeDomain.Spline) {
                 Debug.LogWarning("Cannot convert from a Spline domain or into a Spline domain.");
-                // Note: I use .Yield() so I don't return the attribute itself, but an actual IEnumerable over the attribute values
+                // NOTE: I use .Yield() so I don't return the attribute itself, but an actual IEnumerable over the attribute values
                 // null turns the action into a NoOp
                 return sourceAttribute.Yield(null);
             }
@@ -55,7 +55,7 @@ namespace GeometryGraph.Runtime.Attribute {
         internal static IEnumerable<TValue> ConvertDomain<TAttribute, TValue>(GeometryData geometry, TAttribute sourceAttribute, AttributeDomain to) 
             where TAttribute : BaseAttribute 
         {
-            // TODO: Might be worth rewriting the non-generic implementation here just to be type-safe with the .Yield(null) calls. 
+            // NOTE: Might be worth rewriting the non-generic implementation here just to be type-safe with the .Yield(null) calls. 
             return (IEnumerable<TValue>)ConvertDomain(geometry, sourceAttribute, to);
         }
 
@@ -171,7 +171,7 @@ namespace GeometryGraph.Runtime.Attribute {
             };
         }
         
-        // Note: Maybe there is a better / more correct way to 'average' boolean values but idk
+        // NOTE: Maybe there is a better / more correct way to 'average' boolean values but idk
         private static bool Average(IEnumerable<bool> values) {
             var count = 0;
             return values.Count(b => {

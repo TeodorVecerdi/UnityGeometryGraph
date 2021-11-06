@@ -144,13 +144,13 @@ namespace GeometryGraph.Editor {
         private void OnKeyDown(KeyDownEvent evt) {
             if (evt.actionKey && evt.keyCode == KeyCode.G) {
                 if (graphView.selection.OfType<GraphElement>().Any()) {
-                    // TODO: GROUP
+                    // TODO/NOTE: GROUP
                 }
             }
 
             if (evt.actionKey && evt.keyCode == KeyCode.U) {
                 if (graphView.selection.OfType<GraphElement>().Any()) {
-                    // TODO: UNGROUP
+                    // TODO/NOTE: UNGROUP
                 }
             }
         }

@@ -378,7 +378,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 }
             }
             
-            // TODO: maybe add checks for FaceCorners having vert idx and face idx in range, and for Faces having FaceCorners in range
+            // TODO/NOTE: maybe add checks for FaceCorners having vert idx and face idx in range, and for Faces having FaceCorners in range
         }
     }
 }

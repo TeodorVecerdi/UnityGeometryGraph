@@ -65,7 +65,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public GeometryData Clone() {
-            // TODO: Should probably write a proper Clone method some time
+            // TODO/NOTE: Should probably write a proper Clone method some time
             var clone = GeometryData.Empty;
             GeometryData.Merge(clone, this);
             return clone;

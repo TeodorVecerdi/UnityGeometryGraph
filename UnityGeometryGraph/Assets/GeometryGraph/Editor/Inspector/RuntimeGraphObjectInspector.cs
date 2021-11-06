@@ -170,9 +170,9 @@ namespace GeometryGraph.Editor {
             }
 
             /*
-         TODO: This would work if you updated the Indices dictionary after deleting
-         TODO: Right now it's kind of a memory leak, as in if you delete a property,
-         TODO: it will remain in memory forever, or until clearing the cache.
+         //: This would work if you updated the Indices dictionary after deleting
+         //: Right now it's kind of a memory leak, as in if you delete a property,
+         //: it will remain in memory forever, or until clearing the cache.
         // Remove properties which no longer exist
         var keysToRemove = new List<string>();
         var checkDataKeys = currentData.CheckDataIndices.Keys;
