@@ -23,7 +23,7 @@ namespace GeometryGraph.Runtime {
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float wrap(float x, float min, float max) {
-            return ((x - min) % (max - min) + (max - min)) % (max - min) + min;
+            return fmod(x - min, max - min) + min;
         }
 
         public static float3 wrap(float3 a, float min, float max) {
