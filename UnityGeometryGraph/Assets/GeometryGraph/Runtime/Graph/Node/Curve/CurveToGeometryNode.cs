@@ -9,20 +9,25 @@ namespace GeometryGraph.Runtime.Graph {
         private CurveData source;
         private CurveData profile;
         private float rotationOffset;
-        private bool closeCaps;
+        private float incrementalRotationOffset;
         private GeometryData result;
+
+        private bool closeCaps;
+        private bool separateMaterialsForCaps;
+        private bool shadeSmooth;
+        private bool shadeSmoothCaps;
 
         public RuntimePort InputCurvePort { get; private set; }
         public RuntimePort ProfileCurvePort { get; private set; }
         public RuntimePort RotationOffsetPort { get; private set; }
-        public RuntimePort CloseCapsPort { get; private set; }
+        public RuntimePort IncrementalRotationOffsetPort { get; private set; }
         public RuntimePort ResultPort { get; private set; }
 
         public CurveToGeometryNode(string guid) : base(guid) {
             InputCurvePort = RuntimePort.Create(PortType.Curve, PortDirection.Input, this);
             ProfileCurvePort = RuntimePort.Create(PortType.Curve, PortDirection.Input, this);
             RotationOffsetPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
-            CloseCapsPort = RuntimePort.Create(PortType.Boolean, PortDirection.Input, this);
+            IncrementalRotationOffsetPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
             ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
 
@@ -33,9 +38,35 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(ResultPort);
         }
 
-        public void UpdateCloseCaps(bool newValue) {
-            if (newValue == closeCaps) return;
-            closeCaps = newValue;
+        public void UpdateIncrementalRotationOffset(float newValue) {
+            if (Math.Abs(newValue - incrementalRotationOffset) < Constants.FLOAT_TOLERANCE) return;
+            incrementalRotationOffset = newValue;
+            CalculateResult();
+            NotifyPortValueChanged(ResultPort);
+        }
+
+        public void UpdateBooleanSetting(bool newValue, CurveToGeometryNode_Which which) {
+            switch (which) {
+                case CurveToGeometryNode_Which.CloseCaps:
+                    if (closeCaps == newValue) return;
+                    closeCaps = newValue;
+                    break;
+                case CurveToGeometryNode_Which.SeparateMaterialsForCaps:
+                    if(separateMaterialsForCaps == newValue) return;
+                    separateMaterialsForCaps = newValue;
+                    break;
+                case CurveToGeometryNode_Which.ShadeSmoothCurve:
+                    if (shadeSmooth == newValue) return;
+                    shadeSmooth = newValue;
+                    break;
+                case CurveToGeometryNode_Which.ShadeSmoothCaps:
+                    if (shadeSmoothCaps == newValue) return;
+                    shadeSmoothCaps = newValue;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(which), which, null);
+            }
+            
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
@@ -68,16 +99,16 @@ namespace GeometryGraph.Runtime.Graph {
                 profile = GetValue(connection, CurveData.Empty).Clone();
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
-            } else if (port == CloseCapsPort) {
-                var newValue = GetValue(connection, closeCaps);
-                if (newValue == closeCaps) return;
-                closeCaps = newValue;
-                CalculateResult();
-                NotifyPortValueChanged(ResultPort);
             } else if (port == RotationOffsetPort) {
                 var newValue = GetValue(connection, rotationOffset);
                 if (Math.Abs(newValue - rotationOffset) < Constants.FLOAT_TOLERANCE) return;
                 rotationOffset = newValue;
+                CalculateResult();
+                NotifyPortValueChanged(ResultPort);
+            } else if (port == IncrementalRotationOffsetPort) {
+                var newValue = GetValue(connection, incrementalRotationOffset);
+                if (Math.Abs(newValue - incrementalRotationOffset) < Constants.FLOAT_TOLERANCE) return;
+                incrementalRotationOffset = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             }
@@ -108,8 +139,7 @@ namespace GeometryGraph.Runtime.Graph {
             }
             DebugUtility.Log("Generated mesh with profile");
             
-            // TODO(#11): Re-enable Curve-to-Geometry settings after implementing settings in Node UI 
-            result = CurveToGeometry.WithProfile(source, profile, new CurveToGeometrySettings(closeCaps, false, false, false, rotationOffset, 0.0f));
+            result = CurveToGeometry.WithProfile(source, profile, new CurveToGeometrySettings(closeCaps, separateMaterialsForCaps, shadeSmooth, shadeSmoothCaps, rotationOffset, incrementalRotationOffset));
         }
 
         public override string GetCustomData() {
@@ -124,6 +154,13 @@ namespace GeometryGraph.Runtime.Graph {
             rotationOffset = array.Value<float>(0);
             closeCaps = array.Value<int>(1) == 1;
             NotifyPortValueChanged(ResultPort);
+        }
+
+        public enum CurveToGeometryNode_Which {
+            CloseCaps = 0,
+            SeparateMaterialsForCaps = 1,
+            ShadeSmoothCurve = 2,
+            ShadeSmoothCaps = 3,
         }
     }
 }
