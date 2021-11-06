@@ -14,13 +14,12 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         public bool ShadeSmoothCaps;
         public float RotationOffset;
         public float IncrementalRotationOffset;
-        public bool FixIncrementalRotationEnds;
         
         public GeometryData Geometry;
 
         [Button]
         public void Generate() {
-            Geometry = CurveToGeometry.WithProfile(Curve.Curve, Profile.Curve, new CurveToGeometrySettings(CloseCaps, SeparateMaterialForCaps, ShadeSmoothCurve, ShadeSmoothCaps, RotationOffset, IncrementalRotationOffset, FixIncrementalRotationEnds));
+            Geometry = CurveToGeometry.WithProfile(Curve.Curve, Profile.Curve, new CurveToGeometrySettings(CloseCaps, SeparateMaterialForCaps, ShadeSmoothCurve, ShadeSmoothCaps, RotationOffset, IncrementalRotationOffset));
             Exporter.Export(Geometry);
         }
     }

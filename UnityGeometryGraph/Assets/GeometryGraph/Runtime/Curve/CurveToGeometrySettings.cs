@@ -8,16 +8,14 @@
 
         public float RotationOffset { get; }
         public float IncrementalRotationOffset { get; }
-        public bool FixIncrementalRotationEnds { get; }
 
-        public CurveToGeometrySettings(bool closeCaps, bool separateMaterialsForCaps, bool shadeSmoothCurve, bool shadeSmoothCaps, float rotationOffset, float incrementalRotationOffset, bool fixIncrementalRotationEnds) {
+        public CurveToGeometrySettings(bool closeCaps, bool separateMaterialsForCaps, bool shadeSmoothCurve, bool shadeSmoothCaps, float rotationOffset, float incrementalRotationOffset) {
             CloseCaps = closeCaps;
             SeparateMaterialsForCaps = separateMaterialsForCaps;
             ShadeSmoothCurve = shadeSmoothCurve;
             ShadeSmoothCaps = shadeSmoothCaps;
             RotationOffset = rotationOffset;
             IncrementalRotationOffset = incrementalRotationOffset;
-            FixIncrementalRotationEnds = fixIncrementalRotationEnds;
         }
     }
 }

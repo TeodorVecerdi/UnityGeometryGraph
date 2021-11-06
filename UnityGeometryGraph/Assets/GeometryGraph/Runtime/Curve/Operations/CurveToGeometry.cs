@@ -7,12 +7,18 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using UnityCommons;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace GeometryGraph.Runtime.Curve {
     internal static class CurveToGeometry {
         private static readonly HashSet<CurveType> closeCapsSupportedTypes = new() {
-            CurveType.Circle
+            CurveType.Circle,
+        };
+
+        private static readonly HashSet<CurveType> fixIncrementalRotationEndsSupportedTypes = new() {
+            CurveType.Circle,
         };
 
         // Returns a `GeometryData` object composed of only vertices and edges, representing the curve
@@ -112,7 +118,6 @@ namespace GeometryGraph.Runtime.Curve {
             
             float rotationOffset = settings.RotationOffset;
             float incrementalRotationOffset = settings.IncrementalRotationOffset;
-            incrementalRotationOffset = 0.0f; //debug: disable incremental rotation until I handle closed curves better
 
             // First iteration done outside of loop
             var current = Align(curve, profile, 0, rotationOffset);
@@ -266,7 +271,7 @@ namespace GeometryGraph.Runtime.Curve {
 
             if (curve.IsClosed) {
                 int edgeOffset = edges.Count;
-                
+
                 // Add edges for diagonals
                 for (var i = 0; i < middleEdgeCount; i++) {
                     int fromVertex = (i + 1).mod(profile.Points);
