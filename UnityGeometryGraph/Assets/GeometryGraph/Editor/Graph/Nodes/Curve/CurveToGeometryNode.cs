@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 using WhichBooleanSetting = GeometryGraph.Runtime.Graph.CurveToGeometryNode.CurveToGeometryNode_Which;
 
-namespace GeometryGraph.Editor.Curve {
+namespace GeometryGraph.Editor {
     [Title("Curve", "Curve To Geometry")]
     public class CurveToGeometryNode : AbstractNode<GeometryGraph.Runtime.Graph.CurveToGeometryNode> {
         private GraphFrameworkPort inputCurvePort;
