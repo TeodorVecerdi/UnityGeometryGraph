@@ -53,10 +53,12 @@ namespace GeometryGraph.Runtime.Geometry {
                 var faceNormal = normalAttr[faceIndex];
                 var face = geometry.Faces[faceIndex];
                 
-                // Get shared faces' indices, -1 if no adjacent face or if normal doesn't match 
-                var sharedA = GetSharedFace(faceIndex, face.EdgeA, faceNormal);
-                var sharedB = GetSharedFace(faceIndex, face.EdgeB, faceNormal);
-                var sharedC = GetSharedFace(faceIndex, face.EdgeC, faceNormal);
+                // Get shared faces' indices, -1 if no adjacent face or if normal doesn't match
+                // TODO#(#12): Re-enable sharing vertices with adjacent quad-like faces
+                // Disabled because UVs are not correct in some cases (GeometryExporter.cs)
+                var sharedA = -1; // GetSharedFace(faceIndex, face.EdgeA, faceNormal);
+                var sharedB = -1; // GetSharedFace(faceIndex, face.EdgeB, faceNormal);
+                var sharedC = -1; // GetSharedFace(faceIndex, face.EdgeC, faceNormal);
 
                 var normal0 = faceNormal;
                 var normal1 = faceNormal;
@@ -143,6 +145,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var eqNegZ = Math.Abs(faceNormal.z) > Constants.FLOAT_TOLERANCE && Math.Abs(faceNormal.z + calculatedNormal.z) < Constants.FLOAT_TOLERANCE;
 
             if (eqNegX || eqNegY || eqNegZ) {
+                Debug.Log("flipped face"); 
                 triangles[submesh].Add(t1);
                 triangles[submesh].Add(t0);
                 triangles[submesh].Add(t2);
@@ -225,6 +228,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var eqNegZ = Math.Abs(sharedFaceNormal.z) > Constants.FLOAT_TOLERANCE && Math.Abs(sharedFaceNormal.z + calculatedNormal.z) < Constants.FLOAT_TOLERANCE;
             
             if (eqNegX || eqNegY || eqNegZ) {
+                Debug.Log("flipped face");
                 triangles[submesh].Add(triangle1);
                 triangles[submesh].Add(triangle0);
                 triangles[submesh].Add(triangle2);
