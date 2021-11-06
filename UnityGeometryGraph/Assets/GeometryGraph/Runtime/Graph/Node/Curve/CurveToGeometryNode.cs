@@ -13,8 +13,8 @@ namespace GeometryGraph.Runtime.Graph {
         private GeometryData result;
 
         private bool closeCaps;
-        private bool separateMaterialsForCaps;
-        private bool shadeSmooth;
+        private bool separateMaterialForCaps;
+        private bool shadeSmoothCurve;
         private bool shadeSmoothCaps;
 
         public RuntimePort InputCurvePort { get; private set; }
@@ -51,13 +51,13 @@ namespace GeometryGraph.Runtime.Graph {
                     if (closeCaps == newValue) return;
                     closeCaps = newValue;
                     break;
-                case CurveToGeometryNode_Which.SeparateMaterialsForCaps:
-                    if(separateMaterialsForCaps == newValue) return;
-                    separateMaterialsForCaps = newValue;
+                case CurveToGeometryNode_Which.SeparateMaterialForCaps:
+                    if(separateMaterialForCaps == newValue) return;
+                    separateMaterialForCaps = newValue;
                     break;
                 case CurveToGeometryNode_Which.ShadeSmoothCurve:
-                    if (shadeSmooth == newValue) return;
-                    shadeSmooth = newValue;
+                    if (shadeSmoothCurve == newValue) return;
+                    shadeSmoothCurve = newValue;
                     break;
                 case CurveToGeometryNode_Which.ShadeSmoothCaps:
                     if (shadeSmoothCaps == newValue) return;
@@ -139,26 +139,35 @@ namespace GeometryGraph.Runtime.Graph {
             }
             DebugUtility.Log("Generated mesh with profile");
             
-            result = CurveToGeometry.WithProfile(source, profile, new CurveToGeometrySettings(closeCaps, separateMaterialsForCaps, shadeSmooth, shadeSmoothCaps, rotationOffset, incrementalRotationOffset));
+            result = CurveToGeometry.WithProfile(source, profile, new CurveToGeometrySettings(closeCaps, separateMaterialForCaps, shadeSmoothCurve, shadeSmoothCaps, rotationOffset, incrementalRotationOffset));
         }
 
         public override string GetCustomData() {
             return new JArray {
                 rotationOffset,
+                incrementalRotationOffset,
                 closeCaps ? 1 : 0,
+                separateMaterialForCaps ? 1 : 0,
+                shadeSmoothCurve ? 1 : 0,
+                shadeSmoothCaps ? 1 : 0
             }.ToString(Formatting.None);
         }
 
         public override void SetCustomData(string json) {
-            var array = JArray.Parse(json);
+            JArray array = JArray.Parse(json);
             rotationOffset = array.Value<float>(0);
-            closeCaps = array.Value<int>(1) == 1;
+            incrementalRotationOffset = array.Value<float>(1);
+            closeCaps = array.Value<int>(2) == 1;
+            separateMaterialForCaps = array.Value<int>(3) == 1;
+            shadeSmoothCurve = array.Value<int>(4) == 1;
+            shadeSmoothCaps = array.Value<int>(5) == 1;
+            
             NotifyPortValueChanged(ResultPort);
         }
 
         public enum CurveToGeometryNode_Which {
             CloseCaps = 0,
-            SeparateMaterialsForCaps = 1,
+            SeparateMaterialForCaps = 1,
             ShadeSmoothCurve = 2,
             ShadeSmoothCaps = 3,
         }

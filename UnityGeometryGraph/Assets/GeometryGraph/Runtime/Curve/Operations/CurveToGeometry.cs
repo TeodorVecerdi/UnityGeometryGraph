@@ -87,9 +87,9 @@ namespace GeometryGraph.Runtime.Curve {
             List<int> materialIndices;
             List<bool> shadeSmooth;
             int capsFaceCount = 2 * GetCapFaceCount(profile);
-            int submeshCount = closeCaps && settings.SeparateMaterialsForCaps ? 2 : 1;
+            int submeshCount = closeCaps && settings.SeparateMaterialForCaps ? 2 : 1;
             
-            if (closeCaps && settings.SeparateMaterialsForCaps) {
+            if (closeCaps && settings.SeparateMaterialForCaps) {
                 materialIndices = Enumerable.Repeat(0, faceCount - capsFaceCount).ToList();
                 for (var i = 0; i < capsFaceCount; i++) {
                     materialIndices.Add(1);

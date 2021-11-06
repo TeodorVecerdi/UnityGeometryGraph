@@ -30,8 +30,13 @@ namespace GeometryGraph.Runtime {
         public void Evaluate() {
             if(exporter == null) return;
             var evaluationResult = graph.Evaluate(sceneData);
-            exporter.Export(evaluationResult.GeometryData ?? GeometryData.Empty);
-            curveVisualizer.Load(evaluationResult.CurveData);
+            if (exporter != null) {
+                exporter.Export(evaluationResult.GeometryData ?? GeometryData.Empty);
+            }
+            
+            if (curveVisualizer != null) {
+                curveVisualizer.Load(evaluationResult.CurveData);
+            }
         }
 
         public void OnPropertiesChanged(int newPropertyHashCode) {
