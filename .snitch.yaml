@@ -5,6 +5,6 @@ title:
     - match: (.*) \*\}
       replace: $1
 keywords:
-  - TODO#
-  - FIXME#
-  - BUG#
+  - TODO
+  - FIXME
+  - BUG
