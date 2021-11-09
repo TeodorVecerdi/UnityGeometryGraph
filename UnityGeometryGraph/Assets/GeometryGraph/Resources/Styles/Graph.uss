@@ -34,12 +34,19 @@ BlackboardRow.property-GeometryCollection #expandButton {
     display: none;
 }
 
+.node.collapsed Toggle.unity-toggle,
+.node.collapsed ClampedIntegerField,
+.node.collapsed ClampedFloatField,
+.node.collapsed EnumField,
+.node.collapsed Vector3Field.port-backing-field,
+.node.collapsed EnumSelectionDropdown.enum-selection-dropdown,
+.node.collapsed EnumSelectionToggle.enum-selection-toggle {
+    display: none;
+}
+
 /* 
     Region: Enum Selection Dropdown
 */
-.node.collapsed EnumSelectionDropdown.enum-selection-dropdown {
-    display: none;
-}
 
 EnumSelectionDropdown.enum-selection-dropdown {
     flex-direction: row;
@@ -68,6 +75,7 @@ EnumSelectionDropdown.enum-selection-dropdown .enum-dropdown-button .arrow-down 
 /* 
     Region: Enum Selection Toggle
 */
+
 EnumSelectionToggle.enum-selection-toggle {
     flex-direction: row;
     padding: 3px;
