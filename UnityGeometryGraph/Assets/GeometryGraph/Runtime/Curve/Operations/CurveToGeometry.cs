@@ -385,10 +385,10 @@ namespace GeometryGraph.Runtime.Curve {
             }
 
             if (closeCaps) {
-                CloseCapsEnd(curve, current, edges, faces, ref fcIdx, faceNormals, vertexPositions, faceCorners, uvs);
+                CloseCapsEnd(curve, current, settings.CapUvType, edges, faces, ref fcIdx, faceNormals, vertexPositions, faceCorners, uvs);
 
                 current = Align(curve, profile, 0, settings.RotationOffset);
-                CloseCapsStart(curve, current, edges, faces, ref fcIdx, faceNormals, vertexPositions, faceCorners, uvs);
+                CloseCapsStart(curve, current, settings.CapUvType, edges, faces, ref fcIdx, faceNormals, vertexPositions, faceCorners, uvs);
             } else if (!curve.IsClosed) {
                 for (var i = edges.Count - 1; i >= edges.Count - profileEdgeCount; i--) {
                     edges[i].FaceA = -1;
@@ -410,7 +410,12 @@ namespace GeometryGraph.Runtime.Curve {
             return new GeometryData(edges, faces, faceCorners, submeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth, creases, uvs);
         }
 
-        private static void CloseCapsStart(CurveData curve, CurveData profile, List<GeometryData.Edge> edges, List<GeometryData.Face> faces, ref int fcIdx, List<float3> faceNormals, List<float3> vertexPositions, List<GeometryData.FaceCorner> faceCorners, List<float2> uvs) {
+        private static void CloseCapsStart(
+            CurveData curve, CurveData profile, CurveToGeometrySettings.CapUVType uvType, 
+            List<GeometryData.Edge> edges, List<GeometryData.Face> faces, 
+            ref int fcIdx, 
+            List<float3> faceNormals, List<float3> vertexPositions, List<GeometryData.FaceCorner> faceCorners, List<float2> uvs
+        ) {
             int currentEdgeOffset = edges.Count;
             int currentFaceOffset = faces.Count;
 
@@ -423,10 +428,34 @@ namespace GeometryGraph.Runtime.Curve {
             }
             
             var vertexUVs = new List<float2>();
+            float2 minUV = new float2(float.MaxValue, float.MaxValue);
+            float2 maxUV = new float2(float.MinValue, float.MinValue);
             for (var i = 0; i < profile.Points; i++) {
                 float uvX = math.dot(profile.Position[i], curve.Normal[0]); // right vector
                 float uvY = math.dot(profile.Position[i], curve.Binormal[0]); // forward vector
-                vertexUVs.Add(new float2(uvX, uvY));
+                var uv = new float2(uvX, uvY);
+                vertexUVs.Add(uv);
+                
+                minUV = math.min(minUV, uv);
+                maxUV = math.max(maxUV, uv);
+            }
+
+            if (uvType != CurveToGeometrySettings.CapUVType.WorldSpace) {
+                for (var i = 0; i < vertexUVs.Count; i++) {
+                    switch (uvType) {
+                        case CurveToGeometrySettings.CapUVType.LocalSpace:
+                            float2 uv = vertexUVs[i];
+                            float2 normalizedUV = (uv - minUV) / (maxUV - minUV);
+                            uvs[i] = normalizedUV;
+                            break;
+                        case CurveToGeometrySettings.CapUVType.WorldSpaceAligned:
+                            uvs[i] -= minUV;
+                            break;
+                        case CurveToGeometrySettings.CapUVType.WorldSpace:
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(uvType), uvType, null);
+                    }
+                }
             }
 
             // First face
@@ -511,7 +540,7 @@ namespace GeometryGraph.Runtime.Curve {
         }
 
         private static void CloseCapsEnd(
-            CurveData curve, CurveData profile,
+            CurveData curve, CurveData profile, CurveToGeometrySettings.CapUVType uvType,
             List<GeometryData.Edge> edges, List<GeometryData.Face> faces,
             ref int fcIdx,
             List<float3> faceNormals, List<float3> vertexPositions, List<GeometryData.FaceCorner> faceCorners, List<float2> uvs
@@ -522,10 +551,34 @@ namespace GeometryGraph.Runtime.Curve {
             int edgeStart = edges.Count - profile.Points - profile.Points + 3;
             
             var vertexUVs = new List<float2>();
+            float2 minUV = new float2(float.MaxValue, float.MaxValue);
+            float2 maxUV = new float2(float.MinValue, float.MinValue);
             for (var i = 0; i < profile.Points; i++) {
                 float uvX = math.dot(profile.Position[i], -curve.Normal[curve.Points - 1]); // right vector
                 float uvY = math.dot(profile.Position[i], curve.Binormal[curve.Points - 1]); // forward vector
-                vertexUVs.Add(new float2(uvX, uvY));
+                var uv = new float2(uvX, uvY);
+                vertexUVs.Add(uv);
+                
+                minUV = math.min(minUV, uv);
+                maxUV = math.max(maxUV, uv);
+            }
+            
+            if (uvType != CurveToGeometrySettings.CapUVType.WorldSpace) {
+                for (var i = 0; i < vertexUVs.Count; i++) {
+                    switch (uvType) {
+                        case CurveToGeometrySettings.CapUVType.LocalSpace:
+                            float2 uv = vertexUVs[i];
+                            float2 normalizedUV = (uv - minUV) / (maxUV - minUV);
+                            uvs[i] = normalizedUV;
+                            break;
+                        case CurveToGeometrySettings.CapUVType.WorldSpaceAligned:
+                            uvs[i] -= minUV;
+                            break;
+                        case CurveToGeometrySettings.CapUVType.WorldSpace:
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(uvType), uvType, null);
+                    }
+                }
             }
             
             for (var i = 2; i <= profile.Points - 2; i++) {
