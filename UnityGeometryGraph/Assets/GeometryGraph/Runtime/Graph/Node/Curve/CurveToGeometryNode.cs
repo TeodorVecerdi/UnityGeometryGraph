@@ -16,6 +16,7 @@ namespace GeometryGraph.Runtime.Graph {
         private bool separateMaterialForCaps;
         private bool shadeSmoothCurve;
         private bool shadeSmoothCaps;
+        private CurveToGeometrySettings.CapUVType capUVType = CurveToGeometrySettings.CapUVType.WorldSpace;
 
         public RuntimePort InputCurvePort { get; private set; }
         public RuntimePort ProfileCurvePort { get; private set; }
@@ -67,6 +68,13 @@ namespace GeometryGraph.Runtime.Graph {
                     throw new ArgumentOutOfRangeException(nameof(which), which, null);
             }
             
+            CalculateResult();
+            NotifyPortValueChanged(ResultPort);
+        }
+        
+        public void UpdateCapUVType(CurveToGeometrySettings.CapUVType newValue) {
+            if (capUVType == newValue) return;
+            capUVType = newValue;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
@@ -139,7 +147,7 @@ namespace GeometryGraph.Runtime.Graph {
             }
             DebugUtility.Log("Generated mesh with profile");
             
-            result = CurveToGeometry.WithProfile(source, profile, new CurveToGeometrySettings(closeCaps, separateMaterialForCaps, shadeSmoothCurve, shadeSmoothCaps, rotationOffset, incrementalRotationOffset));
+            result = CurveToGeometry.WithProfile(source, profile, new CurveToGeometrySettings(closeCaps, separateMaterialForCaps, shadeSmoothCurve, shadeSmoothCaps, rotationOffset, incrementalRotationOffset, capUVType));
         }
 
         public override string GetCustomData() {
