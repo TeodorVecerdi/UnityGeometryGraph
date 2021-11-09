@@ -1,4 +1,6 @@
-﻿namespace GeometryGraph.Runtime.Curve {
+﻿using GeometryGraph.Runtime.Attributes;
+
+namespace GeometryGraph.Runtime.Curve {
     public readonly struct CurveToGeometrySettings {
         public bool CloseCaps { get; }
         public CapUVType CapUvType { get; }
@@ -28,7 +30,7 @@
             WorldSpace = 1,
             
             /// <summary>Same as <see cref="WorldSpace"/> but offset to start at 0,0</summary> 
-            WorldSpaceAligned = 2,
+            [DisplayName("Aligned")] WorldSpaceAligned = 2,
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using GeometryGraph.Runtime;
+using GeometryGraph.Runtime.Curve;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 using WhichBooleanSetting = GeometryGraph.Runtime.Graph.CurveToGeometryNode.CurveToGeometryNode_Which;
@@ -23,6 +26,15 @@ namespace GeometryGraph.Editor {
         private Toggle separateMaterialForCapsToggle;
         private Toggle shadeSmoothCurveToggle;
         private Toggle shadeSmoothCapsToggle;
+        private EnumSelectionDropdown<CurveToGeometrySettings.CapUVType> capUVTypeDropdown;
+        
+        private static readonly SelectionTree capUVTypeTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(CurveToGeometrySettings.CapUVType)).Convert(o => o))) {
+            new SelectionCategory("Cap UV Type", false, SelectionCategory.CategorySize.Medium) {
+                new SelectionEntry("Generate cap UVs in local space (relative to the cap)", 0, false),
+                new SelectionEntry("Generate cap UVs in world space", 1, false),
+                new SelectionEntry("Same as World Space but offset to start at 0,0", 2, false),
+            }
+        };
 
         private float rotationOffset;
         private float incrementalRotationOffset;
@@ -30,6 +42,7 @@ namespace GeometryGraph.Editor {
         private bool separateMaterialForCaps;
         private bool shadeSmoothCurve;
         private bool shadeSmoothCaps;
+        private CurveToGeometrySettings.CapUVType capUVType = CurveToGeometrySettings.CapUVType.WorldSpace;
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
@@ -59,28 +72,29 @@ namespace GeometryGraph.Editor {
             separateMaterialForCapsToggle = new Toggle("Separate Material for Caps");
             shadeSmoothCurveToggle = new Toggle("Shade Smooth");
             shadeSmoothCapsToggle = new Toggle("Shade Smooth Caps");
-            
+            capUVTypeDropdown = new EnumSelectionDropdown<CurveToGeometrySettings.CapUVType>(capUVType, capUVTypeTree, "Cap UVs");
+
             closeCapsToggle.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == closeCaps) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Toggle close caps");
                 closeCaps = evt.newValue;
                 RuntimeNode.UpdateBooleanSetting(closeCaps, WhichBooleanSetting.CloseCaps);
             });
-            
+
             separateMaterialForCapsToggle.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == separateMaterialForCaps) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Toggle separate material for caps");
                 separateMaterialForCaps = evt.newValue;
                 RuntimeNode.UpdateBooleanSetting(separateMaterialForCaps, WhichBooleanSetting.SeparateMaterialForCaps);
             });
-            
+
             shadeSmoothCurveToggle.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == shadeSmoothCurve) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Toggle shade smooth curve");
                 shadeSmoothCurve = evt.newValue;
                 RuntimeNode.UpdateBooleanSetting(shadeSmoothCurve, WhichBooleanSetting.ShadeSmoothCurve);
             });
-            
+
             shadeSmoothCapsToggle.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == shadeSmoothCaps) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Toggle shade smooth caps");
@@ -88,6 +102,14 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateBooleanSetting(shadeSmoothCaps, WhichBooleanSetting.ShadeSmoothCaps);
             });
             
+            capUVTypeDropdown.RegisterValueChangedCallback(evt => {
+                if (evt.newValue == capUVType) return;
+                
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cap UV type");
+                capUVType = evt.newValue;
+                RuntimeNode.UpdateCapUVType(capUVType);
+            });
+
             rotationOffsetPort.Add(rotationOffsetField);
             incrementalRotationOffsetPort.Add(incrementalRotationOffsetField);
             
@@ -97,6 +119,7 @@ namespace GeometryGraph.Editor {
             inputContainer.Add(separateMaterialForCapsToggle);
             inputContainer.Add(shadeSmoothCurveToggle);
             inputContainer.Add(shadeSmoothCapsToggle);
+            inputContainer.Add(capUVTypeDropdown);
             
             AddPort(inputCurvePort);
             AddPort(profileCurvePort);
@@ -109,20 +132,22 @@ namespace GeometryGraph.Editor {
             rotationOffsetPort.Show();
             incrementalRotationOffsetPort.Show();
             
-            closeCapsToggle.SetEnabled(true);
-            separateMaterialForCapsToggle.SetEnabled(true);
-            shadeSmoothCurveToggle.SetEnabled(true);
-            shadeSmoothCapsToggle.SetEnabled(true);
+            closeCapsToggle.RemoveFromClassList("d-none");
+            separateMaterialForCapsToggle.RemoveFromClassList("d-none");
+            shadeSmoothCurveToggle.RemoveFromClassList("d-none");
+            shadeSmoothCapsToggle.RemoveFromClassList("d-none");
+            capUVTypeDropdown.RemoveFromClassList("d-none");
         }
 
         private void OnProfileCurveDisconnected(Edge _1, GraphFrameworkPort _2) {
             rotationOffsetPort.HideAndDisconnect();
             incrementalRotationOffsetPort.HideAndDisconnect();
             
-            closeCapsToggle.SetEnabled(false);
-            separateMaterialForCapsToggle.SetEnabled(false);
-            shadeSmoothCurveToggle.SetEnabled(false);
-            shadeSmoothCapsToggle.SetEnabled(false);
+            closeCapsToggle.AddToClassList("d-none");
+            separateMaterialForCapsToggle.AddToClassList("d-none");
+            shadeSmoothCurveToggle.AddToClassList("d-none");
+            shadeSmoothCapsToggle.AddToClassList("d-none");
+            capUVTypeDropdown.AddToClassList("d-none");
         }
 
         public override void BindPorts() {
@@ -141,7 +166,8 @@ namespace GeometryGraph.Editor {
                 closeCaps ? 1 : 0,
                 separateMaterialForCaps ? 1 : 0,
                 shadeSmoothCurve ? 1 : 0,
-                shadeSmoothCaps ? 1 : 0
+                shadeSmoothCaps ? 1 : 0,
+                (int)capUVType
             };
             root["d"] = array;
             return root;
@@ -156,6 +182,7 @@ namespace GeometryGraph.Editor {
             separateMaterialForCaps = array.Value<int>(3) == 1;
             shadeSmoothCurve = array.Value<int>(4) == 1;
             shadeSmoothCaps = array.Value<int>(5) == 1;
+            capUVType = (CurveToGeometrySettings.CapUVType) array.Value<int>(6);
             
             rotationOffsetField.SetValueWithoutNotify(rotationOffset);
             incrementalRotationOffsetField.SetValueWithoutNotify(incrementalRotationOffset);
@@ -163,6 +190,7 @@ namespace GeometryGraph.Editor {
             separateMaterialForCapsToggle.SetValueWithoutNotify(separateMaterialForCaps);
             shadeSmoothCurveToggle.SetValueWithoutNotify(shadeSmoothCurve);
             shadeSmoothCapsToggle.SetValueWithoutNotify(shadeSmoothCaps);
+            capUVTypeDropdown.SetValueWithoutNotify(capUVType);
 
             RuntimeNode.UpdateRotationOffset(rotationOffset);
             RuntimeNode.UpdateIncrementalRotationOffset(incrementalRotationOffset);
@@ -170,6 +198,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateBooleanSetting(separateMaterialForCaps, WhichBooleanSetting.SeparateMaterialForCaps);
             RuntimeNode.UpdateBooleanSetting(shadeSmoothCurve, WhichBooleanSetting.ShadeSmoothCurve);
             RuntimeNode.UpdateBooleanSetting(shadeSmoothCaps, WhichBooleanSetting.ShadeSmoothCaps);
+            RuntimeNode.UpdateCapUVType(capUVType);
             
             base.SetNodeData(jsonData);
         }
