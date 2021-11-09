@@ -446,10 +446,10 @@ namespace GeometryGraph.Runtime.Curve {
                         case CurveToGeometrySettings.CapUVType.LocalSpace:
                             float2 uv = vertexUVs[i];
                             float2 normalizedUV = (uv - minUV) / (maxUV - minUV);
-                            uvs[i] = normalizedUV;
+                            vertexUVs[i] = normalizedUV;
                             break;
                         case CurveToGeometrySettings.CapUVType.WorldSpaceAligned:
-                            uvs[i] -= minUV;
+                            vertexUVs[i] -= minUV;
                             break;
                         case CurveToGeometrySettings.CapUVType.WorldSpace:
                         default:
@@ -569,10 +569,10 @@ namespace GeometryGraph.Runtime.Curve {
                         case CurveToGeometrySettings.CapUVType.LocalSpace:
                             float2 uv = vertexUVs[i];
                             float2 normalizedUV = (uv - minUV) / (maxUV - minUV);
-                            uvs[i] = normalizedUV;
+                            vertexUVs[i] = normalizedUV;
                             break;
                         case CurveToGeometrySettings.CapUVType.WorldSpaceAligned:
-                            uvs[i] -= minUV;
+                            vertexUVs[i] -= minUV;
                             break;
                         case CurveToGeometrySettings.CapUVType.WorldSpace:
                         default:
