@@ -157,7 +157,8 @@ namespace GeometryGraph.Runtime.Graph {
                 closeCaps ? 1 : 0,
                 separateMaterialForCaps ? 1 : 0,
                 shadeSmoothCurve ? 1 : 0,
-                shadeSmoothCaps ? 1 : 0
+                shadeSmoothCaps ? 1 : 0,
+                (int)capUVType
             }.ToString(Formatting.None);
         }
 
@@ -169,6 +170,7 @@ namespace GeometryGraph.Runtime.Graph {
             separateMaterialForCaps = array.Value<int>(3) == 1;
             shadeSmoothCurve = array.Value<int>(4) == 1;
             shadeSmoothCaps = array.Value<int>(5) == 1;
+            capUVType = (CurveToGeometrySettings.CapUVType)array.Value<int>(6);
             
             NotifyPortValueChanged(ResultPort);
         }
