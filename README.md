@@ -1,2 +1,2 @@
 # Geometry Graph
-Recreation of the Geometry Nodes tool from Blender in Unity.
+Node-based tool for procedurally generating geometry in Unity
