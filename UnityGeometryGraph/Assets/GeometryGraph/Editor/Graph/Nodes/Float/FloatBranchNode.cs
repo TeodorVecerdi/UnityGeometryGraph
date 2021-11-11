@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.ClampFloatNode.ClampFloatNode_Which;
 
 namespace GeometryGraph.Editor {
     [Title("Float", "Branch")]
