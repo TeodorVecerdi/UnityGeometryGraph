@@ -1,3 +1,6 @@
 [submodule "UnityGeometryGraph/Assets/Plugins/UnityCommons"]
 	path = UnityGeometryGraph/Assets/Plugins/UnityCommons
 	url = https://github.com/TeodorVecerdi/UnityCommons
+[submodule "CodeGenerator"]
+	path = CodeGenerator
+	url = https://github.com/TeodorVecerdi/UnityGeometryGraph-CodeGen
