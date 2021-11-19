@@ -63,6 +63,12 @@ namespace GeometryGraph.Runtime.Attributes {
         /// By default, the port name is the name of the property + "Port"
         /// </summary>
         public string PortName { get; set; }
+        
+        /// <summary>
+        /// Overrides the default value used when getting a new value.<br/>
+        /// By default, the default value is the value of the property.
+        /// </summary>
+        public string DefaultValue { get; set; }
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
