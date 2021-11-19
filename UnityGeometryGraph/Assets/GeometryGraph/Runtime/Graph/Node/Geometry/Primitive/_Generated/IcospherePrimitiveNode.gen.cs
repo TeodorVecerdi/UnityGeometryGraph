@@ -7,13 +7,13 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 
-using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Geometry;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using Unity.Mathematics;
 using UnityCommons;
 

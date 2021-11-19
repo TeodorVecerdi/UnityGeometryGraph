@@ -7,11 +7,11 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 
-using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Geometry;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using Unity.Mathematics;
 using UnityCommons;
 

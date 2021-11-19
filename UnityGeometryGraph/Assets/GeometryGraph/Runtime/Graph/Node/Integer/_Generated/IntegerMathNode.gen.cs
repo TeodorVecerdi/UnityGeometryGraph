@@ -7,10 +7,10 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 
-using System;
+using GeometryGraph.Runtime.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using GeometryGraph.Runtime.Attributes;
+using System;
 
 namespace GeometryGraph.Runtime.Graph {
     [SourceClass("GeometryGraph.Runtime::GeometryGraph.Runtime.Graph::IntegerMathNode")]

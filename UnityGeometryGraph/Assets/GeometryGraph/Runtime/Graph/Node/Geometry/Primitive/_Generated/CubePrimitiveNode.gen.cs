@@ -7,13 +7,12 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 
-using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Geometry;
-using Unity.Mathematics;
 using GeometryGraph.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
     [SourceClass("GeometryGraph.Runtime::GeometryGraph.Runtime.Graph::CubePrimitiveNode")]

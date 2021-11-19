@@ -7,11 +7,11 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 
-using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using GeometryGraph.Runtime.Attributes;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 
 namespace GeometryGraph.Runtime.Graph {
     [SourceClass("GeometryGraph.Runtime::GeometryGraph.Runtime.Graph::CompareFloatNode")]

@@ -7,15 +7,15 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 
-using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Geometry;
+using GeometryGraph.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using Unity.Mathematics;
 using UnityEngine;
-using GeometryGraph.Runtime.Serialization;
 
 namespace GeometryGraph.Runtime.Graph {
     [SourceClass("GeometryGraph.Runtime::GeometryGraph.Runtime.Graph::TranslatePointNode")]

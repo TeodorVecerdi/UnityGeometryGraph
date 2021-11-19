@@ -7,12 +7,12 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 
-using System;
+using GeometryGraph.Runtime.Attributes;
+using GeometryGraph.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using GeometryGraph.Runtime.Attributes;
+using System;
 using Unity.Mathematics;
-using GeometryGraph.Runtime.Serialization;
 
 namespace GeometryGraph.Runtime.Graph {
     [SourceClass("GeometryGraph.Runtime::GeometryGraph.Runtime.Graph::VectorMathNode")]
