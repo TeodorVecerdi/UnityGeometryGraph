@@ -21,7 +21,7 @@ namespace GeometryGraph.Editor {
         }
         
         public override void BindPorts() {
-            BindPort(aPort, RuntimeNode.APort);
+            BindPort(aPort, RuntimeNode.InputPort);
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
     }

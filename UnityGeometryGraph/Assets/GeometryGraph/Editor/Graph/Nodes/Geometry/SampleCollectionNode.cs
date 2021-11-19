@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.SampleCollectionNode.SampleCollectionNode_Which;
 using SampleType = GeometryGraph.Runtime.Graph.SampleCollectionNode.SampleCollectionNode_SampleType;
 
 namespace GeometryGraph.Editor {
@@ -38,8 +37,8 @@ namespace GeometryGraph.Editor {
             Initialize("Sample Collection");
 
             collectionPort = GraphFrameworkPort.Create("Collection", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Collection, edgeConnectorListener, this);
-            (indexPort, indexField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Index", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(index, Which.Index));
-            (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(seed, Which.Seed));
+            (indexPort, indexField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Index", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateIndex(index));
+            (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateSeed(seed));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             sampleTypeDropdown = new EnumSelectionDropdown<SampleType>(sampleType, tree);
@@ -55,14 +54,14 @@ namespace GeometryGraph.Editor {
                 if (evt.newValue == index) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change collection sample index");
                 index = evt.newValue;
-                RuntimeNode.UpdateValue(index, Which.Index);
+                RuntimeNode.UpdateIndex(index);
             });
             
             seedField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == seed) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change collection sample seed");
                 seed = evt.newValue;
-                RuntimeNode.UpdateValue(seed, Which.Seed);
+                RuntimeNode.UpdateSeed(seed);
             });
 
             indexPort.Add(indexField);
@@ -115,8 +114,8 @@ namespace GeometryGraph.Editor {
             seedField.SetValueWithoutNotify(seed);
             sampleTypeDropdown.SetValueWithoutNotify(sampleType);
             
-            RuntimeNode.UpdateValue(index, Which.Index);
-            RuntimeNode.UpdateValue(seed, Which.Seed);
+            RuntimeNode.UpdateIndex(index);
+            RuntimeNode.UpdateSeed(seed);
             RuntimeNode.UpdateSampleType(sampleType);
             
             OnSampleTypeChanged();

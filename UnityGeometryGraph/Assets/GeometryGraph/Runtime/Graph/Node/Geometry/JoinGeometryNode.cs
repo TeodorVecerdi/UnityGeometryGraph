@@ -1,34 +1,29 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Geometry;
+using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class JoinGeometryNode : RuntimeNode {
-        private GeometryData result;
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    public partial class JoinGeometryNode {
+        [In(
+            UpdatedFromEditorNode = false,
+            PortName = "InputPort",
+            UpdateValueCode = "",
+            GetValueCode = ""
+        ), UsedImplicitly]
+        public GeometryData Input { get; private set; }
 
-        public RuntimePort APort { get; private set; }
-        public RuntimePort ResultPort { get; private set; }
+        [Out] public GeometryData Result { get; private set; }
 
-        public JoinGeometryNode(string guid) : base(guid) {
-            APort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            if (port != ResultPort) return null;
-            CalculateResult();
-            return result;
-        }
-
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            NotifyPortValueChanged(ResultPort);
-        }
-        
+        [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
-            var values = GetValues(APort, GeometryData.Empty).ToList();
-            result = GeometryData.Empty;
-            foreach (var geometryData in values) {
+            List<GeometryData> values = GetValues(InputPort, GeometryData.Empty).ToList();
+            Result = GeometryData.Empty;
+            foreach (GeometryData geometryData in values) {
                 if (geometryData == null) continue;
-                result.MergeWith(geometryData);
+                Result.MergeWith(geometryData);
             }
         }
     }

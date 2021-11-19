@@ -1,97 +1,46 @@
-﻿using System;
+﻿using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Geometry;
-using GeometryGraph.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class TransformGeometryNode : RuntimeNode {
-        private GeometryData result;
-        private float3 defaultTranslation = float3.zero;
-        private float3 defaultRotation = float3.zero;
-        private float3 defaultScale = float3_ext.one;
-
-        public RuntimePort InputGeometryPort { get; private set; }
-        public RuntimePort TranslationPort { get; private set; }
-        public RuntimePort RotationPort { get; private set; }
-        public RuntimePort ScalePort { get; private set; }
-        public RuntimePort OutputGeometryPort { get; private set; }
-
-        public TransformGeometryNode(string guid) : base(guid) {
-            InputGeometryPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
-            
-            TranslationPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
-            RotationPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
-            ScalePort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
-            
-            OutputGeometryPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
-        }
-
-        public void UpdateDefaultValue(float3 value, WhichDefaultValue whichDefaultValue) {
-            switch (whichDefaultValue) {
-                case WhichDefaultValue.Translation: defaultTranslation = value; break;
-                case WhichDefaultValue.Rotation: defaultRotation = value; break;
-                case WhichDefaultValue.Scale: defaultScale = value; break;
-                default: throw new ArgumentOutOfRangeException(nameof(whichDefaultValue), whichDefaultValue, null);
-            }
-
-            NotifyPortValueChanged(OutputGeometryPort);
-        }
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    public partial class TransformGeometryNode {
+        [In(
+            UpdatedFromEditorNode = false,
+            DefaultValue = "GeometryData.Empty",
+            GetValueCode = "{self} = GetValue(connection, {default})",
+            UpdateValueCode = ""
+        )]
+        public GeometryData Input { get; private set; }
+        [In] public float3 Translation { get; private set; } = float3.zero;
+        [In] public float3 Rotation { get; private set; } = float3.zero;
+        [In] public float3 Scale { get; private set; } = float3_ext.one;
+        [Out] public GeometryData Result { get; private set; }
 
         protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
-            if (port != InputGeometryPort) return;
-            result = GeometryData.Empty;
+            if (port != InputPort) return;
+            Input = GeometryData.Empty;
+            Result = GeometryData.Empty;
         }
 
-        protected override object GetValueForPort(RuntimePort port) {
-            if (port != OutputGeometryPort) return null;
-            CalculateResult();
-            return result;
-        }
-
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            NotifyPortValueChanged(OutputGeometryPort);
-        }
-        
+        [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
-            var translation = GetValue(TranslationPort, defaultTranslation);
-            var rotation = GetValue(RotationPort, defaultRotation);
-            var scale = GetValue(ScalePort, defaultScale);
+            var translation = GetValue(TranslationPort, Translation);
+            var rotation = GetValue(RotationPort, Rotation);
+            var scale = GetValue(ScalePort, Scale);
             var rotQuaternion = quaternion.Euler(math.radians(rotation));
             var trs = float4x4.TRS(translation, rotQuaternion, scale);
             var trsNormal = float4x4.TRS(float3.zero, rotQuaternion, scale);
-            result = GetValue(InputGeometryPort, GeometryData.Empty).Clone();
-            
-            var positionAttribute = result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
+            Result = Input.Clone();
+
+            var positionAttribute = Result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             positionAttribute.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionAttribute);
-            var normalAttribute = result.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
+            var normalAttribute = Result.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
             normalAttribute.Yield(normal => math.normalize(math.mul(trsNormal, new float4(normal, 1.0f)).xyz)).Into(normalAttribute);
 
-            result.StoreAttribute(positionAttribute, AttributeDomain.Vertex);
-            result.StoreAttribute(normalAttribute, AttributeDomain.Face);
+            Result.StoreAttribute(positionAttribute, AttributeDomain.Vertex);
+            Result.StoreAttribute(normalAttribute, AttributeDomain.Face);
         }
-
-        public override string GetCustomData() {
-            var data = new JObject {
-                ["t"] = JsonConvert.SerializeObject(defaultTranslation, Formatting.None, float3Converter.Converter),
-                ["r"] = JsonConvert.SerializeObject(defaultRotation, Formatting.None, float3Converter.Converter),
-                ["s"] = JsonConvert.SerializeObject(defaultScale, Formatting.None, float3Converter.Converter),
-            };
-            return data.ToString(Formatting.None);
-        }
-
-        public override void SetCustomData(string json) {
-            if(string.IsNullOrEmpty(json)) return;
-            
-            var data = JObject.Parse(json);
-            defaultTranslation = JsonConvert.DeserializeObject<float3>(data.Value<string>("t")!, float3Converter.Converter);
-            defaultRotation = JsonConvert.DeserializeObject<float3>(data.Value<string>("r")!, float3Converter.Converter);
-            defaultScale = JsonConvert.DeserializeObject<float3>(data.Value<string>("s")!, float3Converter.Converter);
-            NotifyPortValueChanged(OutputGeometryPort);
-        }
-
-        public enum WhichDefaultValue {Translation = 0, Rotation = 1, Scale = 2}
     }
 }

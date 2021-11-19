@@ -1,54 +1,27 @@
-﻿using GeometryGraph.Runtime.Geometry;
+﻿using GeometryGraph.Runtime.Attributes;
+using GeometryGraph.Runtime.Geometry;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class BoundingBoxNode : RuntimeNode {
-        private GeometryData input = GeometryData.Empty;
-        
-        private GeometryData boundingBox;
-        private float3 min;
-        private float3 max;
-
-        public RuntimePort InputPort { get; private set; }
-        public RuntimePort MinPort { get; private set; }
-        public RuntimePort MaxPort { get; private set; }
-        public RuntimePort ResultPort { get; private set; }
-
-        public BoundingBoxNode(string guid) : base(guid) {
-            InputPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
-            MinPort = RuntimePort.Create(PortType.Vector, PortDirection.Output, this);
-            MaxPort = RuntimePort.Create(PortType.Vector, PortDirection.Output, this);
-            ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            if (port == MinPort) return min;
-            if (port == MaxPort) return max;
-            if (port == ResultPort) return boundingBox;
-            return null;
-        }
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GeneratorSettings(GenerateSerialization = false)]
+    public partial class BoundingBoxNode {
+        [In] public GeometryData Input { get; private set; } = GeometryData.Empty;
+        [Out] public GeometryData BoundingBox { get; private set; }
+        [Out] public float3 Min { get; private set; }
+        [Out] public float3 Max { get; private set; }
 
         protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
             if (port != InputPort) return;
-            input = GeometryData.Empty;
-            min = float3.zero;
-            max = float3.zero;
-            boundingBox = GeometryData.Empty;
-        }
-
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port != InputPort) return;
-
-            input = GetValue(connection, input);
-            
-            CalculateResult();
-            NotifyPortValueChanged(ResultPort);
-            NotifyPortValueChanged(MinPort);
-            NotifyPortValueChanged(MaxPort);
+            Input = GeometryData.Empty;
+            Min = float3.zero;
+            Max = float3.zero;
+            BoundingBox = GeometryData.Empty;
         }
         
+        [CalculatesAllProperties]
         private void CalculateResult() {
-            (min, max, boundingBox) = Geometry.Geometry.BoundingBox(input);
+            (Min, Max, BoundingBox) = Geometry.Geometry.BoundingBox(Input);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(minPort, RuntimeNode.MinPort);
             BindPort(maxPort, RuntimeNode.MaxPort);
-            BindPort(boundingBoxPort, RuntimeNode.ResultPort);
+            BindPort(boundingBoxPort, RuntimeNode.BoundingBoxPort);
         }
     }
 }
