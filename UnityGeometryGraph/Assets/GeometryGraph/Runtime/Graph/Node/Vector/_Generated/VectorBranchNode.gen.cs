@@ -9,7 +9,6 @@
 
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Serialization;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Unity.Mathematics;

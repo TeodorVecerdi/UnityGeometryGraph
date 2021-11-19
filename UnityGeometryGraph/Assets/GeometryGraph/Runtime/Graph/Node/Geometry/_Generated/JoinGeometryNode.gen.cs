@@ -9,7 +9,6 @@
 
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Geometry;
-using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Linq;
 
