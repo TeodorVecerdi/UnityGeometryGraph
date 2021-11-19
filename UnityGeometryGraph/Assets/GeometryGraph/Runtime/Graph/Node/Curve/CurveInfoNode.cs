@@ -1,44 +1,25 @@
-﻿using GeometryGraph.Runtime.Curve;
+﻿using GeometryGraph.Runtime.Attributes;
+using GeometryGraph.Runtime.Curve;
+using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class CurveInfoNode : RuntimeNode {
-        public RuntimePort InputCurvePort { get; private set; }
-        public RuntimePort PointsPort { get; private set; }
-        public RuntimePort IsClosedPort { get; private set; }
-
-        private CurveData curve;
+    [GenerateRuntimeNode]
+    [GeneratorSettings(GenerateSerialization = false, OutputPath = "_Generated")]
+    public partial class CurveInfoNode {
+        [In(
+            DefaultValue = "(CurveData)null",
+            GetValueCode = "{self} = GetValue(connection, {default})",
+            UpdateValueCode = ""
+        )]
+        public CurveData Curve { get; private set; }
         
-        public CurveInfoNode(string guid) : base(guid) {
-            InputCurvePort = RuntimePort.Create(PortType.Curve, PortDirection.Input, this);
-            PointsPort = RuntimePort.Create(PortType.Integer, PortDirection.Output, this);
-            IsClosedPort = RuntimePort.Create(PortType.Boolean, PortDirection.Output, this);
-        }
+        [Out] public int Points { get; private set; }
+        [Out] public bool IsClosed { get; private set; }
 
-        protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
-            if (port == InputCurvePort) {
-                curve = null;
-            }
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            if (port == PointsPort) {
-                return curve?.Points ?? 0;
-            } 
-            
-            if (port == IsClosedPort) {
-                return curve?.IsClosed ?? false;
-            } 
-         
-            return null;
-        }
-
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port == InputCurvePort) {
-                curve = GetValue(connection, (CurveData) null);
-                NotifyPortValueChanged(PointsPort);
-                NotifyPortValueChanged(IsClosedPort);
-            }
-        }
-
-        }
+        [GetterMethod(nameof(Points), Inline = true), UsedImplicitly] 
+        private int GetPoints() => Curve?.Points ?? 0;
+        
+        [GetterMethod(nameof(IsClosed), Inline = true), UsedImplicitly] 
+        private bool GetIsClosed() => Curve?.IsClosed ?? false;
+    }
 }

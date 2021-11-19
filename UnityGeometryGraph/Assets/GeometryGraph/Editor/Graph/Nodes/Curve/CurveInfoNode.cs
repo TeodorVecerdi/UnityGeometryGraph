@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void BindPorts() {
-            BindPort(inputCurvePort, RuntimeNode.InputCurvePort);
+            BindPort(inputCurvePort, RuntimeNode.CurvePort);
             BindPort(pointsPort, RuntimeNode.PointsPort);
             BindPort(isClosedPort, RuntimeNode.IsClosedPort);
         }

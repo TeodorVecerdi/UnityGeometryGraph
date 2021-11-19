@@ -103,12 +103,12 @@ namespace GeometryGraph.Editor {
         }
 
         public override void BindPorts() {
-            BindPort(inputCurvePort, RuntimeNode.InputCurvePort);
+            BindPort(inputCurvePort, RuntimeNode.InputPort);
             BindPort(translationPort, RuntimeNode.TranslationPort);
             BindPort(rotationPort, RuntimeNode.RotationPort);
             BindPort(scalePort, RuntimeNode.ScalePort);
             BindPort(isClosedPort, RuntimeNode.IsClosedPort);
-            BindPort(resultCurvePort, RuntimeNode.ResultCurvePort);
+            BindPort(resultCurvePort, RuntimeNode.ResultPort);
         }
 
         public override JObject GetNodeData() {

@@ -9,8 +9,6 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-using WhichBooleanSetting = GeometryGraph.Runtime.Graph.CurveToGeometryNode.CurveToGeometryNode_Which;
-
 namespace GeometryGraph.Editor {
     [Title("Curve", "Curve To Geometry")]
     public class CurveToGeometryNode : AbstractNode<GeometryGraph.Runtime.Graph.CurveToGeometryNode> {
@@ -78,28 +76,28 @@ namespace GeometryGraph.Editor {
                 if (evt.newValue == closeCaps) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Toggle close caps");
                 closeCaps = evt.newValue;
-                RuntimeNode.UpdateBooleanSetting(closeCaps, WhichBooleanSetting.CloseCaps);
+                RuntimeNode.UpdateCloseCaps(closeCaps);
             });
 
             separateMaterialForCapsToggle.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == separateMaterialForCaps) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Toggle separate material for caps");
                 separateMaterialForCaps = evt.newValue;
-                RuntimeNode.UpdateBooleanSetting(separateMaterialForCaps, WhichBooleanSetting.SeparateMaterialForCaps);
+                RuntimeNode.UpdateSeparateMaterialForCaps(separateMaterialForCaps);
             });
 
             shadeSmoothCurveToggle.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == shadeSmoothCurve) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Toggle shade smooth curve");
                 shadeSmoothCurve = evt.newValue;
-                RuntimeNode.UpdateBooleanSetting(shadeSmoothCurve, WhichBooleanSetting.ShadeSmoothCurve);
+                RuntimeNode.UpdateShadeSmoothCurve(shadeSmoothCurve);
             });
 
             shadeSmoothCapsToggle.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == shadeSmoothCaps) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Toggle shade smooth caps");
                 shadeSmoothCaps = evt.newValue;
-                RuntimeNode.UpdateBooleanSetting(shadeSmoothCaps, WhichBooleanSetting.ShadeSmoothCaps);
+                RuntimeNode.UpdateShadeSmoothCaps(shadeSmoothCaps);
             });
             
             capUVTypeDropdown.RegisterValueChangedCallback(evt => {
@@ -151,8 +149,8 @@ namespace GeometryGraph.Editor {
         }
 
         public override void BindPorts() {
-            BindPort(inputCurvePort, RuntimeNode.InputCurvePort);
-            BindPort(profileCurvePort, RuntimeNode.ProfileCurvePort);
+            BindPort(inputCurvePort, RuntimeNode.SourcePort);
+            BindPort(profileCurvePort, RuntimeNode.ProfilePort);
             BindPort(rotationOffsetPort, RuntimeNode.RotationOffsetPort);
             BindPort(incrementalRotationOffsetPort, RuntimeNode.IncrementalRotationOffsetPort);
             BindPort(resultPort, RuntimeNode.ResultPort);
@@ -194,10 +192,10 @@ namespace GeometryGraph.Editor {
 
             RuntimeNode.UpdateRotationOffset(rotationOffset);
             RuntimeNode.UpdateIncrementalRotationOffset(incrementalRotationOffset);
-            RuntimeNode.UpdateBooleanSetting(closeCaps, WhichBooleanSetting.CloseCaps);
-            RuntimeNode.UpdateBooleanSetting(separateMaterialForCaps, WhichBooleanSetting.SeparateMaterialForCaps);
-            RuntimeNode.UpdateBooleanSetting(shadeSmoothCurve, WhichBooleanSetting.ShadeSmoothCurve);
-            RuntimeNode.UpdateBooleanSetting(shadeSmoothCaps, WhichBooleanSetting.ShadeSmoothCaps);
+            RuntimeNode.UpdateCloseCaps(closeCaps);
+            RuntimeNode.UpdateSeparateMaterialForCaps(separateMaterialForCaps);
+            RuntimeNode.UpdateShadeSmoothCurve(shadeSmoothCurve);
+            RuntimeNode.UpdateShadeSmoothCaps(shadeSmoothCaps);
             RuntimeNode.UpdateCapUVType(capUVType);
             
             base.SetNodeData(jsonData);
