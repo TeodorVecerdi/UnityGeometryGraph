@@ -3,18 +3,26 @@
 namespace GeometryGraph.Runtime.Attributes {
     [AttributeUsage(AttributeTargets.Class)]
     public class GenerateRuntimeNodeAttribute: Attribute {
-        /// <summary>
-        /// Specifies where the generated file should be placed relative to the original file.
-        /// </summary>
-        public string OutputPath { get; set; }
     }
     
     [AttributeUsage(AttributeTargets.Class)]
     public class GeneratorSettingsAttribute: Attribute {
         /// <summary>
-        /// Whether to generate serialization and deserialization methods.<br/>Default: <c>true</c>
+        /// Specifies where the generated file should be placed relative to the original file.
+        /// </summary>
+        public string OutputPath { get; set; }
+        
+        /// <summary>
+        /// Whether to generate serialization and deserialization methods.<br/>
+        /// Default: <c>true</c>
         /// </summary>
         public bool GenerateSerialization { get; set; } = true;
+        
+        /// <summary>
+        /// Whether to run the calculate methods during deserialization.<br/>
+        /// Default: <c>true</c>
+        /// </summary>
+        public bool CalculateDuringDeserialization { get; set; } = true;
     }
 
     [AttributeUsage(AttributeTargets.Class)]

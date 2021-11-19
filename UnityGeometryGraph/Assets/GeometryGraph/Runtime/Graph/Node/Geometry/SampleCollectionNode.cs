@@ -6,7 +6,8 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     [AdditionalUsingStatements("System.Linq")]
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class SampleCollectionNode {
         [In(
             UpdatedFromEditorNode = false, 

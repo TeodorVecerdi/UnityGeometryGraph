@@ -2,7 +2,8 @@
 using GeometryGraph.Runtime.Attributes;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class IntegerMathNode {
         [In] public int X { get; private set; }
         [In] public int Y { get; private set; }

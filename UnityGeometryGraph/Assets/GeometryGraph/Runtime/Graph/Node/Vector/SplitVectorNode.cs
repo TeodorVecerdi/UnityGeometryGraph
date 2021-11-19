@@ -3,7 +3,8 @@ using JetBrains.Annotations;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class SplitVectorNode {
         [In(GenerateEquality = false)] public float3 Vector { get; private set; }
         [Out] public float X { get; private set; }

@@ -3,8 +3,8 @@ using GeometryGraph.Runtime.Geometry;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
-    [GeneratorSettings(GenerateSerialization = false)]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated", GenerateSerialization = false)]
     public partial class BoundingBoxNode {
         [In] public GeometryData Input { get; private set; } = GeometryData.Empty;
         [Out] public GeometryData BoundingBox { get; private set; }

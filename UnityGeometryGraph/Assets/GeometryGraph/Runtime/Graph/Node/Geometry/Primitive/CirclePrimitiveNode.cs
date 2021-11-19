@@ -3,7 +3,8 @@ using GeometryGraph.Runtime.Geometry;
 
 namespace GeometryGraph.Runtime.Graph {
     [AdditionalUsingStatements("UnityCommons")]
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class CirclePrimitiveNode {
         [AdditionalValueChangedCode("{other} = {other}.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
         [In] public float Radius { get; private set; } = 1.0f;

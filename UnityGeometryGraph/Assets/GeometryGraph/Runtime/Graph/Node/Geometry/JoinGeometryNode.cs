@@ -5,7 +5,8 @@ using GeometryGraph.Runtime.Geometry;
 using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class JoinGeometryNode {
         [In(
             UpdatedFromEditorNode = false,

@@ -5,7 +5,8 @@ using JetBrains.Annotations;
 using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class MapRangeFloatNode {
         [Setting] public bool Clamp { get; private set; }
         [In] public float Value { get; private set; }

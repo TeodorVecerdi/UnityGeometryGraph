@@ -2,7 +2,8 @@
 using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class FloatValueNode{
         [Setting] public float Value { get; private set; }
         [Out(PortName = "ValuePort")] public float Result { get; private set; }

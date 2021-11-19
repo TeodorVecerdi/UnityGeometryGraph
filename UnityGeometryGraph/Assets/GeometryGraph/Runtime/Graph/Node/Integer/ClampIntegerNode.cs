@@ -3,7 +3,8 @@ using JetBrains.Annotations;
 using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class ClampIntegerNode {
         [In] public int Input {get; private set; }
         [In] public int Min {get; private set; } = 0;

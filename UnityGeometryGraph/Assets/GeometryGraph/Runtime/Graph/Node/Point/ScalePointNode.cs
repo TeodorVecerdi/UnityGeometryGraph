@@ -5,7 +5,8 @@ using Unity.Mathematics;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class ScalePointNode {
         [In] public GeometryData Input { get; private set; }
         [In] public float3 Vector { get; private set; }

@@ -3,7 +3,8 @@ using GeometryGraph.Runtime.Attributes;
 using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class BooleanMathNode {
         [In] public bool A { get; private set; }
         [In] public bool B { get; private set; }

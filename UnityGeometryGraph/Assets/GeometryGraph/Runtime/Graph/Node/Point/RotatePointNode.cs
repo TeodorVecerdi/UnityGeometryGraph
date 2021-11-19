@@ -5,7 +5,8 @@ using GeometryGraph.Runtime.Geometry;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class RotatePointNode {
         [In] public GeometryData Input { get; private set; }
         [In] public float3 Rotation { get; private set; }

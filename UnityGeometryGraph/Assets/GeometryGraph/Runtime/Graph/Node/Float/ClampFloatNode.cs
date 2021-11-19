@@ -3,7 +3,8 @@ using JetBrains.Annotations;
 using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    [GenerateRuntimeNode]
+    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class ClampFloatNode {
         [In] public float Input { get; private set; }
         [In] public float Min { get; private set; } = 0.0f;
