@@ -55,14 +55,6 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(OutputGeometryPort);
         }
         
-        public override void RebindPorts() {
-            InputGeometryPort = Ports[0];
-            TranslationPort = Ports[1];
-            RotationPort = Ports[2];
-            ScalePort = Ports[3];
-            OutputGeometryPort = Ports[4];
-        }
-
         private void CalculateResult() {
             var translation = GetValue(TranslationPort, defaultTranslation);
             var rotation = GetValue(RotationPort, defaultRotation);

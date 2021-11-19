@@ -22,10 +22,6 @@ namespace GeometryGraph.Runtime.Graph {
             return port == ValuePort ? value : float3.zero;
         }
         
-        public override void RebindPorts() {
-            ValuePort = Ports[0];
-        }
-
         public override string GetCustomData() {
             var data = new JObject {
                 ["v"] = JsonConvert.SerializeObject(value, float3Converter.Converter)

@@ -72,13 +72,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            CollectionPort = Ports[0];
-            IndexPort = Ports[1];
-            SeedPort = Ports[2];
-            ResultPort = Ports[3];
-        }
-
         private void CalculateResult() {
             if (collection == null || collection.Count == 0) {
                 result = GeometryData.Empty;

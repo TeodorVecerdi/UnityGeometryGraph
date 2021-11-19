@@ -78,12 +78,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            RadiusPort = Ports[0];
-            SubdivisionsPort = Ports[1];
-            ResultPort = Ports[2];
-        }
-
         private void CalculateResult() {
             DebugUtility.Log($"Calculating result with Radius:`{radius}` Subdiv:`{subdivisions}`");
 

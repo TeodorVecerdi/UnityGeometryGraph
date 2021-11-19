@@ -91,14 +91,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            InputPort = Ports[0];
-            VectorPort = Ports[1];
-            ScalarPort = Ports[2];
-            AttributePort = Ports[3];
-            ResultPort = Ports[4];
-        }
-
         public void Calculate() {
             if (geometry == null) return;
             result = geometry.Clone();

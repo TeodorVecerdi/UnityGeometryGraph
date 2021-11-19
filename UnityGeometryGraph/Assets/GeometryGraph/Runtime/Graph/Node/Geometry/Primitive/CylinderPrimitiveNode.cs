@@ -79,14 +79,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            BottomRadiusPort = Ports[0];
-            TopRadiusPort = Ports[1];
-            HeightPort = Ports[2];
-            PointsPort = Ports[3];
-            ResultPort = Ports[4];
-        }
-
         private void CalculateResult() {
             result = GeometryPrimitive.Cylinder(bottomRadius, topRadius, height, points);
         }

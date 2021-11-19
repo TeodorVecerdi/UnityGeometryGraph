@@ -17,10 +17,6 @@ namespace GeometryGraph.Runtime.Graph {
             Port = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
         
-        public override void RebindPorts() {
-            Port = Ports[0];
-        }
-
         protected override object GetValueForPort(RuntimePort port) {
             GeometryObject objectValue = null;
             var value = Property?.Value;

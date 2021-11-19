@@ -47,13 +47,6 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(MaxPort);
         }
         
-        public override void RebindPorts() {
-            InputPort = Ports[0];
-            MinPort = Ports[1];
-            MaxPort = Ports[2];
-            ResultPort = Ports[3];
-        }
-
         private void CalculateResult() {
             (min, max, boundingBox) = Geometry.Geometry.BoundingBox(input);
         }

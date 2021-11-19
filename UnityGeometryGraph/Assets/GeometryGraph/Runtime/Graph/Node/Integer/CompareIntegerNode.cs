@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class CompareIntegerNode : RuntimeNode {
+    public partial class CompareIntegerNode : RuntimeNode {
         private CompareIntegerNode_CompareOperation operation;
         private int a;
         private int b;
@@ -65,12 +65,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            APort = Ports[0];
-            BPort = Ports[1];
-            ResultPort = Ports[2];
-        }
-
         public override string GetCustomData() {
             var data = new JObject {
                 ["o"] = (int)operation,

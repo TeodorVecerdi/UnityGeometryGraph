@@ -142,8 +142,5 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(ResultPort);
         }
         
-        public override void RebindPorts() {
-            throw new System.NotImplementedException();
         }
-    }
 }

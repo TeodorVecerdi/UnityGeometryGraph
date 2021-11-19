@@ -61,12 +61,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            RadiusPort = Ports[0];
-            PointsPort = Ports[1];
-            ResultPort = Ports[2];
-        }
-
         private void CalculateResult() {
             DebugUtility.Log("Calculated result");
             result = GeometryPrimitive.Circle(radius, points);

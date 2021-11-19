@@ -27,10 +27,6 @@ namespace GeometryGraph.Runtime.Graph {
             return objectValue == null ? (IEnumerable<GeometryData>)Array.Empty<GeometryData>() : (IEnumerable<GeometryData>)objectValue.Collection.Select(data => data.Clone());
         }
         
-        public override void RebindPorts() {
-            Port = Ports[0];
-        }
-
         public override string GetCustomData() {
             return new JObject {
                 ["p"] = Property?.Guid

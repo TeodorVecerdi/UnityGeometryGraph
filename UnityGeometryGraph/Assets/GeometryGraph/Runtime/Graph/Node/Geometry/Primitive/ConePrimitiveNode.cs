@@ -68,13 +68,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            RadiusPort = Ports[0];
-            HeightPort = Ports[1];
-            PointsPort = Ports[2];
-            ResultPort = Ports[3];
-        }
-
         private void CalculateResult() {
             result = GeometryPrimitive.Cone(radius, height, points);
         }

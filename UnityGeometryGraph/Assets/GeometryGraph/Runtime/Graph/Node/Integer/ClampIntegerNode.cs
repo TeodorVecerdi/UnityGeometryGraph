@@ -65,13 +65,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            InputPort = Ports[0];
-            MinPort = Ports[1];
-            MaxPort = Ports[2];
-            ResultPort = Ports[3];
-        }
-
         public override string GetCustomData() {
             var data = new JObject {
                 ["i"] = inputValue,

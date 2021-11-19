@@ -12,10 +12,6 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected abstract object GetValueForPort(RuntimePort port);
-        
-        // NOTE: This is probably not needed anymore since I fixed the desync issues.
-        // Regex to yeet out this function out of every class if needed: !! `public override void RebindPorts\(\) \{(([\n]*.*?)*)?\}[\n\s]*`
-        public abstract void RebindPorts();
 
         public virtual IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
             if (count <= 0) {

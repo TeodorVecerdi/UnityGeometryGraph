@@ -13,10 +13,6 @@ namespace GeometryGraph.Runtime.Graph {
             Port = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
         }
         
-        public override void RebindPorts() {
-            Port = Ports[0];
-        }
-
         protected override object GetValueForPort(RuntimePort port) {
             return Property.GetValueOrDefault<float>(Property, 0.0f);
         }

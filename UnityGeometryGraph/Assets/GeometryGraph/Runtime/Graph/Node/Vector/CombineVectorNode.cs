@@ -59,13 +59,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            XPort = Ports[0];
-            YPort = Ports[1];
-            ZPort = Ports[2];
-            ResultPort = Ports[3];
-        }
-
         public override string GetCustomData() {
             var data = new JObject {
                 ["v"] = JsonConvert.SerializeObject(vector, float3Converter.Converter),

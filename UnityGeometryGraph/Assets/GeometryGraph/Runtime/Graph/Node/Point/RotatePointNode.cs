@@ -150,17 +150,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            InputPort = Ports[0];
-            RotationPort = Ports[1];
-            AxisPort = Ports[2];
-            AnglePort = Ports[3];
-            RotationAttributePort = Ports[4];
-            AxisAttributePort = Ports[5];
-            AngleAttributePort = Ports[6];
-            ResultPort = Ports[7];
-        }
-
         public void Calculate() {
             if (geometry == null) return;
             result = geometry.Clone();

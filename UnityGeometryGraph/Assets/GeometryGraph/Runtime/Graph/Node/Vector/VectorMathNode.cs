@@ -179,17 +179,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
 
-        public override void RebindPorts() {
-            XPort = Ports[0];
-            YPort = Ports[1];
-            WrapMaxPort = Ports[2];
-            IorPort = Ports[3];
-            ScalePort = Ports[4];
-            DistancePort = Ports[5];
-            VectorResultPort = Ports[6];
-            FloatResultPort = Ports[7];
-        }
-
         public override string GetCustomData() {
             var data = new JObject {
                 ["o"] = (int)operation,

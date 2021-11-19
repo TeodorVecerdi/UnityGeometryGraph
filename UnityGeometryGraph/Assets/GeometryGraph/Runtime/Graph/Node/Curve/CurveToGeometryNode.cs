@@ -122,10 +122,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
 
-        public override void RebindPorts() {
-            throw new NotImplementedException();
-        }
-
         private void CalculateResult() {
             if (source is not { Type: not CurveType.None }) {
                 DebugUtility.Log("Source curve was null");

@@ -137,10 +137,6 @@ namespace GeometryGraph.Runtime.Graph {
             resultCurve = new CurveData(inputCurve.Type, inputCurve.Points, changeClosed ? isClosed : inputCurve.IsClosed, position, tangent, normal, binormal);
         }
 
-        public override void RebindPorts() {
-            throw new System.NotImplementedException();
-        }
-
         public override string GetCustomData() {
             return new JArray {
                 JsonConvert.SerializeObject(translation, Formatting.None, float3Converter.Converter),

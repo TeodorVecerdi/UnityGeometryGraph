@@ -44,11 +44,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            SeedPort = Ports[0];
-            ValuePort = Ports[1];
-        }
-
         public override string GetCustomData() {
             var data = new JObject {
                 ["s"] = seed

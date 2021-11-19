@@ -67,12 +67,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            InputPort = Ports[0];
-            LevelsPort = Ports[1];
-            ResultPort = Ports[2];
-        }
-
         private void CalculateResult() {
             DebugUtility.Log("Calculate result");
             result = SimpleSubdivision.Subdivide(source, levels);

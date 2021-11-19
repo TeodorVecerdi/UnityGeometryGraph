@@ -66,10 +66,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
 
-        public override void RebindPorts() {
-            throw new InvalidOperationException();
-        }
-
         public override string GetCustomData() {
             return new JArray {
                 condition ? 1 : 0,

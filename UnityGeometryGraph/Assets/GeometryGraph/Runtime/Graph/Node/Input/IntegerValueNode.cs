@@ -20,10 +20,6 @@ namespace GeometryGraph.Runtime.Graph {
             return port == ValuePort ? value : 0;
         }
         
-        public override void RebindPorts() {
-            ValuePort = Ports[0];
-        }
-
         public override string GetCustomData() {
             var data = new JObject {
                 ["v"] = value

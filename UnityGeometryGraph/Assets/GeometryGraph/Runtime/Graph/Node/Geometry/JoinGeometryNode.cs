@@ -23,11 +23,6 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(ResultPort);
         }
         
-        public override void RebindPorts() {
-            APort = Ports[0];
-            ResultPort = Ports[1];
-        }
-
         private void CalculateResult() {
             var values = GetValues(APort, GeometryData.Empty).ToList();
             result = GeometryData.Empty;

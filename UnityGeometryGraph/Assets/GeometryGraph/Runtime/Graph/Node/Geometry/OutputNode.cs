@@ -15,10 +15,6 @@ namespace GeometryGraph.Runtime.Graph {
             return null;
         }
 
-        public override void RebindPorts() {
-            GeometryPort = Ports[0];
-        }
-
         public CurveData GetDisplayCurve() {
             DebugUtility.Log("Getting display curve");
             var curve = GetValue(CurvePort, (CurveData) null);

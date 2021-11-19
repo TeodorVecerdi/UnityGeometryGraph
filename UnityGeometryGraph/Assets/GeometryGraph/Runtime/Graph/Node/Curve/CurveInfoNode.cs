@@ -40,8 +40,5 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
 
-        public override void RebindPorts() {
-            throw new System.NotImplementedException();
         }
-    }
 }

@@ -75,13 +75,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            TolerancePort = Ports[0];
-            APort = Ports[1];
-            BPort = Ports[2];
-            ResultPort = Ports[3];
-        }
-
         public override string GetCustomData() {
             var data = new JObject {
                 ["o"] = (int)operation,

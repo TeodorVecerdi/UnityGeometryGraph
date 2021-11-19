@@ -38,11 +38,6 @@ namespace GeometryGraph.Runtime.Graph {
             NotifyPortValueChanged(ResultPort);
         }
 
-        public override void RebindPorts() {
-            SizePort = Ports[0];
-            ResultPort = Ports[1];
-        }
-
         private void CalculateResult() {
             result = GeometryPrimitive.Cube(size);
         }

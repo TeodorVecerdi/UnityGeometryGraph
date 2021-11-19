@@ -89,15 +89,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            VectorPort = Ports[0];
-            CenterPort = Ports[1];
-            AxisPort = Ports[2];
-            EulerAnglesPort = Ports[3];
-            AnglePort = Ports[4];
-            ResultPort = Ports[5];
-        }
-
         public override string GetCustomData() {
             var data = new JObject {
                 ["t"] = (int)type,

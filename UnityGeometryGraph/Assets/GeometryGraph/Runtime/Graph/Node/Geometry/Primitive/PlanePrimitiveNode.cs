@@ -68,13 +68,6 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
         
-        public override void RebindPorts() {
-            WidthPort = Ports[0];
-            HeightPort = Ports[1];
-            SubdivisionsPort = Ports[2];
-            ResultPort = Ports[3];
-        }
-
         private void CalculateResult() {
             result = GeometryPrimitive.Plane(size, subdivisions);
         }
