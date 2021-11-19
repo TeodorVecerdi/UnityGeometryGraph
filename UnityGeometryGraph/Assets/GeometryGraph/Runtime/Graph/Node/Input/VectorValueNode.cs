@@ -1,38 +1,12 @@
-﻿using GeometryGraph.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using GeometryGraph.Runtime.Attributes;
+using JetBrains.Annotations;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class VectorValueNode : RuntimeNode {
-        private float3 value;
-
-        public RuntimePort ValuePort { get; private set; }
-
-        public VectorValueNode(string guid) : base(guid) {
-            ValuePort = RuntimePort.Create(PortType.Vector, PortDirection.Output, this);
-        }
-
-        public void UpdateValue(float3 newValue) {
-            value = newValue;
-            NotifyPortValueChanged(ValuePort);
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            return port == ValuePort ? value : float3.zero;
-        }
-        
-        public override string GetCustomData() {
-            var data = new JObject {
-                ["v"] = JsonConvert.SerializeObject(value, float3Converter.Converter)
-            };
-            return data.ToString(Formatting.None);
-        }
-
-        public override void SetCustomData(string json) {
-            var data = JObject.Parse(json);
-            value = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);
-            NotifyPortValueChanged(ValuePort);
-        }
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    public partial class VectorValueNode {
+        [Setting] public float3 Value { get; private set; }
+        [Out(PortName = "ValuePort")] public float3 Result { get; private set; }
+        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly] private float3 GetResult() => Value;
     }
 }

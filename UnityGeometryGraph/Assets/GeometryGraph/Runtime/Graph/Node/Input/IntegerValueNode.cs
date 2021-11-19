@@ -1,36 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using GeometryGraph.Runtime.Attributes;
+using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class IntegerValueNode : RuntimeNode {
-        private int value;
-
-        public RuntimePort ValuePort { get; private set; }
-
-        public IntegerValueNode(string guid) : base(guid) {
-            ValuePort = RuntimePort.Create(PortType.Integer, PortDirection.Output, this);
-        }
-
-        public void UpdateValue(int newValue) {
-            value = newValue;
-            NotifyPortValueChanged(ValuePort);
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            return port == ValuePort ? value : 0;
-        }
-        
-        public override string GetCustomData() {
-            var data = new JObject {
-                ["v"] = value
-            };
-            return data.ToString(Formatting.None);
-        }
-
-        public override void SetCustomData(string json) {
-            var data = JObject.Parse(json);
-            value = data.Value<int>("v");
-            NotifyPortValueChanged(ValuePort);
-        }
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    public partial class IntegerValueNode {
+        [Setting] public int Value { get; private set; }
+        [Out(PortName = "ValuePort")] public int Result { get; private set; }
+        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly] private int GetResult() => Value;
     }
 }
