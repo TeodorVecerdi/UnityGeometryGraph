@@ -41,15 +41,20 @@ namespace GeometryGraph.Runtime.Attributes {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class InAttribute: Attribute {
         /// <summary>
-        /// Whether the property is updated from the editor node.<br/>Default: <c>true</c>
-        /// </summary>
-        public bool UpdatedFromEditorNode { get; set; } = true;
-        
-        /// <summary>
         /// Whether the property should be serialized.<br/>Default: <c>true</c>
         /// </summary>
         public bool IsSerialized { get; set;  } = true;
         
+        /// <summary>
+        /// Whether equality checks should be generated for this property.<br/>Default: <c>true</c>
+        /// </summary>
+        public bool GenerateEquality { get; set; } = true;
+        
+        /// <summary>
+        /// Whether the property is updated from the editor node.<br/>Default: <c>true</c>
+        /// </summary>
+        public bool UpdatedFromEditorNode { get; set; } = true;
+
         /// <summary>
         /// Overrides the default port name for the property.<br/>
         /// By default, the port name is the name of the property + "Port"
@@ -71,7 +76,12 @@ namespace GeometryGraph.Runtime.Attributes {
         /// <summary>
         /// Whether the property should be serialized.<br/>Default: <c>true</c>
         /// </summary>
-        public bool IsSerialized { get; set; }
+        public bool IsSerialized { get; set; } = true;
+
+        /// <summary>
+        /// Whether equality checks should be generated for this property.<br/>Default: <c>true</c>
+        /// </summary>
+        public bool GenerateEquality { get; set; } = true;
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
@@ -91,7 +101,11 @@ namespace GeometryGraph.Runtime.Attributes {
     
     [AttributeUsage(AttributeTargets.Method)]
     public class GetterMethodAttribute: Attribute {
-        public bool Inline { get; set; }
+        /// <summary>
+        /// Whether the methods body should be inlined instead of using a method call.<br/>Default: <c>false</c>
+        /// </summary>
+        public bool Inline { get; set; } = false;
+        
         public GetterMethodAttribute(string property) { }
     }
 }
