@@ -7,8 +7,8 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     public class CirclePrimitiveCurveNode : RuntimeNode {
-        private MinMaxInt points = new (32, Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
-        private MinMaxFloat radius = new (1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
+        private MinMaxInt points = new(32, Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
+        private MinMaxFloat radius = new(1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
         private CurveData curve;
 
         public RuntimePort PointsPort { get; private set; }
@@ -27,6 +27,7 @@ namespace GeometryGraph.Runtime.Graph {
                 curve = null;
                 return;
             }
+
             curve = CurvePrimitive.Circle(points, radius);
         }
 
@@ -65,15 +66,15 @@ namespace GeometryGraph.Runtime.Graph {
             if (string.IsNullOrEmpty(json)) return;
 
             var data = JArray.Parse(json);
-            points = new MinMaxInt(data.Value<int>(0), Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+            points = new MinMaxInt(data.Value<int>(0), Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
             radius = new MinMaxFloat(data.Value<float>(1), Constants.MIN_CIRCULAR_CURVE_RADIUS);
             NotifyPortValueChanged(ResultPort);
         }
 
         public void UpdatePoints(int newPoints) {
-            newPoints = newPoints.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+            newPoints = newPoints.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
             if (newPoints == points) return;
-            
+
             points.Value = newPoints;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
@@ -86,6 +87,5 @@ namespace GeometryGraph.Runtime.Graph {
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-        
-        }
+    }
 }
