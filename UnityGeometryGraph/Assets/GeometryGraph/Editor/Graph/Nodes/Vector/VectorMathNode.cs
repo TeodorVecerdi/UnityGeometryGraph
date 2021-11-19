@@ -10,7 +10,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.VectorMathNode.VectorMathNode_Which;
 using Operation = GeometryGraph.Runtime.Graph.VectorMathNode.VectorMathNode_Operation;
 
 namespace GeometryGraph.Editor {
@@ -101,12 +100,12 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Vector Math");
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("X", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(x, Which.X));
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Y", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(y, Which.Y));
-            (wrapMaxPort, wrapMaxField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Max", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(wrapMax, Which.WrapMax));
-            (iorPort, iorField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("IOR", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(ior, Which.IOR));
-            (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Scale", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(scale, Which.Scale));
-            (distancePort, distanceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Distance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(distance, Which.Distance));
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("X", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateX(x));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Y", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateY(y));
+            (wrapMaxPort, wrapMaxField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Max", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateWrapMax(wrapMax));
+            (iorPort, iorField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("IOR", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateIOR(ior));
+            (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Scale", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateScale(scale));
+            (distancePort, distanceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Distance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateDistance(distance));
             
             vectorResultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
             floatResultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
@@ -122,37 +121,37 @@ namespace GeometryGraph.Editor {
             xField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 x = evt.newValue;
-                RuntimeNode.UpdateValue(x, Which.X);
+                RuntimeNode.UpdateX(x);
             });
 
             yField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 y = evt.newValue;
-                RuntimeNode.UpdateValue(y, Which.Y);
+                RuntimeNode.UpdateY(y);
             });
             
             wrapMaxField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change tolerance");
                 wrapMax = evt.newValue;
-                RuntimeNode.UpdateValue(wrapMax, Which.WrapMax);
+                RuntimeNode.UpdateWrapMax(wrapMax);
             });
             
             iorField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 ior = evt.newValue;
-                RuntimeNode.UpdateValue(ior, Which.IOR);
+                RuntimeNode.UpdateIOR(ior);
             });
 
             scaleField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 scale = evt.newValue;
-                RuntimeNode.UpdateValue(scale, Which.Scale);
+                RuntimeNode.UpdateScale(scale);
             });
             
             distanceField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 distance = evt.newValue;
-                RuntimeNode.UpdateValue(distance, Which.Distance);
+                RuntimeNode.UpdateDistance(distance);
             });
             
             iorPort.Add(iorField);
@@ -181,7 +180,7 @@ namespace GeometryGraph.Editor {
             BindPort(xPort, RuntimeNode.XPort);
             BindPort(yPort, RuntimeNode.YPort);
             BindPort(wrapMaxPort, RuntimeNode.WrapMaxPort);
-            BindPort(iorPort, RuntimeNode.IorPort);
+            BindPort(iorPort, RuntimeNode.IORPort);
             BindPort(scalePort, RuntimeNode.ScalePort);
             BindPort(distancePort, RuntimeNode.DistancePort);
             BindPort(vectorResultPort, RuntimeNode.VectorResultPort);
@@ -205,16 +204,14 @@ namespace GeometryGraph.Editor {
         private void OnOperationChanged() {
             var showIOR = operation == Operation.Refract;
             var showWrapMax = operation == Operation.Wrap;
-            var showDistance = operation == Operation.SmoothMinimum || operation == Operation.SmoothMaximum || operation == Operation.Lerp;
+            var showDistance = operation is Operation.SmoothMinimum or Operation.SmoothMaximum or Operation.Lerp;
             var showScale = operation == Operation.Scale;
-            var showY =
-                !(operation == Operation.Length || operation == Operation.LengthSquared || operation == Operation.Scale || operation == Operation.Sine || 
-                  operation == Operation.Cosine || operation == Operation.Tangent || operation == Operation.Arcsine || operation == Operation.Arccosine || 
-                  operation == Operation.Arctangent || operation == Operation.Fraction || operation == Operation.Ceil || operation == Operation.Floor || 
-                  operation == Operation.Absolute || operation == Operation.Normalize);
+            var showY = operation is not 
+                (Operation.Length or Operation.LengthSquared or Operation.Scale or Operation.Sine or Operation.Cosine or Operation.Tangent 
+                or Operation.Arcsine or Operation.Arccosine or Operation.Arctangent or Operation.Fraction or Operation.Ceil 
+                or Operation.Floor or Operation.Absolute or Operation.Normalize);
 
-            var showFloatOutput = operation == Operation.Length || operation == Operation.LengthSquared || operation == Operation.Distance || 
-                                  operation == Operation.DistanceSquared || operation == Operation.DotProduct;
+            var showFloatOutput = operation is Operation.Length or Operation.LengthSquared or Operation.Distance or Operation.DistanceSquared or Operation.DotProduct;
 
             if (showIOR) iorPort.Show();
             else iorPort.HideAndDisconnect();
@@ -261,12 +258,12 @@ namespace GeometryGraph.Editor {
             distanceField.SetValueWithoutNotify(distance); 
             
             RuntimeNode.UpdateOperation(operation);
-            RuntimeNode.UpdateValue(x, Which.X);
-            RuntimeNode.UpdateValue(y, Which.Y);
-            RuntimeNode.UpdateValue(wrapMax, Which.WrapMax);
-            RuntimeNode.UpdateValue(ior, Which.IOR);
-            RuntimeNode.UpdateValue(scale, Which.Scale);
-            RuntimeNode.UpdateValue(distance, Which.Distance);
+            RuntimeNode.UpdateX(x);
+            RuntimeNode.UpdateY(y);
+            RuntimeNode.UpdateWrapMax(wrapMax);
+            RuntimeNode.UpdateIOR(ior);
+            RuntimeNode.UpdateScale(scale);
+            RuntimeNode.UpdateDistance(distance);
 
             OnOperationChanged();
 

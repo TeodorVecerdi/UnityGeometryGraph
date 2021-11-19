@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Split");
 
-            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector));
+            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
             xPort = GraphFrameworkPort.Create("X", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
             yPort = GraphFrameworkPort.Create("Y", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
             zPort = GraphFrameworkPort.Create("Z", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
@@ -33,7 +33,7 @@ namespace GeometryGraph.Editor {
             vectorField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector value");
                 vector = evt.newValue;
-                RuntimeNode.UpdateValue(vector);
+                RuntimeNode.UpdateVector(vector);
             });
 
             
@@ -64,7 +64,7 @@ namespace GeometryGraph.Editor {
             vector = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v")!, float3Converter.Converter);
             
             vectorField.SetValueWithoutNotify(vector);
-            RuntimeNode.UpdateValue(vector);
+            RuntimeNode.UpdateVector(vector);
 
             base.SetNodeData(jsonData);
         }

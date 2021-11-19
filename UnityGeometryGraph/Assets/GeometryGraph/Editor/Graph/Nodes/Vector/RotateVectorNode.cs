@@ -10,8 +10,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.RotateVectorNode.RotateVectorNode_Which;
-using RotationType = GeometryGraph.Runtime.Graph.RotateVectorNode.RotateVectorNode_Type;
 
 namespace GeometryGraph.Editor {
     [Title("Vector", "Rotate")]
@@ -23,21 +21,21 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort anglePort;
         private GraphFrameworkPort resultPort;
 
-        private EnumSelectionDropdown<RotationType> rotationTypeDropdown;
+        private EnumSelectionDropdown<Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode> rotationTypeDropdown;
         private Vector3Field vectorField;
         private Vector3Field centerField;
         private Vector3Field axisField;
         private Vector3Field eulerAnglesField;
         private FloatField angleField;
 
-        private RotationType rotationType;
+        private Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode rotationMode;
         private float3 vector;
         private float3 center;
         private float3 axis;
         private float3 eulerAngles;
         private float angle;
 
-        private static readonly SelectionTree compareOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(RotationType)).Convert(o => o))) {
+        private static readonly SelectionTree compareOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode)).Convert(o => o))) {
             new SelectionCategory("Rotation Type", false, SelectionCategory.CategorySize.Normal) {
                 new SelectionEntry("", 0, false),
                 new SelectionEntry("", 1, true),
@@ -51,43 +49,43 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Rotate");
 
-            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector, Which.Vector));
-            (centerPort, centerField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Center", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(center, Which.Center));
-            (axisPort, axisField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Axis", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(axis, Which.Axis));
-            (eulerAnglesPort, eulerAnglesField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Euler", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(eulerAngles, Which.Euler));
-            (anglePort, angleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Angle", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(angle, Which.Angle));
+            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
+            (centerPort, centerField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Center", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateCenter(center));
+            (axisPort, axisField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Axis", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateAxis(axis));
+            (eulerAnglesPort, eulerAnglesField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Euler", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateEulerAngles(eulerAngles));
+            (anglePort, angleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Angle", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateAngle(angle));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
 
-            rotationTypeDropdown = new EnumSelectionDropdown<RotationType>(rotationType, compareOperationTree);
-            rotationTypeDropdown.RegisterCallback<ChangeEvent<RotationType>>(evt => {
+            rotationTypeDropdown = new EnumSelectionDropdown<Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode>(rotationMode, compareOperationTree);
+            rotationTypeDropdown.RegisterCallback<ChangeEvent<Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
-                rotationType = evt.newValue;
-                RuntimeNode.UpdateType(rotationType);
+                rotationMode = evt.newValue;
+                RuntimeNode.UpdateMode(rotationMode);
                 OnRotationTypeChanged();
             });
 
             vectorField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector value");
                 vector = evt.newValue;
-                RuntimeNode.UpdateValue(vector, Which.Vector);
+                RuntimeNode.UpdateVector(vector);
             });
             
             centerField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change center value");
                 center = evt.newValue;
-                RuntimeNode.UpdateValue(center, Which.Center);
+                RuntimeNode.UpdateCenter(center);
             });
             
             axisField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change axis value");
                 axis = evt.newValue;
-                RuntimeNode.UpdateValue(axis, Which.Axis);
+                RuntimeNode.UpdateAxis(axis);
             });
             
             eulerAnglesField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change euler angles value");
                 eulerAngles = evt.newValue;
-                RuntimeNode.UpdateValue(eulerAngles, Which.Euler);
+                RuntimeNode.UpdateEulerAngles(eulerAngles);
             });
             
             anglePort.Add(angleField);
@@ -119,33 +117,33 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnRotationTypeChanged() {
-            switch (rotationType) {
-                case RotationType.AxisAngle:
+            switch (rotationMode) {
+                case GeometryGraph.Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode.AxisAngle:
                     axisPort.Show();
                     anglePort.Show();
                     eulerAnglesPort.HideAndDisconnect();
                     break;
-                case RotationType.Euler:
+                case GeometryGraph.Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode.Euler:
                     eulerAnglesPort.Show();
                     axisPort.HideAndDisconnect();
                     anglePort.HideAndDisconnect();
                     break;
-                case RotationType.X_Axis:
-                case RotationType.Y_Axis:
-                case RotationType.Z_Axis:
+                case GeometryGraph.Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode.X_Axis:
+                case GeometryGraph.Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode.Y_Axis:
+                case GeometryGraph.Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode.Z_Axis:
                     anglePort.Show();
                     axisPort.HideAndDisconnect();
                     eulerAnglesPort.HideAndDisconnect();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(rotationType), rotationType, null);
+                    throw new ArgumentOutOfRangeException(nameof(rotationMode), rotationMode, null);
             }
         }
 
         public override JObject GetNodeData() {
             var root = base.GetNodeData();
 
-            root["t"] = (int)rotationType;
+            root["t"] = (int)rotationMode;
             root["v"] = JsonConvert.SerializeObject(vector, float3Converter.Converter);
             root["c"] = JsonConvert.SerializeObject(center, float3Converter.Converter);
             root["x"] = JsonConvert.SerializeObject(axis, float3Converter.Converter);
@@ -156,26 +154,26 @@ namespace GeometryGraph.Editor {
         }
         
         public override void SetNodeData(JObject jsonData) {
-            rotationType = (RotationType)jsonData.Value<int>("t");
+            rotationMode = (Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode)jsonData.Value<int>("t");
             vector = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v")!, float3Converter.Converter);
             center = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("c")!, float3Converter.Converter);
             axis = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("x")!, float3Converter.Converter);
             eulerAngles = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("e")!, float3Converter.Converter);
             angle = jsonData.Value<float>("a");
             
-            rotationTypeDropdown.SetValueWithoutNotify(rotationType, 1);
+            rotationTypeDropdown.SetValueWithoutNotify(rotationMode, 1);
             vectorField.SetValueWithoutNotify(vector);
             centerField.SetValueWithoutNotify(center);
             axisField.SetValueWithoutNotify(axis);
             eulerAnglesField.SetValueWithoutNotify(eulerAngles);
             angleField.SetValueWithoutNotify(angle);
             
-            RuntimeNode.UpdateType(rotationType);
-            RuntimeNode.UpdateValue(vector, Which.Vector);
-            RuntimeNode.UpdateValue(center, Which.Center);
-            RuntimeNode.UpdateValue(axis, Which.Axis);
-            RuntimeNode.UpdateValue(eulerAngles, Which.Euler);
-            RuntimeNode.UpdateValue(angle, Which.Angle);
+            RuntimeNode.UpdateMode(rotationMode);
+            RuntimeNode.UpdateVector(vector);
+            RuntimeNode.UpdateCenter(center);
+            RuntimeNode.UpdateAxis(axis);
+            RuntimeNode.UpdateEulerAngles(eulerAngles);
+            RuntimeNode.UpdateAngle(angle);
             
             OnRotationTypeChanged();
             

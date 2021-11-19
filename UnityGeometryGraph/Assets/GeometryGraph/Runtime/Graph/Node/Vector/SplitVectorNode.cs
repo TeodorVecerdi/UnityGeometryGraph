@@ -1,62 +1,17 @@
-﻿using GeometryGraph.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using GeometryGraph.Runtime.Attributes;
+using JetBrains.Annotations;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class SplitVectorNode : RuntimeNode {
-        private float3 vector;
-
-        public RuntimePort VectorPort { get; private set; }
-        public RuntimePort XPort { get; private set; }
-        public RuntimePort YPort { get; private set; }
-        public RuntimePort ZPort { get; private set; }
-
-        public SplitVectorNode(string guid) : base(guid) {
-            VectorPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
-            XPort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
-            YPort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
-            ZPort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
-        }
-
-        public void UpdateValue(float3 value) {
-            vector = value;
-            NotifyPortValueChanged(XPort);
-            NotifyPortValueChanged(YPort);
-            NotifyPortValueChanged(ZPort);
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            if (port == XPort) return vector.x;
-            if (port == YPort) return vector.y;
-            if (port == ZPort) return vector.z;
-            return null;
-        }
-
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port == VectorPort) {
-                vector = GetValue(VectorPort, vector);
-                NotifyPortValueChanged(XPort);
-                NotifyPortValueChanged(YPort);
-                NotifyPortValueChanged(ZPort);
-            }
-        }
+    [GenerateRuntimeNode]
+    public partial class SplitVectorNode {
+        [In(GenerateEquality = false)] public float3 Vector { get; private set; }
+        [Out] public float X { get; private set; }
+        [Out] public float Y { get; private set; }
+        [Out] public float Z { get; private set; }
         
-        public override string GetCustomData() {
-            var data = new JObject {
-                ["v"] = JsonConvert.SerializeObject(vector, float3Converter.Converter),
-            };
-            return data.ToString(Formatting.None);
-        }
-
-        public override void SetCustomData(string json) {
-            if(string.IsNullOrEmpty(json)) return;
-            
-            var data = JObject.Parse(json);
-            vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);
-            NotifyPortValueChanged(XPort);
-            NotifyPortValueChanged(YPort);
-            NotifyPortValueChanged(ZPort);
-        }
+        [GetterMethod(nameof(X), Inline = true), UsedImplicitly] private float GetX() => Vector.x;
+        [GetterMethod(nameof(Y), Inline = true), UsedImplicitly] private float GetY() => Vector.y;
+        [GetterMethod(nameof(Z), Inline = true), UsedImplicitly] private float GetZ() => Vector.z;
     }
 }

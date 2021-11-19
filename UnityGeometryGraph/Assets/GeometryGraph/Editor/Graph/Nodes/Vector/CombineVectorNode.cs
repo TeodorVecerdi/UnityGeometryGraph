@@ -7,8 +7,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-using Which = GeometryGraph.Runtime.Graph.CombineVectorNode.CombineVectorNode_Which;
-
 namespace GeometryGraph.Editor {
     [Title("Vector", "Combine")]
     public class CombineVectorNode : AbstractNode<GeometryGraph.Runtime.Graph.CombineVectorNode> {
@@ -27,27 +25,27 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Combine");
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector.x, Which.X));
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector.y, Which.Y));
-            (zPort, zField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Z", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector.z, Which.Z));
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(vector.x));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateY(vector.y));
+            (zPort, zField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Z", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateZ(vector.z));
             vectorPort = GraphFrameworkPort.Create("Vector", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
 
             xField.RegisterValueChangedCallback(evt => {
-                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector x component");
                 vector.x = evt.newValue;
-                RuntimeNode.UpdateValue(vector.x, Which.X);
+                RuntimeNode.UpdateX(vector.x);
             });
             
             yField.RegisterValueChangedCallback(evt => {
-                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector y component");
                 vector.y = evt.newValue;
-                RuntimeNode.UpdateValue(vector.y, Which.Y);
+                RuntimeNode.UpdateY(vector.y);
             });
             
             zField.RegisterValueChangedCallback(evt => {
-                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector z component");
                 vector.z = evt.newValue;
-                RuntimeNode.UpdateValue(vector.z, Which.Z);
+                RuntimeNode.UpdateZ(vector.z);
             });
 
             xPort.Add(xField);
@@ -66,7 +64,7 @@ namespace GeometryGraph.Editor {
             BindPort(xPort, RuntimeNode.XPort);
             BindPort(yPort, RuntimeNode.YPort);
             BindPort(zPort, RuntimeNode.ZPort);
-            BindPort(vectorPort, RuntimeNode.ResultPort);
+            BindPort(vectorPort, RuntimeNode.VectorPort);
         }
 
         public override JObject GetNodeData() {
@@ -82,9 +80,9 @@ namespace GeometryGraph.Editor {
             xField.SetValueWithoutNotify(vector.x);
             yField.SetValueWithoutNotify(vector.y);
             zField.SetValueWithoutNotify(vector.z);
-            RuntimeNode.UpdateValue(vector.x, Which.X);
-            RuntimeNode.UpdateValue(vector.y, Which.Y);
-            RuntimeNode.UpdateValue(vector.z, Which.Z);
+            RuntimeNode.UpdateX(vector.x);
+            RuntimeNode.UpdateY(vector.y);
+            RuntimeNode.UpdateZ(vector.z);
 
             base.SetNodeData(jsonData);
         }
