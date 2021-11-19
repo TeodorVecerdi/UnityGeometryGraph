@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Integer", "Branch")]
     public class IntegerBranchNode : AbstractNode<GeometryGraph.Runtime.Graph.IntegerBranchNode> {
-        
         private GraphFrameworkPort conditionPort;
         private GraphFrameworkPort ifTruePort;
         private GraphFrameworkPort ifFalsePort;
