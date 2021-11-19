@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace GeometryGraph.Runtime.Attribute {
+namespace GeometryGraph.Runtime.AttributeSystem {
     [Serializable]
     public class SerializedAttribute {
         private static readonly JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.None };

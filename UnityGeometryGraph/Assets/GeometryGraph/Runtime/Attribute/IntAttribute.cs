@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GeometryGraph.Runtime.Attribute {
+namespace GeometryGraph.Runtime.AttributeSystem {
     [Serializable]
     public class IntAttribute : BaseAttribute<int> {
         public override AttributeType Type => AttributeType.Integer;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityCommons;
 
-namespace GeometryGraph.Runtime.Attribute {
+namespace GeometryGraph.Runtime.AttributeSystem {
     [Serializable]
     public class FloatAttribute : BaseAttribute<float> {
         public override AttributeType Type => AttributeType.Float;

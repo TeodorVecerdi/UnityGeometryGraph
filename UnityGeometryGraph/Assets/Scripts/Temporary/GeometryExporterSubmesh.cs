@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Data;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;

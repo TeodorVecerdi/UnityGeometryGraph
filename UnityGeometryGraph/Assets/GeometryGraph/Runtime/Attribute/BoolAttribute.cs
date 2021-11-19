@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GeometryGraph.Runtime.Attribute {
+namespace GeometryGraph.Runtime.AttributeSystem {
     [Serializable]
     public class BoolAttribute : BaseAttribute<bool> {
         public override AttributeType Type => AttributeType.Boolean;

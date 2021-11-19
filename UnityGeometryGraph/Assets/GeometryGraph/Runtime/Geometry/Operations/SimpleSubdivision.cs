@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.AttributeSystem;
 using Unity.Mathematics;
 using UnityEngine;
 

@@ -6,7 +6,7 @@ using System.Text;
 using UnityCommons;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Attribute {
+namespace GeometryGraph.Runtime.AttributeSystem {
     [Serializable]
     public abstract class BaseAttribute : IEnumerable, ICloneable {
         private static readonly Type objectType = typeof(object);

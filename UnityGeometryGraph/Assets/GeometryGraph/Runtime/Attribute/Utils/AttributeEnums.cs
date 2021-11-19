@@ -1,4 +1,4 @@
-﻿namespace GeometryGraph.Runtime.Attribute {
+﻿namespace GeometryGraph.Runtime.AttributeSystem {
     public enum AttributeDomain {
         Vertex,
         Edge,

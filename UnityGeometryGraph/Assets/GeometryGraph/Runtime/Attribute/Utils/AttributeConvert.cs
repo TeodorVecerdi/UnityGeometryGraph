@@ -8,7 +8,7 @@ using Unity.Mathematics;
 using UnityCommons;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Attribute {
+namespace GeometryGraph.Runtime.AttributeSystem {
     // Domain conversion
     internal static partial class AttributeConvert {
         internal static IEnumerable ConvertDomain(GeometryData geometry, BaseAttribute sourceAttribute, AttributeDomain to) {

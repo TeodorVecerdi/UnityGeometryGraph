@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Serialization;
 using Newtonsoft.Json;

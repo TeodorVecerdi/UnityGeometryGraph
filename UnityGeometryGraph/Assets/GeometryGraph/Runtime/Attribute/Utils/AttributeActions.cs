@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GeometryGraph.Runtime.Attribute {
+namespace GeometryGraph.Runtime.AttributeSystem {
     public static class AttributeActions {
         public static Func<T, T> NoOp<T>() => arg => arg;
         public static Func<T, T0, T> NoOp<T, T0>() => (arg, _) => arg;

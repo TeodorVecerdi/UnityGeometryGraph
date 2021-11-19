@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.AttributeSystem;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

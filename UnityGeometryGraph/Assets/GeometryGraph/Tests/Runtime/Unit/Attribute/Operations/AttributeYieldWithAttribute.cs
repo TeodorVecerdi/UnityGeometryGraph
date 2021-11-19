@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.AttributeSystem;
 using NUnit.Framework;
 using UnityCommons;
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Geometry;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

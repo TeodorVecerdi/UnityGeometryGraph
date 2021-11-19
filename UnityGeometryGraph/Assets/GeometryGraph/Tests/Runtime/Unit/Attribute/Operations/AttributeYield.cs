@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Linq;
 using GeometryGraph.Runtime;
-using GeometryGraph.Runtime.Attribute;
+using GeometryGraph.Runtime.AttributeSystem;
 using NUnit.Framework;
 using UnityCommons;
 

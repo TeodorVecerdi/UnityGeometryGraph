@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GeometryGraph.Runtime.Attribute {
+namespace GeometryGraph.Runtime.AttributeSystem {
     public static class AttributeUtility {
         public static AttributeType SystemTypeToAttributeType(Type type) {
             return attributeTypeDictionary[type];

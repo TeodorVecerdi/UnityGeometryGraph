@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 
-namespace GeometryGraph.Runtime.Attribute {
+namespace GeometryGraph.Runtime.AttributeSystem {
     [Serializable]
     public class Vector2Attribute : BaseAttribute<float2> {
         public override AttributeType Type => AttributeType.Vector2;
