@@ -10,7 +10,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.ScalePointNode.ScalePointNode_Which;
 using Mode = GeometryGraph.Runtime.Graph.ScalePointNode.ScalePointNode_Mode;
 
 namespace GeometryGraph.Editor {
@@ -46,9 +45,9 @@ namespace GeometryGraph.Editor {
             Initialize("Scale Points");
 
             inputPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener, this);
-            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Factor", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(vector, Which.Vector));
-            (scalarPort, scalarField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Factor", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(scalar, Which.Scalar));
-            (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(attributeName, Which.AttributeName));
+            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Factor", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
+            (scalarPort, scalarField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Factor", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateScalar(scalar));
+            (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttributeName(attributeName));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             modeDropdown = new EnumSelectionDropdown<Mode>(mode, tree);
@@ -64,13 +63,13 @@ namespace GeometryGraph.Editor {
             vectorField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector scale");
                 vector = evt.newValue;
-                RuntimeNode.UpdateValue(vector, Which.Vector);
+                RuntimeNode.UpdateVector(vector);
             });
             
             scalarField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change scalar scale");
                 scalar = evt.newValue;
-                RuntimeNode.UpdateValue(scalar, Which.Scalar);
+                RuntimeNode.UpdateScalar(scalar);
             });
             
             attributeNameField.RegisterValueChangedCallback(evt => {
@@ -78,7 +77,7 @@ namespace GeometryGraph.Editor {
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change attribute name");
                 attributeName = evt.newValue;
-                RuntimeNode.UpdateValue(attributeName, Which.AttributeName);
+                RuntimeNode.UpdateAttributeName(attributeName);
             });
 
             scalarPort.Add(scalarField);
@@ -123,7 +122,7 @@ namespace GeometryGraph.Editor {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(vectorPort, RuntimeNode.VectorPort);
             BindPort(scalarPort, RuntimeNode.ScalarPort);
-            BindPort(attributePort, RuntimeNode.AttributePort);
+            BindPort(attributePort, RuntimeNode.AttributeNamePort);
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
@@ -149,9 +148,9 @@ namespace GeometryGraph.Editor {
             attributeNameField.SetValueWithoutNotify(attributeName);
             modeDropdown.SetValueWithoutNotify(mode);
             
-            RuntimeNode.UpdateValue(vector, Which.Vector);
-            RuntimeNode.UpdateValue(scalar, Which.Scalar);
-            RuntimeNode.UpdateValue(attributeName, Which.AttributeName);
+            RuntimeNode.UpdateVector(vector);
+            RuntimeNode.UpdateScalar(scalar);
+            RuntimeNode.UpdateAttributeName(attributeName);
             RuntimeNode.UpdateMode(mode);
 
             OnModeChanged();

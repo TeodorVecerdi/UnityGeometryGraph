@@ -10,7 +10,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.TranslatePointNode.TranslatePointNode_Which;
 using Mode = GeometryGraph.Runtime.Graph.TranslatePointNode.TranslatePointNode_Mode;
 
 namespace GeometryGraph.Editor {
@@ -42,8 +41,8 @@ namespace GeometryGraph.Editor {
             Initialize("Translate Points");
 
             inputPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener, this);
-            (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateValue(translation, Which.Translation));
-            (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(attributeName, Which.AttributeName));
+            (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateTranslation(translation));
+            (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttributeName(attributeName));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             modeDropdown = new EnumSelectionDropdown<Mode>(mode, tree);
@@ -59,7 +58,7 @@ namespace GeometryGraph.Editor {
             translationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change translation");
                 translation = evt.newValue;
-                RuntimeNode.UpdateValue(translation, Which.Translation);
+                RuntimeNode.UpdateTranslation(translation);
             });
             
             attributeNameField.RegisterValueChangedCallback(evt => {
@@ -67,7 +66,7 @@ namespace GeometryGraph.Editor {
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change attribute name");
                 attributeName = evt.newValue;
-                RuntimeNode.UpdateValue(attributeName, Which.AttributeName);
+                RuntimeNode.UpdateAttributeName(attributeName);
             });
 
             attributePort.Add(attributeNameField);
@@ -97,7 +96,7 @@ namespace GeometryGraph.Editor {
         public override void BindPorts() {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(translationPort, RuntimeNode.TranslationPort);
-            BindPort(attributePort, RuntimeNode.AttributePort);
+            BindPort(attributePort, RuntimeNode.AttributeNamePort);
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
@@ -120,8 +119,8 @@ namespace GeometryGraph.Editor {
             attributeNameField.SetValueWithoutNotify(attributeName);
             modeDropdown.SetValueWithoutNotify(mode);
             
-            RuntimeNode.UpdateValue(translation, Which.Translation);
-            RuntimeNode.UpdateValue(attributeName, Which.AttributeName);
+            RuntimeNode.UpdateTranslation(translation);
+            RuntimeNode.UpdateAttributeName(attributeName);
             RuntimeNode.UpdateMode(mode);
 
             OnModeChanged();
