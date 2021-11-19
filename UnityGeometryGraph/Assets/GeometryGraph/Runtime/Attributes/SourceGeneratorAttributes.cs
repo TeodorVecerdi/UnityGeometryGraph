@@ -52,17 +52,20 @@ namespace GeometryGraph.Runtime.Attributes {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class InAttribute: Attribute {
         /// <summary>
-        /// Whether the property should be serialized.<br/>Default: <c>true</c>
+        /// Whether the property should be serialized.<br/>
+        /// Default: <c>true</c>
         /// </summary>
         public bool IsSerialized { get; set;  } = true;
         
         /// <summary>
-        /// Whether equality checks should be generated for this property.<br/>Default: <c>true</c>
+        /// Whether equality checks should be generated for this property.<br/>
+        /// Default: <c>true</c>
         /// </summary>
         public bool GenerateEquality { get; set; } = true;
         
         /// <summary>
-        /// Whether the property is updated from the editor node.<br/>Default: <c>true</c>
+        /// Whether the property is updated from the editor node.<br/>
+        /// Default: <c>true</c>
         /// </summary>
         public bool UpdatedFromEditorNode { get; set; } = true;
 
@@ -89,22 +92,37 @@ namespace GeometryGraph.Runtime.Attributes {
         /// Default: <c>{self} = {other};</c>
         /// </summary>
         public string UpdateValueCode { get; set; } = "{self} = {other};";
+        
+        /// <summary>
+        /// Whether to call NotifyPortValueChanged when the value of the property is changed.<br/>
+        /// Default: <c>true</c>
+        /// </summary>
+        public bool CallNotifyMethodsIfChanged { get; set; } = true;
+        
+        /// <summary>
+        /// Whether to call the update methods when the value of the property is changed.<br/>
+        /// Default: <c>true</c>
+        /// </summary>
+        public bool CallUpdateMethodsIfChanged { get; set; } = true;
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class SettingAttribute : Attribute {
         /// <summary>
-        /// Whether the property should be serialized.<br/>Default: <c>true</c>
+        /// Whether the property should be serialized.<br/>
+        /// Default: <c>true</c>
         /// </summary>
         public bool IsSerialized { get; set; } = true;
         
         /// <summary>
-        /// Whether the property is updated from the editor node.<br/>Default: <c>true</c>
+        /// Whether the property is updated from the editor node.<br/>
+        /// Default: <c>true</c>
         /// </summary>
         public bool UpdatedFromEditorNode { get; set; } = true;
 
         /// <summary>
-        /// Whether equality checks should be generated for this property.<br/>Default: <c>true</c>
+        /// Whether equality checks should be generated for this property.<br/>
+        /// Default: <c>true</c>
         /// </summary>
         public bool GenerateEquality { get; set; } = true;
     }
