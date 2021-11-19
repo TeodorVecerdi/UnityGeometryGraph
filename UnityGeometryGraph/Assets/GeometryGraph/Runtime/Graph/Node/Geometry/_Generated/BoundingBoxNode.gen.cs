@@ -27,14 +27,6 @@ namespace GeometryGraph.Runtime.Graph {
             MaxPort = RuntimePort.Create(PortType.Vector, PortDirection.Output, this);
         }
 
-        public void UpdateInput(GeometryData newValue) {
-            Input = newValue;
-            CalculateResult();
-            NotifyPortValueChanged(BoundingBoxPort);
-            NotifyPortValueChanged(MinPort);
-            NotifyPortValueChanged(MaxPort);
-        }
-
         protected override object GetValueForPort(RuntimePort port) {
             if (port == BoundingBoxPort) return BoundingBox;
             if (port == MinPort) return Min;

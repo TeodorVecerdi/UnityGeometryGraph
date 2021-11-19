@@ -34,12 +34,6 @@ namespace GeometryGraph.Runtime.Graph {
             ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
 
-        public void UpdateInput(GeometryData newValue) {
-            Input = newValue;
-            Calculate();
-            NotifyPortValueChanged(ResultPort);
-        }
-
         public void UpdateVector(float3 newValue) {
             if(math.distancesq(Vector, newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
             Vector = newValue;
