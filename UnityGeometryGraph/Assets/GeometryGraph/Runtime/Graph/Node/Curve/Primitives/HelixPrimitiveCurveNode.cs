@@ -7,9 +7,9 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     public class HelixPrimitiveCurveNode : RuntimeNode {
-        private MinMaxInt points = new (64, Constants.MIN_HELIX_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
-        private MinMaxFloat topRadius = new (1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
-        private MinMaxFloat bottomRadius = new (1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
+        private MinMaxInt points = new(64, Constants.MIN_HELIX_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+        private MinMaxFloat topRadius = new(1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
+        private MinMaxFloat bottomRadius = new(1.0f, Constants.MIN_CIRCULAR_CURVE_RADIUS);
         private float rotations = 2.0f;
         private float pitch = 1.0f;
         private CurveData curve;
@@ -36,6 +36,7 @@ namespace GeometryGraph.Runtime.Graph {
                 curve = null;
                 return;
             }
+
             curve = CurvePrimitive.Helix(points - 1, rotations, pitch, topRadius, bottomRadius);
         }
 
@@ -106,7 +107,7 @@ namespace GeometryGraph.Runtime.Graph {
         public void UpdatePoints(int newValue) {
             newValue = newValue.Clamped(Constants.MIN_HELIX_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             if (newValue == points) return;
-            
+
             points.Value = newValue;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
@@ -118,14 +119,14 @@ namespace GeometryGraph.Runtime.Graph {
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-        
+
         public void UpdatePitch(float newValue) {
             if (Math.Abs(newValue - pitch) < Constants.FLOAT_TOLERANCE) return;
             pitch = newValue;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-        
+
         public void UpdateTopRadius(float newValue) {
             newValue = newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             if (Math.Abs(newValue - topRadius) < Constants.FLOAT_TOLERANCE) return;
@@ -133,7 +134,7 @@ namespace GeometryGraph.Runtime.Graph {
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-        
+
         public void UpdateBottomRadius(float newValue) {
             newValue = newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             if (Math.Abs(newValue - bottomRadius) < Constants.FLOAT_TOLERANCE) return;
@@ -141,6 +142,5 @@ namespace GeometryGraph.Runtime.Graph {
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-        
-        }
+    }
 }

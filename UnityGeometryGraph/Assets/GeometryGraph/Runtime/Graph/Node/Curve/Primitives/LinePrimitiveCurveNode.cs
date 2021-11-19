@@ -31,6 +31,7 @@ namespace GeometryGraph.Runtime.Graph {
                 curve = null;
                 return;
             }
+
             curve = CurvePrimitive.Line(points - 1, start, end);
         }
 
@@ -85,7 +86,7 @@ namespace GeometryGraph.Runtime.Graph {
         public void UpdatePoints(int newPoints) {
             newPoints = newPoints.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             if (newPoints == points) return;
-            
+
             points.Value = newPoints;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
@@ -104,6 +105,5 @@ namespace GeometryGraph.Runtime.Graph {
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-
-        }
+    }
 }

@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Graph {
         private float3 controlA = float3_ext.forward;
         private float3 controlB = float3_ext.right + float3_ext.forward;
         private float3 end = float3_ext.right;
-        
+
         private CurveData curve;
 
         public RuntimePort PointsPort { get; private set; }
@@ -41,6 +41,7 @@ namespace GeometryGraph.Runtime.Graph {
                 curve = null;
                 return;
             }
+
             curve = CurvePrimitive.CubicBezier(points - 1, isClosed, start, controlA, controlB, end);
         }
 
@@ -119,7 +120,7 @@ namespace GeometryGraph.Runtime.Graph {
         public void UpdatePoints(int newValue) {
             newValue = newValue.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             if (newValue == points) return;
-            
+
             points.Value = newValue;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
@@ -138,14 +139,14 @@ namespace GeometryGraph.Runtime.Graph {
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-        
+
         public void UpdateControlA(float3 newValue) {
             if (controlA.Equals(newValue)) return;
             controlA = newValue;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-        
+
         public void UpdateControlB(float3 newValue) {
             if (controlB.Equals(newValue)) return;
             controlB = newValue;
@@ -159,6 +160,5 @@ namespace GeometryGraph.Runtime.Graph {
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-
-        }
+    }
 }

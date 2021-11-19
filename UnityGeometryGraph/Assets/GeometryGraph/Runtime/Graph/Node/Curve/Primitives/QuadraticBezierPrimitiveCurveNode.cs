@@ -13,7 +13,7 @@ namespace GeometryGraph.Runtime.Graph {
         private float3 start = float3.zero;
         private float3 control = float3_ext.right;
         private float3 end = float3_ext.forward;
-        
+
         private CurveData curve;
 
         public RuntimePort PointsPort { get; private set; }
@@ -38,6 +38,7 @@ namespace GeometryGraph.Runtime.Graph {
                 curve = null;
                 return;
             }
+
             curve = CurvePrimitive.QuadraticBezier(points - 1, isClosed, start, control, end);
         }
 
@@ -108,7 +109,7 @@ namespace GeometryGraph.Runtime.Graph {
         public void UpdatePoints(int newValue) {
             newValue = newValue.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             if (newValue == points) return;
-            
+
             points.Value = newValue;
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
@@ -127,7 +128,7 @@ namespace GeometryGraph.Runtime.Graph {
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-        
+
         public void UpdateControl(float3 newValue) {
             if (control.Equals(newValue)) return;
             control = newValue;
@@ -141,6 +142,5 @@ namespace GeometryGraph.Runtime.Graph {
             CalculateResult();
             NotifyPortValueChanged(ResultPort);
         }
-
-        }
+    }
 }
