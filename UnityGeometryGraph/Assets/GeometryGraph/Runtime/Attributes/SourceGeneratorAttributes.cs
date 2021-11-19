@@ -100,10 +100,10 @@ namespace GeometryGraph.Runtime.Attributes {
         public bool CallNotifyMethodsIfChanged { get; set; } = true;
         
         /// <summary>
-        /// Whether to call the update methods when the value of the property is changed.<br/>
+        /// Whether to call the calculate methods when the value of the property is changed.<br/>
         /// Default: <c>true</c>
         /// </summary>
-        public bool CallUpdateMethodsIfChanged { get; set; } = true;
+        public bool CallCalculateMethodsIfChanged { get; set; } = true;
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
