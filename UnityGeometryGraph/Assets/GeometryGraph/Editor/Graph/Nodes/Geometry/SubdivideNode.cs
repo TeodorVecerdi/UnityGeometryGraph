@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
 
             levelsField.Min = 0;
             levelsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Min(0);
+                var newValue = evt.newValue.MinClamped(0);
                 if (newValue == levels) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivision levels");

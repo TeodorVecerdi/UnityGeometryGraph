@@ -68,7 +68,7 @@ namespace GeometryGraph.Editor {
 
             topRadiusField.Min = Constants.MIN_CIRCULAR_CURVE_RADIUS;
             topRadiusField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+                var newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
                 if (Math.Abs(newValue - topRadius) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change helix curve top radius");
@@ -78,7 +78,7 @@ namespace GeometryGraph.Editor {
             
             bottomRadiusField.Min = Constants.MIN_CIRCULAR_CURVE_RADIUS;
             bottomRadiusField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+                var newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
                 if (Math.Abs(newValue - bottomRadius) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change helix curve bottom radius");

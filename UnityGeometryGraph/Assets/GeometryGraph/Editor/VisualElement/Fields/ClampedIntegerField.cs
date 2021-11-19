@@ -50,15 +50,15 @@ namespace GeometryGraph.Editor {
 
         private void ClampWithoutNotify() {
             var val = value;
-            if (min != null) val = val.Min((int)min);
-            if (max != null) val = val.Max((int)max);
+            if (min != null) val = val.MinClamped((int)min);
+            if (max != null) val = val.MaxClamped((int)max);
             SetValueWithoutNotify(val);
         }
 
         private void Clamp() {
             var val = value;
-            if (min != null) val = val.Min((int)min);
-            if (max != null) val = val.Max((int)max);
+            if (min != null) val = val.MinClamped((int)min);
+            if (max != null) val = val.MaxClamped((int)max);
             if (val != value) value = val;
         }
 
@@ -96,8 +96,8 @@ namespace GeometryGraph.Editor {
                 var acceleration = NumericFieldDraggerUtility.Acceleration(speed == DeltaSpeed.Fast, speed == DeltaSpeed.Slow);
                 var num = StringToValue(text) + (long)Math.Round(NumericFieldDraggerUtility.NiceDelta(delta, acceleration) * dragSensitivity);
 
-                if (ParentField.min != null) num = num.Min((long)ParentField.min);
-                if (ParentField.max != null) num = num.Max((long)ParentField.max);
+                if (ParentField.min != null) num = num.MinClamped((long)ParentField.min);
+                if (ParentField.max != null) num = num.MaxClamped((long)ParentField.max);
 
                 if (ParentField.isDelayed) text = ValueToString(MathUtils.ClampToInt(num));
                 else ParentField.value = MathUtils.ClampToInt(num);

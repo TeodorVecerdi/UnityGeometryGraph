@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Curve {
 
         public static CurveData Circle(int resolution, float radius) {
             resolution = resolution.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
-            radius = radius.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+            radius = radius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
 
             var circleCurve = new CircleCurve(resolution, radius);
             circleCurve.Generate();

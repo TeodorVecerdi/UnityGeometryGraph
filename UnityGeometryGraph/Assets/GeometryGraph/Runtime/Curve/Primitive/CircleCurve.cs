@@ -12,7 +12,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
         private readonly float radius;
         
         public CircleCurve(int resolution, float radius) : base(resolution.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION)) {
-            this.radius = radius.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+            this.radius = radius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             IsClosed = true;
         }
 

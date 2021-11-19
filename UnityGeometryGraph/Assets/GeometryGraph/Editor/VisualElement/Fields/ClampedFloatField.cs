@@ -51,15 +51,15 @@ namespace GeometryGraph.Editor {
 
         private void ClampWithoutNotify() {
             var val = value;
-            if (min != null) val = val.Min((float)min);
-            if (max != null) val = val.Max((float)max);
+            if (min != null) val = val.MinClamped((float)min);
+            if (max != null) val = val.MaxClamped((float)max);
             SetValueWithoutNotify(val);
         }
 
         private void Clamp() {
             var val = value;
-            if (min != null) val = val.Min((float)min);
-            if (max != null) val = val.Max((float)max);
+            if (min != null) val = val.MinClamped((float)min);
+            if (max != null) val = val.MaxClamped((float)max);
             if (Math.Abs(val - value) > Constants.FLOAT_TOLERANCE) value = val;
         }
 
@@ -98,8 +98,8 @@ namespace GeometryGraph.Editor {
                 var num = MathUtils.RoundBasedOnMinimumDifference(StringToValue(text) + NumericFieldDraggerUtility.NiceDelta(delta, acceleration) * dragSensitivity,
                                                                   dragSensitivity);
 
-                if (ParentField.min != null) num = num.Min((double)ParentField.min);
-                if (ParentField.max != null) num = num.Max((double)ParentField.max);
+                if (ParentField.min != null) num = num.MinClamped((double)ParentField.min);
+                if (ParentField.max != null) num = num.MaxClamped((double)ParentField.max);
 
                 if (ParentField.isDelayed) text = ValueToString(MathUtils.ClampToFloat(num));
                 else ParentField.value = MathUtils.ClampToFloat(num);

@@ -17,8 +17,8 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
         public HelixCurve(int resolution, float rotations, float pitch, float topRadius, float bottomRadius) : base(resolution.Clamped(Constants.MIN_HELIX_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION)) {
             time = rotations * math_ext.TWO_PI;
             b = pitch / math_ext.TWO_PI;
-            this.topRadius = topRadius.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
-            this.bottomRadius = bottomRadius.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+            this.topRadius = topRadius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+            this.bottomRadius = bottomRadius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             
             IsClosed = false;
         }

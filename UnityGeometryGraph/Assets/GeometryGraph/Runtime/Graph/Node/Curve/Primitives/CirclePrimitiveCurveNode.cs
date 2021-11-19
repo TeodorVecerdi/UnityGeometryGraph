@@ -80,7 +80,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void UpdateRadius(float newRadius) {
-            newRadius = newRadius.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+            newRadius = newRadius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             if (Math.Abs(newRadius - radius) < Constants.FLOAT_TOLERANCE) return;
             radius.Value = newRadius;
             CalculateResult();

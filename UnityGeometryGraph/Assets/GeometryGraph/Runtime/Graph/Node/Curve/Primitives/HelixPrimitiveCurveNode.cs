@@ -127,7 +127,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
         
         public void UpdateTopRadius(float newValue) {
-            newValue = newValue.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+            newValue = newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             if (Math.Abs(newValue - topRadius) < Constants.FLOAT_TOLERANCE) return;
             topRadius.Value = newValue;
             CalculateResult();
@@ -135,7 +135,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
         
         public void UpdateBottomRadius(float newValue) {
-            newValue = newValue.Min(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+            newValue = newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             if (Math.Abs(newValue - bottomRadius) < Constants.FLOAT_TOLERANCE) return;
             bottomRadius.Value = newValue;
             CalculateResult();
