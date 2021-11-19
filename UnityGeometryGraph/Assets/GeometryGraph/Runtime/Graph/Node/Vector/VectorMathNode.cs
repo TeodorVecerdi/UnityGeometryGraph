@@ -3,7 +3,7 @@ using GeometryGraph.Runtime.Attributes;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode]
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
     public partial class VectorMathNode {
         [Setting] public VectorMathNode_Operation Operation { get; private set; }
         [In(GenerateEquality = false)] public float3 X { get; private set; }

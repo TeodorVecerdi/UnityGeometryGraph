@@ -3,7 +3,7 @@ using GeometryGraph.Runtime.Attributes;
 using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode]
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
     public partial class CompareIntegerNode {
         [In] public int A {get; private set; }
         [In] public int B {get; private set; }

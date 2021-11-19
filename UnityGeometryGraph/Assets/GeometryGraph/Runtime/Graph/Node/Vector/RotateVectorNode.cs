@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode]
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
     public partial class RotateVectorNode {
         [In] public float3 Vector { get; private set; }
         [In] public float3 Center { get; private set; }

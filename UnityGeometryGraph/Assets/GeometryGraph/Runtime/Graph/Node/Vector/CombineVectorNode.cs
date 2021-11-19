@@ -2,7 +2,7 @@
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    [GenerateRuntimeNode]
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
     public partial class CombineVectorNode {
         [In] public float X { get; private set; }
         [In] public float Y { get; private set; }
