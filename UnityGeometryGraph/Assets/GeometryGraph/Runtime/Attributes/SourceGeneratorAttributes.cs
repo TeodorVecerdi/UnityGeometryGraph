@@ -63,25 +63,30 @@ namespace GeometryGraph.Runtime.Attributes {
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    public class SettingAttribute : Attribute {
+        /// <summary>
+        /// Whether the property should be serialized.<br/>Default: <c>true</c>
+        /// </summary>
+        public bool IsSerialized { get; set; } = true;
+        
+        /// <summary>
+        /// Whether the property is updated from the editor node.<br/>Default: <c>true</c>
+        /// </summary>
+        public bool UpdatedFromEditorNode { get; set; } = true;
+
+        /// <summary>
+        /// Whether equality checks should be generated for this property.<br/>Default: <c>true</c>
+        /// </summary>
+        public bool GenerateEquality { get; set; } = true;
+    }
+
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class OutAttribute : Attribute {
         /// <summary>
         /// Overrides the default port name for the property.<br/>
         /// By default, the port name is the name of the property + "Port"
         /// </summary>
         public string PortName { get; set; }
-    }
-    
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class SettingAttribute : Attribute {
-        /// <summary>
-        /// Whether the property should be serialized.<br/>Default: <c>true</c>
-        /// </summary>
-        public bool IsSerialized { get; set; } = true;
-
-        /// <summary>
-        /// Whether equality checks should be generated for this property.<br/>Default: <c>true</c>
-        /// </summary>
-        public bool GenerateEquality { get; set; } = true;
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
@@ -97,6 +102,25 @@ namespace GeometryGraph.Runtime.Attributes {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class GetterAttribute: Attribute {
         public GetterAttribute(string getterCode) { }
+    }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    public class AdditionalValueChangedCodeAttribute : Attribute {
+        /// <summary>
+        /// Specifies where to add the code.<br/>Default: <c>AfterUpdate</c>
+        /// </summary>
+        public Location Where { get; set; } = Location.AfterUpdate;
+        
+        public AdditionalValueChangedCodeAttribute(string code) { }
+
+        public enum Location {
+            BeforeGetValue,
+            AfterGetValue,
+            AfterEqualityCheck,
+            AfterUpdate,
+            AfterCalculate,
+            AfterNotify,
+        } 
     }
     
     [AttributeUsage(AttributeTargets.Method)]
