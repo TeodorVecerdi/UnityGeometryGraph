@@ -69,6 +69,12 @@ namespace GeometryGraph.Runtime.Attributes {
         /// Default: <c>{self}</c>
         /// </summary>
         public string DefaultValue { get; set; } = "{self}";
+
+        /// <summary>
+        /// Overrides the code used to get the new value when a port's value is changed.<br/>
+        /// Default: <c>{other} = GetValue(connection, {default});</c>
+        /// </summary>
+        public string GetValueCode { get; set; } = "var {other} = GetValue(connection, {default});";
         
         /// <summary>
         /// Overrides the code used to update the value of the property when a port's value is changed.<br/>
