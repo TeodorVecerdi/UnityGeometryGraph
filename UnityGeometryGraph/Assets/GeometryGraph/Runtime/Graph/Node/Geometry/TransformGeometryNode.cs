@@ -8,7 +8,6 @@ namespace GeometryGraph.Runtime.Graph {
     [GeneratorSettings(OutputPath = "_Generated")]
     public partial class TransformGeometryNode {
         [In(
-            UpdatedFromEditorNode = false,
             DefaultValue = "GeometryData.Empty",
             GetValueCode = "{self} = GetValue(connection, {default})",
             UpdateValueCode = ""

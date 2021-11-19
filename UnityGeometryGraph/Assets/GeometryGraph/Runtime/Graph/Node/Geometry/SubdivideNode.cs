@@ -7,7 +7,7 @@ namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
     [GeneratorSettings(OutputPath = "_Generated")]
     public partial class SubdivideNode {
-        [In(UpdatedFromEditorNode = false, DefaultValue = "GeometryData.Empty")]
+        [In(DefaultValue = "GeometryData.Empty")]
         [AdditionalValueChangedCode("{other} = {other}.Clone()", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
         public GeometryData Input { get; private set; } = GeometryData.Empty;
         

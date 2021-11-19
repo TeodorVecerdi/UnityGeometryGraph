@@ -10,7 +10,6 @@ namespace GeometryGraph.Runtime.Graph {
     [GeneratorSettings(OutputPath = "_Generated")]
     public partial class SampleCollectionNode {
         [In(
-            UpdatedFromEditorNode = false, 
             DefaultValue = "Enumerable.Empty<GeometryData>()", 
             UpdateValueCode = "{self} = new List<GeometryData>({other})")
         ] public List<GeometryData> Collection { get; private set; } = new ();

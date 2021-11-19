@@ -9,7 +9,6 @@ namespace GeometryGraph.Runtime.Graph {
     [GeneratorSettings(OutputPath = "_Generated")]
     public partial class JoinGeometryNode {
         [In(
-            UpdatedFromEditorNode = false,
             PortName = "InputPort",
             UpdateValueCode = "",
             GetValueCode = ""
