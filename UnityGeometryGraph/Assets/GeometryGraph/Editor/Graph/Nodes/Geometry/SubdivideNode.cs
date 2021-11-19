@@ -1,4 +1,5 @@
-﻿using GeometryGraph.Runtime.Graph;
+﻿using GeometryGraph.Runtime;
+using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityCommons;
 using UnityEditor.Experimental.GraphView;
@@ -24,8 +25,9 @@ namespace GeometryGraph.Editor {
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             levelsField.Min = 0;
+            levelsField.Max = Constants.MAX_SUBDIVISIONS;
             levelsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(0);
+                var newValue = evt.newValue.Clamped(0, Constants.MAX_SUBDIVISIONS);
                 if (newValue == levels) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivision levels");

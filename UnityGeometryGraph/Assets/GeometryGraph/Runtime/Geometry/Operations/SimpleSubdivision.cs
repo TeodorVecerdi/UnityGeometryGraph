@@ -2,12 +2,14 @@
 using System.Linq;
 using GeometryGraph.Runtime.AttributeSystem;
 using Unity.Mathematics;
+using UnityCommons;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
     public static class SimpleSubdivision {
         public static GeometryData Subdivide(GeometryData geometryData, int levels = 1) {
             if (levels <= 0) return geometryData.Clone();
+            levels = levels.Clamped(0, Constants.MAX_SUBDIVISIONS);
 
             var subdivided = geometryData.Clone();
             for (var i = 0; i < levels; i++) {

@@ -10,6 +10,9 @@
         public const float MIN_CIRCULAR_GEOMETRY_RADIUS = 0.01f;
         public const float MIN_GEOMETRY_HEIGHT = 0.01f;
         
+        // Other Geometry constraints
+        public const int MAX_SUBDIVISIONS = 5;
+        
         // Primitive Curves constraints
         public const int MAX_CURVE_RESOLUTION = 1024;
         public const int MIN_LINE_CURVE_RESOLUTION = 1;
