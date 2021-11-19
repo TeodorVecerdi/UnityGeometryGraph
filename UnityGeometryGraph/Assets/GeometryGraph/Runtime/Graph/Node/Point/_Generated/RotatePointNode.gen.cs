@@ -124,42 +124,42 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == InputPort) {
-                var newValue = GetValue(InputPort, Input);
+                var newValue = GetValue(connection, Input);
                 Input = newValue;
                 Calculate();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == RotationPort) {
-                var newValue = GetValue(RotationPort, Rotation);
+                var newValue = GetValue(connection, Rotation);
                 if(math.distancesq(Rotation, newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 Rotation = newValue;
                 Calculate();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == RotationAttributePort) {
-                var newValue = GetValue(RotationAttributePort, RotationAttribute);
+                var newValue = GetValue(connection, RotationAttribute);
                 if(string.Equals(RotationAttribute, newValue, StringComparison.InvariantCulture)) return;
                 RotationAttribute = newValue;
                 Calculate();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == AxisPort) {
-                var newValue = GetValue(AxisPort, Axis);
+                var newValue = GetValue(connection, Axis);
                 if(math.distancesq(Axis, newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 Axis = newValue;
                 Calculate();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == AxisAttributePort) {
-                var newValue = GetValue(AxisAttributePort, AxisAttribute);
+                var newValue = GetValue(connection, AxisAttribute);
                 if(string.Equals(AxisAttribute, newValue, StringComparison.InvariantCulture)) return;
                 AxisAttribute = newValue;
                 Calculate();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == AnglePort) {
-                var newValue = GetValue(AnglePort, Angle);
+                var newValue = GetValue(connection, Angle);
                 if(Math.Abs(Angle - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Angle = newValue;
                 Calculate();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == AngleAttributePort) {
-                var newValue = GetValue(AngleAttributePort, AngleAttribute);
+                var newValue = GetValue(connection, AngleAttribute);
                 if(string.Equals(AngleAttribute, newValue, StringComparison.InvariantCulture)) return;
                 AngleAttribute = newValue;
                 Calculate();

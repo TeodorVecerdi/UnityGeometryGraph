@@ -70,17 +70,17 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == TolerancePort) {
-                var newValue = GetValue(TolerancePort, Tolerance);
+                var newValue = GetValue(connection, Tolerance);
                 if(Math.Abs(Tolerance - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Tolerance = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == APort) {
-                var newValue = GetValue(APort, A);
+                var newValue = GetValue(connection, A);
                 if(Math.Abs(A - newValue) < Constants.FLOAT_TOLERANCE) return;
                 A = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == BPort) {
-                var newValue = GetValue(BPort, B);
+                var newValue = GetValue(connection, B);
                 if(Math.Abs(B - newValue) < Constants.FLOAT_TOLERANCE) return;
                 B = newValue;
                 NotifyPortValueChanged(ResultPort);

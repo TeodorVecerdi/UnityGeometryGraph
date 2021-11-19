@@ -112,22 +112,22 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == XPort) {
-                var newValue = GetValue(XPort, X);
+                var newValue = GetValue(connection, X);
                 if(Math.Abs(X - newValue) < Constants.FLOAT_TOLERANCE) return;
                 X = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == YPort) {
-                var newValue = GetValue(YPort, Y);
+                var newValue = GetValue(connection, Y);
                 if(Math.Abs(Y - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Y = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == TolerancePort) {
-                var newValue = GetValue(TolerancePort, Tolerance);
+                var newValue = GetValue(connection, Tolerance);
                 if(Math.Abs(Tolerance - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Tolerance = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == ExtraPort) {
-                var newValue = GetValue(ExtraPort, Extra);
+                var newValue = GetValue(connection, Extra);
                 if(Math.Abs(Extra - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Extra = newValue;
                 NotifyPortValueChanged(ResultPort);

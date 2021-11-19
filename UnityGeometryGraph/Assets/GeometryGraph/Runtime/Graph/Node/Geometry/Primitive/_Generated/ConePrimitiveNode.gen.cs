@@ -58,21 +58,21 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == RadiusPort) {
-                var newValue = GetValue(RadiusPort, Radius);
+                var newValue = GetValue(connection, Radius);
                 newValue = newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if(Math.Abs(Radius - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Radius = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == HeightPort) {
-                var newValue = GetValue(HeightPort, Height);
+                var newValue = GetValue(connection, Height);
                 newValue = newValue.MinClamped(Constants.MIN_GEOMETRY_HEIGHT);
                 if(Math.Abs(Height - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Height = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == PointsPort) {
-                var newValue = GetValue(PointsPort, Points);
+                var newValue = GetValue(connection, Points);
                 newValue = newValue.Clamped(Constants.MIN_CIRCULAR_GEOMETRY_POINTS, Constants.MAX_CIRCULAR_GEOMETRY_POINTS);
                 if(Points == newValue) return;
                 Points = newValue;

@@ -67,28 +67,28 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == BottomRadiusPort) {
-                var newValue = GetValue(BottomRadiusPort, BottomRadius);
+                var newValue = GetValue(connection, BottomRadius);
                 newValue = newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if(Math.Abs(BottomRadius - newValue) < Constants.FLOAT_TOLERANCE) return;
                 BottomRadius = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == TopRadiusPort) {
-                var newValue = GetValue(TopRadiusPort, TopRadius);
+                var newValue = GetValue(connection, TopRadius);
                 newValue = newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if(Math.Abs(TopRadius - newValue) < Constants.FLOAT_TOLERANCE) return;
                 TopRadius = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == HeightPort) {
-                var newValue = GetValue(HeightPort, Height);
+                var newValue = GetValue(connection, Height);
                 newValue = newValue.MinClamped(Constants.MIN_GEOMETRY_HEIGHT);
                 if(Math.Abs(Height - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Height = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == PointsPort) {
-                var newValue = GetValue(PointsPort, Points);
+                var newValue = GetValue(connection, Points);
                 newValue = newValue.Clamped(Constants.MIN_CIRCULAR_GEOMETRY_POINTS, Constants.MAX_CIRCULAR_GEOMETRY_POINTS);
                 if(Points == newValue) return;
                 Points = newValue;

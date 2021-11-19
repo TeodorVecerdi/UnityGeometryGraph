@@ -55,17 +55,17 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == InputPort) {
-                var newValue = GetValue(InputPort, Input);
+                var newValue = GetValue(connection, Input);
                 if(Input == newValue) return;
                 Input = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == MinPort) {
-                var newValue = GetValue(MinPort, Min);
+                var newValue = GetValue(connection, Min);
                 if(Min == newValue) return;
                 Min = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == MaxPort) {
-                var newValue = GetValue(MaxPort, Max);
+                var newValue = GetValue(connection, Max);
                 if(Max == newValue) return;
                 Max = newValue;
                 NotifyPortValueChanged(ResultPort);

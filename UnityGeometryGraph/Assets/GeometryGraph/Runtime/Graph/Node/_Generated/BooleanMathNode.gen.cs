@@ -60,12 +60,12 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == APort) {
-                var newValue = GetValue(APort, A);
+                var newValue = GetValue(connection, A);
                 if(A == newValue) return;
                 A = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == BPort) {
-                var newValue = GetValue(BPort, B);
+                var newValue = GetValue(connection, B);
                 if(B == newValue) return;
                 B = newValue;
                 NotifyPortValueChanged(ResultPort);

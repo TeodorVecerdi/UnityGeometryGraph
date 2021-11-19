@@ -41,7 +41,7 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == SizePort) {
-                var newValue = GetValue(SizePort, Size);
+                var newValue = GetValue(connection, Size);
                 if(math.distancesq(Size, newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 Size = newValue;
                 CalculateResult();

@@ -58,19 +58,19 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == VectorPort) return;
             if (port == XPort) {
-                var newValue = GetValue(XPort, X);
+                var newValue = GetValue(connection, X);
                 if(Math.Abs(X - newValue) < Constants.FLOAT_TOLERANCE) return;
                 X = newValue;
                 CalculateVector();
                 NotifyPortValueChanged(VectorPort);
             } else if (port == YPort) {
-                var newValue = GetValue(YPort, Y);
+                var newValue = GetValue(connection, Y);
                 if(Math.Abs(Y - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Y = newValue;
                 CalculateVector();
                 NotifyPortValueChanged(VectorPort);
             } else if (port == ZPort) {
-                var newValue = GetValue(ZPort, Z);
+                var newValue = GetValue(connection, Z);
                 if(Math.Abs(Z - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Z = newValue;
                 CalculateVector();

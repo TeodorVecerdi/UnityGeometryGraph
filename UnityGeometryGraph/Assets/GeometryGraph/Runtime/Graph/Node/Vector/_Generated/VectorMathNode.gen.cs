@@ -89,32 +89,32 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == VectorResultPort || port == FloatResultPort) return;
             if (port == XPort) {
-                var newValue = GetValue(XPort, X);
+                var newValue = GetValue(connection, X);
                 X = newValue;
                 NotifyPortValueChanged(VectorResultPort);
                 NotifyPortValueChanged(FloatResultPort);
             } else if (port == YPort) {
-                var newValue = GetValue(YPort, Y);
+                var newValue = GetValue(connection, Y);
                 Y = newValue;
                 NotifyPortValueChanged(VectorResultPort);
                 NotifyPortValueChanged(FloatResultPort);
             } else if (port == WrapMaxPort) {
-                var newValue = GetValue(WrapMaxPort, WrapMax);
+                var newValue = GetValue(connection, WrapMax);
                 WrapMax = newValue;
                 NotifyPortValueChanged(VectorResultPort);
                 NotifyPortValueChanged(FloatResultPort);
             } else if (port == IORPort) {
-                var newValue = GetValue(IORPort, IOR);
+                var newValue = GetValue(connection, IOR);
                 if(Math.Abs(IOR - newValue) < Constants.FLOAT_TOLERANCE) return;
                 IOR = newValue;
                 NotifyPortValueChanged(VectorResultPort);
             } else if (port == ScalePort) {
-                var newValue = GetValue(ScalePort, Scale);
+                var newValue = GetValue(connection, Scale);
                 if(Math.Abs(Scale - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Scale = newValue;
                 NotifyPortValueChanged(VectorResultPort);
             } else if (port == DistancePort) {
-                var newValue = GetValue(DistancePort, Distance);
+                var newValue = GetValue(connection, Distance);
                 if(Math.Abs(Distance - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Distance = newValue;
                 NotifyPortValueChanged(VectorResultPort);

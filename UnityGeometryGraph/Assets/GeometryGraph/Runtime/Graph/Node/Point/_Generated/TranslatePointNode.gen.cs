@@ -67,18 +67,18 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == InputPort) {
-                var newValue = GetValue(InputPort, Input);
+                var newValue = GetValue(connection, Input);
                 Input = newValue;
                 Calculate();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == TranslationPort) {
-                var newValue = GetValue(TranslationPort, Translation);
+                var newValue = GetValue(connection, Translation);
                 if(math.distancesq(Translation, newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 Translation = newValue;
                 Calculate();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == AttributeNamePort) {
-                var newValue = GetValue(AttributeNamePort, AttributeName);
+                var newValue = GetValue(connection, AttributeName);
                 if(string.Equals(AttributeName, newValue, StringComparison.InvariantCulture)) return;
                 AttributeName = newValue;
                 Calculate();

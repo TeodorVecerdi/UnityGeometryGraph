@@ -47,7 +47,7 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == XPort || port == YPort || port == ZPort) return;
             if (port == VectorPort) {
-                var newValue = GetValue(VectorPort, Vector);
+                var newValue = GetValue(connection, Vector);
                 Vector = newValue;
                 NotifyPortValueChanged(XPort);
                 NotifyPortValueChanged(YPort);

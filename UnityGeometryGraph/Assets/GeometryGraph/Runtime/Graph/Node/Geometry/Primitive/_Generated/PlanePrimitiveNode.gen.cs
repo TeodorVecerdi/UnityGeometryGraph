@@ -59,19 +59,19 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == WidthPort) {
-                var newValue = GetValue(WidthPort, Width);
+                var newValue = GetValue(connection, Width);
                 if(Math.Abs(Width - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Width = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == HeightPort) {
-                var newValue = GetValue(HeightPort, Height);
+                var newValue = GetValue(connection, Height);
                 if(Math.Abs(Height - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Height = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == SubdivisionsPort) {
-                var newValue = GetValue(SubdivisionsPort, Subdivisions);
+                var newValue = GetValue(connection, Subdivisions);
                 newValue = newValue.MinClamped(0);
                 if(Subdivisions == newValue) return;
                 Subdivisions = newValue;

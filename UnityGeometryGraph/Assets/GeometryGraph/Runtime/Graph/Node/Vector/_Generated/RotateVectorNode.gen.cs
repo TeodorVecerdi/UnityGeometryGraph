@@ -87,27 +87,27 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == VectorPort) {
-                var newValue = GetValue(VectorPort, Vector);
+                var newValue = GetValue(connection, Vector);
                 if(math.distancesq(Vector, newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 Vector = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == CenterPort) {
-                var newValue = GetValue(CenterPort, Center);
+                var newValue = GetValue(connection, Center);
                 if(math.distancesq(Center, newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 Center = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == AxisPort) {
-                var newValue = GetValue(AxisPort, Axis);
+                var newValue = GetValue(connection, Axis);
                 if(math.distancesq(Axis, newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 Axis = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == EulerAnglesPort) {
-                var newValue = GetValue(EulerAnglesPort, EulerAngles);
+                var newValue = GetValue(connection, EulerAngles);
                 if(math.distancesq(EulerAngles, newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 EulerAngles = newValue;
                 NotifyPortValueChanged(ResultPort);
             } else if (port == AnglePort) {
-                var newValue = GetValue(AnglePort, Angle);
+                var newValue = GetValue(connection, Angle);
                 if(Math.Abs(Angle - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Angle = newValue;
                 NotifyPortValueChanged(ResultPort);

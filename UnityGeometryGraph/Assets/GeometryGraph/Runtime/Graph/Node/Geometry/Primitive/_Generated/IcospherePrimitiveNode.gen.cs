@@ -55,14 +55,14 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == RadiusPort) {
-                var newValue = GetValue(RadiusPort, Radius);
+                var newValue = GetValue(connection, Radius);
                 newValue = newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if(Math.Abs(Radius - newValue) < Constants.FLOAT_TOLERANCE) return;
                 Radius = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == SubdivisionsPort) {
-                var newValue = GetValue(SubdivisionsPort, Subdivisions);
+                var newValue = GetValue(connection, Subdivisions);
                 newValue = newValue.Clamped(0, Constants.MAX_ICOSPHERE_SUBDIVISIONS);
                 if(Subdivisions == newValue) return;
                 Subdivisions = newValue;
