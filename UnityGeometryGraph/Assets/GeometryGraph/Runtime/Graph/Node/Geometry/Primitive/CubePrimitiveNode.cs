@@ -1,65 +1,16 @@
-﻿using GeometryGraph.Runtime.Geometry;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using GeometryGraph.Runtime.Attributes;
+using GeometryGraph.Runtime.Geometry;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class CubePrimitiveNode : RuntimeNode {
-        private float3 size = float3_ext.one;
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    public partial class CubePrimitiveNode {
+        [In] public float3 Size { get; private set; } = float3_ext.one;
+        [Out] public GeometryData Result { get; private set; }
 
-        private GeometryData result;
-
-        public RuntimePort SizePort { get; private set; }
-        public RuntimePort ResultPort { get; private set; }
-
-        public CubePrimitiveNode(string guid) : base(guid) {
-            SizePort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
-        }
-
-        public void UpdateSize(float3 newSize) {
-            size = newSize;
-            CalculateResult();
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            if (port != ResultPort) return null;
-            return result;
-        }
-
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port != SizePort) return;
-            var newSize = GetValue(connection, size);
-            if (newSize.Equals(size)) return;
-
-            size = newSize;
-            CalculateResult();
-            NotifyPortValueChanged(ResultPort);
-        }
-
+        [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
-            result = GeometryPrimitive.Cube(size);
-        }
-
-        public override string GetCustomData() {
-            var data = new JObject {
-                ["w"] = size.x,
-                ["h"] = size.y,
-                ["d"] = size.z
-            };
-            return data.ToString(Formatting.None);
-        }
-
-        public override void SetCustomData(string json) {
-            if (string.IsNullOrEmpty(json)) return;
-
-            var data = JObject.Parse(json);
-            size.x = data.Value<float>("w");
-            size.y = data.Value<float>("h");
-            size.z = data.Value<float>("d");
-            CalculateResult();
-            NotifyPortValueChanged(ResultPort);
+            Result = GeometryPrimitive.Cube(Size);
         }
     }
 }

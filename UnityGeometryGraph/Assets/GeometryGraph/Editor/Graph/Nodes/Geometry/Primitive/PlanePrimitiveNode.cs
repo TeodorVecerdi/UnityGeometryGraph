@@ -6,7 +6,6 @@ using Unity.Mathematics;
 using UnityCommons;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.PlanePrimitiveNode.PlanePrimitiveNode_Which;
 
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Primitive", "Plane")]
@@ -27,39 +26,39 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Plane Primitive");
 
-            (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Width", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.x, Which.Width));
-            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(size.y, Which.Height));
-            (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Subdivisions", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions));
+            (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Width", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateWidth(size.x));
+            (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateHeight(size.y));
+            (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Subdivisions", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateSubdivisions(subdivisions));
             resultPort = GraphFrameworkPort.Create("Plane", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             widthField.Min = 0.0f;
             widthField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Min(0.0f);
+                var newValue = evt.newValue.MinClamped(0.0f);
                 if (MathF.Abs(newValue - size.x) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change width");
                 size.x = newValue;
-                RuntimeNode.UpdateValue(size.x, Which.Width);
+                RuntimeNode.UpdateWidth(size.x);
             });
             
             heightField.Min = 0.0f;
             heightField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Min(0.0f);
+                var newValue = evt.newValue.MinClamped(0.0f);
                 if (MathF.Abs(newValue - size.y) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change height");
                 size.y = newValue;
-                RuntimeNode.UpdateValue(size.y, Which.Height);
+                RuntimeNode.UpdateHeight(size.y);
             });
 
             subdivisionsField.Min = 0;
             subdivisionsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Min(0);
+                var newValue = evt.newValue.MinClamped(0);
                 if (newValue == subdivisions) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivisions");
                 subdivisions = newValue;
-                RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions);
+                RuntimeNode.UpdateSubdivisions(subdivisions);
             });
 
             widthField.SetValueWithoutNotify(1.0f);
@@ -104,9 +103,9 @@ namespace GeometryGraph.Editor {
             heightField.SetValueWithoutNotify(size.y);
             subdivisionsField.SetValueWithoutNotify(subdivisions);
 
-            RuntimeNode.UpdateValue(size.x, Which.Width);
-            RuntimeNode.UpdateValue(size.y, Which.Height);
-            RuntimeNode.UpdateValue(subdivisions, Which.Subdivisions);
+            RuntimeNode.UpdateWidth(size.x);
+            RuntimeNode.UpdateHeight(size.y);
+            RuntimeNode.UpdateSubdivisions(subdivisions);
 
             base.SetNodeData(jsonData);
         }

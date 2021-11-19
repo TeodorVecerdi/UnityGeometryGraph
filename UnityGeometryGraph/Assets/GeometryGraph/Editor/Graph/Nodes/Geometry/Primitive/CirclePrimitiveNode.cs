@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using UnityCommons;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.CirclePrimitiveNode.CirclePrimitiveNode_Which;
 
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Primitive", "Circle")]
@@ -24,18 +23,18 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Circle Primitive");
 
-            (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(radius, Which.Radius));
-            (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(points, Which.Points));
+            (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));
+            (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             resultPort = GraphFrameworkPort.Create("Circle", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
 
             radiusField.Min = Constants.MIN_CIRCULAR_GEOMETRY_RADIUS;
             radiusField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Min(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
+                var newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if (MathF.Abs(newValue - radius) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 radius = newValue;
-                RuntimeNode.UpdateValue(radius, Which.Radius);
+                RuntimeNode.UpdateRadius(radius);
             });
 
             pointsField.Min = Constants.MIN_CIRCULAR_GEOMETRY_POINTS;
@@ -46,7 +45,7 @@ namespace GeometryGraph.Editor {
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 points = newValue;
-                RuntimeNode.UpdateValue(points, Which.Points);
+                RuntimeNode.UpdatePoints(points);
             });
 
             radiusField.SetValueWithoutNotify(1.0f);
@@ -84,8 +83,8 @@ namespace GeometryGraph.Editor {
             radiusField.SetValueWithoutNotify(radius);
             pointsField.SetValueWithoutNotify(points);
 
-            RuntimeNode.UpdateValue(radius, Which.Radius);
-            RuntimeNode.UpdateValue(points, Which.Points);
+            RuntimeNode.UpdateRadius(radius);
+            RuntimeNode.UpdatePoints(points);
 
             base.SetNodeData(jsonData);
         }
