@@ -5,7 +5,6 @@ using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.BooleanMathNode.BooleanMathNode_Which;
 using Operation = GeometryGraph.Runtime.Graph.BooleanMathNode.BooleanMathNode_Operation;
 
 namespace GeometryGraph.Editor {
@@ -37,28 +36,28 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Boolean Math");
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("X", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(x, Which.A));
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Y", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(y, Which.B));
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("X", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(x));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Y", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(y));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
             operationDropdown = new EnumSelectionDropdown<Operation>(operation, compareOperationTree);
             operationDropdown.RegisterCallback<ChangeEvent<Operation>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
-                RuntimeNode.UpdateCompareOperation(operation);
+                RuntimeNode.UpdateOperation(operation);
                 OnOperationChanged();
             });
 
             xField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 x = evt.newValue;
-                RuntimeNode.UpdateValue(x, Which.A);
+                RuntimeNode.UpdateA(x);
             });
             
             yField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 y = evt.newValue;
-                RuntimeNode.UpdateValue(y, Which.B);
+                RuntimeNode.UpdateB(y);
             });
 
             xPort.Add(xField);
@@ -107,9 +106,9 @@ namespace GeometryGraph.Editor {
             xField.SetValueWithoutNotify(x);
             yField.SetValueWithoutNotify(y);
             
-            RuntimeNode.UpdateCompareOperation(operation);
-            RuntimeNode.UpdateValue(x, Which.A);
-            RuntimeNode.UpdateValue(y, Which.B);
+            RuntimeNode.UpdateOperation(operation);
+            RuntimeNode.UpdateA(x);
+            RuntimeNode.UpdateB(y);
 
             OnOperationChanged();
 
