@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.ClampFloatNode.ClampFloatNode_Which;
 
 namespace GeometryGraph.Editor {
     [Title("Float", "Clamp")]
@@ -26,27 +25,27 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Clamp");
 
-            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Input", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue, Which.Input));
-            (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Min", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(minValue, Which.Min));
-            (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(maxValue, Which.Max));
+            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Input", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateInput(inputValue));
+            (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Min", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(minValue));
+            (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateMax(maxValue));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
 
             inputField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 inputValue = evt.newValue;
-                RuntimeNode.UpdateValue(inputValue, Which.Input);
+                RuntimeNode.UpdateInput(inputValue);
             });
             
             minField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 minValue = evt.newValue;
-                RuntimeNode.UpdateValue(minValue, Which.Min);
+                RuntimeNode.UpdateMin(minValue);
             });
             
             maxField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 maxValue = evt.newValue;
-                RuntimeNode.UpdateValue(maxValue, Which.Max);
+                RuntimeNode.UpdateMax(maxValue);
             });
             
             minField.SetValueWithoutNotify(0.0f);
@@ -90,9 +89,9 @@ namespace GeometryGraph.Editor {
             minField.SetValueWithoutNotify(minValue);
             maxField.SetValueWithoutNotify(maxValue);
             
-            RuntimeNode.UpdateValue(inputValue, Which.Input);
-            RuntimeNode.UpdateValue(minValue, Which.Min);
-            RuntimeNode.UpdateValue(maxValue, Which.Max);
+            RuntimeNode.UpdateInput(inputValue);
+            RuntimeNode.UpdateMin(minValue);
+            RuntimeNode.UpdateMax(maxValue);
 
             base.SetNodeData(jsonData);
         }

@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.MapRangeFloatNode.MapRangeFloatNode_Which;
 
 namespace GeometryGraph.Editor {
     [Title("Float", "Map Range")]
@@ -34,45 +33,45 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Map Range");
 
-            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Input", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue, Which.Input));
-            (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Min", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(fromMin, Which.FromMin));
-            (fromMaxPort, fromMaxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(fromMax, Which.FromMax));
-            (toMinPort, toMinField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("To Min", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(toMin, Which.ToMin));
-            (toMaxPort, toMaxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("To Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(toMax, Which.ToMax));
+            (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Input", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue));
+            (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Min", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateFromMin(fromMin));
+            (fromMaxPort, fromMaxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateFromMax(fromMax));
+            (toMinPort, toMinField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("To Min", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateToMin(toMin));
+            (toMaxPort, toMaxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("To Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateToMax(toMax));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
 
             clampField = new Toggle("Clamp");
             clampField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change clamp");
                 clamp = evt.newValue;
-                RuntimeNode.UpdateClamped(clamp);
+                RuntimeNode.UpdateClamp(clamp);
             });
             
             inputField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 inputValue = evt.newValue;
-                RuntimeNode.UpdateValue(inputValue, Which.Input);
+                RuntimeNode.UpdateValue(inputValue);
             });
             
             fromMinField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 fromMin = evt.newValue;
-                RuntimeNode.UpdateValue(fromMin, Which.FromMin);
+                RuntimeNode.UpdateFromMin(fromMin);
             });
             fromMaxField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 fromMax = evt.newValue;
-                RuntimeNode.UpdateValue(fromMax, Which.FromMax);
+                RuntimeNode.UpdateFromMax(fromMax);
             });
             toMinField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 toMin = evt.newValue;
-                RuntimeNode.UpdateValue(toMin, Which.ToMin);
+                RuntimeNode.UpdateToMin(toMin);
             });
             toMaxField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 toMax = evt.newValue;
-                RuntimeNode.UpdateValue(toMax, Which.ToMax);
+                RuntimeNode.UpdateToMax(toMax);
             });
             
             fromMinField.SetValueWithoutNotify(0.0f);
@@ -98,7 +97,7 @@ namespace GeometryGraph.Editor {
         }
         
         public override void BindPorts() {
-            BindPort(inputPort, RuntimeNode.InputPort);
+            BindPort(inputPort, RuntimeNode.ValuePort);
             BindPort(fromMinPort, RuntimeNode.FromMinPort);
             BindPort(fromMaxPort, RuntimeNode.FromMaxPort);
             BindPort(toMinPort, RuntimeNode.ToMinPort);
@@ -133,12 +132,12 @@ namespace GeometryGraph.Editor {
             toMinField.SetValueWithoutNotify(toMin);
             toMaxField.SetValueWithoutNotify(toMax);
             
-            RuntimeNode.UpdateClamped(clamp);
-            RuntimeNode.UpdateValue(inputValue, Which.Input);
-            RuntimeNode.UpdateValue(fromMin, Which.FromMin);
-            RuntimeNode.UpdateValue(fromMax, Which.FromMax);
-            RuntimeNode.UpdateValue(toMin, Which.ToMin);
-            RuntimeNode.UpdateValue(toMax, Which.ToMax);
+            RuntimeNode.UpdateClamp(clamp);
+            RuntimeNode.UpdateValue(inputValue);
+            RuntimeNode.UpdateFromMin(fromMin);
+            RuntimeNode.UpdateFromMax(fromMax);
+            RuntimeNode.UpdateToMin(toMin);
+            RuntimeNode.UpdateToMax(toMax);
 
             base.SetNodeData(jsonData);
         }

@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.CompareFloatNode.CompareFloatNode_Which;
 using CompareOperation = GeometryGraph.Runtime.Graph.CompareFloatNode.CompareFloatNode_CompareOperation;
 
 namespace GeometryGraph.Editor {
@@ -43,35 +42,35 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Compare");
 
-            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(tolerance, Which.Tolerance));
-            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(a, Which.A));
-            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("B", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(b, Which.B));
+            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));
+            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(a));
+            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("B", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(b));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
             operationDropdown = new EnumSelectionDropdown<CompareOperation>(operation, compareOperationTree);
             operationDropdown.RegisterCallback<ChangeEvent<CompareOperation>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
-                RuntimeNode.UpdateCompareOperation(operation);
+                RuntimeNode.UpdateOperation(operation);
                 OnOperationChanged();
             });
 
             toleranceField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change tolerance");
                 tolerance = evt.newValue;
-                RuntimeNode.UpdateValue(tolerance, Which.Tolerance);
+                RuntimeNode.UpdateTolerance(tolerance);
             });
 
             aField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 a = evt.newValue;
-                RuntimeNode.UpdateValue(a, Which.A);
+                RuntimeNode.UpdateA(a);
             });
             
             bField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 b = evt.newValue;
-                RuntimeNode.UpdateValue(b, Which.B);
+                RuntimeNode.UpdateB(b);
             });
 
             tolerancePort.Add(toleranceField); 
@@ -128,10 +127,10 @@ namespace GeometryGraph.Editor {
             aField.SetValueWithoutNotify(a);
             bField.SetValueWithoutNotify(b);
             
-            RuntimeNode.UpdateCompareOperation(operation);
-            RuntimeNode.UpdateValue(tolerance, Which.Tolerance);
-            RuntimeNode.UpdateValue(a, Which.A);
-            RuntimeNode.UpdateValue(b, Which.B);
+            RuntimeNode.UpdateOperation(operation);
+            RuntimeNode.UpdateTolerance(tolerance);
+            RuntimeNode.UpdateA(a);
+            RuntimeNode.UpdateB(b);
 
             OnOperationChanged();
 

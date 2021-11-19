@@ -6,8 +6,6 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Which;
-using MathOperation = GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_MathOperation;
 
 namespace GeometryGraph.Editor {
     [Title("Float", "Math")]
@@ -19,19 +17,19 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort extraPort;
         private GraphFrameworkPort resultPort;
 
-        private EnumSelectionDropdown<MathOperation> operationDropdown;
+        private EnumSelectionDropdown<Runtime.Graph.FloatMathNode.FloatMathNode_Operation> operationDropdown;
         private FloatField xField;
         private FloatField yField;
         private FloatField toleranceField;
         private FloatField extraField;
 
-        private MathOperation operation;
+        private Runtime.Graph.FloatMathNode.FloatMathNode_Operation operation;
         private float x;
         private float y;
         private float tolerance = 1e-6f;
         private float extra;
 
-        private static readonly SelectionTree mathOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(MathOperation)).Convert(o => o))) {
+        private static readonly SelectionTree mathOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(Runtime.Graph.FloatMathNode.FloatMathNode_Operation)).Convert(o => o))) {
             new SelectionCategory("Operations", false, SelectionCategory.CategorySize.Large) {
                 new SelectionEntry("x + y", 0, false),
                 new SelectionEntry("x - y", 1, false),
@@ -84,14 +82,14 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Float Math");
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(x, Which.X));
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(y, Which.Y));
-            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(tolerance, Which.Tolerance));
-            (extraPort, extraField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(extra, Which.Extra));
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(x));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateY(y));
+            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));
+            (extraPort, extraField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Max", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateExtra(extra));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
 
-            operationDropdown = new EnumSelectionDropdown<MathOperation>(operation, mathOperationTree);
-            operationDropdown.RegisterCallback<ChangeEvent<MathOperation>>(evt => {
+            operationDropdown = new EnumSelectionDropdown<Runtime.Graph.FloatMathNode.FloatMathNode_Operation>(operation, mathOperationTree);
+            operationDropdown.RegisterCallback<ChangeEvent<Runtime.Graph.FloatMathNode.FloatMathNode_Operation>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
                 RuntimeNode.UpdateOperation(operation);
@@ -101,25 +99,25 @@ namespace GeometryGraph.Editor {
             xField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 x = evt.newValue;
-                RuntimeNode.UpdateValue(x, Which.X);
+                RuntimeNode.UpdateX(x);
             });
 
             yField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 y = evt.newValue;
-                RuntimeNode.UpdateValue(y, Which.Y);
+                RuntimeNode.UpdateY(y);
             });
             
             toleranceField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change tolerance");
                 tolerance = evt.newValue;
-                RuntimeNode.UpdateValue(tolerance, Which.Tolerance);
+                RuntimeNode.UpdateTolerance(tolerance);
             });
             
             extraField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 extra = evt.newValue;
-                RuntimeNode.UpdateValue(extra, Which.Extra);
+                RuntimeNode.UpdateExtra(extra);
             });
 
             xPort.Add(xField);
@@ -160,9 +158,9 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnOperationChanged() {
-            var showTolerance = operation is MathOperation.Compare or MathOperation.SmoothMinimum or MathOperation.SmoothMaximum;
-            var showExtra = operation is MathOperation.Wrap or MathOperation.Lerp;
-            var showY = !(operation is MathOperation.SquareRoot or MathOperation.InverseSquareRoot or MathOperation.Absolute or MathOperation.Exponent or MathOperation.Sign or MathOperation.Round or MathOperation.Floor or MathOperation.Ceil or MathOperation.Truncate or MathOperation.Fraction or MathOperation.Sine or MathOperation.Cosine or MathOperation.Tangent or MathOperation.Arcsine or MathOperation.Arccosine or MathOperation.Arctangent or MathOperation.ToRadians or MathOperation.ToDegrees);
+            var showTolerance = operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Compare or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMinimum or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMaximum;
+            var showExtra = operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Wrap or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Lerp;
+            var showY = !(operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SquareRoot or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.InverseSquareRoot or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Absolute or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Exponent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sign or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Round or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Floor or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Ceil or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Truncate or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Fraction or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Cosine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Tangent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arcsine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arccosine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arctangent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToRadians or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToDegrees);
             
             if (showTolerance) {
                 tolerancePort.Show();
@@ -187,60 +185,60 @@ namespace GeometryGraph.Editor {
 
         private void UpdatePortNames() {
             switch (operation) {
-                case MathOperation.Add:
-                case MathOperation.Subtract:
-                case MathOperation.Multiply:
-                case MathOperation.Divide:
-                case MathOperation.Minimum:
-                case MathOperation.Maximum:
-                case MathOperation.LessThan:
-                case MathOperation.GreaterThan:
-                case MathOperation.Modulo:
-                case MathOperation.Atan2:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Add:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Subtract:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Multiply:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Divide:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Minimum:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Maximum:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.LessThan:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.GreaterThan:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Modulo:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Atan2:
                     SetPortNames("X", "Y", "", ""); break;
                 
-                case MathOperation.Power: 
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Power: 
                     SetPortNames("Base", "Exponent", "", ""); break;
                 
-                case MathOperation.Logarithm: 
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Logarithm: 
                     SetPortNames("X", "Base", "", ""); break;
                 
-                case MathOperation.SquareRoot:
-                case MathOperation.InverseSquareRoot:
-                case MathOperation.Absolute:
-                case MathOperation.Exponent:
-                case MathOperation.Sign: 
-                case MathOperation.Round:
-                case MathOperation.Floor:
-                case MathOperation.Ceil:
-                case MathOperation.Truncate:
-                case MathOperation.Fraction:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SquareRoot:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.InverseSquareRoot:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Absolute:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Exponent:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sign: 
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Round:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Floor:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Ceil:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Truncate:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Fraction:
                     SetPortNames("X", "", "", ""); break;
                 
-                case MathOperation.Compare: 
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Compare: 
                     SetPortNames("X", "Y", "Tolerance", ""); break;
                 
-                case MathOperation.SmoothMinimum:
-                case MathOperation.SmoothMaximum: 
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMinimum:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMaximum: 
                     SetPortNames("X", "Y", "Distance", ""); break;
                 
-                case MathOperation.Wrap:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Wrap:
                     SetPortNames("X", "Min", "", "Max"); break;
                 
-                case MathOperation.Snap:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Snap:
                     SetPortNames("X", "Increment", "", ""); break;
                 
-                case MathOperation.Sine:
-                case MathOperation.Cosine:
-                case MathOperation.Tangent:
-                case MathOperation.Arcsine:
-                case MathOperation.Arccosine:
-                case MathOperation.Arctangent:
-                case MathOperation.ToDegrees:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sine:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Cosine:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Tangent:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arcsine:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arccosine:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arctangent:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToDegrees:
                     SetPortNames("Radians", "", "", ""); break;
-                case MathOperation.ToRadians:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToRadians:
                     SetPortNames("Degrees", "", "", ""); break;
-                case MathOperation.Lerp:
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Lerp:
                     SetPortNames("X", "Y", "", "T"); break;
                 default: throw new ArgumentOutOfRangeException();
             }
@@ -254,7 +252,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void SetNodeData(JObject jsonData) {
-            operation = (MathOperation) jsonData.Value<int>("o");
+            operation = (Runtime.Graph.FloatMathNode.FloatMathNode_Operation) jsonData.Value<int>("o");
             x = jsonData.Value<float>("x");
             y = jsonData.Value<float>("y");
             tolerance = jsonData.Value<float>("t");
@@ -267,10 +265,10 @@ namespace GeometryGraph.Editor {
             extraField.SetValueWithoutNotify(extra);
             
             RuntimeNode.UpdateOperation(operation);
-            RuntimeNode.UpdateValue(x, Which.X);
-            RuntimeNode.UpdateValue(y, Which.Y);
-            RuntimeNode.UpdateValue(tolerance, Which.Tolerance);
-            RuntimeNode.UpdateValue(extra, Which.Extra);
+            RuntimeNode.UpdateX(x);
+            RuntimeNode.UpdateY(y);
+            RuntimeNode.UpdateTolerance(tolerance);
+            RuntimeNode.UpdateExtra(extra);
 
             OnOperationChanged();
 

@@ -1,166 +1,65 @@
 ﻿using System;
 using GeometryGraph.Runtime.Attributes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using JetBrains.Annotations;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class FloatMathNode : RuntimeNode {
-        private FloatMathNode_MathOperation operation;
-        private float x;
-        private float y;
-        private float tolerance;
-        private float extra;
+    [GenerateRuntimeNode(OutputPath = "_Generated")]
+    public partial class FloatMathNode {
+        [In] public float X { get; private set; }
+        [In] public float Y { get; private set; }
+        [In] public float Tolerance { get; private set; }
+        [In] public float Extra { get; private set; }
+        [Setting] public FloatMathNode_Operation Operation { get; private set; }
+        [Out] public float Result { get; private set; }
 
-        public RuntimePort XPort { get; private set; }
-        public RuntimePort YPort { get; private set; }
-        public RuntimePort TolerancePort { get; private set; }
-        public RuntimePort ExtraPort { get; private set; }
-        public RuntimePort ResultPort { get; private set; }
+        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly]
+        private float GetResult() {
+            return Operation switch {
+                FloatMathNode_Operation.Add => X + Y,
+                FloatMathNode_Operation.Subtract => X - Y,
+                FloatMathNode_Operation.Multiply => X * Y,
+                FloatMathNode_Operation.Divide => X / Y,
+                FloatMathNode_Operation.Power => math.pow(X, Y),
+                FloatMathNode_Operation.Logarithm => MathF.Log(X, Y),
+                FloatMathNode_Operation.SquareRoot => math.sqrt(X),
+                FloatMathNode_Operation.InverseSquareRoot => math.rsqrt(X),
+                FloatMathNode_Operation.Absolute => math.abs(X),
+                FloatMathNode_Operation.Exponent => math.exp(X),
 
-        public FloatMathNode(string guid) : base(guid) {
-            XPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
-            YPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
-            TolerancePort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
-            ExtraPort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
-        }
+                FloatMathNode_Operation.Minimum => math.min(X, Y),
+                FloatMathNode_Operation.Maximum => math.max(X, Y),
+                FloatMathNode_Operation.LessThan => X < Y ? 1.0f : 0.0f,
+                FloatMathNode_Operation.GreaterThan => X > Y ? 1.0f : 0.0f,
+                FloatMathNode_Operation.Sign => X < 0 ? -1.0f : X == 0.0f ? 0.0f : 1.0f,
+                FloatMathNode_Operation.Compare => math.abs(X - Y) < Tolerance ? 1.0f : 0.0f,
+                FloatMathNode_Operation.SmoothMinimum => math_ext.smooth_min(X, Y, Tolerance),
+                FloatMathNode_Operation.SmoothMaximum => math_ext.smooth_max(X, Y, Tolerance),
 
-        public void UpdateOperation(FloatMathNode_MathOperation newOperation) {
-            if (newOperation == operation) return;
+                FloatMathNode_Operation.Round => math.round(X),
+                FloatMathNode_Operation.Floor => math.floor(X),
+                FloatMathNode_Operation.Ceil => math.ceil(X),
+                FloatMathNode_Operation.Truncate => (int)X,
+                FloatMathNode_Operation.Fraction => X - (int)X,
+                FloatMathNode_Operation.Modulo => MathF.IEEERemainder(X, Y),
+                FloatMathNode_Operation.Wrap => X = math_ext.wrap(X, Y, Extra),
+                FloatMathNode_Operation.Snap => math.round(X / Y) * Y,
 
-            operation = newOperation;
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        public void UpdateValue(float value, FloatMathNode_Which which) {
-            switch (which) {
-                case FloatMathNode_Which.X:
-                    x = value;
-                    break;
-                case FloatMathNode_Which.Y:
-                    y = value;
-                    break;
-                case FloatMathNode_Which.Tolerance:
-                    tolerance = value;
-                    break;
-                case FloatMathNode_Which.Extra:
-                    extra = value;
-                    break;
-                default: throw new ArgumentOutOfRangeException(nameof(which), which, null);
-            }
-
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            if (port != ResultPort) return null;
-            return Calculate();
-        }
-
-        private float Calculate() {
-            return operation switch {
-                FloatMathNode_MathOperation.Add => x + y,
-                FloatMathNode_MathOperation.Subtract => x - y,
-                FloatMathNode_MathOperation.Multiply => x * y,
-                FloatMathNode_MathOperation.Divide => x / y,
-                FloatMathNode_MathOperation.Power => math.pow(x, y),
-                FloatMathNode_MathOperation.Logarithm => MathF.Log(x, y),
-                FloatMathNode_MathOperation.SquareRoot => math.sqrt(x),
-                FloatMathNode_MathOperation.InverseSquareRoot => math.rsqrt(x),
-                FloatMathNode_MathOperation.Absolute => math.abs(x),
-                FloatMathNode_MathOperation.Exponent => math.exp(x),
-
-                FloatMathNode_MathOperation.Minimum => math.min(x, y),
-                FloatMathNode_MathOperation.Maximum => math.max(x, y),
-                FloatMathNode_MathOperation.LessThan => x < y ? 1.0f : 0.0f,
-                FloatMathNode_MathOperation.GreaterThan => x > y ? 1.0f : 0.0f,
-                FloatMathNode_MathOperation.Sign => x < 0 ? -1.0f : x == 0.0f ? 0.0f : 1.0f,
-                FloatMathNode_MathOperation.Compare => math.abs(x - y) < tolerance ? 1.0f : 0.0f,
-                FloatMathNode_MathOperation.SmoothMinimum => math_ext.smooth_min(x, y, tolerance),
-                FloatMathNode_MathOperation.SmoothMaximum => math_ext.smooth_max(x, y, tolerance),
-
-                FloatMathNode_MathOperation.Round => math.round(x),
-                FloatMathNode_MathOperation.Floor => math.floor(x),
-                FloatMathNode_MathOperation.Ceil => math.ceil(x),
-                FloatMathNode_MathOperation.Truncate => (int)x,
-                FloatMathNode_MathOperation.Fraction => x - (int)x,
-                FloatMathNode_MathOperation.Modulo => (float)Math.IEEERemainder(x, y),
-                FloatMathNode_MathOperation.Wrap => x = math_ext.wrap(x, y, extra),
-                FloatMathNode_MathOperation.Snap => math.round(x / y) * y,
-
-                FloatMathNode_MathOperation.Sine => math.sin(x),
-                FloatMathNode_MathOperation.Cosine => math.cos(x),
-                FloatMathNode_MathOperation.Tangent => math.tan(x),
-                FloatMathNode_MathOperation.Arcsine => math.asin(x),
-                FloatMathNode_MathOperation.Arccosine => math.acos(x),
-                FloatMathNode_MathOperation.Arctangent => math.atan(x),
-                FloatMathNode_MathOperation.Atan2 => math.atan2(x, y),
-                FloatMathNode_MathOperation.ToRadians => math.radians(x),
-                FloatMathNode_MathOperation.ToDegrees => math.degrees(x),
-                FloatMathNode_MathOperation.Lerp => math.lerp(x, y, extra),
+                FloatMathNode_Operation.Sine => math.sin(X),
+                FloatMathNode_Operation.Cosine => math.cos(X),
+                FloatMathNode_Operation.Tangent => math.tan(X),
+                FloatMathNode_Operation.Arcsine => math.asin(X),
+                FloatMathNode_Operation.Arccosine => math.acos(X),
+                FloatMathNode_Operation.Arctangent => math.atan(X),
+                FloatMathNode_Operation.Atan2 => math.atan2(X, Y),
+                FloatMathNode_Operation.ToRadians => math.radians(X),
+                FloatMathNode_Operation.ToDegrees => math.degrees(X),
+                FloatMathNode_Operation.Lerp => math.lerp(X, Y, Extra),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
-
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port == ResultPort) return;
-            DebugUtility.Log("Port value changed");
-            if (port == XPort) {
-                var newValue = GetValue(connection, x);
-                if (Math.Abs(x - newValue) > 0.000001f) {
-                    x = newValue;
-                    NotifyPortValueChanged(ResultPort);
-                }
-            } else if (port == YPort) {
-                var newValue = GetValue(connection, y);
-                if (Math.Abs(y - newValue) > 0.000001f) {
-                    y = newValue;
-                    NotifyPortValueChanged(ResultPort);
-                }
-            } else if (port == TolerancePort) {
-                var newValue = GetValue(connection, tolerance);
-                if (Math.Abs(tolerance - newValue) > 0.000001f) {
-                    tolerance = newValue;
-                    NotifyPortValueChanged(ResultPort);
-                }
-            } else if (port == ExtraPort) {
-                var newValue = GetValue(connection, extra);
-                if (Math.Abs(extra - newValue) > 0.000001f) {
-                    extra = newValue;
-                    NotifyPortValueChanged(ResultPort);
-                }
-            } else {
-                DebugUtility.Log("Invalid port");
-            }
-        }
-
-        public override string GetCustomData() {
-            var data = new JObject {
-                ["o"] = (int)operation,
-                ["x"] = x,
-                ["y"] = y,
-                ["t"] = tolerance,
-                ["v"] = extra,
-            };
-            return data.ToString(Formatting.None);
-        }
-
-        public override void SetCustomData(string json) {
-            if (string.IsNullOrEmpty(json)) return;
-
-            var data = JObject.Parse(json);
-            operation = (FloatMathNode_MathOperation)data.Value<int>("o");
-            x = data.Value<float>("x");
-            y = data.Value<float>("y");
-            tolerance = data.Value<float>("t");
-            extra = data.Value<float>("v");
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        public enum FloatMathNode_Which { X = 0, Y = 1, Tolerance = 2, Extra = 3 }
-
-        public enum FloatMathNode_MathOperation {
+        
+        public enum FloatMathNode_Operation {
             // Operations
             Add = 0, Subtract = 1, Multiply = 2, Divide = 3, Power = 4,
             Logarithm = 5, SquareRoot = 6, InverseSquareRoot = 7, Absolute = 8, Exponent = 9,
