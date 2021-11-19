@@ -1,146 +1,48 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using GeometryGraph.Runtime.Attributes;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class IntegerMathNode : RuntimeNode {
-        private IntegerMathNode_MathOperation operation;
-        private int x;
-        private int y;
-        private float tolerance;
-        private int extra;
+    [GenerateRuntimeNode]
+    public partial class IntegerMathNode {
+        [In] public int X { get; private set; }
+        [In] public int Y { get; private set; }
+        [In] public float Tolerance { get; private set; }
+        [In] public int Extra { get; private set; }
+        [Setting] public IntegerMathNode_Operation Operation { get; private set; }
+        [Out] public int Result { get; private set; }
 
-        public RuntimePort XPort { get; private set; }
-        public RuntimePort YPort { get; private set; }
-        public RuntimePort TolerancePort { get; private set; }
-        public RuntimePort ExtraPort { get; private set; }
-        public RuntimePort ResultPort { get; private set; }
-
-        public IntegerMathNode(string guid) : base(guid) {
-            XPort = RuntimePort.Create(PortType.Integer, PortDirection.Input, this);
-            YPort = RuntimePort.Create(PortType.Integer, PortDirection.Input, this);
-            TolerancePort = RuntimePort.Create(PortType.Float, PortDirection.Input, this);
-            ExtraPort = RuntimePort.Create(PortType.Integer, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Integer, PortDirection.Output, this);
-        }
-
-        public void UpdateOperation(IntegerMathNode_MathOperation newOperation) {
-            if (newOperation == operation) return;
-
-            operation = newOperation;
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        public void UpdateValue(float value, IntegerMathNode_Which which) {
-            switch (which) {
-                case IntegerMathNode_Which.X:
-                    x = (int)value;
-                    break;
-                case IntegerMathNode_Which.Y:
-                    y = (int)value;
-                    break;
-                case IntegerMathNode_Which.Tolerance:
-                    tolerance = value;
-                    break;
-                case IntegerMathNode_Which.Extra:
-                    extra = (int)value;
-                    break;
-                default: throw new ArgumentOutOfRangeException(nameof(which), which, null);
-            }
-
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            if (port != ResultPort) return null;
-            return Calculate();
-        }
-
+        [GetterMethod(nameof(Result))]
         private int Calculate() {
-            return operation switch {
-                IntegerMathNode_MathOperation.Add => x + y,
-                IntegerMathNode_MathOperation.Subtract => x - y,
-                IntegerMathNode_MathOperation.Multiply => x * y,
-                IntegerMathNode_MathOperation.IntegerDivision => x / y,
-                IntegerMathNode_MathOperation.FloatDivision => (int)(x / (float)y),
-                IntegerMathNode_MathOperation.Power => (int)Math.Pow(x, y),
-                IntegerMathNode_MathOperation.Logarithm => (int)Math.Log(x, y),
-                IntegerMathNode_MathOperation.SquareRoot => (int)Math.Sqrt(x),
-                IntegerMathNode_MathOperation.Absolute => Math.Abs(x),
-                IntegerMathNode_MathOperation.Exponent => (int)Math.Exp(x),
+            return Operation switch {
+                IntegerMathNode_Operation.Add => X + Y,
+                IntegerMathNode_Operation.Subtract => X - Y,
+                IntegerMathNode_Operation.Multiply => X * Y,
+                IntegerMathNode_Operation.IntegerDivision => X / Y,
+                IntegerMathNode_Operation.FloatDivision => (int)(X / (float)Y),
+                IntegerMathNode_Operation.Power => (int)Math.Pow(X, Y),
+                IntegerMathNode_Operation.Logarithm => (int)Math.Log(X, Y),
+                IntegerMathNode_Operation.SquareRoot => (int)Math.Sqrt(X),
+                IntegerMathNode_Operation.Absolute => Math.Abs(X),
+                IntegerMathNode_Operation.Exponent => (int)Math.Exp(X),
 
-                IntegerMathNode_MathOperation.Minimum => Math.Min(x, y),
-                IntegerMathNode_MathOperation.Maximum => Math.Max(x, y),
-                IntegerMathNode_MathOperation.LessThan => x < y ? 1 : 0,
-                IntegerMathNode_MathOperation.GreaterThan => x > y ? 1 : 0,
-                IntegerMathNode_MathOperation.Sign => x < 0 ? -1 : x == 0 ? 0 : 1,
-                IntegerMathNode_MathOperation.Compare => x == y ? 1 : 0,
-                IntegerMathNode_MathOperation.SmoothMinimum => (int)math_ext.smooth_min(x, y, tolerance),
-                IntegerMathNode_MathOperation.SmoothMaximum => (int)math_ext.smooth_max(x, y, tolerance),
+                IntegerMathNode_Operation.Minimum => Math.Min(X, Y),
+                IntegerMathNode_Operation.Maximum => Math.Max(X, Y),
+                IntegerMathNode_Operation.LessThan => X < Y ? 1 : 0,
+                IntegerMathNode_Operation.GreaterThan => X > Y ? 1 : 0,
+                IntegerMathNode_Operation.Sign => X < 0 ? -1 : X == 0 ? 0 : 1,
+                IntegerMathNode_Operation.Compare => X == Y ? 1 : 0,
+                IntegerMathNode_Operation.SmoothMinimum => (int)math_ext.smooth_min(X, Y, Tolerance),
+                IntegerMathNode_Operation.SmoothMaximum => (int)math_ext.smooth_max(X, Y, Tolerance),
 
-                IntegerMathNode_MathOperation.Modulo => x % y,
-                IntegerMathNode_MathOperation.Wrap => x = ((x - y) % (extra - y) + (extra - y)) % (extra - y) + y,
-                IntegerMathNode_MathOperation.Snap => (int) Math.Round((float)x / y) * y,
+                IntegerMathNode_Operation.Modulo => X % Y,
+                IntegerMathNode_Operation.Wrap => X = ((X - Y) % (Extra - Y) + (Extra - Y)) % (Extra - Y) + Y,
+                IntegerMathNode_Operation.Snap => (int) Math.Round((float)X / Y) * Y,
 
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(Operation), Operation, null)
             };
         }
 
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port == ResultPort) return;
-            if (port == XPort) {
-                var newValue = GetValue(XPort, x);
-                if (newValue != x) {
-                    x = newValue;
-                    NotifyPortValueChanged(ResultPort);
-                }
-            } else if (port == YPort) {
-                var newValue = GetValue(YPort, y);
-                if (newValue != y) {
-                    y = newValue;
-                    NotifyPortValueChanged(ResultPort);
-                }
-            } else if (port == TolerancePort) {
-                var newValue = GetValue(TolerancePort, tolerance);
-                if (Math.Abs(newValue - tolerance) > 0.000001f) {
-                    tolerance = newValue;
-                    NotifyPortValueChanged(ResultPort);
-                }
-            } else if (port == ExtraPort) {
-                var newValue = GetValue(ExtraPort, extra);
-                if (newValue != extra) {
-                    extra = newValue;
-                    NotifyPortValueChanged(ResultPort);
-                }
-            }
-        }
-
-        public override string GetCustomData() {
-            var data = new JObject {
-                ["o"] = (int)operation,
-                ["x"] = x,
-                ["y"] = y,
-                ["t"] = tolerance,
-                ["v"] = extra,
-            };
-            return data.ToString(Formatting.None);
-        }
-
-        public override void SetCustomData(string json) {
-            if (string.IsNullOrEmpty(json)) return;
-
-            var data = JObject.Parse(json);
-            operation = (IntegerMathNode_MathOperation)data.Value<int>("o");
-            x = data.Value<int>("x");
-            y = data.Value<int>("y");
-            tolerance = data.Value<float>("t");
-            extra = data.Value<int>("v");
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        public enum IntegerMathNode_Which { X = 0, Y = 1, Tolerance = 2, Extra = 3 }
-
-        public enum IntegerMathNode_MathOperation {
+        public enum IntegerMathNode_Operation {
             // Operations
             Add = 0, Subtract = 1, Multiply = 2, IntegerDivision = 3, Power = 4,
             Logarithm = 5, SquareRoot = 6, FloatDivision = 7, Absolute = 8, Exponent = 9,

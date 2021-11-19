@@ -6,8 +6,6 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Which;
-using MathOperation = GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_MathOperation;
 
 namespace GeometryGraph.Editor {
     [Title("Integer", "Math")]
@@ -19,19 +17,19 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort extraPort;
         private GraphFrameworkPort resultPort;
 
-        private EnumSelectionDropdown<MathOperation> operationDropdown;
+        private EnumSelectionDropdown<Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation> operationDropdown;
         private IntegerField xField;
         private IntegerField yField;
         private FloatField toleranceField;
         private IntegerField extraField;
 
-        private MathOperation operation;
+        private Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation operation;
         private int x;
         private int y;
         private float tolerance;
         private int extra;
 
-        private static readonly SelectionTree mathOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(MathOperation)).Convert(o => o))) {
+        private static readonly SelectionTree mathOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation)).Convert(o => o))) {
             new SelectionCategory("Operations", false, SelectionCategory.CategorySize.Large) {
                 new SelectionEntry("x + y", 0, false),
                 new SelectionEntry("x - y", 1, false),
@@ -65,14 +63,14 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Integer Math");
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("X", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(x, Which.X));
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Y", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(y, Which.Y));
-            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(tolerance, Which.Tolerance));
-            (extraPort, extraField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Extra", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(extra, Which.Extra));
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("X", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(x));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Y", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateY(y));
+            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));
+            (extraPort, extraField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Extra", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateExtra(extra));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Integer, edgeConnectorListener, this);
 
-            operationDropdown = new EnumSelectionDropdown<MathOperation>(operation, mathOperationTree);
-            operationDropdown.RegisterCallback<ChangeEvent<MathOperation>>(evt => {
+            operationDropdown = new EnumSelectionDropdown<Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation>(operation, mathOperationTree);
+            operationDropdown.RegisterCallback<ChangeEvent<Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
                 RuntimeNode.UpdateOperation(operation);
@@ -82,25 +80,25 @@ namespace GeometryGraph.Editor {
             xField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 x = evt.newValue;
-                RuntimeNode.UpdateValue(x, Which.X);
+                RuntimeNode.UpdateX(x);
             });
 
             yField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 y = evt.newValue;
-                RuntimeNode.UpdateValue(y, Which.Y);
+                RuntimeNode.UpdateY(y);
             });
             
             toleranceField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change tolerance");
                 tolerance = evt.newValue;
-                RuntimeNode.UpdateValue(tolerance, Which.Tolerance);
+                RuntimeNode.UpdateTolerance(tolerance);
             });
             
             extraField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change extra");
                 extra = evt.newValue;
-                RuntimeNode.UpdateValue(extra, Which.Extra);
+                RuntimeNode.UpdateExtra(extra);
             });
             
             xPort.Add(xField);
@@ -141,10 +139,10 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnOperationChanged() {
-            var showTolerance = operation == MathOperation.SmoothMinimum || operation == MathOperation.SmoothMaximum;
-            var showExtra = operation == MathOperation.Wrap;
-            var showY = !(operation == MathOperation.SquareRoot || operation == MathOperation.Absolute ||
-                          operation == MathOperation.Exponent || operation == MathOperation.Sign);
+            var showTolerance = operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMinimum || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMaximum;
+            var showExtra = operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Wrap;
+            var showY = !(operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SquareRoot || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Absolute ||
+                          operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Exponent || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Sign);
             
             if (showTolerance) {
                 tolerancePort.Show();
@@ -169,41 +167,41 @@ namespace GeometryGraph.Editor {
 
         private void UpdatePortNames() {
             switch (operation) {
-                case MathOperation.Add:
-                case MathOperation.Subtract:
-                case MathOperation.Multiply:
-                case MathOperation.IntegerDivision:
-                case MathOperation.FloatDivision:
-                case MathOperation.Minimum:
-                case MathOperation.Maximum:
-                case MathOperation.LessThan:
-                case MathOperation.GreaterThan:
-                case MathOperation.Modulo:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Add:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Subtract:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Multiply:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.IntegerDivision:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.FloatDivision:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Minimum:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Maximum:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.LessThan:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.GreaterThan:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Modulo:
                     SetPortNames("X", "Y", "", ""); break;
                 
-                case MathOperation.Power: 
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Power: 
                     SetPortNames("Base", "Exponent", "", ""); break;
                 
-                case MathOperation.Logarithm: 
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Logarithm: 
                     SetPortNames("X", "Base", "", ""); break;
                 
-                case MathOperation.SquareRoot:
-                case MathOperation.Absolute:
-                case MathOperation.Exponent:
-                case MathOperation.Sign:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SquareRoot:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Absolute:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Exponent:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Sign:
                     SetPortNames("X", "", "", ""); break;
                 
-                case MathOperation.Compare: 
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Compare: 
                     SetPortNames("X", "Y", "Tolerance", ""); break;
                 
-                case MathOperation.SmoothMinimum:
-                case MathOperation.SmoothMaximum: 
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMinimum:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMaximum: 
                     SetPortNames("X", "Y", "Distance", ""); break;
                 
-                case MathOperation.Wrap:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Wrap:
                     SetPortNames("X", "Min", "", "Max"); break;
                 
-                case MathOperation.Snap:
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Snap:
                     SetPortNames("X", "Increment", "", ""); break;
 
                 default: throw new ArgumentOutOfRangeException();
@@ -218,7 +216,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void SetNodeData(JObject jsonData) {
-            operation = (MathOperation) jsonData.Value<int>("o");
+            operation = (Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation) jsonData.Value<int>("o");
             x = jsonData.Value<int>("x");
             y = jsonData.Value<int>("y");
             tolerance = jsonData.Value<float>("t");
@@ -231,10 +229,10 @@ namespace GeometryGraph.Editor {
             extraField.SetValueWithoutNotify(extra);
             
             RuntimeNode.UpdateOperation(operation);
-            RuntimeNode.UpdateValue(x, Which.X);
-            RuntimeNode.UpdateValue(y, Which.Y);
-            RuntimeNode.UpdateValue(tolerance, Which.Tolerance);
-            RuntimeNode.UpdateValue(extra, Which.Extra);
+            RuntimeNode.UpdateX(x);
+            RuntimeNode.UpdateY(y);
+            RuntimeNode.UpdateTolerance(tolerance);
+            RuntimeNode.UpdateExtra(extra);
 
             OnOperationChanged();
 

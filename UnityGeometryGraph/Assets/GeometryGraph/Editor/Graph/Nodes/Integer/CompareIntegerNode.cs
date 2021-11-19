@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Which = GeometryGraph.Runtime.Graph.CompareIntegerNode.CompareIntegerNode_Which;
 using CompareOperation = GeometryGraph.Runtime.Graph.CompareIntegerNode.CompareIntegerNode_CompareOperation;
 
 namespace GeometryGraph.Editor {
@@ -40,27 +39,27 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Compare");
 
-            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("A", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(a, Which.A));
-            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("B", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(b, Which.B));
+            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("A", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(a));
+            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("B", Orientation.Horizontal, PortType.Integer, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(b));
             resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
 
             operationDropdown = new EnumSelectionDropdown<CompareOperation>(operation, compareOperationTree);
             operationDropdown.RegisterCallback<ChangeEvent<CompareOperation>>(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change operation");
                 operation = evt.newValue;
-                RuntimeNode.UpdateCompareOperation(operation);
+                RuntimeNode.UpdateOperation(operation);
             });
 
             aField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 a = evt.newValue;
-                RuntimeNode.UpdateValue(a, Which.A);
+                RuntimeNode.UpdateA(a);
             });
             
             bField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 b = evt.newValue;
-                RuntimeNode.UpdateValue(b, Which.B);
+                RuntimeNode.UpdateB(b);
             });
 
             aPort.Add(aField);
@@ -99,9 +98,9 @@ namespace GeometryGraph.Editor {
             aField.SetValueWithoutNotify(a);
             bField.SetValueWithoutNotify(b);
             
-            RuntimeNode.UpdateCompareOperation(operation);
-            RuntimeNode.UpdateValue(a, Which.A);
-            RuntimeNode.UpdateValue(b, Which.B);
+            RuntimeNode.UpdateOperation(operation);
+            RuntimeNode.UpdateA(a);
+            RuntimeNode.UpdateB(b);
 
             base.SetNodeData(jsonData);
         }

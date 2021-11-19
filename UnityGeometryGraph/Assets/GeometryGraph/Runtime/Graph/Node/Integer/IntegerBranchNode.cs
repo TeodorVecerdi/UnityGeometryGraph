@@ -10,6 +10,6 @@ namespace GeometryGraph.Runtime.Graph {
         [Out] public int Result { get; private set; }
         
         [GetterMethod(nameof(Result), Inline = true), UsedImplicitly]
-        public int GetResult() => Condition ? IfTrue : IfFalse;
+        private int GetResult() => Condition ? IfTrue : IfFalse;
     }
 }
