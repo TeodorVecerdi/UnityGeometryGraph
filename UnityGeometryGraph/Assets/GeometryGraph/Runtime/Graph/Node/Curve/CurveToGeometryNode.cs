@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(CalculateDuringDeserialization = false, OutputPath = "_Generated")]
+    [GeneratorSettings(CalculateDuringDeserialization = false)]
     public partial class CurveToGeometryNode {
         [In(
             UpdateValueCode = "",

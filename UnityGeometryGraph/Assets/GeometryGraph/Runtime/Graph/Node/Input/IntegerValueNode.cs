@@ -3,7 +3,6 @@ using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class IntegerValueNode {
         [Setting] public int Value { get; private set; }
         [Out(PortName = "ValuePort")] public int Result { get; private set; }

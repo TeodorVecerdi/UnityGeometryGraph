@@ -5,7 +5,6 @@ using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class FloatMathNode {
         [In] public float X { get; private set; }
         [In] public float Y { get; private set; }

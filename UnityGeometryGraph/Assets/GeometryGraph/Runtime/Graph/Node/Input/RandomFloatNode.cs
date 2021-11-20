@@ -5,7 +5,6 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class RandomFloatNode {
         [In] public int Seed { get; private set; }
         [Out] public float Value { get; private set; }

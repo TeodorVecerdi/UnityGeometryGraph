@@ -4,7 +4,6 @@ using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class SplitVectorNode {
         [In(GenerateEquality = false)] public float3 Vector { get; private set; }
         [Out] public float X { get; private set; }

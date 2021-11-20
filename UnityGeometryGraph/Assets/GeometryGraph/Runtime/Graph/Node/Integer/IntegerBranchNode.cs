@@ -3,7 +3,6 @@ using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class IntegerBranchNode {
         [In] public bool Condition { get; private set; }
         [In] public int IfTrue { get; private set; }

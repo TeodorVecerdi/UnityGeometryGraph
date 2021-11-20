@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(GenerateSerialization = false, OutputPath = "_Generated")]
+    [GeneratorSettings(GenerateSerialization = false)]
     public partial class CurveInfoNode {
         [In(
             DefaultValue = "(CurveData)null",

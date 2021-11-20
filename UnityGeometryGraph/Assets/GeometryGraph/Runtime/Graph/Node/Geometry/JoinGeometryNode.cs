@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class JoinGeometryNode {
         [In(
             PortName = "InputPort",

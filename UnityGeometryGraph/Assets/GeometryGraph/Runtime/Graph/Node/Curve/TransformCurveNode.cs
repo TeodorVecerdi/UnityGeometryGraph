@@ -6,7 +6,6 @@ using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class TransformCurveNode {
         [In(
             DefaultValue = "(CurveData)null",

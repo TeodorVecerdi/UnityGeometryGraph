@@ -5,7 +5,6 @@ using Unity.Mathematics;
 namespace GeometryGraph.Runtime.Graph {
     [AdditionalUsingStatements("UnityCommons")]
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class PlanePrimitiveNode {
         [In] public float Width { get; private set; } = 1.0f;
         [In] public float Height { get; private set; } = 1.0f;

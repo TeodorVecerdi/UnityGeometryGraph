@@ -150,3 +150,6 @@ sysinfo.txt
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # End of https://www.toptal.com/developers/gitignore/api/unity,rider
+
+*.gen.cs
+*.gen.cs.meta

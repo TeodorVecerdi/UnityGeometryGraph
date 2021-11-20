@@ -5,7 +5,6 @@ using JetBrains.Annotations;
 namespace GeometryGraph.Runtime.Graph {
     [AdditionalUsingStatements("UnityCommons")]
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class SubdivideNode {
         [In(DefaultValue = "GeometryData.Empty")]
         [AdditionalValueChangedCode("{other} = {other}.Clone()", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]

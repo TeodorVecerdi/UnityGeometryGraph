@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class FloatBranchNode {
         [In] public bool Condition { get; private set; }
         [In] public float IfTrue { get; private set; }

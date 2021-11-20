@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class TranslatePointNode {
         [In] public GeometryData Input { get; private set; }
         [In] public float3 Translation { get; private set; }

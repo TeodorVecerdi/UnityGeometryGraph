@@ -4,7 +4,7 @@ using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated", GenerateSerialization = false)]
+    [GeneratorSettings(GenerateSerialization = false)]
     public partial class BoundingBoxNode {
         [In] public GeometryData Input { get; private set; } = GeometryData.Empty;
         [Out] public GeometryData BoundingBox { get; private set; }

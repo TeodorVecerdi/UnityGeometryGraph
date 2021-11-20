@@ -5,7 +5,6 @@ using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
-    [GeneratorSettings(OutputPath = "_Generated")]
     public partial class TransformGeometryNode {
         [In(
             DefaultValue = "GeometryData.Empty",
