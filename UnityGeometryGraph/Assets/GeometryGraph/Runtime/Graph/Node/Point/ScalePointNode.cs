@@ -38,10 +38,6 @@ namespace GeometryGraph.Runtime.Graph {
                     scaleAttr.YieldWithAttribute(multiplier, (scale, mul) => scale * mul).Into(scaleAttr);
                     Result.StoreAttribute(scaleAttr);
                 }
-                
-                // var multiplier = mode == ScalePointNode_Mode.Vector ? vector : new float3(scalar);
-                // scaleAttr.Yield(scale => scale * multiplier).Into(scaleAttr);
-                // result.StoreAttribute(scaleAttr);
             } else {
                 if (!Result.HasAttribute(AttributeName)) {
                     Debug.LogWarning($"Couldn't find attribute [{AttributeName}]");
