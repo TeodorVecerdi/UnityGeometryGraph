@@ -49,7 +49,7 @@ namespace GeometryGraph.Editor {
 
         public static GraphFrameworkObject LoadGraphAtPath(string assetPath) {
             if (string.IsNullOrEmpty(assetPath)) return null;
-            Debug.LogWarning("GraphFrameworkUtility::LoadGraphAtPath");
+            // Debug.LogWarning("GraphFrameworkUtility::LoadGraphAtPath");
             var jsonString = ReadCompressed(assetPath);
             try {
                 RuntimeGraphObjectData.DeserializingFromJson = true;
