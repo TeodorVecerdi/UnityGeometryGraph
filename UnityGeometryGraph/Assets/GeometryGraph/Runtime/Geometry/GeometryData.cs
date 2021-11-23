@@ -78,15 +78,15 @@ namespace GeometryGraph.Runtime.Geometry {
             List<float3> faceNormals, List<int> faceMaterialIndices, List<bool> faceSmoothShaded
         ) {
             using var method = Profiler.ProfileMethod();
-            if(vertices.Count > 0) attributeManager.Store(vertices.Into<Vector3Attribute>("position", AttributeDomain.Vertex));
+            if(vertices.Count > 0) attributeManager.Store(vertices.Into<Vector3Attribute>(AttributeId.Position, AttributeDomain.Vertex));
 
-            if(faceNormals.Count > 0) attributeManager.Store(faceNormals.Into<Vector3Attribute>("normal", AttributeDomain.Face));
-            if(faceMaterialIndices.Count > 0) attributeManager.Store(faceMaterialIndices.Into<IntAttribute>("material_index", AttributeDomain.Face));
-            if(faceSmoothShaded.Count > 0) attributeManager.Store(faceSmoothShaded.Into<BoolAttribute>("shade_smooth", AttributeDomain.Face));
+            if(faceNormals.Count > 0) attributeManager.Store(faceNormals.Into<Vector3Attribute>(AttributeId.Normal, AttributeDomain.Face));
+            if(faceMaterialIndices.Count > 0) attributeManager.Store(faceMaterialIndices.Into<IntAttribute>(AttributeId.Material, AttributeDomain.Face));
+            if(faceSmoothShaded.Count > 0) attributeManager.Store(faceSmoothShaded.Into<BoolAttribute>(AttributeId.ShadeSmooth, AttributeDomain.Face));
 
-            if(creases.Count > 0) attributeManager.Store(creases.Into<ClampedFloatAttribute>("crease", AttributeDomain.Edge));
+            if(creases.Count > 0) attributeManager.Store(creases.Into<ClampedFloatAttribute>(AttributeId.Crease, AttributeDomain.Edge));
 
-            if (uvs.Count > 0) attributeManager.Store(uvs.Into<Vector2Attribute>("uv", AttributeDomain.FaceCorner));
+            if (uvs.Count > 0) attributeManager.Store(uvs.Into<Vector2Attribute>(AttributeId.UV, AttributeDomain.FaceCorner));
         }
 
         private void Cleanup() {

@@ -94,16 +94,16 @@ namespace GeometryGraph.Runtime.Geometry {
 
             //!! 3. Update attributes on `rhs`
             var rhsMaterialIndexOffset = lhs.submeshCount;
-            if (rhs.attributeManager.HasAttribute("material_index", AttributeDomain.Face)) {
-                var rhsMaterialIndexAttr = rhs.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face).Select(i => i + rhsMaterialIndexOffset);
+            if (rhs.attributeManager.HasAttribute(AttributeId.Material, AttributeDomain.Face)) {
+                var rhsMaterialIndexAttr = rhs.GetAttribute<IntAttribute>(AttributeId.Material, AttributeDomain.Face).Select(i => i + rhsMaterialIndexOffset);
                 
                 //!! 4. Merge attributes on `lhs`
                 // Material index is treated separately
-                if (lhs.attributeManager.HasAttribute("material_index", AttributeDomain.Face)) {
-                    var lhsMaterialIndexAttr = lhs.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face);
+                if (lhs.attributeManager.HasAttribute(AttributeId.Material, AttributeDomain.Face)) {
+                    var lhsMaterialIndexAttr = lhs.GetAttribute<IntAttribute>(AttributeId.Material, AttributeDomain.Face);
                     lhsMaterialIndexAttr.AppendMany(rhsMaterialIndexAttr).Into(lhsMaterialIndexAttr);
                 } else {
-                    var attr = rhsMaterialIndexAttr.Into<IntAttribute>("material_index", AttributeDomain.Face);
+                    var attr = rhsMaterialIndexAttr.Into<IntAttribute>(AttributeId.Material, AttributeDomain.Face);
                     lhs.attributeManager.Store(attr);
                 }
             }
@@ -119,7 +119,7 @@ namespace GeometryGraph.Runtime.Geometry {
                    .Union(lhs.attributeManager.FaceCornerAttributes);
            
             foreach (var pair in allLhsAttributeDictionaries) {
-                if (string.Equals(pair.Key, "material_index", StringComparison.InvariantCulture) && pair.Value.Domain == AttributeDomain.Face) continue;
+                if (string.Equals(pair.Key, AttributeId.Material, StringComparison.InvariantCulture) && pair.Value.Domain == AttributeDomain.Face) continue;
                 if(!rhs.attributeManager.HasAttribute(pair.Key, pair.Value.Domain)) continue;
 
                 pair.Value
