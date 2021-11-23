@@ -36,9 +36,9 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Boolean Math");
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("X", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(x));
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Y", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(y));
-            resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("X", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(x));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Y", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(y));
+            resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Boolean, this);
 
             operationDropdown = new EnumSelectionDropdown<Operation>(operation, compareOperationTree);
             operationDropdown.RegisterCallback<ChangeEvent<Operation>>(evt => {

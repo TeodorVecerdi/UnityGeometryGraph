@@ -42,10 +42,10 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Compare");
 
-            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));
-            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(a));
-            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("B", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(b));
-            resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
+            (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));
+            (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(a));
+            (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("B", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(b));
+            resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Boolean, this);
 
             operationDropdown = new EnumSelectionDropdown<CompareOperation>(operation, compareOperationTree);
             operationDropdown.RegisterCallback<ChangeEvent<CompareOperation>>(evt => {

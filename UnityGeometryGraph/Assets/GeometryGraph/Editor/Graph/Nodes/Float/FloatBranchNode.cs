@@ -27,10 +27,10 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Branch (Float)");
 
-            (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
-            (ifTruePort, ifTrueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("If True", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfTrue(ifTrue));
-            (ifFalsePort, ifFalseField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("If False", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfFalse(ifFalse));
-            resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
+            (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
+            (ifTruePort, ifTrueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("If True", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfTrue(ifTrue));
+            (ifFalsePort, ifFalseField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("If False", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfFalse(ifFalse));
+            resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
 
             conditionToggle.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == condition) return;

@@ -25,10 +25,10 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Combine");
 
-            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(vector.x));
-            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateY(vector.y));
-            (zPort, zField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Z", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateZ(vector.z));
-            vectorPort = GraphFrameworkPort.Create("Vector", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Vector, edgeConnectorListener, this);
+            (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(vector.x));
+            (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateY(vector.y));
+            (zPort, zField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Z", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateZ(vector.z));
+            vectorPort = GraphFrameworkPort.Create("Vector", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
 
             xField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector x component");

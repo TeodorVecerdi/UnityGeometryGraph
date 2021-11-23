@@ -11,8 +11,8 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Join Geometry");
 
-            aPort = GraphFrameworkPort.Create("Values", Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
-            resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
+            aPort = GraphFrameworkPort.Create("Values", Direction.Input, Port.Capacity.Multi, PortType.Geometry, this);
+            resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
             
             AddPort(aPort);
             AddPort(resultPort);

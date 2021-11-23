@@ -35,26 +35,26 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Transform Curve");
             
-            inputCurvePort = GraphFrameworkPort.Create("Curve", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Curve, edgeConnectorListener, this);
+            inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
 
             (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false,
+                "Translation", PortType.Vector, this, showLabelOnField: false,
                 onDisconnect: (_, _) => RuntimeNode.UpdateTranslation(translation)
             );
             (rotationPort, rotationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Rotation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false,
+                "Rotation", PortType.Vector, this, showLabelOnField: false,
                 onDisconnect: (_, _) => RuntimeNode.UpdateRotation(rotation)
             );
             (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Scale", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false,
+                "Scale", PortType.Vector, this, showLabelOnField: false,
                 onDisconnect: (_, _) => RuntimeNode.UpdateScale(scale)
             );
             (isClosedPort, isClosedToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>(
-                "Is Closed", Orientation.Horizontal, PortType.Boolean, edgeConnectorListener, this,
+                "Is Closed", PortType.Boolean, this,
                 onDisconnect: (_, _) => RuntimeNode.UpdateIsClosed(isClosed)
             );
             
-            resultCurvePort = GraphFrameworkPort.Create("Curve", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Curve, edgeConnectorListener, this);
+            resultCurvePort = GraphFrameworkPort.Create("Curve", Direction.Output, Port.Capacity.Multi, PortType.Curve, this);
 
             translationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change curve translation");

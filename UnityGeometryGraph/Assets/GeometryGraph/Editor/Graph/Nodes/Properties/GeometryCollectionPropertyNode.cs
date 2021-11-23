@@ -36,7 +36,7 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize(property != null ? property.DisplayName : "ERROR");
 
-            propertyPort = GraphFrameworkPort.Create("Collection", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Collection, edgeConnectorListener, this);
+            propertyPort = GraphFrameworkPort.Create("Collection", Direction.Output, Port.Capacity.Multi, PortType.Collection, this);
             AddPort(propertyPort);
             
             Refresh();

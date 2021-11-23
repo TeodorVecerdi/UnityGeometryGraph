@@ -46,11 +46,11 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Curve To Geometry");
             
-            inputCurvePort = GraphFrameworkPort.Create("Curve", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Curve, edgeConnectorListener, this);
-            profileCurvePort = GraphFrameworkPort.Create("Profile", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Curve, edgeConnectorListener, this, onConnect: OnProfileCurveConnected, onDisconnect: OnProfileCurveDisconnected);
-            (rotationOffsetPort, rotationOffsetField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Profile Rotation", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateRotationOffset(rotationOffset));
-            (incrementalRotationOffsetPort, incrementalRotationOffsetField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Incremental Rotation", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateIncrementalRotationOffset(incrementalRotationOffset));
-            resultPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
+            inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
+            profileCurvePort = GraphFrameworkPort.Create("Profile", Direction.Input, Port.Capacity.Single, PortType.Curve, this, onConnect: OnProfileCurveConnected, onDisconnect: OnProfileCurveDisconnected);
+            (rotationOffsetPort, rotationOffsetField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Profile Rotation", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRotationOffset(rotationOffset));
+            (incrementalRotationOffsetPort, incrementalRotationOffsetField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Incremental Rotation", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateIncrementalRotationOffset(incrementalRotationOffset));
+            resultPort = GraphFrameworkPort.Create("Geometry", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
 
             rotationOffsetField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - rotationOffset) < Constants.FLOAT_TOLERANCE) return;

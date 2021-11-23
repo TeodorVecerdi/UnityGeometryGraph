@@ -77,14 +77,14 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Rotate Points");
 
-            inputPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener, this);
-            (rotationPort, rotationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Rotation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateRotation(rotation));
-            (axisPort, axisField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Axis", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateAxis(axis));
-            (anglePort, angleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Angle", Orientation.Horizontal, PortType.Float, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateAngle(angle));
-            (rotationAttributePort, rotationAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Rotation", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateRotationAttribute(rotationAttribute));
-            (axisAttributePort, axisAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Axis", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateAxisAttribute(axisAttribute));
-            (angleAttributePort, angleAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Angle", Orientation.Horizontal, PortType.String, edgeConnectorListener, this, onDisconnect: (_, _) => RuntimeNode.UpdateAngleAttribute(angleAttribute));
-            resultPort = GraphFrameworkPort.Create("Result", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
+            inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
+            (rotationPort, rotationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Rotation", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateRotation(rotation));
+            (axisPort, axisField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Axis", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateAxis(axis));
+            (anglePort, angleField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Angle", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateAngle(angle));
+            (rotationAttributePort, rotationAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Rotation", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateRotationAttribute(rotationAttribute));
+            (axisAttributePort, axisAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Axis", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAxisAttribute(axisAttribute));
+            (angleAttributePort, angleAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Angle", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAngleAttribute(angleAttribute));
+            resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
 
             rotationModeDropdown = new EnumSelectionDropdown<RotationMode>(rotationMode, rotationTree, "Rotation");
             rotationModeDropdown.RegisterCallback<ChangeEvent<RotationMode>>(evt => {

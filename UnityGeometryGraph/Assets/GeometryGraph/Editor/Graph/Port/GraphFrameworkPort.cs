@@ -86,10 +86,10 @@ namespace GeometryGraph.Editor {
             OnDisconnect?.Invoke(edge, this);
         }
 
-        public static GraphFrameworkPort Create(string name, Orientation portOrientation, Direction portDirection, Capacity portCapacity, PortType type, EdgeConnectorListener edgeConnectorListener, AbstractNode ownerNode, bool hideLabel = false, Action<Edge, GraphFrameworkPort> onConnect = null, Action<Edge, GraphFrameworkPort> onDisconnect = null) {
-            var port = new GraphFrameworkPort(name, ownerNode, portOrientation, portDirection, portCapacity);
-            if (edgeConnectorListener != null) {
-                port.m_EdgeConnector = new EdgeConnector<Edge>(edgeConnectorListener);
+        public static GraphFrameworkPort Create(string name, Direction portDirection, Capacity portCapacity, PortType type, AbstractNode ownerNode, bool hideLabel = false, Action<Edge, GraphFrameworkPort> onConnect = null, Action<Edge, GraphFrameworkPort> onDisconnect = null) {
+            var port = new GraphFrameworkPort(name, ownerNode, Orientation.Horizontal, portDirection, portCapacity);
+            if (ownerNode.EdgeConnectorListener != null) {
+                port.m_EdgeConnector = new EdgeConnector<Edge>(ownerNode.EdgeConnectorListener);
                 port.AddManipulator(port.m_EdgeConnector);
             }
             
@@ -116,8 +116,8 @@ namespace GeometryGraph.Editor {
             return port;
         }
 
-        public static (GraphFrameworkPort port, T field) CreateWithBackingField<T, TVal>(string name, Orientation portOrientation, PortType type, EdgeConnectorListener edgeConnectorListener, AbstractNode ownerNode, bool hideLabel = false, bool showLabelOnField = true, Action<Edge, GraphFrameworkPort> onConnect = null, Action<Edge, GraphFrameworkPort> onDisconnect = null) where T : BaseField<TVal>, new() {
-            var port = Create(name, portOrientation, Direction.Input, Capacity.Single, type, edgeConnectorListener, ownerNode, hideLabel);
+        public static (GraphFrameworkPort port, T field) CreateWithBackingField<T, TVal>(string name, PortType type, AbstractNode ownerNode, bool hideLabel = false, bool showLabelOnField = true, Action<Edge, GraphFrameworkPort> onConnect = null, Action<Edge, GraphFrameworkPort> onDisconnect = null) where T : BaseField<TVal>, new() {
+            var port = Create(name, Direction.Input, Capacity.Single, type, ownerNode, hideLabel);
             var field = new T();
             if (showLabelOnField) field.label = name;
             field.AddToClassList("port-backing-field");

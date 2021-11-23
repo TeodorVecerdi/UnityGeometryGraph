@@ -12,9 +12,9 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Curve Info");
             
-            inputCurvePort = GraphFrameworkPort.Create("Curve", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Curve, edgeConnectorListener, this);
-            pointsPort = GraphFrameworkPort.Create("Points", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Integer, edgeConnectorListener, this);
-            isClosedPort = GraphFrameworkPort.Create("Is Closed", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Boolean, edgeConnectorListener, this);
+            inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
+            pointsPort = GraphFrameworkPort.Create("Points", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);
+            isClosedPort = GraphFrameworkPort.Create("Is Closed", Direction.Output, Port.Capacity.Multi, PortType.Boolean, this);
             
             AddPort(inputCurvePort);
             AddPort(pointsPort);

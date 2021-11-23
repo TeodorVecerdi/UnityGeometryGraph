@@ -25,10 +25,10 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Split");
 
-            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
-            xPort = GraphFrameworkPort.Create("X", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
-            yPort = GraphFrameworkPort.Create("Y", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
-            zPort = GraphFrameworkPort.Create("Z", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Float, edgeConnectorListener, this);
+            (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
+            xPort = GraphFrameworkPort.Create("X", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
+            yPort = GraphFrameworkPort.Create("Y", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
+            zPort = GraphFrameworkPort.Create("Z", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
 
             vectorField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector value");

@@ -31,11 +31,11 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Transform Geometry");
 
-            inputGeometryPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Input, Port.Capacity.Single, PortType.Geometry, edgeConnectorListener, this);
-            outputGeometryPort = GraphFrameworkPort.Create("Geometry", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, PortType.Geometry, edgeConnectorListener, this);
+            inputGeometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
+            outputGeometryPort = GraphFrameworkPort.Create("Geometry", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
 
             (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Translation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, 
+                "Translation", PortType.Vector, this, showLabelOnField: false, 
                 onDisconnect: (_, _) => RuntimeNode.UpdateTranslation(translation)
             );
             translationField.RegisterValueChangedCallback(evt => {
@@ -44,7 +44,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateTranslation(translation);
             });
             (rotationPort, eulerRotationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Rotation", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, 
+                "Rotation", PortType.Vector, this, showLabelOnField: false, 
                 onDisconnect: (_, _) => RuntimeNode.UpdateRotation(eulerRotation)
             );
             eulerRotationField.RegisterValueChangedCallback(evt => {
@@ -54,7 +54,7 @@ namespace GeometryGraph.Editor {
             });
             
             (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Scale", Orientation.Horizontal, PortType.Vector, edgeConnectorListener, this, showLabelOnField: false, 
+                "Scale", PortType.Vector, this, showLabelOnField: false, 
                 onDisconnect: (_, _) => RuntimeNode.UpdateScale(scale)
             );
             scaleField.SetValueWithoutNotify(float3_ext.one);
