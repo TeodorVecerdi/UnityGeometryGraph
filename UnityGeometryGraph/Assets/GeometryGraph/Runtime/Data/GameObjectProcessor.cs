@@ -7,7 +7,7 @@ namespace GeometryGraph.Runtime.Data {
         [SerializeField, HideInInspector] protected int ChildrenHashCode = 0;
 
         public virtual void Process() {
-            var newHashCode = ComputeChildrenHashCode(transform);
+            int newHashCode = ComputeChildrenHashCode(transform);
         
             if (ChildrenHashCode != newHashCode || Processed == null) {
                 ChildrenHashCode = newHashCode;
@@ -19,8 +19,8 @@ namespace GeometryGraph.Runtime.Data {
         protected abstract TChild CollectChild(Transform childTransform);
 
         protected List<TChild> CollectChildren() {
-            var list = new List<TChild>();
-            for (var i = 0; i < transform.childCount; i++) {
+            List<TChild> list = new List<TChild>();
+            for (int i = 0; i < transform.childCount; i++) {
                 list.Add(CollectChild(transform.GetChild(i)));
             }
 
@@ -33,10 +33,10 @@ namespace GeometryGraph.Runtime.Data {
             // Currently it changes only if you add/remove objects or disable/enable objects
             
             unchecked {
-                var hashCode = transform.gameObject.GetHashCode() * 137 + transform.gameObject.activeSelf.GetHashCode();
+                int hashCode = transform.gameObject.GetHashCode() * 137 + transform.gameObject.activeSelf.GetHashCode();
                 if (transform.childCount == 0) return hashCode;
             
-                for (var i = 0; i < transform.childCount; i++) {
+                for (int i = 0; i < transform.childCount; i++) {
                     hashCode = hashCode * 239 + ComputeChildrenHashCode(transform.GetChild(i));
                 }
 

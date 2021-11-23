@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
@@ -35,7 +36,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
             Handles.matrix = Gizmos.matrix = transform.localToWorldMatrix;
 
             if (ShowPoints || ShowSpline) {
-                var points = curveData.Position.Select(float3 => (Vector3)float3).ToArray();
+                Vector3[] points = curveData.Position.Select(float3 => (Vector3)float3).ToArray();
                 Handles.color = SplineColor;
                 if (ShowSpline) {
                     Handles.DrawAAPolyLine(SplineWidth, points);
@@ -44,18 +45,18 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
 
                 if (ShowPoints) {
                     Gizmos.color = PointColor;
-                    foreach (var p in points) {
+                    foreach (Vector3 p in points) {
                         Gizmos.DrawSphere(p, PointSize);
                     }
                 }
             }
 
             if (ShowDirectionVectors) {
-                for (var i = 0; i < curveData.Position.Count; i++) {
-                    var p = curveData.Position[i];
-                    var t = curveData.Tangent[i];
-                    var n = curveData.Normal[i];
-                    var b = curveData.Binormal[i];
+                for (int i = 0; i < curveData.Position.Count; i++) {
+                    float3 p = curveData.Position[i];
+                    float3 t = curveData.Tangent[i];
+                    float3 n = curveData.Normal[i];
+                    float3 b = curveData.Binormal[i];
 
                     Handles.color = DirectionTangentColor;
                     Handles.DrawAAPolyLine(DirectionVectorWidth, p, p + t * DirectionVectorLength);

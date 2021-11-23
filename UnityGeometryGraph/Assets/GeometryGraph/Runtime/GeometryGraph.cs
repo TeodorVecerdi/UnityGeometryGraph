@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Curve.TEMP;
+using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
 using Unity.Mathematics;
@@ -29,7 +31,7 @@ namespace GeometryGraph.Runtime {
 
         public void Evaluate() {
             if(exporter == null) return;
-            var evaluationResult = graph.Evaluate(sceneData);
+            GeometryGraphEvaluationResult evaluationResult = graph.Evaluate(sceneData);
             if (exporter != null) {
                 exporter.Export(evaluationResult.GeometryData ?? GeometryData.Empty);
             }
@@ -41,12 +43,12 @@ namespace GeometryGraph.Runtime {
 
         public void OnPropertiesChanged(int newPropertyHashCode) {
             sceneData.PropertyHashCode = newPropertyHashCode;
-            var toRemove = SceneData.PropertyData.Keys.Where(key => Graph.RuntimeData.Properties.All(property => !string.Equals(property.Guid, key, StringComparison.InvariantCulture))).ToList();
-            foreach (var key in toRemove) {
+            List<string> toRemove = SceneData.PropertyData.Keys.Where(key => Graph.RuntimeData.Properties.All(property => !string.Equals(property.Guid, key, StringComparison.InvariantCulture))).ToList();
+            foreach (string key in toRemove) {
                 SceneData.PropertyData.Remove(key);
             }
 
-            foreach (var property in Graph.RuntimeData.Properties) {
+            foreach (Property property in Graph.RuntimeData.Properties) {
                 if (!SceneData.PropertyData.ContainsKey(property.Guid)) {
                     SceneData.PropertyData[property.Guid] = new PropertyValue(property);
                 }

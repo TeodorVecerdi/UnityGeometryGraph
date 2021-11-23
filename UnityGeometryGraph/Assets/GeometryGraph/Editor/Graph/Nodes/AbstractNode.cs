@@ -80,13 +80,13 @@ namespace GeometryGraph.Editor {
             base.SetPosition(EditorView.DefaultNodePosition);
 
             if (GUID == null) {
-                var guid = Guid.NewGuid().ToString();
+                string guid = Guid.NewGuid().ToString();
                 GUID = guid;
                 viewDataKey = guid;
             }
 
             if (EdgeConnectorListener != null) {
-                var alreadyExisting = Owner.EditorView.GraphObject.RuntimeGraph.RuntimeData.Nodes.Find(node => node.Guid == GUID);
+                RuntimeNode alreadyExisting = Owner.EditorView.GraphObject.RuntimeGraph.RuntimeData.Nodes.Find(node => node.Guid == GUID);
                 RuntimeNode = (TRuntimeNode) alreadyExisting ?? (TRuntimeNode)Activator.CreateInstance(runtimeNodeType, GUID);
             }
             RuntimePortDictionary = new Dictionary<GraphFrameworkPort, RuntimePort>();
@@ -107,12 +107,12 @@ namespace GeometryGraph.Editor {
         }
         
         protected virtual void InjectCustomStyle() {
-            var border = this.Q("node-border");
-            var overflowStyle = border.style.overflow;
+            VisualElement border = this.Q("node-border");
+            StyleEnum<Overflow> overflowStyle = border.style.overflow;
             overflowStyle.value = Overflow.Visible;
             border.style.overflow = overflowStyle;
 
-            var selectionBorder = this.Q("selection-border");
+            VisualElement selectionBorder = this.Q("selection-border");
             selectionBorder.SendToBack();
         }
         
@@ -120,7 +120,7 @@ namespace GeometryGraph.Editor {
             Ports.Add(port);
             
             if(!alsoAddToHierarchy) return;
-            var isInput = port.direction == Direction.Input;
+            bool isInput = port.direction == Direction.Input;
             if (isInput) {
                 inputContainer.Add(port);
             } else {

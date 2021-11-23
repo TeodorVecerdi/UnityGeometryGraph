@@ -33,7 +33,7 @@ namespace GeometryGraph.Editor {
 
             radiusField.Min = Constants.MIN_CIRCULAR_GEOMETRY_RADIUS;
             radiusField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
+                float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if (MathF.Abs(newValue - radius) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
@@ -43,7 +43,7 @@ namespace GeometryGraph.Editor {
 
             heightField.Min = Constants.MIN_GEOMETRY_HEIGHT;
             heightField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(Constants.MIN_GEOMETRY_HEIGHT);
+                float newValue = evt.newValue.MinClamped(Constants.MIN_GEOMETRY_HEIGHT);
                 if (MathF.Abs(newValue - height) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
@@ -54,7 +54,7 @@ namespace GeometryGraph.Editor {
             pointsField.Min = Constants.MIN_CIRCULAR_GEOMETRY_POINTS;
             pointsField.Max = Constants.MAX_CIRCULAR_GEOMETRY_POINTS;
             pointsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Clamped(Constants.MIN_CIRCULAR_GEOMETRY_POINTS, Constants.MAX_CIRCULAR_GEOMETRY_POINTS);
+                int newValue = evt.newValue.Clamped(Constants.MIN_CIRCULAR_GEOMETRY_POINTS, Constants.MAX_CIRCULAR_GEOMETRY_POINTS);
                 if (newValue == points) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
@@ -86,7 +86,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["r"] = radius;
             root["h"] = height;

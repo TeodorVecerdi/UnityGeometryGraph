@@ -18,40 +18,40 @@ namespace GeometryGraph.Runtime.Geometry {
     
     public partial class GeometryData {
         public static void Merge(GeometryData geometry, Mesh mesh) {
-            var rhs = new GeometryData(mesh, 179.99f);
+            GeometryData rhs = new GeometryData(mesh, 179.99f);
             Merge(geometry, rhs);
         }
         
         public static void Merge(GeometryData lhs, GeometryData rhs) {
             //!! 1. Update metadata on `rhs`
-            var rhsVertexOffset = lhs.vertices.Count;
-            var rhsEdgeOffset = lhs.edges.Count;
-            var rhsFaceOffset = lhs.faces.Count;
-            var rhsFaceCornerOffset = lhs.faceCorners.Count;
+            int rhsVertexOffset = lhs.vertices.Count;
+            int rhsEdgeOffset = lhs.edges.Count;
+            int rhsFaceOffset = lhs.faces.Count;
+            int rhsFaceCornerOffset = lhs.faceCorners.Count;
 
-            var rhsVertices = new List<Vertex>();
-            var rhsEdges = new List<Edge>();
-            var rhsFaces = new List<Face>();
-            var rhsFaceCorners = new List<FaceCorner>();
+            List<Vertex> rhsVertices = new List<Vertex>();
+            List<Edge> rhsEdges = new List<Edge>();
+            List<Face> rhsFaces = new List<Face>();
+            List<FaceCorner> rhsFaceCorners = new List<FaceCorner>();
             
             rhs.vertices.ForEach(v => {
-                var vertex = (Vertex) v.Clone();
-                for (var i = 0; i < vertex.Edges.Count; i++) {
+                Vertex vertex = (Vertex) v.Clone();
+                for (int i = 0; i < vertex.Edges.Count; i++) {
                     vertex.Edges[i] += rhsEdgeOffset;
                 }
 
-                for (var i = 0; i < vertex.Faces.Count; i++) {
+                for (int i = 0; i < vertex.Faces.Count; i++) {
                     vertex.Faces[i] += rhsFaceOffset;
                 }
                 
-                for (var i = 0; i < vertex.FaceCorners.Count; i++) {
+                for (int i = 0; i < vertex.FaceCorners.Count; i++) {
                     vertex.FaceCorners[i] += rhsFaceCornerOffset;
                 }
                 rhsVertices.Add(vertex);
             });
             
             rhs.edges.ForEach(e => {
-                var edge = (Edge) e.Clone();
+                Edge edge = (Edge) e.Clone();
                 edge.VertA += rhsVertexOffset;
                 edge.VertB += rhsVertexOffset;
                 // NOTE: SelfIndex is no longer used after edge duplicate detection, so there really isn't any point in updating it here
@@ -63,7 +63,7 @@ namespace GeometryGraph.Runtime.Geometry {
             });
             
             rhs.faces.ForEach(f => {
-                var face = (Face)f.Clone();
+                Face face = (Face)f.Clone();
                 face.VertA += rhsVertexOffset;
                 face.VertB += rhsVertexOffset;
                 face.VertC += rhsVertexOffset;
@@ -73,14 +73,14 @@ namespace GeometryGraph.Runtime.Geometry {
                 face.FaceCornerA += rhsFaceCornerOffset;
                 face.FaceCornerB += rhsFaceCornerOffset;
                 face.FaceCornerC += rhsFaceCornerOffset;
-                for (var i = 0; i < face.AdjacentFaces.Count; i++) {
+                for (int i = 0; i < face.AdjacentFaces.Count; i++) {
                     face.AdjacentFaces[i] += rhsFaceOffset;
                 }
                 rhsFaces.Add(face);
             });
             
             rhs.faceCorners.ForEach(fc => {
-                var faceCorner = (FaceCorner)fc.Clone();
+                FaceCorner faceCorner = (FaceCorner)fc.Clone();
                 faceCorner.Face += rhsFaceOffset;
                 faceCorner.Vert += rhsVertexOffset;
                 rhsFaceCorners.Add(faceCorner);
@@ -93,17 +93,17 @@ namespace GeometryGraph.Runtime.Geometry {
             lhs.faceCorners.AddRange(rhsFaceCorners);
 
             //!! 3. Update attributes on `rhs`
-            var rhsMaterialIndexOffset = lhs.submeshCount;
+            int rhsMaterialIndexOffset = lhs.submeshCount;
             if (rhs.attributeManager.HasAttribute(AttributeId.Material, AttributeDomain.Face)) {
-                var rhsMaterialIndexAttr = rhs.GetAttribute<IntAttribute>(AttributeId.Material, AttributeDomain.Face).Select(i => i + rhsMaterialIndexOffset);
+                IEnumerable<int> rhsMaterialIndexAttr = rhs.GetAttribute<IntAttribute>(AttributeId.Material, AttributeDomain.Face).Select(i => i + rhsMaterialIndexOffset);
                 
                 //!! 4. Merge attributes on `lhs`
                 // Material index is treated separately
                 if (lhs.attributeManager.HasAttribute(AttributeId.Material, AttributeDomain.Face)) {
-                    var lhsMaterialIndexAttr = lhs.GetAttribute<IntAttribute>(AttributeId.Material, AttributeDomain.Face);
+                    IntAttribute lhsMaterialIndexAttr = lhs.GetAttribute<IntAttribute>(AttributeId.Material, AttributeDomain.Face);
                     lhsMaterialIndexAttr.AppendMany(rhsMaterialIndexAttr).Into(lhsMaterialIndexAttr);
                 } else {
-                    var attr = rhsMaterialIndexAttr.Into<IntAttribute>(AttributeId.Material, AttributeDomain.Face);
+                    IntAttribute attr = rhsMaterialIndexAttr.Into<IntAttribute>(AttributeId.Material, AttributeDomain.Face);
                     lhs.attributeManager.Store(attr);
                 }
             }
@@ -112,13 +112,13 @@ namespace GeometryGraph.Runtime.Geometry {
 
             // Rest of attributes just get merged normally
             // First attributes in lhs & rhs
-            var allLhsAttributeDictionaries = 
+            IEnumerable<KeyValuePair<string, BaseAttribute>> allLhsAttributeDictionaries = 
                 lhs.attributeManager.VertexAttributes
                    .Union(lhs.attributeManager.EdgeAttributes)
                    .Union(lhs.attributeManager.FaceAttributes)
                    .Union(lhs.attributeManager.FaceCornerAttributes);
            
-            foreach (var pair in allLhsAttributeDictionaries) {
+            foreach (KeyValuePair<string, BaseAttribute> pair in allLhsAttributeDictionaries) {
                 if (string.Equals(pair.Key, AttributeId.Material, StringComparison.InvariantCulture) && pair.Value.Domain == AttributeDomain.Face) continue;
                 if(!rhs.attributeManager.HasAttribute(pair.Key, pair.Value.Domain)) continue;
 
@@ -129,12 +129,12 @@ namespace GeometryGraph.Runtime.Geometry {
             }
             
             // Then attributes in rhs but not in lhs
-            var allRhsAttributeDictionaries = 
+            IEnumerable<KeyValuePair<string, BaseAttribute>> allRhsAttributeDictionaries = 
                 rhs.attributeManager.VertexAttributes
                    .Union(rhs.attributeManager.EdgeAttributes)
                    .Union(rhs.attributeManager.FaceAttributes)
                    .Union(rhs.attributeManager.FaceCornerAttributes);
-            foreach (var pair in allRhsAttributeDictionaries) {
+            foreach (KeyValuePair<string, BaseAttribute> pair in allRhsAttributeDictionaries) {
                 // Skipping already existing attributes because they were merged in previous foreach-loop
                 if(lhs.attributeManager.HasAttribute(pair.Key, pair.Value.Domain)) continue;
                 lhs.attributeManager.Store((BaseAttribute) pair.Value.Clone());

@@ -127,7 +127,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["o"] = (int)operation;
             root["x"] = x;
@@ -139,10 +139,10 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnOperationChanged() {
-            var showTolerance = operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMinimum || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMaximum;
-            var showExtra = operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Wrap;
-            var showY = !(operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SquareRoot || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Absolute ||
-                          operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Exponent || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Sign);
+            bool showTolerance = operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMinimum || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMaximum;
+            bool showExtra = operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Wrap;
+            bool showY = !(operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SquareRoot || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Absolute ||
+                           operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Exponent || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Sign);
             
             if (showTolerance) {
                 tolerancePort.Show();

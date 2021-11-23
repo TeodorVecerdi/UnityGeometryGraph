@@ -12,7 +12,7 @@ namespace GeometryGraph.Editor {
             if (!assetName.EndsWith(GraphFrameworkImporter.Extension) && !assetName.EndsWith($"{GraphFrameworkImporter.Extension}.meta")) return;
 
             if (assetName.EndsWith($"{GraphFrameworkImporter.Extension}.meta")) {
-                var assetNameNoMeta = assetName[..^5];
+                string assetNameNoMeta = assetName[..^5];
                 if (!DuplicatedAssets.Contains(assetNameNoMeta)) {
                     DuplicatedAssets.Add(assetNameNoMeta);
                     return;
@@ -24,8 +24,8 @@ namespace GeometryGraph.Editor {
 
         private static AssetMoveResult OnWillMoveAsset(string sourcePath, string destinationPath) {
             if (!destinationPath.EndsWith(GraphFrameworkImporter.Extension)) return AssetMoveResult.DidNotMove;
-            var sourceFolder = sourcePath[..sourcePath.LastIndexOf('/')];
-            var destinationFolder = destinationPath[..destinationPath.LastIndexOf('/')];
+            string sourceFolder = sourcePath[..sourcePath.LastIndexOf('/')];
+            string destinationFolder = destinationPath[..destinationPath.LastIndexOf('/')];
 
             if (!string.Equals(sourceFolder, destinationFolder, StringComparison.InvariantCulture)) {
                 return AssetMoveResult.DidNotMove;
@@ -45,9 +45,9 @@ namespace GeometryGraph.Editor {
             
             
             if (importedAssets.Length > 0 && GraphFrameworkAssetModificationProcessor.DuplicatedAssets.Count > 0) {
-                foreach (var importedAsset in importedAssets) {
+                foreach (string importedAsset in importedAssets) {
                     if (!GraphFrameworkAssetModificationProcessor.DuplicatedAssets.Contains(importedAsset)) continue;
-                    var gfo = GraphFrameworkUtility.FindOrLoadAtPath(importedAsset);
+                    GraphFrameworkObject gfo = GraphFrameworkUtility.FindOrLoadAtPath(importedAsset);
                     gfo.ResetGuids();
                     GraphFrameworkUtility.SaveGraph(gfo);
                 }
@@ -60,22 +60,22 @@ namespace GeometryGraph.Editor {
         }
 
         private static void UpdateRenamedAssetsTitle(HashSet<string> renamedAssets) {
-            var affectedWindows = Resources.FindObjectsOfTypeAll<GraphFrameworkEditorWindow>().Where(window => {
-                var assetPath = AssetDatabase.GUIDToAssetPath(window.SelectedAssetGuid);
+            IEnumerable<GraphFrameworkEditorWindow> affectedWindows = Resources.FindObjectsOfTypeAll<GraphFrameworkEditorWindow>().Where(window => {
+                string assetPath = AssetDatabase.GUIDToAssetPath(window.SelectedAssetGuid);
                 return renamedAssets.Contains(assetPath);
             });
-            foreach (var window in affectedWindows) {
+            foreach (GraphFrameworkEditorWindow window in affectedWindows) {
                 window.UpdateTitle();
             }
         }
 
         private static void DisplayDeletionDialog(string[] deletedAssets) {
-            var affectedWindows = Resources.FindObjectsOfTypeAll<GraphFrameworkEditorWindow>().Where(window => {
-                var assetPath = AssetDatabase.GUIDToAssetPath(window.SelectedAssetGuid);
+            IEnumerable<GraphFrameworkEditorWindow> affectedWindows = Resources.FindObjectsOfTypeAll<GraphFrameworkEditorWindow>().Where(window => {
+                string assetPath = AssetDatabase.GUIDToAssetPath(window.SelectedAssetGuid);
                 return deletedAssets.Contains(assetPath);
             });
             
-            foreach (var window in affectedWindows) {
+            foreach (GraphFrameworkEditorWindow window in affectedWindows) {
                 window.GraphDeleted();
             }
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Graph;
@@ -46,17 +47,17 @@ namespace GeometryGraph.Editor {
         }
 
         private void EditTextRequested(Blackboard blackboard, VisualElement visualElement, string newText) {
-            var field = (BlackboardField) visualElement;
-            var property = (AbstractProperty) field.userData;
+            BlackboardField field = (BlackboardField) visualElement;
+            AbstractProperty property = (AbstractProperty) field.userData;
             if (!string.IsNullOrEmpty(newText) && newText != property.DisplayName) {
                 editorView.GraphObject.RegisterCompleteObjectUndo("Edit Property Name");
                 property.DisplayName = newText;
                 editorView.GraphObject.GraphData.SanitizePropertyName(property);
                 field.text = property.DisplayName;
-                var propertyType = PropertyUtils.PropertyTypeToSystemType(property.Type);
+                Type propertyType = PropertyUtils.PropertyTypeToSystemType(property.Type);
                 editorView.GraphObject.RuntimeGraph.OnPropertyUpdated(property.GUID, property.DisplayName);
-                var modifiedNodes = editorView.GraphObject.GraphData.Nodes.Where(node => node.Node.GetType() == propertyType).Select(node => node.Node);
-                foreach (var modifiedNode in modifiedNodes) {
+                IEnumerable<AbstractNode> modifiedNodes = editorView.GraphObject.GraphData.Nodes.Where(node => node.Node.GetType() == propertyType).Select(node => node.Node);
+                foreach (AbstractNode modifiedNode in modifiedNodes) {
                     modifiedNode.OnPropertyUpdated(property);
                 }
             }
@@ -71,7 +72,7 @@ namespace GeometryGraph.Editor {
         }
 
         private void AddItemRequested(Blackboard blackboard) {
-            var menu = new GenericMenu();
+            GenericMenu menu = new GenericMenu();
             menu.AddItem(new GUIContent("Geometry Object"), false, () => AddInputRow(new GeometryObjectProperty(), true));
             menu.AddItem(new GUIContent("Geometry Collection"), false, () => AddInputRow(new GeometryCollectionProperty(), true));
             menu.AddItem(new GUIContent("Integer"), false, () => AddInputRow(new IntegerProperty(), true));
@@ -94,9 +95,9 @@ namespace GeometryGraph.Editor {
                 editorView.GraphObject.GraphData.SanitizePropertyName(property);
             }
 
-            var propertyTypeName = property.Type.ToString();
-            var field = new BlackboardField(exposedIcon, property.DisplayName, propertyTypeName) {userData = property};
-            var row = new BlackboardRow(field, new BlackboardPropertyView(field, editorView, property)) {userData = property};
+            string propertyTypeName = property.Type.ToString();
+            BlackboardField field = new BlackboardField(exposedIcon, property.DisplayName, propertyTypeName) {userData = property};
+            BlackboardRow row = new BlackboardRow(field, new BlackboardPropertyView(field, editorView, property)) {userData = property};
             row.AddToClassList($"property-{propertyTypeName}");
             if (index < 0)
                 index = inputRows.Count;
@@ -105,7 +106,7 @@ namespace GeometryGraph.Editor {
             else
                 section.Insert(index, row);
 
-            var pill = row.Q<Pill>();
+            Pill pill = row.Q<Pill>();
             pill.RegisterCallback<MouseEnterEvent>(evt => OnMouseHover(evt, property));
             pill.RegisterCallback<MouseLeaveEvent>(evt => OnMouseHover(evt, property));
             pill.RegisterCallback<DragUpdatedEvent>(OnDragUpdatedEvent);
@@ -124,14 +125,14 @@ namespace GeometryGraph.Editor {
 
         private void OnMouseHover(EventBase evt, AbstractProperty input) {
             if (evt.eventTypeId == MouseEnterEvent.TypeId()) {
-                foreach (var node in editorView.GraphView.nodes.ToList()) {
+                foreach (Node node in editorView.GraphView.nodes.ToList()) {
                     if (node.viewDataKey == input.GUID) {
                         selectedNodes.Add(node);
                         node.AddToClassList("hovered");
                     }
                 }
             } else if (evt.eventTypeId == MouseLeaveEvent.TypeId() && selectedNodes.Count > 0) {
-                foreach (var node in selectedNodes) {
+                foreach (Node node in selectedNodes) {
                     node.RemoveFromClassList("hovered");
                 }
 
@@ -141,7 +142,7 @@ namespace GeometryGraph.Editor {
 
         private void OnDragUpdatedEvent(DragUpdatedEvent evt) {
             if (selectedNodes.Count > 0) {
-                foreach (var node in selectedNodes) {
+                foreach (Node node in selectedNodes) {
                     node.RemoveFromClassList("hovered");
                 }
 
@@ -150,8 +151,8 @@ namespace GeometryGraph.Editor {
         }
 
         public void HandleChanges() {
-            foreach (var property in editorView.GraphObject.GraphData.RemovedProperties) {
-                if (!inputRows.TryGetValue(property.GUID, out var row))
+            foreach (AbstractProperty property in editorView.GraphObject.GraphData.RemovedProperties) {
+                if (!inputRows.TryGetValue(property.GUID, out BlackboardRow row))
                     continue;
 
                 row.RemoveFromHierarchy();
@@ -160,17 +161,17 @@ namespace GeometryGraph.Editor {
                 editorView.GraphObject.RuntimeGraph.OnPropertyRemoved(property.GUID);
             }
 
-            foreach (var property in editorView.GraphObject.GraphData.AddedProperties) {
+            foreach (AbstractProperty property in editorView.GraphObject.GraphData.AddedProperties) {
                 AddInputRow(property, index: editorView.GraphObject.GraphData.Properties.IndexOf(property));
-                var runtimeProperty = new Property{Guid = property.GUID, DisplayName =  property.DisplayName, ReferenceName = property.ReferenceName, Type = property.Type, DefaultValue = new DefaultPropertyValue(property.Type, property.DefaultValue)};
+                Property runtimeProperty = new Property{Guid = property.GUID, DisplayName =  property.DisplayName, ReferenceName = property.ReferenceName, Type = property.Type, DefaultValue = new DefaultPropertyValue(property.Type, property.DefaultValue)};
                 editorView.GraphObject.RuntimeGraph.OnPropertyAdded(runtimeProperty);
             }
 
             if (editorView.GraphObject.GraphData.MovedProperties.Count > 0) {
-                foreach (var row in inputRows.Values)
+                foreach (BlackboardRow row in inputRows.Values)
                     row.RemoveFromHierarchy();
 
-                foreach (var property in editorView.GraphObject.GraphData.Properties) {
+                foreach (AbstractProperty property in editorView.GraphObject.GraphData.Properties) {
                     section.Add(inputRows[property.GUID]);
                     // Note: Select the relevant section here
                     // (property.Type == PropertyType.Actor ? actorSection : property.Type == PropertyType.Check ? checkSection : triggerSection).Add(inputRows[property.GUID]);

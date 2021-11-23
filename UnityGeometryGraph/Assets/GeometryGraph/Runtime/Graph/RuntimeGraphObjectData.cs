@@ -23,8 +23,8 @@ namespace GeometryGraph.Runtime {
         public int PropertyHashCode {
             get {
                 unchecked {
-                    var sum = 0;
-                    foreach (var property in Properties) {
+                    int sum = 0;
+                    foreach (Property property in Properties) {
                         sum += property.Guid.GetHashCode();
                     }
 
@@ -67,7 +67,7 @@ namespace GeometryGraph.Runtime {
 
             serializedRuntimeNodes ??= new List<SerializedRuntimeNode>();
             serializedRuntimeNodes.Clear();
-            foreach (var runtimeNode in Nodes) {
+            foreach (RuntimeNode runtimeNode in Nodes) {
                 serializedRuntimeNodes.Add(SerializedRuntimeNode.FromRuntimeNode(runtimeNode));
             }
 
@@ -83,18 +83,18 @@ namespace GeometryGraph.Runtime {
             Nodes.Clear();
             OutputNode = null;
 
-            foreach (var serializedRuntimeNode in serializedRuntimeNodes) {
-                var node = SerializedRuntimeNode.FromSerializedNode(serializedRuntimeNode);
+            foreach (SerializedRuntimeNode serializedRuntimeNode in serializedRuntimeNodes) {
+                RuntimeNode node = SerializedRuntimeNode.FromSerializedNode(serializedRuntimeNode);
                 if (node is OutputNode outputNode) {
                     OutputNode = outputNode;
                 }
                 Nodes.Add(node);
             }
 
-            var allPorts = Nodes.SelectMany(node => node.Ports).ToList();
-            foreach (var connection in Connections) {
-                var outputPort = allPorts.Find(port => port.Guid == connection.OutputGuid);
-                var inputPort = allPorts.Find(port => port.Guid == connection.InputGuid);
+            List<RuntimePort> allPorts = Nodes.SelectMany(node => node.Ports).ToList();
+            foreach (Connection connection in Connections) {
+                RuntimePort outputPort = allPorts.Find(port => port.Guid == connection.OutputGuid);
+                RuntimePort inputPort = allPorts.Find(port => port.Guid == connection.InputGuid);
                 connection.Output = outputPort;
                 connection.Input = inputPort;
                 
@@ -104,13 +104,13 @@ namespace GeometryGraph.Runtime {
                 inputPort.Connections.Add(connection);
             }
 
-            for (var i = 0; i < Nodes.Count; i++) {
-                var node = Nodes[i];
+            for (int i = 0; i < Nodes.Count; i++) {
+                RuntimeNode node = Nodes[i];
                 if (!DeserializingFromJson) {
                     node.SetCustomData(serializedRuntimeNodes[i].CustomData);
                 }
                 
-                foreach (var port in node.Ports) {
+                foreach (RuntimePort port in node.Ports) {
                     DebugUtility.Log($"Port on {node.GetType().Name} has {port.Connections.Count} connections");
                 }
 

@@ -19,7 +19,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void OnInspectorGUI() {
-            var importer = target as GraphFrameworkImporter;
+            GraphFrameworkImporter importer = target as GraphFrameworkImporter;
             if (GUILayout.Button("Open Graph Editor")) {
                 OpenEditorWindow(importer!.assetPath);
             }
@@ -27,8 +27,8 @@ namespace GeometryGraph.Editor {
         }
 
         public static bool OpenEditorWindow(string assetPath) {
-            var guid = AssetDatabase.AssetPathToGUID(assetPath);
-            var extension = Path.GetExtension(assetPath);
+            string guid = AssetDatabase.AssetPathToGUID(assetPath);
+            string extension = Path.GetExtension(assetPath);
             if (string.IsNullOrEmpty(extension))
                 return false;
 
@@ -36,14 +36,14 @@ namespace GeometryGraph.Editor {
             if (extension != GraphFrameworkImporter.Extension)
                 return false;
 
-            var graphObject = GraphFrameworkUtility.FindOrLoadAtPath(assetPath);
+            GraphFrameworkObject graphObject = GraphFrameworkUtility.FindOrLoadAtPath(assetPath);
             
             if (string.IsNullOrEmpty(graphObject.AssetGuid)) {
                 graphObject.RecalculateAssetGuid(assetPath);
                 GraphFrameworkUtility.SaveGraph(graphObject, false);
             }
 
-            foreach (var activeWindow in Resources.FindObjectsOfTypeAll<GraphFrameworkEditorWindow>()) {
+            foreach (GraphFrameworkEditorWindow activeWindow in Resources.FindObjectsOfTypeAll<GraphFrameworkEditorWindow>()) {
                 if (activeWindow.SelectedAssetGuid != guid)
                     continue;
 
@@ -57,7 +57,7 @@ namespace GeometryGraph.Editor {
                 return true;
             }
 
-            var window = EditorWindow.CreateWindow<GraphFrameworkEditorWindow>(typeof(GraphFrameworkEditorWindow), typeof(SceneView));
+            GraphFrameworkEditorWindow window = EditorWindow.CreateWindow<GraphFrameworkEditorWindow>(typeof(GraphFrameworkEditorWindow), typeof(SceneView));
             window.titleContent = EditorGUIUtility.TrTextContentWithIcon(guid, Resources.Load<Texture2D>(GraphFrameworkResources.IconSmall));
             window.SetGraphObject(graphObject);
             window.BuildWindow();
@@ -67,7 +67,7 @@ namespace GeometryGraph.Editor {
 
         [OnOpenAsset(0)]
         public static bool OnOpenAsset(int instanceID, int line) {
-            var path = AssetDatabase.GetAssetPath(instanceID);
+            string path = AssetDatabase.GetAssetPath(instanceID);
             return OpenEditorWindow(path);
         }
     }

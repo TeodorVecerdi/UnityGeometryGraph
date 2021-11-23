@@ -50,7 +50,7 @@ namespace GeometryGraph.Editor {
             pointsField.Min = Constants.MIN_LINE_CURVE_RESOLUTION + 1;
             pointsField.Max = Constants.MAX_CURVE_RESOLUTION + 1;
             pointsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+                int newValue = evt.newValue.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
                 if (newValue == points) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cubic bezier curve points");
                 points = newValue;
@@ -65,7 +65,7 @@ namespace GeometryGraph.Editor {
             });
 
             startField.RegisterValueChangedCallback(evt => {
-                var newValue = (float3)evt.newValue;
+                float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(start)) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cubic bezier curve start position");
                 start = newValue;
@@ -73,7 +73,7 @@ namespace GeometryGraph.Editor {
             });
             
             controlAField.RegisterValueChangedCallback(evt => {
-                var newValue = (float3)evt.newValue;
+                float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(controlA)) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cubic bezier curve control position");
                 controlA = newValue;
@@ -81,7 +81,7 @@ namespace GeometryGraph.Editor {
             });
             
             controlBField.RegisterValueChangedCallback(evt => {
-                var newValue = (float3)evt.newValue;
+                float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(controlB)) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cubic bezier curve control position");
                 controlB = newValue;
@@ -89,7 +89,7 @@ namespace GeometryGraph.Editor {
             });
             
             endField.RegisterValueChangedCallback(evt => {
-                var newValue = (float3)evt.newValue;
+                float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(end)) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cubic bezier curve end position");
                 end = newValue;
@@ -130,8 +130,8 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root =  base.GetNodeData();
-            var array = new JArray {
+            JObject root =  base.GetNodeData();
+            JArray array = new JArray {
                 points,
                 closed ? 1 : 0,
                 JsonConvert.SerializeObject(start, float3Converter.Converter),
@@ -144,7 +144,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void SetNodeData(JObject jsonData) {
-            var array = jsonData["d"] as JArray;
+            JArray array = jsonData["d"] as JArray;
 
             points = array!.Value<int>(0);
             closed = array!.Value<int>(1) == 1;

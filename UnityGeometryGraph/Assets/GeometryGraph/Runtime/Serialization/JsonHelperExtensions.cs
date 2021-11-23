@@ -6,12 +6,12 @@ namespace GeometryGraph.Runtime.Serialization {
         public static float? ReadAsFloat(this JsonReader reader) {
             // https://github.com/jilleJr/Newtonsoft.Json-for-Unity.Converters/issues/46
 
-            var str = reader.ReadAsString();
+            string? str = reader.ReadAsString();
 
             if (string.IsNullOrEmpty(str))
                 return null;
 
-            return float.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out var valueParsed) ? valueParsed : 0f;
+            return float.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out float valueParsed) ? valueParsed : 0f;
         }
     }
 }

@@ -188,7 +188,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["o"] = (int)operation;
             root["x"] = JsonConvert.SerializeObject(x, float3Converter.Converter);
@@ -202,16 +202,16 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnOperationChanged() {
-            var showIOR = operation == Operation.Refract;
-            var showWrapMax = operation == Operation.Wrap;
-            var showDistance = operation is Operation.SmoothMinimum or Operation.SmoothMaximum or Operation.Lerp;
-            var showScale = operation == Operation.Scale;
-            var showY = operation is not 
+            bool showIOR = operation == Operation.Refract;
+            bool showWrapMax = operation == Operation.Wrap;
+            bool showDistance = operation is Operation.SmoothMinimum or Operation.SmoothMaximum or Operation.Lerp;
+            bool showScale = operation == Operation.Scale;
+            bool showY = operation is not 
                 (Operation.Length or Operation.LengthSquared or Operation.Scale or Operation.Sine or Operation.Cosine or Operation.Tangent 
                 or Operation.Arcsine or Operation.Arccosine or Operation.Arctangent or Operation.Fraction or Operation.Ceil 
                 or Operation.Floor or Operation.Absolute or Operation.Normalize);
 
-            var showFloatOutput = operation is Operation.Length or Operation.LengthSquared or Operation.Distance or Operation.DistanceSquared or Operation.DotProduct;
+            bool showFloatOutput = operation is Operation.Length or Operation.LengthSquared or Operation.Distance or Operation.DistanceSquared or Operation.DotProduct;
 
             if (showIOR) iorPort.Show();
             else iorPort.HideAndDisconnect();

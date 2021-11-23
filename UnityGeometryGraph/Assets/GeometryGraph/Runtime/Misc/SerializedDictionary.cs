@@ -12,7 +12,7 @@ namespace GeometryGraph.Runtime {
             keys.Clear();
             values.Clear();
 
-            foreach (var item in this)
+            foreach (KeyValuePair<TKey, TValue> item in this)
             {
                 keys.Add(item.Key);
                 values.Add(item.Value);
@@ -21,7 +21,7 @@ namespace GeometryGraph.Runtime {
 
         public void OnAfterDeserialize() {
             Clear();
-            for (var i = 0; i < keys.Count && i < values.Count; i++) {
+            for (int i = 0; i < keys.Count && i < values.Count; i++) {
                 this[keys[i]] = values[i];
             }
         }

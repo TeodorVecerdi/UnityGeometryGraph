@@ -30,7 +30,7 @@ namespace GeometryGraph.Editor {
             pointsField.Min = Constants.MIN_CIRCLE_CURVE_RESOLUTION;
             pointsField.Max = Constants.MAX_CURVE_RESOLUTION;
             pointsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
+                int newValue = evt.newValue.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
                 if (newValue == points) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change circle curve points");
                 points = newValue;
@@ -39,7 +39,7 @@ namespace GeometryGraph.Editor {
 
             radiusField.Min = Constants.MIN_CIRCULAR_CURVE_RADIUS;
             radiusField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+                float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
                 if (Math.Abs(newValue - radius) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change circle curve radius");
@@ -67,8 +67,8 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root =  base.GetNodeData();
-            var array = new JArray {
+            JObject root =  base.GetNodeData();
+            JArray array = new JArray {
                 points,
                 radius
             };
@@ -77,7 +77,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void SetNodeData(JObject jsonData) {
-            var array = jsonData["d"] as JArray;
+            JArray array = jsonData["d"] as JArray;
 
             points = array!.Value<int>(0);
             radius = array!.Value<float>(1);

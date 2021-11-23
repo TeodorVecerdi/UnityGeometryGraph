@@ -24,7 +24,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override void SetCustomData(string json) {
-            var jsonObject = JObject.Parse(json);
+            JObject jsonObject = JObject.Parse(json);
             PropertyGuid = jsonObject.Value<string>("p");
         }
     }

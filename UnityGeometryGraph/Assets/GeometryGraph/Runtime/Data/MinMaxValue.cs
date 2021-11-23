@@ -29,7 +29,7 @@ namespace GeometryGraph.Runtime.Data {
         }
 
         private T Clamped() {
-            var val = value;
+            T val = value;
             if (min != null) val = val.MinClamped((T)min);
             if (max != null) val = val.MaxClamped((T)max);
             return val;

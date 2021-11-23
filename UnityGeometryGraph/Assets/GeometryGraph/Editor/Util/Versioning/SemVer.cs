@@ -17,7 +17,7 @@ namespace GeometryGraph.Editor {
 
 
         public SemVer(string versionString) {
-            if (!IsValid(versionString, out var major, out var minor, out var patch)) {
+            if (!IsValid(versionString, out int major, out int minor, out int patch)) {
                 Debug.LogError($"Could not parse SemVer string {versionString} into format MAJOR.MINOR.PATCH.");
                 this = Invalid;
                 return;
@@ -58,7 +58,7 @@ namespace GeometryGraph.Editor {
         }
 
         public static bool IsValid(string versionString, out int major, out int minor, out int patch) {
-            var split = versionString.Split('.');
+            string[] split = versionString.Split('.');
             if (split.Length != 3) {
                 major = -1;
                 minor = -1;
@@ -66,9 +66,9 @@ namespace GeometryGraph.Editor {
                 return false;
             }
 
-            var majorWorks = int.TryParse(split[0], out var majorParsed) && majorParsed >= 0;
-            var minorWorks = int.TryParse(split[1], out var minorParsed) && minorParsed >= 0;
-            var patchWorks = int.TryParse(split[2], out var patchParsed) && patchParsed >= 0;
+            bool majorWorks = int.TryParse(split[0], out int majorParsed) && majorParsed >= 0;
+            bool minorWorks = int.TryParse(split[1], out int minorParsed) && minorParsed >= 0;
+            bool patchWorks = int.TryParse(split[2], out int patchParsed) && patchParsed >= 0;
             major = majorParsed;
             minor = minorParsed;
             patch = patchParsed;
@@ -87,7 +87,7 @@ namespace GeometryGraph.Editor {
 
         public override int GetHashCode() {
             unchecked {
-                var hashCode = MAJOR;
+                int hashCode = MAJOR;
                 hashCode = (hashCode * 397) ^ MINOR;
                 hashCode = (hashCode * 397) ^ PATCH;
                 return hashCode;
@@ -103,10 +103,10 @@ namespace GeometryGraph.Editor {
         }
 
         public int CompareTo(SemVer other) {
-            var majorComparison = MAJOR.CompareTo(other.MAJOR);
+            int majorComparison = MAJOR.CompareTo(other.MAJOR);
             if (majorComparison != 0)
                 return majorComparison;
-            var minorComparison = MINOR.CompareTo(other.MINOR);
+            int minorComparison = MINOR.CompareTo(other.MINOR);
             if (minorComparison != 0)
                 return minorComparison;
             return PATCH.CompareTo(other.PATCH);

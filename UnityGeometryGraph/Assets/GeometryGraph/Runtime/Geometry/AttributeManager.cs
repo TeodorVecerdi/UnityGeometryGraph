@@ -55,7 +55,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
         public bool HasAttribute(string name, AttributeDomain domain) {
             if (name == null) return false;
-            var searchDict = domain switch {
+            AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
                 AttributeDomain.Face => faceAttributes,
@@ -68,7 +68,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
         public bool HasAttribute(string name, AttributeType type, AttributeDomain domain) {
             if (name == null) return false;
-            var searchDict = domain switch {
+            AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
                 AttributeDomain.Face => faceAttributes,
@@ -80,7 +80,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public bool Store(BaseAttribute attribute) {
-            var destDict = attribute.Domain switch {
+            AttributeDictionary destDict = attribute.Domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
                 AttributeDomain.Face => faceAttributes,
@@ -90,7 +90,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
 
             dirty = true;
-            var overwritten = destDict.ContainsKey(attribute.Name);
+            bool overwritten = destDict.ContainsKey(attribute.Name);
             destDict[attribute.Name] = attribute;
             return overwritten;
         }
@@ -101,7 +101,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 attribute.Domain = targetDomain;
             }
             
-            var destDict = targetDomain switch {
+            AttributeDictionary destDict = targetDomain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
                 AttributeDomain.Face => faceAttributes,
@@ -110,7 +110,7 @@ namespace GeometryGraph.Runtime.Geometry {
             };
             
             dirty = true;
-            var overwritten = destDict.ContainsKey(attribute.Name);
+            bool overwritten = destDict.ContainsKey(attribute.Name);
             destDict[attribute.Name] = attribute;
             return overwritten;
         }
@@ -133,7 +133,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
         
         public BaseAttribute Request(string name, AttributeDomain domain) {
-            var searchDict = domain switch {
+            AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
                 AttributeDomain.Face => faceAttributes,
@@ -146,7 +146,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
         
         public BaseAttribute Request(string name, AttributeType type, AttributeDomain domain) {
-            var searchDict = domain switch {
+            AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
                 AttributeDomain.Face => faceAttributes,
@@ -160,13 +160,13 @@ namespace GeometryGraph.Runtime.Geometry {
                 return searchDict[name].Yield(o => AttributeConvert.ConvertType(o, searchDict[name].Type, type)).Into(name, type, domain);
             }
 
-            var attribute = vertexAttributes.ContainsKey(name) ? vertexAttributes[name] :
+            BaseAttribute attribute = vertexAttributes.ContainsKey(name) ? vertexAttributes[name] :
                 edgeAttributes.ContainsKey(name) ? edgeAttributes[name] :
                 faceAttributes.ContainsKey(name) ? faceAttributes[name] :
                 faceCornerAttributes.ContainsKey(name) ? faceCornerAttributes[name] : null;
             if (attribute == null) return null;
 
-            var clone = (BaseAttribute) attribute.Clone();
+            BaseAttribute clone = (BaseAttribute) attribute.Clone();
             return AttributeConvert.ConvertDomain(owner, clone, domain).Into(clone);
         }
 
@@ -191,7 +191,7 @@ namespace GeometryGraph.Runtime.Geometry {
             if(source == null) return;
             destination = new SerializedAttributeDictionary();
             
-            foreach (var keyValuePair in source) {
+            foreach (KeyValuePair<string, BaseAttribute> keyValuePair in source) {
                 destination[keyValuePair.Key] = SerializedAttribute.Serialize(keyValuePair.Value);
             }
         }
@@ -203,7 +203,7 @@ namespace GeometryGraph.Runtime.Geometry {
             if (source.Count == 0) source.OnAfterDeserialize();
             
             destination = new AttributeDictionary();
-            foreach (var keyValuePair in source) {
+            foreach (KeyValuePair<string, SerializedAttribute> keyValuePair in source) {
                 destination[keyValuePair.Key] = SerializedAttribute.Deserialize(keyValuePair.Value);
             }
         }

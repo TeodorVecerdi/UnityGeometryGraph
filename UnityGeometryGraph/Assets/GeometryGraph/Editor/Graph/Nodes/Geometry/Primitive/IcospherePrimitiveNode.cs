@@ -29,7 +29,7 @@ namespace GeometryGraph.Editor {
 
             radiusField.Min = Constants.MIN_CIRCULAR_GEOMETRY_RADIUS;
             radiusField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
+                float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if (MathF.Abs(newValue - radius) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change radius");
@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
             subdivisionsField.Min = 0;
             subdivisionsField.Max = Constants.MAX_ICOSPHERE_SUBDIVISIONS;
             subdivisionsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Clamped(0, Constants.MAX_ICOSPHERE_SUBDIVISIONS);
+                int newValue = evt.newValue.Clamped(0, Constants.MAX_ICOSPHERE_SUBDIVISIONS);
                 if (newValue == subdivisions) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivisions");
@@ -68,7 +68,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["r"] = radius;
             root["s"] = subdivisions;

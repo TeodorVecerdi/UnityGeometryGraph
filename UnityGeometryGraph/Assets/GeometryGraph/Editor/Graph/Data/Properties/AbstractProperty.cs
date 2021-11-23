@@ -50,7 +50,7 @@ namespace GeometryGraph.Editor {
             get {
                 if (string.IsNullOrEmpty(GUID))
                     GUID = Guid.NewGuid().ToString();
-                if (Guid.TryParse(GUID, out var parsedGuid))
+                if (Guid.TryParse(GUID, out Guid parsedGuid))
                     return $"{Convert.ToBase64String(parsedGuid.ToByteArray()).GetHashCode():X}";
                 return $"{Convert.ToBase64String(Guid.NewGuid().ToByteArray()).GetHashCode():X}";
             }

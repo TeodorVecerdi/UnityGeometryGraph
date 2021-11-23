@@ -127,7 +127,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["v"] = JsonConvert.SerializeObject(vector, Formatting.None, float3Converter.Converter);
             root["s"] = scalar;

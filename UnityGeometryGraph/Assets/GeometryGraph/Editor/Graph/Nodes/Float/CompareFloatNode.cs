@@ -96,7 +96,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["o"] = (int)operation;
             root["t"] = tolerance;
@@ -107,7 +107,7 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnOperationChanged() {
-            var showTolerance = operation == CompareOperation.Equal || operation == CompareOperation.NotEqual;
+            bool showTolerance = operation == CompareOperation.Equal || operation == CompareOperation.NotEqual;
             
             if (showTolerance) {
                 tolerancePort.Show();

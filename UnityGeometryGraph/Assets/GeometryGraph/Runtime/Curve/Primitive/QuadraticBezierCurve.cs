@@ -26,12 +26,12 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
         }
 
         internal override void Generate() {
-            var pointCount = PointCount();
-            var points = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var job = new QuadraticBezierJob(points, tangents, normals, binormals, Resolution, start, control, end);
+            int pointCount = PointCount();
+            NativeArray<float3> points = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            QuadraticBezierJob job = new QuadraticBezierJob(points, tangents, normals, binormals, Resolution, start, control, end);
             job.Schedule(pointCount, Environment.ProcessorCount).Complete();
 
             Points = new List<float3>(points);
@@ -71,21 +71,21 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public void Execute(int index) {
-                var t = index / (float)resolution;
+                float t = index / (float)resolution;
                 points[index] = Position(t);
-                var tangent = Tangent(t);
-                var binormal = Binormal(t);
-                var normal = math.cross(tangent, binormal);
+                float3 tangent = Tangent(t);
+                float3 binormal = Binormal(t);
+                float3 normal = math.cross(tangent, binormal);
                 tangents[index] = tangent;
                 normals[index] = binormal;
                 binormals[index] = normal;
             }
 
             public float3 Position(float t) {
-                var t0 = (1.0f - t) * (1.0f - t);
-                var t1 = t * t;
-                var p0 = start - control;
-                var p1 = end - control;
+                float t0 = (1.0f - t) * (1.0f - t);
+                float t1 = t * t;
+                float3 p0 = start - control;
+                float3 p1 = end - control;
             
                 return control + t0 * p0 + t1 * p1;
             }

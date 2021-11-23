@@ -47,7 +47,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
             root["propertyGuid"] = propertyGuid;
             return root;
         }
@@ -62,7 +62,7 @@ namespace GeometryGraph.Editor {
 
         public override void OnPropertyUpdated(AbstractProperty property) {
             if(property != null && property.GUID != propertyGuid) return;
-            var prop = Owner.EditorView.GraphObject.GraphData.Properties.FirstOrGivenDefault(abstractProperty => abstractProperty.GUID == propertyGuid, null);
+            AbstractProperty? prop = Owner.EditorView.GraphObject.GraphData.Properties.FirstOrGivenDefault(abstractProperty => abstractProperty.GUID == propertyGuid, null);
             title = prop?.DisplayName ?? "null property";
             Refresh();
         }

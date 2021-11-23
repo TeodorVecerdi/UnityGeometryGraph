@@ -12,12 +12,12 @@ namespace GeometryGraph.Editor {
             AddToClassList("enum-selection-dropdown");
             button = new Button();
             button.AddToClassList("enum-dropdown-button");
-            var arrow = new VisualElement();
+            VisualElement arrow = new VisualElement();
             arrow.AddToClassList("arrow-down");
             button.Add(arrow);
 
             if (label != null) {
-                var labelElement = new Label(label);
+                Label labelElement = new Label(label);
                 Add(labelElement);
                 AddToClassList("with-label");
             }
@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
             Add(button);
             
             button.clicked += () => {
-                var pos = GUIUtility.GUIToScreenPoint(worldBound.position);
+                Vector2 pos = GUIUtility.GUIToScreenPoint(worldBound.position);
                 SelectionWindow.ShowWindow(pos, worldBound.height, tree, selection => {
                     this.value = (T)selection;
                 });
@@ -36,20 +36,20 @@ namespace GeometryGraph.Editor {
 
         public void SetValueWithoutNotify(T newValue, int scheduleNesting = 0) {
             rawValue = newValue;
-            var buttonText = RandomUtilities.DisplayNameEnum(rawValue);
+            string buttonText = RandomUtilities.DisplayNameEnum(rawValue);
             button.text = buttonText;
 
             scheduleNesting = scheduleNesting.Clamped(0, 2);
             
             if (scheduleNesting == 0) {
                 schedule.Execute(() => {
-                    var size = button.MeasureTextSize(buttonText, 15, MeasureMode.Undefined, 0, MeasureMode.Undefined);
+                    Vector2 size = button.MeasureTextSize(buttonText, 15, MeasureMode.Undefined, 0, MeasureMode.Undefined);
                     button.style.minWidth = size.x + 24f;
                 });
             } else if (scheduleNesting == 1) {
                 schedule.Execute(() => {
                     schedule.Execute(() => {
-                        var size = button.MeasureTextSize(buttonText, 15, MeasureMode.Undefined, 0, MeasureMode.Undefined);
+                        Vector2 size = button.MeasureTextSize(buttonText, 15, MeasureMode.Undefined, 0, MeasureMode.Undefined);
                         button.style.minWidth = size.x + 24f;
                     });
                 });
@@ -57,7 +57,7 @@ namespace GeometryGraph.Editor {
                 schedule.Execute(() => {
                     schedule.Execute(() => {
                         schedule.Execute(() => {
-                            var size = button.MeasureTextSize(buttonText, 15, MeasureMode.Undefined, 0, MeasureMode.Undefined);
+                            Vector2 size = button.MeasureTextSize(buttonText, 15, MeasureMode.Undefined, 0, MeasureMode.Undefined);
                             button.style.minWidth = size.x + 24f;
                         });
                     });
@@ -73,7 +73,7 @@ namespace GeometryGraph.Editor {
         public T value {
             get => rawValue;
             set {
-                using var pooled = ChangeEvent<T>.GetPooled(rawValue, value);
+                using ChangeEvent<T> pooled = ChangeEvent<T>.GetPooled(rawValue, value);
                 pooled.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(pooled);

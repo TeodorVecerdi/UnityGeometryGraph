@@ -17,7 +17,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (port != ValuePort) yield break;
             if (count <= 0) yield break;
             Rand.PushState(Seed);
-            for (var i = 0; i < count; i++) {
+            for (int i = 0; i < count; i++) {
                 yield return Rand.Range(Min, Max);
             }
             Rand.PopState();

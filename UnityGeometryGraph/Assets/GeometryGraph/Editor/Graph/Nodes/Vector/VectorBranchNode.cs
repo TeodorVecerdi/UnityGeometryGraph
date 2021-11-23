@@ -43,7 +43,7 @@ namespace GeometryGraph.Editor {
             });
             
             ifTrueField.RegisterValueChangedCallback(evt => {
-                var newValue = (float3)evt.newValue;
+                float3 newValue = (float3)evt.newValue;
                 if (math.lengthsq(newValue - ifTrue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change branch node if true value");
                 ifTrue = newValue;
@@ -51,7 +51,7 @@ namespace GeometryGraph.Editor {
             });
             
             ifFalseField.RegisterValueChangedCallback(evt => {
-                var newValue = (float3)evt.newValue;
+                float3 newValue = (float3)evt.newValue;
                 if (math.lengthsq(newValue - ifFalse) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change branch node if false value");
                 ifFalse = newValue;
@@ -78,8 +78,8 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
-            var array = new JArray {
+            JObject root = base.GetNodeData();
+            JArray array = new JArray {
                 condition ? 1 : 0,
                 JsonConvert.SerializeObject(ifTrue, Formatting.None, float3Converter.Converter),
                 JsonConvert.SerializeObject(ifFalse, Formatting.None, float3Converter.Converter)
@@ -89,7 +89,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void SetNodeData(JObject jsonData) {
-            var array = jsonData["d"] as JArray;
+            JArray array = jsonData["d"] as JArray;
             
             condition = array!.Value<int>(0) == 1;
             ifTrue = JsonConvert.DeserializeObject<float3>(array.Value<string>(1), float3Converter.Converter);

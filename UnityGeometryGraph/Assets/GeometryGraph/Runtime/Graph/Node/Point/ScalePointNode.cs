@@ -26,15 +26,15 @@ namespace GeometryGraph.Runtime.Graph {
         private void Calculate() {
             if (Input == null) return;
             Result = Input.Clone();
-            var scaleAttr = Result.GetAttributeOrDefault<Vector3Attribute, float3>("scale", AttributeDomain.Vertex, float3_ext.one);
+            Vector3Attribute scaleAttr = Result.GetAttributeOrDefault<Vector3Attribute, float3>("scale", AttributeDomain.Vertex, float3_ext.one);
             
             if (Mode is ScalePointNode_Mode.Vector or ScalePointNode_Mode.Float) {
                 if (Mode is ScalePointNode_Mode.Float) {
-                    var multiplier = GetValues(ScalarPort, Input.Vertices.Count, Scalar).Into<FloatAttribute>("multiplier", AttributeDomain.Vertex);
+                    FloatAttribute multiplier = GetValues(ScalarPort, Input.Vertices.Count, Scalar).Into<FloatAttribute>("multiplier", AttributeDomain.Vertex);
                     scaleAttr.YieldWithAttribute(multiplier, (scale, scalar) => scale * scalar).Into(scaleAttr);
                     Result.StoreAttribute(scaleAttr);
                 } else {
-                    var multiplier = GetValues(VectorPort, Input.Vertices.Count, Vector).Into<Vector3Attribute>("multiplier", AttributeDomain.Vertex);
+                    Vector3Attribute multiplier = GetValues(VectorPort, Input.Vertices.Count, Vector).Into<Vector3Attribute>("multiplier", AttributeDomain.Vertex);
                     scaleAttr.YieldWithAttribute(multiplier, (scale, mul) => scale * mul).Into(scaleAttr);
                     Result.StoreAttribute(scaleAttr);
                 }
@@ -44,7 +44,7 @@ namespace GeometryGraph.Runtime.Graph {
                     return;
                 }
                 
-                var otherAttribute = Result.GetAttribute<Vector3Attribute>(AttributeName, AttributeDomain.Vertex);
+                Vector3Attribute otherAttribute = Result.GetAttribute<Vector3Attribute>(AttributeName, AttributeDomain.Vertex);
                 scaleAttr.YieldWithAttribute(otherAttribute, (scale, multiplier) => scale * multiplier).Into(scaleAttr);
                 Result.StoreAttribute(scaleAttr);
             }

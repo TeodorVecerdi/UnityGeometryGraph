@@ -24,15 +24,15 @@ namespace GeometryGraph.Runtime.Curve {
         // Returns a `GeometryData` object composed of only vertices and edges, representing the curve
         internal static GeometryData WithoutProfile(CurveData curve) {
             if (curve.Points == 0) return GeometryData.Empty;
-            var vertexPositions = new List<float3>();
-            var crease = new float[curve.Points - 1].ToList();
+            List<float3> vertexPositions = new List<float3>();
+            List<float> crease = new float[curve.Points - 1].ToList();
 
-            for (var i = 0; i < curve.Points; i++) {
+            for (int i = 0; i < curve.Points; i++) {
                 vertexPositions.Add(curve.Position[i]);
             }
 
-            var edges = new List<GeometryData.Edge>();
-            for (var i = 0; i < curve.Points - 1; i++) {
+            List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
+            for (int i = 0; i < curve.Points - 1; i++) {
                 edges.Add(new GeometryData.Edge(i, i + 1, i));
             }
 
@@ -40,8 +40,8 @@ namespace GeometryGraph.Runtime.Curve {
                 edges.Add(new GeometryData.Edge(curve.Points - 1, 0, edges.Count));
             }
 
-            var geometry = new GeometryData(edges, new List<GeometryData.Face>(), new List<GeometryData.FaceCorner>(), 1, vertexPositions,
-                                            new List<float3>(), new List<int>(), new List<bool>(), crease, new List<float2>());
+            GeometryData geometry = new GeometryData(edges, new List<GeometryData.Face>(), new List<GeometryData.FaceCorner>(), 1, vertexPositions,
+                                                     new List<float3>(), new List<int>(), new List<bool>(), crease, new List<float2>());
 
             geometry.StoreAttribute(curve.Tangent.Into("tangent", AttributeType.Vector3, AttributeDomain.Vertex));
             geometry.StoreAttribute(curve.Normal.Into("normal", AttributeType.Vector3, AttributeDomain.Vertex));
@@ -76,7 +76,7 @@ namespace GeometryGraph.Runtime.Curve {
                 burstAlign_normalDst = new NativeArray<float3>(profile.Points, Allocator.Persistent);
                 burstAlign_binormalDst = new NativeArray<float3>(profile.Points, Allocator.Persistent);
 
-                for (var i = 0; i < profile.Points; i++) {
+                for (int i = 0; i < profile.Points; i++) {
                     burstAlign_positionSrc[i] = profile.Position[i].float4(1.0f);
                     burstAlign_tangentSrc[i] = profile.Tangent[i].float4();
                     burstAlign_normalSrc[i] = profile.Normal[i].float4();
@@ -91,7 +91,7 @@ namespace GeometryGraph.Runtime.Curve {
             
             if (closeCaps && settings.SeparateMaterialForCaps) {
                 materialIndices = Enumerable.Repeat(0, faceCount - capsFaceCount).ToList();
-                for (var i = 0; i < capsFaceCount; i++) {
+                for (int i = 0; i < capsFaceCount; i++) {
                     materialIndices.Add(1);
                 }
             } else {
@@ -100,7 +100,7 @@ namespace GeometryGraph.Runtime.Curve {
 
             if (closeCaps) {
                 shadeSmooth = Enumerable.Repeat(settings.ShadeSmoothCurve, faceCount - capsFaceCount).ToList();
-                for (var i = 0; i < capsFaceCount; i++) {
+                for (int i = 0; i < capsFaceCount; i++) {
                     shadeSmooth.Add(settings.ShadeSmoothCaps);
                 }
             } else {
@@ -122,11 +122,11 @@ namespace GeometryGraph.Runtime.Curve {
             // First iteration done outside of loop
             CurveData current = Align(curve, profile, 0, rotationOffset);
             // Add points and edges
-            for (var i = 0; i < current.Points; i++) {
+            for (int i = 0; i < current.Points; i++) {
                 vertexPositions.Add(current.Position[i]);
             }
 
-            for (var i = 0; i < current.Points - 1; i++) {
+            for (int i = 0; i < current.Points - 1; i++) {
                 edges.Add(new GeometryData.Edge(i, i + 1, i) {
                     FaceA = i * 2 + 1
                 });
@@ -144,7 +144,7 @@ namespace GeometryGraph.Runtime.Curve {
             int verticalEdgeCount = current.Points;
             int profileEdgeCount = middleEdgeCount;
             int faceIterations = middleEdgeCount;
-            for (var index = 1; index < curve.Points; index++) {
+            for (int index = 1; index < curve.Points; index++) {
                 rotationOffset += incrementalRotationOffset;
                 current = Align(curve, profile, index, rotationOffset);
                 int faceOffset = (index - 1) * facesPerIteration;
@@ -152,7 +152,7 @@ namespace GeometryGraph.Runtime.Curve {
                 int vertexOffset = vertexPositions.Count;
 
                 // Middle edges
-                for (var i = 0; i < middleEdgeCount; i++) {
+                for (int i = 0; i < middleEdgeCount; i++) {
                     int fromVertex = vertexOffset - current.Points + i;
                     int toVertex = vertexOffset + (i + 1).mod(current.Points);
                     edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
@@ -162,7 +162,7 @@ namespace GeometryGraph.Runtime.Curve {
                 }
 
                 // Vertical edges (from profile to profile)
-                for (var i = 0; i < verticalEdgeCount; i++) {
+                for (int i = 0; i < verticalEdgeCount; i++) {
                     int fromVertex = vertexOffset - current.Points + i;
                     int toVertex = vertexOffset + i;
                     int faceA, faceB;
@@ -194,7 +194,7 @@ namespace GeometryGraph.Runtime.Curve {
                 }
 
                 // Profile edges
-                for (var i = 0; i < profileEdgeCount; i++) {
+                for (int i = 0; i < profileEdgeCount; i++) {
                     int fromVertex = vertexOffset + i;
                     int toVertex = vertexOffset + (i + 1).mod(current.Points);
                     edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
@@ -204,12 +204,12 @@ namespace GeometryGraph.Runtime.Curve {
                 }
 
                 // Vertices
-                for (var i = 0; i < current.Points; i++) {
+                for (int i = 0; i < current.Points; i++) {
                     vertexPositions.Add(current.Position[i]);
                 }
 
                 // Faces
-                for (var i = 0; i < faceIterations; i++) {
+                for (int i = 0; i < faceIterations; i++) {
                     // First face
                     faces.Add(new GeometryData.Face(
                                   vertexOffset + i,
@@ -273,7 +273,7 @@ namespace GeometryGraph.Runtime.Curve {
                 int edgeOffset = edges.Count;
 
                 // Add edges for diagonals
-                for (var i = 0; i < middleEdgeCount; i++) {
+                for (int i = 0; i < middleEdgeCount; i++) {
                     int fromVertex = (i + 1).mod(profile.Points);
                     int toVertex = vertexPositions.Count - profile.Points + i;
                     edges.Add(new GeometryData.Edge(fromVertex, toVertex, edges.Count) {
@@ -283,7 +283,7 @@ namespace GeometryGraph.Runtime.Curve {
                 }
                 
                 // Add edges from start to end
-                for (var i = 0; i < verticalEdgeCount; i++) {
+                for (int i = 0; i < verticalEdgeCount; i++) {
                     int fromVertex = i;
                     int toVertex = vertexPositions.Count - profile.Points + i;
                     int faceA, faceB;
@@ -315,7 +315,7 @@ namespace GeometryGraph.Runtime.Curve {
                 }
                 
                 // Faces
-                for (var i = 0; i < faceIterations; i++) {
+                for (int i = 0; i < faceIterations; i++) {
                     // First face
                     faces.Add(new GeometryData.Face(
                                   vertexPositions.Count - profile.Points + i,
@@ -390,7 +390,7 @@ namespace GeometryGraph.Runtime.Curve {
                 current = Align(curve, profile, 0, settings.RotationOffset);
                 CloseCapsStart(curve, current, settings.CapUvType, edges, faces, ref fcIdx, faceNormals, vertexPositions, faceCorners, uvs);
             } else if (!curve.IsClosed) {
-                for (var i = edges.Count - 1; i >= edges.Count - profileEdgeCount; i--) {
+                for (int i = edges.Count - 1; i >= edges.Count - profileEdgeCount; i--) {
                     edges[i].FaceA = -1;
                 }
             }
@@ -419,21 +419,21 @@ namespace GeometryGraph.Runtime.Curve {
             int currentEdgeOffset = edges.Count;
             int currentFaceOffset = faces.Count;
 
-            for (var i = 2; i <= profile.Points - 2; i++) {
-                var edge = new GeometryData.Edge(0, i, edges.Count) {
+            for (int i = 2; i <= profile.Points - 2; i++) {
+                GeometryData.Edge edge = new GeometryData.Edge(0, i, edges.Count) {
                     FaceA = currentFaceOffset + i - 2,
                     FaceB = currentFaceOffset + i - 1,
                 };
                 edges.Add(edge);
             }
             
-            var vertexUVs = new List<float2>();
+            List<float2> vertexUVs = new List<float2>();
             float2 minUV = new float2(float.MaxValue, float.MaxValue);
             float2 maxUV = new float2(float.MinValue, float.MinValue);
-            for (var i = 0; i < profile.Points; i++) {
+            for (int i = 0; i < profile.Points; i++) {
                 float uvX = math.dot(profile.Position[i], curve.Normal[0]); // right vector
                 float uvY = math.dot(profile.Position[i], curve.Binormal[0]); // forward vector
-                var uv = new float2(uvX, uvY);
+                float2 uv = new float2(uvX, uvY);
                 vertexUVs.Add(uv);
                 
                 minUV = math.min(minUV, uv);
@@ -441,7 +441,7 @@ namespace GeometryGraph.Runtime.Curve {
             }
 
             if (uvType != CurveToGeometrySettings.CapUVType.WorldSpace) {
-                for (var i = 0; i < vertexUVs.Count; i++) {
+                for (int i = 0; i < vertexUVs.Count; i++) {
                     switch (uvType) {
                         case CurveToGeometrySettings.CapUVType.LocalSpace:
                             float2 uv = vertexUVs[i];
@@ -459,7 +459,7 @@ namespace GeometryGraph.Runtime.Curve {
             }
 
             // First face
-            var firstFace = new GeometryData.Face(
+            GeometryData.Face firstFace = new GeometryData.Face(
                 0, 2, 1,
                 fcIdx++, fcIdx++, fcIdx++,
                 0, profile.Points == 3 ? 2 : currentEdgeOffset, 1 
@@ -486,8 +486,8 @@ namespace GeometryGraph.Runtime.Curve {
                 edges[2].FaceB = faces.Count - 1;
 
             int capFaceCount = profile.Points - 2;
-            for (var i = 1; i < capFaceCount - 1; i++) {
-                var face = new GeometryData.Face(
+            for (int i = 1; i < capFaceCount - 1; i++) {
+                GeometryData.Face face = new GeometryData.Face(
                     0, i + 2, i + 1,
                     fcIdx++, fcIdx++, fcIdx++,
                     currentEdgeOffset + i - 1, currentEdgeOffset + i, i + 1
@@ -513,7 +513,7 @@ namespace GeometryGraph.Runtime.Curve {
 
             // last face
             if (profile.Points > 3) {
-                var face = new GeometryData.Face(
+                GeometryData.Face face = new GeometryData.Face(
                     profile.Points - 2, 0, profile.Points - 1,
                     fcIdx++, fcIdx++, fcIdx++,
                     edges.Count - 1, profile.Points - 1, profile.Points - 2
@@ -550,13 +550,13 @@ namespace GeometryGraph.Runtime.Curve {
             int vertexStart = vertexPositions.Count - profile.Points;
             int edgeStart = edges.Count - profile.Points - profile.Points + 3;
             
-            var vertexUVs = new List<float2>();
+            List<float2> vertexUVs = new List<float2>();
             float2 minUV = new float2(float.MaxValue, float.MaxValue);
             float2 maxUV = new float2(float.MinValue, float.MinValue);
-            for (var i = 0; i < profile.Points; i++) {
+            for (int i = 0; i < profile.Points; i++) {
                 float uvX = math.dot(profile.Position[i], -curve.Normal[curve.Points - 1]); // right vector
                 float uvY = math.dot(profile.Position[i], curve.Binormal[curve.Points - 1]); // forward vector
-                var uv = new float2(uvX, uvY);
+                float2 uv = new float2(uvX, uvY);
                 vertexUVs.Add(uv);
                 
                 minUV = math.min(minUV, uv);
@@ -564,7 +564,7 @@ namespace GeometryGraph.Runtime.Curve {
             }
             
             if (uvType != CurveToGeometrySettings.CapUVType.WorldSpace) {
-                for (var i = 0; i < vertexUVs.Count; i++) {
+                for (int i = 0; i < vertexUVs.Count; i++) {
                     switch (uvType) {
                         case CurveToGeometrySettings.CapUVType.LocalSpace:
                             float2 uv = vertexUVs[i];
@@ -581,8 +581,8 @@ namespace GeometryGraph.Runtime.Curve {
                 }
             }
             
-            for (var i = 2; i <= profile.Points - 2; i++) {
-                var edge = new GeometryData.Edge(vertexStart, vertexStart + i, edges.Count) {
+            for (int i = 2; i <= profile.Points - 2; i++) {
+                GeometryData.Edge edge = new GeometryData.Edge(vertexStart, vertexStart + i, edges.Count) {
                     FaceA = currentFaceOffset + i - 2,
                     FaceB = currentFaceOffset + i - 1,
                 };
@@ -590,7 +590,7 @@ namespace GeometryGraph.Runtime.Curve {
             }
             
             // First face
-            var firstFace = new GeometryData.Face(
+            GeometryData.Face firstFace = new GeometryData.Face(
                 vertexStart + 2, vertexStart, vertexStart + 1,
                 fcIdx++, fcIdx++, fcIdx++,
                 profile.Points == 3 ? edgeStart + 2 : currentEdgeOffset, edgeStart + 0, edgeStart + 1
@@ -616,8 +616,8 @@ namespace GeometryGraph.Runtime.Curve {
                 edges[edgeStart + 2].FaceA = faces.Count - 1;
             
             int capFaceCount = profile.Points - 2;
-            for (var i = 1; i < capFaceCount - 1; i++) {
-                var face = new GeometryData.Face(
+            for (int i = 1; i < capFaceCount - 1; i++) {
+                GeometryData.Face face = new GeometryData.Face(
                     vertexStart + i + 2, vertexStart, vertexStart + i + 1,
                     fcIdx++, fcIdx++, fcIdx++,
                     currentEdgeOffset + i, currentEdgeOffset + i - 1, edgeStart + i + 1
@@ -642,7 +642,7 @@ namespace GeometryGraph.Runtime.Curve {
             
             // Last face
             if (profile.Points > 3) {
-                var lastFace = new GeometryData.Face(
+                GeometryData.Face lastFace = new GeometryData.Face(
                     vertexStart + profile.Points - 1, vertexStart, vertexStart + profile.Points - 2,
                     fcIdx++, fcIdx++, fcIdx++,
                     edgeStart + profile.Points - 1, currentEdgeOffset + profile.Points - 4, edgeStart + profile.Points - 2
@@ -671,24 +671,24 @@ namespace GeometryGraph.Runtime.Curve {
         private static CurveData Align(CurveData alignOn, CurveData toAlign, int index, float rotationOffset) {
             Assert.IsTrue(index.InRange(..alignOn.Points));
 
-            var rotation = float4x4.RotateY(math.radians(rotationOffset));
-            var align = new float4x4(alignOn.Normal[index].float4(), alignOn.Tangent[index].float4(), alignOn.Binormal[index].float4(), alignOn.Position[index].float4(1.0f));
-            var matrix = math.mul(align, rotation);
+            float4x4 rotation = float4x4.RotateY(math.radians(rotationOffset));
+            float4x4 align = new float4x4(alignOn.Normal[index].float4(), alignOn.Tangent[index].float4(), alignOn.Binormal[index].float4(), alignOn.Position[index].float4(1.0f));
+            float4x4 matrix = math.mul(align, rotation);
 
             if (toAlign.Points > kBurstAlignPointsThreshold) {
-                var job = new AlignCurveJob(burstAlign_positionDst, burstAlign_tangentDst, burstAlign_normalDst, burstAlign_binormalDst,
-                                            burstAlign_positionSrc, burstAlign_tangentSrc, burstAlign_normalSrc, burstAlign_binormalSrc,
-                                            matrix);
+                AlignCurveJob job = new AlignCurveJob(burstAlign_positionDst, burstAlign_tangentDst, burstAlign_normalDst, burstAlign_binormalDst,
+                                                      burstAlign_positionSrc, burstAlign_tangentSrc, burstAlign_normalSrc, burstAlign_binormalSrc,
+                                                      matrix);
                 job.Schedule(toAlign.Points, Environment.ProcessorCount).Complete();
                 return new CurveData(toAlign.Type, toAlign.Points, toAlign.IsClosed, burstAlign_positionDst.ToList(), burstAlign_tangentDst.ToList(),
                                      burstAlign_normalDst.ToList(), burstAlign_binormalDst.ToList());
             }
 
-            var position = new List<float3>();
-            var tangent = new List<float3>();
-            var normal = new List<float3>();
-            var binormal = new List<float3>();
-            for (var i = 0; i < toAlign.Points; i++) {
+            List<float3> position = new List<float3>();
+            List<float3> tangent = new List<float3>();
+            List<float3> normal = new List<float3>();
+            List<float3> binormal = new List<float3>();
+            for (int i = 0; i < toAlign.Points; i++) {
                 position.Add(math.mul(matrix, toAlign.Position[i].float4(1.0f)).xyz);
                 tangent.Add(math.mul(matrix, toAlign.Tangent[i].float4()).xyz);
                 normal.Add(math.mul(matrix, toAlign.Normal[i].float4()).xyz);

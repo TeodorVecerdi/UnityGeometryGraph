@@ -43,12 +43,12 @@ namespace GeometryGraph.Runtime.Geometry {
             this.faceCorners = faceCorners is List<FaceCorner> faceCornersList ? faceCornersList : new List<FaceCorner>(faceCorners);
             attributeManager = new AttributeManager(this);
 
-            var materialIndicesList = materialIndices is List<int> indicesList ? indicesList : materialIndices.ToList();
-            var vertexPositionsList = vertexPositions is List<float3> positionsList ? positionsList : vertexPositions.ToList();
-            var uvsList = uvs is List<float2> uvList ? uvList : uvs.ToList();
-            var creasesList = creases is List<float> creaseList ? creaseList : creases.ToList();
-            var faceNormalsList = faceNormals is List<float3> faceNormalList ? faceNormalList : faceNormals.ToList();
-            var smoothShadedList = smoothShaded is List<bool> smoothShadeList ? smoothShadeList : smoothShaded.ToList();
+            List<int> materialIndicesList = materialIndices is List<int> indicesList ? indicesList : materialIndices.ToList();
+            List<float3> vertexPositionsList = vertexPositions is List<float3> positionsList ? positionsList : vertexPositions.ToList();
+            List<float2> uvsList = uvs is List<float2> uvList ? uvList : uvs.ToList();
+            List<float> creasesList = creases is List<float> creaseList ? creaseList : creases.ToList();
+            List<float3> faceNormalsList = faceNormals is List<float3> faceNormalList ? faceNormalList : faceNormals.ToList();
+            List<bool> smoothShadedList = smoothShaded is List<bool> smoothShadeList ? smoothShadeList : smoothShaded.ToList();
             
             if (submeshCount == -1) submeshCount = materialIndicesList.Max() + 1;
             this.submeshCount = submeshCount;
@@ -66,7 +66,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
         public GeometryData Clone() {
             // TODO/NOTE: Should probably write a proper Clone method some time
-            var clone = GeometryData.Empty;
+            GeometryData clone = GeometryData.Empty;
             GeometryData.Merge(clone, this);
             return clone;
         }
@@ -77,7 +77,7 @@ namespace GeometryGraph.Runtime.Geometry {
             List<float3> vertices, List<float2> uvs, List<float> creases,
             List<float3> faceNormals, List<int> faceMaterialIndices, List<bool> faceSmoothShaded
         ) {
-            using var method = Profiler.ProfileMethod();
+            using IDisposable method = Profiler.ProfileMethod();
             if(vertices.Count > 0) attributeManager.Store(vertices.Into<Vector3Attribute>(AttributeId.Position, AttributeDomain.Vertex));
 
             if(faceNormals.Count > 0) attributeManager.Store(faceNormals.Into<Vector3Attribute>(AttributeId.Normal, AttributeDomain.Face));
@@ -90,13 +90,13 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         private void Cleanup() {
-            for (var i = 0; i < edges.Count; i++) {
+            for (int i = 0; i < edges.Count; i++) {
                 edges[i].SelfIndex = i;
             }
         }
 
         private void FillElementMetadata() {
-            using var method = Profiler.ProfileMethod();
+            using IDisposable method = Profiler.ProfileMethod();
             // Face Corner Metadata ==> Backing Vertex
             FillFaceCornerMetadata();
         
@@ -108,30 +108,30 @@ namespace GeometryGraph.Runtime.Geometry {
         }
         
         private void FillVertexMetadata() {
-            using var method = Profiler.ProfileMethod();
+            using IDisposable method = Profiler.ProfileMethod();
             // Edges
-            for (var i = 0; i < edges.Count; i++) {
-                var edge = edges[i];
+            for (int i = 0; i < edges.Count; i++) {
+                Edge edge = edges[i];
                 vertices[edge.VertA].Edges.Add(i);
                 vertices[edge.VertB].Edges.Add(i);
             }
 
             //Faces
-            for (var i = 0; i < faces.Count; i++) {
-                var face = faces[i];
+            for (int i = 0; i < faces.Count; i++) {
+                Face face = faces[i];
                 vertices[face.VertA].Faces.Add(i);
                 vertices[face.VertB].Faces.Add(i);
                 vertices[face.VertC].Faces.Add(i);
             }
         
             // Face Corners
-            for (var i = 0; i < faceCorners.Count; i++) {
-                var fc = faceCorners[i];
+            for (int i = 0; i < faceCorners.Count; i++) {
+                FaceCorner fc = faceCorners[i];
                 vertices[fc.Vert].FaceCorners.Add(i);
             }
 
             // Cleanup
-            foreach (var vertex in vertices) {
+            foreach (Vertex vertex in vertices) {
                 vertex.Edges.RemoveDuplicates();
                 vertex.Faces.RemoveDuplicates();
                 vertex.FaceCorners.RemoveDuplicates();
@@ -139,12 +139,12 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         private void FillFaceMetadata() {
-            using var method = Profiler.ProfileMethod();
-            for (var i = 0; i < faces.Count; i++) {
-                var face = faces[i];
-                var edgeA = edges[face.EdgeA];
-                var edgeB = edges[face.EdgeB];
-                var edgeC = edges[face.EdgeC];
+            using IDisposable method = Profiler.ProfileMethod();
+            for (int i = 0; i < faces.Count; i++) {
+                Face face = faces[i];
+                Edge edgeA = edges[face.EdgeA];
+                Edge edgeB = edges[face.EdgeB];
+                Edge edgeC = edges[face.EdgeC];
                 face.AdjacentFaces.AddRange(new[] { edgeA.FaceA, edgeA.FaceB, edgeB.FaceA, edgeB.FaceB, edgeC.FaceA, edgeC.FaceB });
 
                 // Cleanup
@@ -154,11 +154,11 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         private void FillFaceCornerMetadata() {
-            using var method = Profiler.ProfileMethod();
-            foreach (var face in faces) {
-                var fcA = faceCorners[face.FaceCornerA];
-                var fcB = faceCorners[face.FaceCornerB];
-                var fcC = faceCorners[face.FaceCornerC];
+            using IDisposable method = Profiler.ProfileMethod();
+            foreach (Face face in faces) {
+                FaceCorner fcA = faceCorners[face.FaceCornerA];
+                FaceCorner fcB = faceCorners[face.FaceCornerB];
+                FaceCorner fcC = faceCorners[face.FaceCornerC];
 
                 fcA.Vert = face.VertA;
                 fcB.Vert = face.VertB;

@@ -4,6 +4,7 @@ using GeometryGraph.Runtime.Graph;
 using UnityEditor;
 using UnityEngine;
 using GGraph = GeometryGraph.Runtime.GeometryGraph;
+using Object = UnityEngine.Object;
 
 namespace GeometryGraph.Editor {
     [CustomEditor(typeof(GGraph))]
@@ -23,18 +24,18 @@ namespace GeometryGraph.Editor {
                 targetGraph.OnPropertiesChanged(targetGraph.Graph.RuntimeData.PropertyHashCode);
             }
 
-            foreach (var property in targetGraph.Graph.RuntimeData.Properties) {
+            foreach (Property property in targetGraph.Graph.RuntimeData.Properties) {
                 if (targetGraph.SceneData.PropertyData[property.Guid].HasCustomValue) continue;
                 targetGraph.SceneData.PropertyData[property.Guid].UpdateDefaultValue(property.Type, property.DefaultValue);
             }
         }
 
         public override void OnInspectorGUI() {
-            var graphProperty = serializedObject.FindProperty("graph");
+            UnityEditor.SerializedProperty graphProperty = serializedObject.FindProperty("graph");
             EditorGUILayout.PropertyField(graphProperty);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("exporter"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("curveVisualizer"));
-            var changed = serializedObject.ApplyModifiedProperties();
+            bool changed = serializedObject.ApplyModifiedProperties();
 
             if (changed) {
                 if(targetGraph.Graph == null) {
@@ -49,13 +50,13 @@ namespace GeometryGraph.Editor {
 
             GUILayout.BeginVertical(GUI.skin.box);
             GUILayout.Label("Properties");
-            foreach (var property in targetGraph.Graph.RuntimeData.Properties) {
-                var isUnityObjectType = Runtime.Graph.PropertyUtils.IsUnityObjectType(property.Type);
-                var backingValueType = Runtime.Graph.PropertyUtils.GetBackingValueType(property.Type);
+            foreach (Property property in targetGraph.Graph.RuntimeData.Properties) {
+                bool isUnityObjectType = Runtime.Graph.PropertyUtils.IsUnityObjectType(property.Type);
+                Type backingValueType = Runtime.Graph.PropertyUtils.GetBackingValueType(property.Type);
 
                 if (isUnityObjectType) {
                     EditorGUI.BeginChangeCheck();
-                    var newValue = EditorGUILayout.ObjectField(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].ObjectValue, backingValueType, true);
+                    Object newValue = EditorGUILayout.ObjectField(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].ObjectValue, backingValueType, true);
                     if (EditorGUI.EndChangeCheck()) {
                         Undo.RegisterCompleteObjectUndo(targetGraph, $"Changed {property.DisplayName} value");
                         targetGraph.SceneData.PropertyData[property.Guid].ObjectValue = newValue;
@@ -65,7 +66,7 @@ namespace GeometryGraph.Editor {
                     switch (property.Type) {
                         case PropertyType.Integer: {
                             EditorGUI.BeginChangeCheck();
-                            var newValue = EditorGUILayout.IntField(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].IntValue);
+                            int newValue = EditorGUILayout.IntField(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].IntValue);
                             if (EditorGUI.EndChangeCheck()) {
                                 Undo.RegisterCompleteObjectUndo(targetGraph, $"Changed {property.DisplayName} value");
                                 targetGraph.SceneData.PropertyData[property.Guid].IntValue = newValue;
@@ -75,7 +76,7 @@ namespace GeometryGraph.Editor {
                         }
                         case PropertyType.Float: {
                             EditorGUI.BeginChangeCheck();
-                            var newValue = EditorGUILayout.FloatField(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].FloatValue);
+                            float newValue = EditorGUILayout.FloatField(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].FloatValue);
                             if (EditorGUI.EndChangeCheck()) {
                                 Undo.RegisterCompleteObjectUndo(targetGraph, $"Changed {property.DisplayName} value");
                                 targetGraph.SceneData.PropertyData[property.Guid].FloatValue = newValue;
@@ -85,7 +86,7 @@ namespace GeometryGraph.Editor {
                         }
                         case PropertyType.Vector: {
                             EditorGUI.BeginChangeCheck();
-                            var newValue = EditorGUILayout.Vector3Field(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].VectorValue);
+                            Vector3 newValue = EditorGUILayout.Vector3Field(property.DisplayName, targetGraph.SceneData.PropertyData[property.Guid].VectorValue);
                             if (EditorGUI.EndChangeCheck()) {
                                 Undo.RegisterCompleteObjectUndo(targetGraph, $"Changed {property.DisplayName} value");
                                 targetGraph.SceneData.PropertyData[property.Guid].VectorValue = newValue;
@@ -107,7 +108,7 @@ namespace GeometryGraph.Editor {
 
         private void OnGraphChanged() {
             targetGraph.SceneData.Reset();
-            foreach (var property in targetGraph.Graph.RuntimeData.Properties) {
+            foreach (Property property in targetGraph.Graph.RuntimeData.Properties) {
                 targetGraph.SceneData.PropertyData.Add(property.Guid, new PropertyValue(property));
             }
         }

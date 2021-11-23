@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace GeometryGraph.Editor {
@@ -31,22 +32,22 @@ namespace GeometryGraph.Editor {
         public CopyPasteData(EditorView editorView, IEnumerable<SerializedNode> nodes, IEnumerable<SerializedEdge> edges, IEnumerable<AbstractProperty> properties, IEnumerable<AbstractProperty> metaProperties) {
             this.editorView = editorView;
             
-            foreach (var node in nodes) {
+            foreach (SerializedNode node in nodes) {
                 AddNode(node);
-                foreach (var edge in GetAllEdgesForNode(node)) {
+                foreach (SerializedEdge edge in GetAllEdgesForNode(node)) {
                     AddEdge(edge);
                 }
             }
 
-            foreach (var edge in edges) {
+            foreach (SerializedEdge edge in edges) {
                 AddEdge(edge);
             }
 
-            foreach (var property in properties) {
+            foreach (AbstractProperty property in properties) {
                 AddProperty(property);
             }
 
-            foreach (var metaProperty in metaProperties) {
+            foreach (AbstractProperty metaProperty in metaProperties) {
                 AddMetaProperty(metaProperty);
             }
         }
@@ -67,22 +68,22 @@ namespace GeometryGraph.Editor {
 
         public void OnBeforeSerialize() {
             serializedNodes = new List<SerializedNode>();
-            foreach (var node in nodes) {
+            foreach (SerializedNode node in nodes) {
                 serializedNodes.Add(node);
             }
             
             serializedEdges = new List<SerializedEdge>();
-            foreach (var edge in edges) {
+            foreach (SerializedEdge edge in edges) {
                 serializedEdges.Add(edge);
             }
             
             serializedProperties = new List<SerializedProperty>();
-            foreach (var property in properties) {
+            foreach (AbstractProperty property in properties) {
                 serializedProperties.Add(new SerializedProperty(property));
             }
 
             serializedMetaProperties = new List<SerializedProperty>();
-            foreach (var property in metaProperties) {
+            foreach (AbstractProperty property in metaProperties) {
                 serializedMetaProperties.Add(new SerializedProperty(property));
             }
         }
@@ -92,23 +93,23 @@ namespace GeometryGraph.Editor {
             edges = new HashSet<SerializedEdge>();
             properties = new HashSet<AbstractProperty>();
             metaProperties = new HashSet<AbstractProperty>();
-            foreach (var node in serializedNodes) {
+            foreach (SerializedNode node in serializedNodes) {
                 nodes.Add(node);
             }
-            foreach (var edge in serializedEdges) {
+            foreach (SerializedEdge edge in serializedEdges) {
                 edges.Add(edge);
             }
-            foreach (var prop in serializedProperties) {
+            foreach (SerializedProperty prop in serializedProperties) {
                 properties.Add(prop.Deserialize());
             }
-            foreach (var prop in serializedMetaProperties) {
+            foreach (SerializedProperty prop in serializedMetaProperties) {
                 metaProperties.Add(prop.Deserialize());
             }
         }
         
         private IEnumerable<SerializedEdge> GetAllEdgesForNode(SerializedNode node) {
-            var edges = new List<SerializedEdge>();
-            foreach (var portConnections in node.GuidPortDictionary.Values.Select(port => port.connections)) {
+            List<SerializedEdge> edges = new List<SerializedEdge>();
+            foreach (IEnumerable<Edge> portConnections in node.GuidPortDictionary.Values.Select(port => port.connections)) {
                 edges.AddRange(portConnections.Select(edge => edge.userData).OfType<SerializedEdge>());
             }
             return edges;

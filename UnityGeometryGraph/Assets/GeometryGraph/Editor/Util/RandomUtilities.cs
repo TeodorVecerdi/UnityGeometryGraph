@@ -13,7 +13,7 @@ namespace GeometryGraph.Editor {
 
         /// <inheritdoc cref="DisplayNameString"/>
         public static string DisplayNameEnum(object enumValue) {
-            var enumType = enumValue.GetType();
+            Type enumType = enumValue.GetType();
             
             if (displayNameOverrides.ContainsKey(enumType) && displayNameOverrides[enumType].ContainsKey(ToUInt64(enumValue))) return displayNameOverrides[enumType][ToUInt64(enumValue)];
             
@@ -25,9 +25,9 @@ namespace GeometryGraph.Editor {
         /// </summary>
         /// <example><c>"someStringValue"</c> becomes <c>"Some String Value"</c></example>
         public static string DisplayNameString(string value) {
-            var result = new StringBuilder();
-            var currentWordStart = 0;
-            for (var i = 1; i < value.Length - 1; i++) {
+            StringBuilder result = new StringBuilder();
+            int currentWordStart = 0;
+            for (int i = 1; i < value.Length - 1; i++) {
                 if (value[i] == '_') {
                     result.Append($"{Capitalize(value.Substring(currentWordStart, i - currentWordStart))} ");
                     currentWordStart = i + 1;
@@ -50,17 +50,17 @@ namespace GeometryGraph.Editor {
         }
 
         private static Dictionary<Type, Dictionary<ulong, string>> CollectDisplayNameOverrides() {
-            var dict = new Dictionary<Type, Dictionary<ulong, string>>();
-            var enumType = typeof(Enum);
-            var allEnumTypes = typeof(RandomUtilities).Assembly.GetTypes().Where(type => type.IsSubclassOf(enumType))
-                                                      .Union(typeof(RuntimeGraphObject).Assembly.GetTypes().Where(type => type.IsSubclassOf(enumType))).ToList();
+            Dictionary<Type, Dictionary<ulong, string>> dict = new Dictionary<Type, Dictionary<ulong, string>>();
+            Type enumType = typeof(Enum);
+            List<Type> allEnumTypes = typeof(RandomUtilities).Assembly.GetTypes().Where(type => type.IsSubclassOf(enumType))
+                                                             .Union(typeof(RuntimeGraphObject).Assembly.GetTypes().Where(type => type.IsSubclassOf(enumType))).ToList();
             
-            foreach (var type in allEnumTypes) {
-                var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-                foreach (var field in fields) {
-                    var displayNameAttribute = field.GetCustomAttribute<DisplayNameAttribute>();
+            foreach (Type type in allEnumTypes) {
+                FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+                foreach (FieldInfo field in fields) {
+                    DisplayNameAttribute displayNameAttribute = field.GetCustomAttribute<DisplayNameAttribute>();
                     if(displayNameAttribute == null) continue;
-                    var enumValue = ToUInt64(field.GetRawConstantValue());
+                    ulong enumValue = ToUInt64(field.GetRawConstantValue());
 
                     if (!dict.ContainsKey(type)) dict[type] = new Dictionary<ulong, string>();
                     dict[type][enumValue] = displayNameAttribute.Name;

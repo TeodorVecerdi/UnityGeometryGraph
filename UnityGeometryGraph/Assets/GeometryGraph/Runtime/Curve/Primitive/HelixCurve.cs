@@ -28,12 +28,12 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
         }
 
         internal override void Generate() {
-            var pointCount = PointCount();
-            var points = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var job = new HelixCurveJob(points, tangents, normals, binormals, Resolution, topRadius, bottomRadius, time, b);
+            int pointCount = PointCount();
+            NativeArray<float3> points = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            HelixCurveJob job = new HelixCurveJob(points, tangents, normals, binormals, Resolution, topRadius, bottomRadius, time, b);
             job.Schedule(pointCount, Environment.ProcessorCount).Complete();
 
             Points = new List<float3>(points);
@@ -75,7 +75,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public void Execute(int index) {
-                var t = index / (float)resolution;
+                float t = index / (float)resolution;
                 
                 points[index] = Position(t * time);
                 tangents[index] = Tangent(t * time);
@@ -84,20 +84,20 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public float3 Position(float t) {
-                var radius = math.lerp(bottomRadius, topRadius, t / time);
-                math.sincos(t, out var sin, out var cos);
+                float radius = math.lerp(bottomRadius, topRadius, t / time);
+                math.sincos(t, out float sin, out float cos);
                 return new float3(radius * cos, b * t, radius * sin);
             }
 
             public float3 Tangent(float t) {
-                var radius = math.lerp(bottomRadius, topRadius, t / time);
-                math.sincos(t, out var sin, out var cos);
+                float radius = math.lerp(bottomRadius, topRadius, t / time);
+                math.sincos(t, out float sin, out float cos);
                 return math.normalizesafe(new float3(-radius * sin, b, radius * cos), float3_ext.forward);
             }
 
             public float3 Normal(float t) {
-                var radius = math.lerp(bottomRadius, topRadius, t / time);
-                math.sincos(t, out var sin, out var cos);
+                float radius = math.lerp(bottomRadius, topRadius, t / time);
+                math.sincos(t, out float sin, out float cos);
                 return math.normalizesafe(new float3(radius * cos, 0.0f, radius * sin), float3_ext.right);
             }
 

@@ -21,12 +21,12 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
         }
 
         internal override void Generate() {
-            var pointCount = PointCount();
-            var points = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var job = new CircleJob(points, tangents, normals, binormals, Resolution, radius);
+            int pointCount = PointCount();
+            NativeArray<float3> points = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            CircleJob job = new CircleJob(points, tangents, normals, binormals, Resolution, radius);
             job.Schedule(pointCount, Environment.ProcessorCount).Complete();
 
             Points = new List<float3>(points);
@@ -62,7 +62,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public void Execute(int index) {
-                var t = index / (float)resolution;
+                float t = index / (float)resolution;
                 points[index] = Position(t);
                 tangents[index] = Tangent(t);
                 normals[index] = Normal(t);
@@ -70,30 +70,30 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public float3 Position(float t) {
-                var angle = math_ext.TWO_PI * t;
+                float angle = math_ext.TWO_PI * t;
                 return new float3(radius * math.cos(angle), 0.0f, radius * math.sin(angle));
             }
 
             private float Slope(float t) {
-                var angle = math_ext.TWO_PI * t;
-                var x = math.cos(angle);
-                var z = math.sin(angle);
+                float angle = math_ext.TWO_PI * t;
+                float x = math.cos(angle);
+                float z = math.sin(angle);
                 if (z == 0.0f) return t > 0.5f ? float.PositiveInfinity : float.NegativeInfinity;
                 return -x / z;
             }
 
             public float3 Tangent(float t) {
-                var slope = Slope(t);
+                float slope = Slope(t);
                 if (float.IsPositiveInfinity(slope)) return -float3_ext.forward;
                 if (float.IsNegativeInfinity(slope)) return float3_ext.forward;
 
-                var tangent = math.normalize(new float3(1.0f, 0.0f, slope));
+                float3 tangent = math.normalize(new float3(1.0f, 0.0f, slope));
                 if (t >= 0.5) return tangent;
                 return -tangent;
             }
 
             public float3 Normal(float t) {
-                var tangent = Tangent(t);
+                float3 tangent = Tangent(t);
                 return new float3(tangent.z, 0.0f, -tangent.x);
             }
 

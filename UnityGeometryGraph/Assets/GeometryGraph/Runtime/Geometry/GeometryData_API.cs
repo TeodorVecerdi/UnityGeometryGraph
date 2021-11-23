@@ -90,7 +90,7 @@ namespace GeometryGraph.Runtime.Geometry {
         [NotNull, MustUseReturnValue]
         public TAttribute GetAttributeOrDefault<TAttribute, T>(string name, AttributeDomain domain, T defaultValue) where TAttribute : BaseAttribute<T> {
             if (HasAttribute(name, domain)) return GetAttribute<TAttribute>(name, domain)!;
-            var attribute = Enumerable.Repeat(defaultValue, domain switch {
+            TAttribute attribute = Enumerable.Repeat(defaultValue, domain switch {
                 AttributeDomain.Vertex => vertices.Count,
                 AttributeDomain.Edge => edges.Count,
                 AttributeDomain.Face => faces.Count,

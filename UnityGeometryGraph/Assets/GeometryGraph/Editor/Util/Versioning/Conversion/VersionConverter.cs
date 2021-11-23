@@ -14,9 +14,9 @@ namespace GeometryGraph.Editor {
         private static Dictionary<SemVer, Action<GraphFrameworkObject>> upgradeMethodCache;
 
         private static SemVer GetNextVersion(SemVer from) {
-            for (var i = 1; i < sortedVersions.Length; i++) {
-                var comparePrev = from.CompareTo(sortedVersions[i - 1]);
-                var compareNext = from.CompareTo(sortedVersions[i]);
+            for (int i = 1; i < sortedVersions.Length; i++) {
+                int comparePrev = from.CompareTo(sortedVersions[i - 1]);
+                int compareNext = from.CompareTo(sortedVersions[i]);
                 if (comparePrev >= 0 && compareNext < 0) return sortedVersions[i];
             }
 
@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
 
         public static void ConvertVersion(SemVer from, SemVer to, GraphFrameworkObject graphObject) {
             if (from == to) return;
-            var next = GetNextVersion(from);
+            SemVer next = GetNextVersion(from);
             if (next == SemVer.Invalid) {
                 Debug.Log($"Could not find upgrading method [{from} -> {to}]");
                 return;
@@ -60,13 +60,13 @@ namespace GeometryGraph.Editor {
             builtMethodCache = true;
             upgradeMethodCache = new Dictionary<SemVer, Action<GraphFrameworkObject>>();
 
-            var methods = typeof(VersionConverter).GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-            foreach (var method in methods) {
-                var attributes = method.GetCustomAttributes<ConvertMethodAttribute>(false).ToList();
+            MethodInfo[] methods = typeof(VersionConverter).GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+            foreach (MethodInfo method in methods) {
+                List<ConvertMethodAttribute> attributes = method.GetCustomAttributes<ConvertMethodAttribute>(false).ToList();
                 if (attributes.Count <= 0) continue;
-                var attribute = attributes[0];
+                ConvertMethodAttribute attribute = attributes[0];
                 
-                var methodCall = method.CreateDelegate(typeof(Action<GraphFrameworkObject>)) as Action<GraphFrameworkObject>;
+                Action<GraphFrameworkObject> methodCall = method.CreateDelegate(typeof(Action<GraphFrameworkObject>)) as Action<GraphFrameworkObject>;
                 upgradeMethodCache.Add(attribute.TargetVersion, methodCall);
             }
         }

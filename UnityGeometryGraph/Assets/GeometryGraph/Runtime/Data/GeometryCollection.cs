@@ -19,7 +19,7 @@ namespace GeometryGraph.Runtime.Data {
 
         [Button]
         public override void Process() {
-            var newHashCode = ComputeChildrenHashCode(transform);
+            int newHashCode = ComputeChildrenHashCode(transform);
             
             if (ChildrenHashCode != newHashCode || Processed == null) {
                 children.Clear();
@@ -34,10 +34,10 @@ namespace GeometryGraph.Runtime.Data {
 
         protected override GeometryData CollectChild(Transform childTransform) {
             children.Add(childTransform);
-            var data = GeometryData.Empty;
-            var childrenMeshFilters = childTransform.GetComponentsInChildren<MeshFilter>();
-            foreach (var meshFilter in childrenMeshFilters) {
-                var transformedChildMesh = TransformMeshToRootLocal(meshFilter, childTransform);
+            GeometryData data = GeometryData.Empty;
+            MeshFilter[] childrenMeshFilters = childTransform.GetComponentsInChildren<MeshFilter>();
+            foreach (MeshFilter meshFilter in childrenMeshFilters) {
+                Mesh transformedChildMesh = TransformMeshToRootLocal(meshFilter, childTransform);
                 GeometryData.Merge(data, transformedChildMesh);
             }
 
@@ -45,22 +45,22 @@ namespace GeometryGraph.Runtime.Data {
         }
         
         private Mesh TransformMeshToRootLocal(MeshFilter filter, Transform parentTransform) {
-            var filterLocalToRootLocalMatrix = parentTransform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
-            var rotation = Quaternion.LookRotation(
+            Matrix4x4 filterLocalToRootLocalMatrix = parentTransform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+            Quaternion rotation = Quaternion.LookRotation(
                 filterLocalToRootLocalMatrix.GetColumn(2),
                 filterLocalToRootLocalMatrix.GetColumn(1)
             );
-            var sourceMesh = filter.sharedMesh;
+            Mesh sourceMesh = filter.sharedMesh;
             
-            var mesh = new Mesh();
-            var vertices = sourceMesh.vertices.Select(vertex => (Vector3)(filterLocalToRootLocalMatrix * new Vector4(vertex.x, vertex.y, vertex.z, 1.0f))).ToList();
-            var normals = sourceMesh.normals.Select(normal => (rotation * normal).normalized).ToList();
+            Mesh mesh = new Mesh();
+            List<Vector3> vertices = sourceMesh.vertices.Select(vertex => (Vector3)(filterLocalToRootLocalMatrix * new Vector4(vertex.x, vertex.y, vertex.z, 1.0f))).ToList();
+            List<Vector3> normals = sourceMesh.normals.Select(normal => (rotation * normal).normalized).ToList();
             mesh.SetVertices(vertices);
             mesh.SetNormals(normals);
             mesh.SetTangents(sourceMesh.tangents);
             mesh.SetUVs(0, sourceMesh.uv);
             mesh.subMeshCount = sourceMesh.subMeshCount;
-            for (var i = 0; i < mesh.subMeshCount; i++) {
+            for (int i = 0; i < mesh.subMeshCount; i++) {
                 mesh.SetTriangles(sourceMesh.GetTriangles(i), i);
             }
             
@@ -81,7 +81,7 @@ namespace GeometryGraph.Runtime.Data {
         }
 
         private void __ChangeIndex(int amount) {
-            var maxIndex = __GetMaxIndex();
+            int maxIndex = __GetMaxIndex();
             if (maxIndex == -1) return;
             if (index + amount > maxIndex) index = 0;
             else if (index + amount < 0) index = maxIndex;

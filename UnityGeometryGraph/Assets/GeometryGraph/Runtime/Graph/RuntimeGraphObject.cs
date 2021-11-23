@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using GeometryGraph.Runtime.Curve;
 using GeometryGraph.Runtime.Data;
+using GeometryGraph.Runtime.Geometry;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
@@ -14,8 +16,8 @@ namespace GeometryGraph.Runtime.Graph {
             }
 
             LoadScenePropertyValues(sceneData.PropertyData);
-            var result = RuntimeData.OutputNode.EvaluateGraph();
-            var curve = RuntimeData.OutputNode.GetDisplayCurve();
+            GeometryData result = RuntimeData.OutputNode.EvaluateGraph();
+            CurveData curve = RuntimeData.OutputNode.GetDisplayCurve();
             CleanupScenePropertyValues();
             
             return new GeometryGraphEvaluationResult(result, curve);
@@ -38,7 +40,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void OnPropertyRemoved(string propertyGuid) {
-            var removed = RuntimeData.Properties.RemoveAll(p => p.Guid == propertyGuid);
+            int removed = RuntimeData.Properties.RemoveAll(p => p.Guid == propertyGuid);
             if (removed == 0) return;
             
 #if UNITY_EDITOR
@@ -49,7 +51,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void OnPropertyDefaultValueChanged(string propertyGuid, object newValue) {
-            var property = RuntimeData.Properties.Find(p => p.Guid == propertyGuid);
+            Property property = RuntimeData.Properties.Find(p => p.Guid == propertyGuid);
             if (property == null) {
                 Debug.LogError($"Updated value of non-existent property with guid {propertyGuid}");
                 return;
@@ -94,7 +96,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void OnConnectionRemoved(string outputGuid, string inputGuid) {
-            var connection = RuntimeData.Connections.FirstOrDefault(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
+            Connection connection = RuntimeData.Connections.FirstOrDefault(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
             if (connection == null) {
                 return;
             }
@@ -105,12 +107,12 @@ namespace GeometryGraph.Runtime.Graph {
             connection.Input.Connections.Remove(connection);
             RuntimeData.Connections.Remove(connection);
 
-            var removed = RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
+            int removed = RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
             if (removed != 0) Debug.LogWarning("Removed connection when it was supposed to already be removed");
         }
 
         public void OnPropertyUpdated(string propertyGuid, string newDisplayName) {
-            foreach (var runtimeDataProperty in RuntimeData.Properties) {
+            foreach (Property runtimeDataProperty in RuntimeData.Properties) {
                 if (runtimeDataProperty.Guid != propertyGuid) continue;
 
                 runtimeDataProperty.DisplayName = newDisplayName;
@@ -130,14 +132,14 @@ namespace GeometryGraph.Runtime.Graph {
 
         private void LoadScenePropertyValues(PropertyDataDictionary propertyData) {
             DebugUtility.Log("Loading Scene Property Values");
-            foreach (var property in RuntimeData.Properties) {
+            foreach (Property property in RuntimeData.Properties) {
                 property.Value = propertyData[property.Guid].GetValueForPropertyType(property.Type);
                 DebugUtility.Log($"Set Property {property.DisplayName}/{property.Type} value to [{property.Value}]");
             }
 
             DebugUtility.Log("Announcing port value changes on property nodes");
             // Call NotifyPortValueChanged on all property nodes
-            foreach (var runtimeNode in RuntimeData.Nodes) {
+            foreach (RuntimeNode runtimeNode in RuntimeData.Nodes) {
                 switch (runtimeNode) {
                     case GeometryObjectPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
                     case GeometryCollectionPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
@@ -150,7 +152,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private void CleanupScenePropertyValues() {
-            foreach (var property in RuntimeData.Properties) {
+            foreach (Property property in RuntimeData.Properties) {
                 property.Value = property.DefaultValue; 
             }
         }

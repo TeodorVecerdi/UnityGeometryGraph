@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public static SerializedRuntimeNode FromRuntimeNode(RuntimeNode node) {
-            var serializedNode = new SerializedRuntimeNode {
+            SerializedRuntimeNode serializedNode = new SerializedRuntimeNode {
                 Guid = node.Guid,
                 Type = node.GetType().FullName,
                 CustomData = node.GetCustomData(),
@@ -25,8 +25,8 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public static RuntimeNode FromSerializedNode(SerializedRuntimeNode serializedNode) {
-            var inst = (RuntimeNode)Activator.CreateInstance(System.Type.GetType(serializedNode.Type), serializedNode.Guid);
-            for (var i = 0; i < inst.Ports.Count; i++) {
+            RuntimeNode inst = (RuntimeNode)Activator.CreateInstance(System.Type.GetType(serializedNode.Type), serializedNode.Guid);
+            for (int i = 0; i < inst.Ports.Count; i++) {
                 inst.Ports[i].Guid = serializedNode.PortGuids[i];
             }
 

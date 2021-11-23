@@ -16,7 +16,7 @@ namespace GeometryGraph.Editor {
 
         public ref T GetReference() {
             if (getValue != null) {
-                var val = getValue();
+                T val = getValue();
                 if (!val.Equals(value)) value = val;
             }
             return ref value;
@@ -24,7 +24,7 @@ namespace GeometryGraph.Editor {
 
         public T GetValue() {
             if (getValue != null) {
-                var val = getValue();
+                T val = getValue();
                 if (!val.Equals(value)) value = val;
             }
             return value;
@@ -107,7 +107,7 @@ namespace GeometryGraph.Editor {
         }
         
         public static Ref<T> MakeRef(T initialValue, Func<T> getValue, Action setValue) {
-            var reference = new Ref<T>(initialValue);
+            Ref<T> reference = new Ref<T>(initialValue);
             reference.Bind(getValue, setValue);
             return reference;
         }

@@ -27,8 +27,8 @@ namespace GeometryGraph.Editor {
             get {
                 if (deleted) return false;
                 if (graphObject == null) return false;
-                var current = JsonUtility.ToJson(graphObject.GraphData);
-                var saved = GraphFrameworkUtility.ReadCompressed(AssetDatabase.GUIDToAssetPath(selectedAssetGuid));
+                string current = JsonUtility.ToJson(graphObject.GraphData);
+                string saved = GraphFrameworkUtility.ReadCompressed(AssetDatabase.GUIDToAssetPath(selectedAssetGuid));
                 return !string.Equals(current, saved, StringComparison.Ordinal);
             }
         }
@@ -49,15 +49,15 @@ namespace GeometryGraph.Editor {
 
         private void Update() {
             if (deleted) {
-                var closed = DisplayDeletedFromDiskDialog();
+                bool closed = DisplayDeletedFromDiskDialog();
                 if (closed) return;
             }
             
             if (graphObject == null && selectedAssetGuid != null) {
                 Debug.LogError("graphObject == null && selectedAssetGuid != null");
-                var assetGuid = selectedAssetGuid;
+                string assetGuid = selectedAssetGuid;
                 selectedAssetGuid = null;
-                var newObject = GraphFrameworkUtility.FindGraphAtGuid(assetGuid);
+                GraphFrameworkObject newObject = GraphFrameworkUtility.FindGraphAtGuid(assetGuid);
                 if (newObject == null) {
                     Debug.LogError("did not find graph, reimporting");
                     AssetDatabase.ImportAsset(AssetDatabase.GUIDToAssetPath(assetGuid));
@@ -83,7 +83,7 @@ namespace GeometryGraph.Editor {
                 return;
             }
 
-            var wasUndoRedoPerformed = graphObject.WasUndoRedoPerformed;
+            bool wasUndoRedoPerformed = graphObject.WasUndoRedoPerformed;
             if (wasUndoRedoPerformed) {
                 editorView.HandleChanges();
                 graphObject.GraphData.ClearChanges();
@@ -100,7 +100,7 @@ namespace GeometryGraph.Editor {
         }
 
         private bool DisplayDeletedFromDiskDialog() {
-            var saveResult = new SaveAsResult(false, null);
+            SaveAsResult saveResult = new SaveAsResult(false, null);
             if (EditorUtility.DisplayDialog("Graph Missing", $"{AssetDatabase.GUIDToAssetPath(selectedAssetGuid)} has been deleted or moved outside of Unity.\n\nWould you like to save your Graph Asset?", "Save As", "Close Window")) {
                 saveResult = SaveAs();
             }
@@ -110,7 +110,7 @@ namespace GeometryGraph.Editor {
                 return true;
             }
 
-            var newGraphObject = GraphFrameworkUtility.FindOrLoadAtPath(saveResult.Path);
+            GraphFrameworkObject newGraphObject = GraphFrameworkUtility.FindOrLoadAtPath(saveResult.Path);
             SetGraphObject(newGraphObject);
             BuildWindow();
             Focus();
@@ -142,13 +142,13 @@ namespace GeometryGraph.Editor {
         }
 
         private bool VersionCheck() {
-            var fileVersion = (SemVer)graphObject.GraphData.GraphVersion;
-            var comparison = fileVersion.CompareTo(GraphFrameworkVersion.Version.GetValue());
+            SemVer fileVersion = (SemVer)graphObject.GraphData.GraphVersion;
+            int comparison = fileVersion.CompareTo(GraphFrameworkVersion.Version.GetValue());
             if (comparison < 0) {
                 if (EditorUtility.DisplayDialog("Version mismatch", $"The graph you are trying to load was saved with an older version of Geometry Graph.\nIf you proceed with loading it will be converted to the current version. (A backup will be created)\n\nDo you wish to continue?", "Yes", "No")) {
-                    var assetPath = AssetDatabase.GUIDToAssetPath(graphObject.AssetGuid);
-                    var assetNameSubEndIndex = assetPath.LastIndexOf('.');
-                    var backupAssetPath = assetPath.Substring(0, assetNameSubEndIndex);
+                    string assetPath = AssetDatabase.GUIDToAssetPath(graphObject.AssetGuid);
+                    int assetNameSubEndIndex = assetPath.LastIndexOf('.');
+                    string backupAssetPath = assetPath.Substring(0, assetNameSubEndIndex);
                     GraphFrameworkUtility.CreateFileNoUpdate($"{backupAssetPath}.backup_{fileVersion}.{GraphFrameworkImporter.Extension}", graphObject);
                     GraphFrameworkUtility.VersionConvert(fileVersion, graphObject);
                     Refresh();
@@ -161,9 +161,9 @@ namespace GeometryGraph.Editor {
 
             if (comparison > 0) {
                 if (EditorUtility.DisplayDialog("Version mismatch", $"The graph you are trying to load was saved with a newer version of Geometry Graph.\nLoading the file might cause unexpected behaviour or errors. (A backup will be created)\n\nDo you wish to continue?", "Yes", "No")) {
-                    var assetPath = AssetDatabase.GUIDToAssetPath(graphObject.AssetGuid);
-                    var assetNameSubEndIndex = assetPath.LastIndexOf('.');
-                    var backupAssetPath = assetPath.Substring(0, assetNameSubEndIndex);
+                    string assetPath = AssetDatabase.GUIDToAssetPath(graphObject.AssetGuid);
+                    int assetNameSubEndIndex = assetPath.LastIndexOf('.');
+                    string backupAssetPath = assetPath.Substring(0, assetNameSubEndIndex);
                     GraphFrameworkUtility.CreateFileNoUpdate($"{backupAssetPath}.backup_{fileVersion}.{GraphFrameworkImporter.Extension}", graphObject);
                     Refresh();
                 } else {
@@ -186,15 +186,15 @@ namespace GeometryGraph.Editor {
         }
 
         public bool ShowReplaceGraphWindow() {
-            var selection = EditorUtility.DisplayDialogComplex("Graph has unsaved changes", "Do you want to save the changes you made in the Geometry Graph?\nYour changes will be lost if you don't save them.", "Save As...", "Cancel", "Continue");
+            int selection = EditorUtility.DisplayDialogComplex("Graph has unsaved changes", "Do you want to save the changes you made in the Geometry Graph?\nYour changes will be lost if you don't save them.", "Save As...", "Cancel", "Continue");
             // 0 = Save As, 1 = Cancel, 2 = Continue
             if (selection == 1) 
                 return false;
             if (selection == 2) {
                 // Reimport asset on disk, then replace
-                var assetPath = AssetDatabase.GUIDToAssetPath(selectedAssetGuid);
+                string assetPath = AssetDatabase.GUIDToAssetPath(selectedAssetGuid);
                 AssetDatabase.ImportAsset(assetPath);
-                var newGraphObject = GraphFrameworkUtility.FindOrLoadAtPath(assetPath);
+                GraphFrameworkObject newGraphObject = GraphFrameworkUtility.FindOrLoadAtPath(assetPath);
                 SetGraphObject(newGraphObject);
                 BuildWindow();
                 Refresh();
@@ -203,16 +203,16 @@ namespace GeometryGraph.Editor {
             }
 
             if (selection == 0) {
-                var result = SaveAs();
+                SaveAsResult result = SaveAs();
                 if (result.ReplacedSameAsset) {
                     return false;
                 }
 
                 Debug.Log("Reimporting and replacing");
                 
-                var assetPath = AssetDatabase.GUIDToAssetPath(selectedAssetGuid);
+                string assetPath = AssetDatabase.GUIDToAssetPath(selectedAssetGuid);
                 AssetDatabase.ImportAsset(assetPath);
-                var newGraphObject = GraphFrameworkUtility.FindOrLoadAtPath(assetPath);
+                GraphFrameworkObject newGraphObject = GraphFrameworkUtility.FindOrLoadAtPath(assetPath);
                 SetGraphObject(newGraphObject);
                 BuildWindow();
                 Refresh();
@@ -235,15 +235,15 @@ namespace GeometryGraph.Editor {
 
         private SaveAsResult SaveAs() {
             if (!string.IsNullOrEmpty(selectedAssetGuid) && graphObject != null) {
-                var assetPath = AssetDatabase.GUIDToAssetPath(selectedAssetGuid);
+                string assetPath = AssetDatabase.GUIDToAssetPath(selectedAssetGuid);
                 if (string.IsNullOrEmpty(assetPath))
                     return new SaveAsResult(false, null);
 
-                var directoryPath = Path.GetDirectoryName(assetPath);
-                var savePath = EditorUtility.SaveFilePanelInProject("Save As...", Path.GetFileNameWithoutExtension(assetPath), GraphFrameworkImporter.Extension, "", directoryPath);
+                string directoryPath = Path.GetDirectoryName(assetPath);
+                string savePath = EditorUtility.SaveFilePanelInProject("Save As...", Path.GetFileNameWithoutExtension(assetPath), GraphFrameworkImporter.Extension, "", directoryPath);
                 savePath = savePath.Replace(Application.dataPath, "Assets");
                 if (!string.Equals(savePath, assetPath, StringComparison.InvariantCulture)) {
-                    var objectToSave = graphObject.GetCloneForSerialization();
+                    GraphFrameworkObject objectToSave = graphObject.GetCloneForSerialization();
                     if (string.IsNullOrEmpty(savePath) || !GraphFrameworkUtility.CreateFile(savePath, objectToSave)) {
                         return new SaveAsResult(false, null);
                     }
@@ -263,8 +263,8 @@ namespace GeometryGraph.Editor {
         private void ShowInProject() {
             if (string.IsNullOrEmpty(selectedAssetGuid)) return;
 
-            var path = AssetDatabase.GUIDToAssetPath(selectedAssetGuid);
-            var asset = AssetDatabase.LoadAssetAtPath<Object>(path);
+            string path = AssetDatabase.GUIDToAssetPath(selectedAssetGuid);
+            Object asset = AssetDatabase.LoadAssetAtPath<Object>(path);
             EditorGUIUtility.PingObject(asset);
         }
 

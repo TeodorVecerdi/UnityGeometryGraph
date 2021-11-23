@@ -75,12 +75,12 @@ namespace GeometryGraph.Editor {
                 return;
             }
 
-            var deserialized = Deserialize();
+            GraphFrameworkData deserialized = Deserialize();
             graphData.ReplaceWith(deserialized);
         }
 
         private GraphFrameworkData Deserialize() {
-            var deserialized = JsonUtility.FromJson<GraphFrameworkData>(serializedGraph);
+            GraphFrameworkData deserialized = JsonUtility.FromJson<GraphFrameworkData>(serializedGraph);
             if (deserialized == null) return null;
             deserialized.AssetGuid = AssetGuid;
             objectVersion = fileVersion;
@@ -89,9 +89,9 @@ namespace GeometryGraph.Editor {
         }
 
         public GraphFrameworkObject GetCloneForSerialization() {
-            var gfo = CreateInstance<GraphFrameworkObject>();
+            GraphFrameworkObject gfo = CreateInstance<GraphFrameworkObject>();
 
-            var cloneData = JsonUtility.FromJson<GraphFrameworkData>(JsonUtility.ToJson(graphData));
+            GraphFrameworkData cloneData = JsonUtility.FromJson<GraphFrameworkData>(JsonUtility.ToJson(graphData));
             cloneData.AssetGuid = AssetGuid;
             gfo.Initialize(cloneData);
 

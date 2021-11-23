@@ -157,8 +157,8 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
-            var array = new JArray {
+            JObject root = base.GetNodeData();
+            JArray array = new JArray {
                 rotationOffset,
                 incrementalRotationOffset,
                 closeCaps ? 1 : 0,
@@ -172,7 +172,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void SetNodeData(JObject jsonData) {
-            var array = jsonData["d"] as JArray;
+            JArray array = jsonData["d"] as JArray;
             
             rotationOffset = array!.Value<float>(0);
             incrementalRotationOffset = array.Value<float>(1);

@@ -34,8 +34,8 @@ namespace GeometryGraph.Editor {
 
         private void Build() {
             buttons = new Button[names.Length];
-            for (var i = 0; i < names.Length; i++) {
-                var index = i;
+            for (int i = 0; i < names.Length; i++) {
+                int index = i;
                 buttons[i] = new Button(() => value = values[index]) {text = names[i]};
                 buttons[i].AddToClassList("toggle-button");
                 Add(buttons[i]);
@@ -46,7 +46,7 @@ namespace GeometryGraph.Editor {
         }
 
         private int FindIndex(T value) {
-            for (var i = 0; i < values.Length; i++) {
+            for (int i = 0; i < values.Length; i++) {
                 if (value.ToUInt64() == values[i].ToUInt64()) return i;
             }
 
@@ -60,7 +60,7 @@ namespace GeometryGraph.Editor {
         public T value {
             get => rawValue;
             set {
-                using var pooled = ChangeEvent<T>.GetPooled(rawValue, value);
+                using ChangeEvent<T> pooled = ChangeEvent<T>.GetPooled(rawValue, value);
                 pooled.target = this;
                 SetValueWithoutNotify(FindIndex(value));
                 SendEvent(pooled);

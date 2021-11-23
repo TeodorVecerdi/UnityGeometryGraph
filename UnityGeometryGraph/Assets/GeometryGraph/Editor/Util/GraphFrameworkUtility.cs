@@ -9,6 +9,7 @@ using K4os.Compression.LZ4.Streams;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
 
 namespace GeometryGraph.Editor {
     public static class GraphFrameworkUtility {
@@ -19,7 +20,7 @@ namespace GeometryGraph.Editor {
         public static bool CreateFile(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
             if (graphObject == null || string.IsNullOrEmpty(path)) return false;
             
-            var assetGuid = AssetDatabase.AssetPathToGUID(path);
+            string assetGuid = AssetDatabase.AssetPathToGUID(path);
             graphObject.GraphData.AssetGuid = assetGuid;
             graphObject.RuntimeGraph.RuntimeData.Guid = Guid.NewGuid().ToString();
             
@@ -28,7 +29,7 @@ namespace GeometryGraph.Editor {
         }
 
         public static void CreateFileNoUpdate(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
-            var json = JsonUtility.ToJson(graphObject.GraphData);
+            string json = JsonUtility.ToJson(graphObject.GraphData);
             WriteCompressed(json, path);
             if (refreshAsset) AssetDatabase.ImportAsset(path);
         }
@@ -37,10 +38,10 @@ namespace GeometryGraph.Editor {
             if (graphObject == null) return false;
             if (string.IsNullOrEmpty(graphObject.GraphData.AssetGuid)) return false;
 
-            var assetPath = AssetDatabase.GUIDToAssetPath(graphObject.GraphData.AssetGuid);
+            string assetPath = AssetDatabase.GUIDToAssetPath(graphObject.GraphData.AssetGuid);
             if (string.IsNullOrEmpty(assetPath)) return false;
 
-            var jsonString = JsonUtility.ToJson(graphObject.GraphData);
+            string jsonString = JsonUtility.ToJson(graphObject.GraphData);
             WriteCompressed(jsonString, assetPath);
             // if (refreshAsset) AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
             if (refreshAsset) AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
@@ -50,12 +51,12 @@ namespace GeometryGraph.Editor {
         public static GraphFrameworkObject LoadGraphAtPath(string assetPath) {
             if (string.IsNullOrEmpty(assetPath)) return null;
             // Debug.LogWarning("GraphFrameworkUtility::LoadGraphAtPath");
-            var jsonString = ReadCompressed(assetPath);
+            string jsonString = ReadCompressed(assetPath);
             try {
                 RuntimeGraphObjectData.DeserializingFromJson = true;
-                var graphData = JsonUtility.FromJson<GraphFrameworkData>(jsonString);
+                GraphFrameworkData graphData = JsonUtility.FromJson<GraphFrameworkData>(jsonString);
                 RuntimeGraphObjectData.DeserializingFromJson = false;
-                var graphObject = ScriptableObject.CreateInstance<GraphFrameworkObject>();
+                GraphFrameworkObject graphObject = ScriptableObject.CreateInstance<GraphFrameworkObject>();
                 graphObject.Initialize(graphData);
                 graphObject.AssetGuid = graphData.AssetGuid;
                 
@@ -74,7 +75,7 @@ namespace GeometryGraph.Editor {
         public static GraphFrameworkObject LoadGraphAtGuid(string assetGuid) {
             if (string.IsNullOrEmpty(assetGuid)) return null;
 
-            var assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
+            string assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
             if (string.IsNullOrEmpty(assetPath)) return null;
 
             return LoadGraphAtPath(assetPath);
@@ -83,16 +84,16 @@ namespace GeometryGraph.Editor {
         public static GraphFrameworkObject FindGraphAtGuid(string assetGuid) {
             if (string.IsNullOrEmpty(assetGuid)) return null;
 
-            var assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
+            string assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
             if (string.IsNullOrEmpty(assetPath)) return null;
             return FindGraphAtPath(assetPath);
         }
 
         public static GraphFrameworkObject FindGraphAtPath(string assetPath) {
             if (string.IsNullOrEmpty(assetPath)) return null;
-            var allAssetsAtPath = AssetDatabase.LoadAllAssetsAtPath(assetPath);
+            Object[] allAssetsAtPath = AssetDatabase.LoadAllAssetsAtPath(assetPath);
 
-            foreach (var asset in allAssetsAtPath) {
+            foreach (Object asset in allAssetsAtPath) {
                 if (asset is GraphFrameworkObject graphFrameworkObject) {
                     graphFrameworkObject.RecalculateAssetGuid(assetPath);
                     return graphFrameworkObject;
@@ -107,15 +108,15 @@ namespace GeometryGraph.Editor {
         }
 
         internal static void WriteCompressed(string value, string path) {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(value);
-            using var byteStream = new MemoryStream(bytes);
-            using var lz4Stream = LZ4Stream.Encode(File.Create(path), EncoderSettings);
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(value);
+            using MemoryStream byteStream = new MemoryStream(bytes);
+            using LZ4EncoderStream lz4Stream = LZ4Stream.Encode(File.Create(path), EncoderSettings);
             byteStream.CopyTo(lz4Stream);
         }
 
         internal static string ReadCompressed(string path) {
-            using var lz4Stream = LZ4Stream.Decode(File.OpenRead(path));
-            using var memoryStream = new MemoryStream();
+            using LZ4DecoderStream lz4Stream = LZ4Stream.Decode(File.OpenRead(path));
+            using MemoryStream memoryStream = new MemoryStream();
             lz4Stream.CopyTo(memoryStream);
 
             return System.Text.Encoding.UTF8.GetString(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
@@ -157,32 +158,32 @@ namespace GeometryGraph.Editor {
         /// A name that is distinct form any name in `existingNames`.
         /// </returns>
         public static string SanitizeName(IEnumerable<string> existingNames, string duplicateFormat, string name) {
-            var existingNamesList = existingNames.ToList();
+            List<string> existingNamesList = existingNames.ToList();
             if (!existingNamesList.ToList().Contains(name))
                 return name;
 
-            var escapedDuplicateFormat = Regex.Escape(duplicateFormat);
+            string escapedDuplicateFormat = Regex.Escape(duplicateFormat);
 
             // Escaped format will escape string interpolation, so the escape characters must be removed for these.
             escapedDuplicateFormat = escapedDuplicateFormat.Replace(@"\{0}", @"{0}");
             escapedDuplicateFormat = escapedDuplicateFormat.Replace(@"\{1}", @"{1}");
 
-            var baseRegex = new Regex(string.Format(escapedDuplicateFormat, @"^(.*)", @"(\d+)"));
+            Regex baseRegex = new Regex(string.Format(escapedDuplicateFormat, @"^(.*)", @"(\d+)"));
 
-            var baseMatch = baseRegex.Match(name);
+            Match baseMatch = baseRegex.Match(name);
             if (baseMatch.Success)
                 name = baseMatch.Groups[1].Value;
 
-            var baseNameExpression = $@"^{Regex.Escape(name)}";
-            var regex = new Regex(string.Format(escapedDuplicateFormat, baseNameExpression, @"(\d+)") + "$");
+            string baseNameExpression = $@"^{Regex.Escape(name)}";
+            Regex regex = new Regex(string.Format(escapedDuplicateFormat, baseNameExpression, @"(\d+)") + "$");
 
-            var existingDuplicateNumbers = existingNamesList.Select(existingName => regex.Match(existingName)).Where(m => m.Success).Select(m => int.Parse(m.Groups[1].Value)).Where(n => n > 0).Distinct().ToList();
+            List<int> existingDuplicateNumbers = existingNamesList.Select(existingName => regex.Match(existingName)).Where(m => m.Success).Select(m => int.Parse(m.Groups[1].Value)).Where(n => n > 0).Distinct().ToList();
 
-            var duplicateNumber = 1;
+            int duplicateNumber = 1;
             existingDuplicateNumbers.Sort();
             if (existingDuplicateNumbers.Any() && existingDuplicateNumbers.First() == 1) {
                 duplicateNumber = existingDuplicateNumbers.Last() + 1;
-                for (var i = 1; i < existingDuplicateNumbers.Count; i++) {
+                for (int i = 1; i < existingDuplicateNumbers.Count; i++) {
                     if (existingDuplicateNumbers[i - 1] != existingDuplicateNumbers[i] - 1) {
                         duplicateNumber = existingDuplicateNumbers[i - 1] + 1;
                         break;

@@ -63,7 +63,7 @@ namespace GeometryGraph.Editor {
             }
             
             serializedProperties.Clear();
-            foreach (var property in properties) {
+            foreach (AbstractProperty property in properties) {
                 serializedProperties.Add(new SerializedProperty(property));
             }
         }
@@ -87,26 +87,26 @@ namespace GeometryGraph.Editor {
 
         public void ReplaceWith(GraphFrameworkData otherGraphData) {
             // Remove everything 
-            var removedNodesGuid = new List<string>();
+            List<string> removedNodesGuid = new List<string>();
             removedNodesGuid.AddRange(nodes.Select(node => node.GUID));
-            foreach (var node in removedNodesGuid) {
+            foreach (string node in removedNodesGuid) {
                 RemoveNode(nodeDictionary[node]);
             }
 
-            var removedProperties = new List<AbstractProperty>(properties);
-            foreach (var prop in removedProperties)
+            List<AbstractProperty> removedProperties = new List<AbstractProperty>(properties);
+            foreach (AbstractProperty prop in removedProperties)
                 RemoveProperty(prop);
 
             // Add back everything
-            foreach (var node in otherGraphData.nodes) {
+            foreach (SerializedNode node in otherGraphData.nodes) {
                 AddNode(node);
             }
 
-            foreach (var edge in otherGraphData.edges) {
+            foreach (SerializedEdge edge in otherGraphData.edges) {
                 AddEdge(edge);
             }
 
-            foreach (var property in otherGraphData.properties) {
+            foreach (AbstractProperty property in otherGraphData.properties) {
                 AddProperty(property);
             }
             
@@ -131,7 +131,7 @@ namespace GeometryGraph.Editor {
         }
 
         public bool HasEdge(Edge edge) {
-            var serializedEdge = new SerializedEdge {
+            SerializedEdge serializedEdge = new SerializedEdge {
                 Input = edge.input.node.viewDataKey,
                 Output = edge.output.node.viewDataKey,
                 InputPort = edge.input.viewDataKey,
@@ -141,7 +141,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void AddEdge(Edge edge) {
-            var serializedEdge = new SerializedEdge {
+            SerializedEdge serializedEdge = new SerializedEdge {
                 Input = edge.input.node.viewDataKey,
                 Output = edge.output.node.viewDataKey,
                 InputPort = edge.input.viewDataKey,
@@ -155,14 +155,14 @@ namespace GeometryGraph.Editor {
         public void AddEdge(SerializedEdge edge) {
             if (edge.InputCapacity == Port.Capacity.Single) {
                 // Remove all edges with the same port
-                var temp = new List<SerializedEdge>();
+                List<SerializedEdge> temp = new List<SerializedEdge>();
                 temp.AddRange(edges.Where(edge1 => edge1.InputPort == edge.InputPort));
                 temp.ForEach(RemoveEdge);
             }
 
             if (edge.OutputCapacity == Port.Capacity.Single) {
                 // Remove all edges with the same port
-                var temp = new List<SerializedEdge>();
+                List<SerializedEdge> temp = new List<SerializedEdge>();
                 temp.AddRange(edges.Where(edge1 => edge1.OutputPort == edge.OutputPort));
                 temp.ForEach(RemoveEdge);
             }
@@ -184,8 +184,8 @@ namespace GeometryGraph.Editor {
         }
 
         public void RemoveProperty(AbstractProperty property) {
-            var propertyNodes = nodes.FindAll(node => node.Node.IsProperty &&  node.Node.PropertyGuid == property.GUID);
-            foreach (var node in propertyNodes)
+            List<SerializedNode> propertyNodes = nodes.FindAll(node => node.Node.IsProperty &&  node.Node.PropertyGuid == property.GUID);
+            foreach (SerializedNode node in propertyNodes)
                 RemoveNode(node);
 
             if (properties.Remove(property)) {
@@ -198,18 +198,18 @@ namespace GeometryGraph.Editor {
         public void MoveProperty(AbstractProperty property, int newIndex) {
             if (newIndex > properties.Count || newIndex < 0)
                 throw new ArgumentException("New index is not within properties list.");
-            var currentIndex = properties.IndexOf(property);
+            int currentIndex = properties.IndexOf(property);
             if (currentIndex == -1)
                 throw new ArgumentException("Property is not in graph.");
             if (newIndex == currentIndex) {
                 return;
             }
             properties.RemoveAt(currentIndex);
-            var runtimeProperty = RuntimeGraphData.Properties[currentIndex];
+            Property runtimeProperty = RuntimeGraphData.Properties[currentIndex];
             RuntimeGraphData.Properties.RemoveAt(currentIndex);
             if (newIndex > currentIndex)
                 newIndex--;
-            var isLast = newIndex == properties.Count;
+            bool isLast = newIndex == properties.Count;
             if (isLast) {
                 properties.Add(property);
                 RuntimeGraphData.Properties.Add(runtimeProperty);
@@ -222,11 +222,11 @@ namespace GeometryGraph.Editor {
         }
 
         public void RemoveElements(List<SerializedNode> nodes, List<SerializedEdge> edges) {
-            foreach (var edge in edges) {
+            foreach (SerializedEdge edge in edges) {
                 RemoveEdge(edge);
             }
 
-            foreach (var node in nodes) {
+            foreach (SerializedNode node in nodes) {
                 RemoveNode(node);
             }
         }
@@ -245,7 +245,7 @@ namespace GeometryGraph.Editor {
             if (string.IsNullOrEmpty(newReferenceName))
                 return;
 
-            var name = newReferenceName.Trim();
+            string name = newReferenceName.Trim();
             if (string.IsNullOrEmpty(name))
                 return;
 
@@ -253,16 +253,16 @@ namespace GeometryGraph.Editor {
         }
 
         public void Paste(CopyPasteData copyPasteData, List<SerializedNode> remappedNodes, List<SerializedEdge> remappedEdges) {
-            var nodeGuidMap = new Dictionary<string, string>();
-            var portGuidMap = new Dictionary<string, string>();
-            foreach (var node in copyPasteData.Nodes) {
-                var oldGuid = node.GUID;
-                var newGuid = Guid.NewGuid().ToString();
+            Dictionary<string, string> nodeGuidMap = new Dictionary<string, string>();
+            Dictionary<string, string> portGuidMap = new Dictionary<string, string>();
+            foreach (SerializedNode node in copyPasteData.Nodes) {
+                string oldGuid = node.GUID;
+                string newGuid = Guid.NewGuid().ToString();
                 node.GUID = newGuid;
                 nodeGuidMap[oldGuid] = newGuid;
-                for (var i = 0; i < node.PortData.Count; i++) {
-                    var newPortGuid = Guid.NewGuid().ToString();
-                    var oldPortGuid = node.PortData[i];
+                for (int i = 0; i < node.PortData.Count; i++) {
+                    string newPortGuid = Guid.NewGuid().ToString();
+                    string oldPortGuid = node.PortData[i];
                     portGuidMap[oldPortGuid] = newPortGuid;
 
                     node.PortData[i] = newPortGuid;
@@ -296,8 +296,8 @@ namespace GeometryGraph.Editor {
                 }*/
 
                 // offset the pasted node slightly so it's not on top of the original one
-                var drawState = node.DrawState;
-                var position = drawState.Position;
+                NodeDrawState drawState = node.DrawState;
+                Rect position = drawState.Position;
                 position.x += 30;
                 position.y += 30;
                 drawState.Position = position;
@@ -309,13 +309,13 @@ namespace GeometryGraph.Editor {
                 pastedNodes.Add(node);
             }
 
-            foreach (var edge in copyPasteData.Edges) {
+            foreach (SerializedEdge edge in copyPasteData.Edges) {
                 if ((nodeGuidMap.ContainsKey(edge.Input) && nodeGuidMap.ContainsKey(edge.Output)) && (portGuidMap.ContainsKey(edge.InputPort) && portGuidMap.ContainsKey(edge.OutputPort))) {
-                    var remappedOutputGuid = nodeGuidMap.ContainsKey(edge.Output) ? nodeGuidMap[edge.Output] : edge.Output;
-                    var remappedInputGuid = nodeGuidMap.ContainsKey(edge.Input) ? nodeGuidMap[edge.Input] : edge.Input;
-                    var remappedOutputPortGuid = portGuidMap.ContainsKey(edge.OutputPort) ? portGuidMap[edge.OutputPort] : edge.OutputPort;
-                    var remappedInputPortGuid = portGuidMap.ContainsKey(edge.InputPort) ? portGuidMap[edge.InputPort] : edge.InputPort;
-                    var remappedEdge = new SerializedEdge {
+                    string remappedOutputGuid = nodeGuidMap.ContainsKey(edge.Output) ? nodeGuidMap[edge.Output] : edge.Output;
+                    string remappedInputGuid = nodeGuidMap.ContainsKey(edge.Input) ? nodeGuidMap[edge.Input] : edge.Input;
+                    string remappedOutputPortGuid = portGuidMap.ContainsKey(edge.OutputPort) ? portGuidMap[edge.OutputPort] : edge.OutputPort;
+                    string remappedInputPortGuid = portGuidMap.ContainsKey(edge.InputPort) ? portGuidMap[edge.InputPort] : edge.InputPort;
+                    SerializedEdge remappedEdge = new SerializedEdge {
                         Input = remappedInputGuid,
                         Output = remappedOutputGuid,
                         InputPort = remappedInputPortGuid,

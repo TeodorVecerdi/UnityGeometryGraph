@@ -112,8 +112,8 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
-            var array = new JArray {
+            JObject root = base.GetNodeData();
+            JArray array = new JArray {
                 JsonConvert.SerializeObject(translation, float3Converter.Converter),
                 JsonConvert.SerializeObject(rotation, float3Converter.Converter),
                 JsonConvert.SerializeObject(scale, float3Converter.Converter),
@@ -125,7 +125,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void SetNodeData(JObject jsonData) {
-            var array = jsonData["d"] as JArray;
+            JArray array = jsonData["d"] as JArray;
             
             translation = JsonConvert.DeserializeObject<float3>(array!.Value<string>(0), float3Converter.Converter);
             rotation = JsonConvert.DeserializeObject<float3>(array!.Value<string>(1), float3Converter.Converter);

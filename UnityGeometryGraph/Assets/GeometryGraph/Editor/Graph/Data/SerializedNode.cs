@@ -52,21 +52,21 @@ namespace GeometryGraph.Editor {
             if ((PortData == null || PortData.Count == 0) && Node.Ports.Count != 0 || (PortData != null && PortData.Count != Node.Ports.Count && Node.Ports.Count != 0)) {
                 // GET
                 PortData = new List<string>();
-                foreach (var port in Node.Ports) {
+                foreach (GraphFrameworkPort port in Node.Ports) {
                     PortData.Add(port.GUID);
                 }
             } else {
                 // SET
                 if (PortData == null)
                     throw new Exception("Serialized port data somehow ended up as null when it was not supposed to.");
-                for (var i = 0; i < PortData.Count; i++) {
+                for (int i = 0; i < PortData.Count; i++) {
                     Node.Ports[i].GUID = PortData[i];
                 }
             }
 
             // Build dictionary
             GuidPortDictionary = new Dictionary<string, Port>();
-            foreach (var port in Node.Ports) {
+            foreach (GraphFrameworkPort port in Node.Ports) {
                 GuidPortDictionary.Add(port.GUID, port);
             }
         }

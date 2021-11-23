@@ -45,31 +45,31 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == PointsPort) {
-                var newValue = GetValue(connection, (int)points);
+                int newValue = GetValue(connection, (int)points);
                 if (newValue == points) return;
                 points.Value = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == ClosedPort) {
-                var newValue = GetValue(connection, isClosed);
+                bool newValue = GetValue(connection, isClosed);
                 if (newValue == isClosed) return;
                 isClosed = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == StartPort) {
-                var newValue = GetValue(connection, start);
+                float3 newValue = GetValue(connection, start);
                 if (newValue.Equals(start)) return;
                 start = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == ControlPort) {
-                var newValue = GetValue(connection, control);
+                float3 newValue = GetValue(connection, control);
                 if (newValue.Equals(control)) return;
                 control = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == EndPort) {
-                var newValue = GetValue(connection, end);
+                float3 newValue = GetValue(connection, end);
                 if (newValue.Equals(end)) return;
                 end = newValue;
                 CalculateResult();
@@ -84,7 +84,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override string GetCustomData() {
-            var array = new JArray {
+            JArray array = new JArray {
                 (int)points,
                 isClosed ? 1 : 0,
                 JsonConvert.SerializeObject(start, float3Converter.Converter),
@@ -97,7 +97,7 @@ namespace GeometryGraph.Runtime.Graph {
         public override void SetCustomData(string json) {
             if (string.IsNullOrEmpty(json)) return;
 
-            var data = JArray.Parse(json);
+            JArray data = JArray.Parse(json);
             points = new MinMaxInt(data.Value<int>(0), Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             isClosed = data.Value<int>(1) == 1;
             start = JsonConvert.DeserializeObject<float3>(data.Value<string>(2)!, float3Converter.Converter);

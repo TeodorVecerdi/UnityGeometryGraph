@@ -34,13 +34,13 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == PointsPort) {
-                var newValue = GetValue(connection, (int)points);
+                int newValue = GetValue(connection, (int)points);
                 if (newValue == points) return;
                 points.Value = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == RadiusPort) {
-                var newValue = GetValue(connection, (float)radius);
+                float newValue = GetValue(connection, (float)radius);
                 if (Math.Abs(newValue - radius) < Constants.FLOAT_TOLERANCE) return;
                 radius.Value = newValue;
                 CalculateResult();
@@ -55,7 +55,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override string GetCustomData() {
-            var array = new JArray {
+            JArray array = new JArray {
                 (int)points,
                 (float)radius,
             };
@@ -65,7 +65,7 @@ namespace GeometryGraph.Runtime.Graph {
         public override void SetCustomData(string json) {
             if (string.IsNullOrEmpty(json)) return;
 
-            var data = JArray.Parse(json);
+            JArray data = JArray.Parse(json);
             points = new MinMaxInt(data.Value<int>(0), Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
             radius = new MinMaxFloat(data.Value<float>(1), Constants.MIN_CIRCULAR_CURVE_RADIUS);
             NotifyPortValueChanged(ResultPort);

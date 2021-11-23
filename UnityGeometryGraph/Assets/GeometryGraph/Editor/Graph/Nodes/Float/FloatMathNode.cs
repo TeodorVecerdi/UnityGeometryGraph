@@ -146,7 +146,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["o"] = (int)operation;
             root["x"] = x;
@@ -158,9 +158,9 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnOperationChanged() {
-            var showTolerance = operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Compare or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMinimum or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMaximum;
-            var showExtra = operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Wrap or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Lerp;
-            var showY = !(operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SquareRoot or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.InverseSquareRoot or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Absolute or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Exponent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sign or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Round or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Floor or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Ceil or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Truncate or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Fraction or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Cosine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Tangent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arcsine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arccosine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arctangent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToRadians or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToDegrees);
+            bool showTolerance = operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Compare or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMinimum or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMaximum;
+            bool showExtra = operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Wrap or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Lerp;
+            bool showY = !(operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SquareRoot or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.InverseSquareRoot or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Absolute or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Exponent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sign or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Round or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Floor or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Ceil or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Truncate or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Fraction or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Cosine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Tangent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arcsine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arccosine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arctangent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToRadians or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToDegrees);
             
             if (showTolerance) {
                 tolerancePort.Show();

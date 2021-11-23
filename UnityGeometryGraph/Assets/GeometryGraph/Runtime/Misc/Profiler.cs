@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Debug = UnityEngine.Debug;
 
@@ -11,7 +12,7 @@ namespace GeometryGraph.Runtime {
         private static List<ProfileSession> finishedSessions = new List<ProfileSession>();
         
         public static IDisposable BeginSession(string name, bool printWhenDone) {
-            var session = new ProfileSession(name);
+            ProfileSession session = new ProfileSession(name);
             sessionStack.Push(session);
             return new ProfileSessionDisposable(printWhenDone);
         }
@@ -22,17 +23,17 @@ namespace GeometryGraph.Runtime {
                 return new DummyDisposable();
             }
             
-            var stack = new StackTrace(1);
-            var stackMethod = stack.GetFrame(0).GetMethod();
-            var className = stackMethod.DeclaringType?.Name;
-            var methodName = stackMethod.Name;
+            StackTrace stack = new StackTrace(1);
+            MethodBase stackMethod = stack.GetFrame(0).GetMethod();
+            string className = stackMethod.DeclaringType?.Name;
+            string methodName = stackMethod.Name;
             
-            var currentSession = sessionStack.Peek();
+            ProfileSession currentSession = sessionStack.Peek();
             Method currentMethod = null;
             if (currentSession.MethodStack.Count > 0) {
                 currentMethod = currentSession.MethodStack.Peek();
             }
-            var method = new Method($"{className}:{methodName}", currentMethod);
+            Method method = new Method($"{className}:{methodName}", currentMethod);
             if(currentMethod != null) currentMethod.Children.Add(method);
             currentSession.MethodStack.Push(method);
 
@@ -55,7 +56,7 @@ namespace GeometryGraph.Runtime {
             }
 
             public void Dispose() {
-                var currentMethod = currentSession.MethodStack.Pop();
+                Method currentMethod = currentSession.MethodStack.Pop();
                 currentMethod.End();
                 if (currentMethod.Parent == null)
                     currentSession.FinishedMethods.Add(currentMethod);
@@ -70,7 +71,7 @@ namespace GeometryGraph.Runtime {
             }
 
             public void Dispose() {
-                var session = sessionStack.Pop();
+                ProfileSession session = sessionStack.Pop();
                 finishedSessions.Add(session);
 
                 if (printWhenDone) session.Print();
@@ -90,9 +91,9 @@ namespace GeometryGraph.Runtime {
         }
 
         public void Print() {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.AppendLine($"PROFILING SESSION [{Name}]");
-            foreach (var finishedMethod in FinishedMethods) {
+            foreach (Method finishedMethod in FinishedMethods) {
                 finishedMethod.Print(sb, 0);
             }
 
@@ -123,11 +124,11 @@ namespace GeometryGraph.Runtime {
         }
 
         public void Print(StringBuilder stringBuilder, int indent) {
-            var indentStr = $"{new string(' ', indent * 4)}";
-            var childrenElapsed = Children.Aggregate(TimeSpan.Zero, (total, m2) => total + m2.Elapsed);
-            var selfElapsed = elapsed - childrenElapsed;
+            string indentStr = $"{new string(' ', indent * 4)}";
+            TimeSpan childrenElapsed = Children.Aggregate(TimeSpan.Zero, (total, m2) => total + m2.Elapsed);
+            TimeSpan selfElapsed = elapsed - childrenElapsed;
             stringBuilder.AppendLine($"{indentStr}[Total: {elapsed.TotalMilliseconds}ms, Self: {selfElapsed.TotalMilliseconds}ms]\n{indentStr}{Name}:");
-            foreach (var method in Children) {
+            foreach (Method method in Children) {
                 method.Print(stringBuilder, indent + 1);
             }
         }

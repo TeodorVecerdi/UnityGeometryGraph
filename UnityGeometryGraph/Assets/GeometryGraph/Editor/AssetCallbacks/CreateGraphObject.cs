@@ -13,10 +13,10 @@ namespace GeometryGraph.Editor {
         }
 
         public override void Action(int instanceId, string pathName, string resourceFile) {
-            var runtimeGraphObject = CreateInstance<RuntimeGraphObject>();
+            RuntimeGraphObject runtimeGraphObject = CreateInstance<RuntimeGraphObject>();
 
-            var graphData = new GraphFrameworkData(runtimeGraphObject);
-            var graphObject = CreateInstance<GraphFrameworkObject>();
+            GraphFrameworkData graphData = new GraphFrameworkData(runtimeGraphObject);
+            GraphFrameworkObject graphObject = CreateInstance<GraphFrameworkObject>();
             
             graphObject.Initialize(graphData);
             graphObject.GraphData.AssetGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(instanceId));

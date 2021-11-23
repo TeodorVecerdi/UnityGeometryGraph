@@ -33,7 +33,7 @@ namespace GeometryGraph.Editor {
             this.editorWindow = editorWindow;
             this.AddStyleSheet("Styles/Graph");
 
-            var toolbar = new IMGUIContainer(() => {
+            IMGUIContainer toolbar = new IMGUIContainer(() => {
                 GUILayout.BeginHorizontal(EditorStyles.toolbar);
                 if (GUILayout.Button("Save Graph", EditorStyles.toolbarButton)) {
                     EditorWindow.Events.SaveRequested?.Invoke();
@@ -51,14 +51,14 @@ namespace GeometryGraph.Editor {
                 
                 GUILayout.Space(6);
                 if (GUILayout.Button("Debug", EditorStyles.toolbarButton)) {
-                    var current = JsonUtility.ToJson(GraphObject.GraphData);
-                    var saved = GraphFrameworkUtility.ReadCompressed(AssetDatabase.GUIDToAssetPath(GraphObject.AssetGuid));
+                    string current = JsonUtility.ToJson(GraphObject.GraphData);
+                    string saved = GraphFrameworkUtility.ReadCompressed(AssetDatabase.GUIDToAssetPath(GraphObject.AssetGuid));
                     Debug.Log($"{current}\n\n{saved}");
                 }
                 if (GUILayout.Button("Debug 2", EditorStyles.toolbarButton)) {
-                    var assetGuid = GraphObject.AssetGuid;
-                    var assetGuidSelected = EditorWindow.SelectedAssetGuid;
-                    var calculated = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(GraphObject));
+                    string assetGuid = GraphObject.AssetGuid;
+                    string assetGuidSelected = EditorWindow.SelectedAssetGuid;
+                    string calculated = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(GraphObject));
                     Debug.Log($"{assetGuid} ;; {assetGuidSelected} ;; {calculated}");
                 }
 
@@ -70,7 +70,7 @@ namespace GeometryGraph.Editor {
             });
 
             Add(toolbar);
-            var content = new VisualElement { name = "content" };
+            VisualElement content = new VisualElement { name = "content" };
             {
                 graphView = new GraphFrameworkGraphView(this);
                 graphView.SetupZoom(0.05f, 8f);
@@ -81,7 +81,7 @@ namespace GeometryGraph.Editor {
                 graphView.RegisterCallback<KeyDownEvent>(OnKeyDown);
                 content.Add(graphView);
 
-                var grid = new GridBackground();
+                GridBackground grid = new GridBackground();
                 graphView.Insert(0, grid);
                 grid.StretchToParentSize();
 
@@ -108,15 +108,15 @@ namespace GeometryGraph.Editor {
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange) {
             if (graphViewChange.movedElements != null) {
                 editorWindow.GraphObject.RegisterCompleteObjectUndo("Moved elements");
-                foreach (var node in graphViewChange.movedElements.OfType<AbstractNode>()) {
-                    var rect = node.parent.ChangeCoordinatesTo(graphView.contentViewContainer, node.GetPosition());
+                foreach (AbstractNode node in graphViewChange.movedElements.OfType<AbstractNode>()) {
+                    Rect rect = node.parent.ChangeCoordinatesTo(graphView.contentViewContainer, node.GetPosition());
                     node.Owner.DrawState.Position = rect;
                 }
             }
 
             if (graphViewChange.edgesToCreate != null) {
                 editorWindow.GraphObject.RegisterCompleteObjectUndo("Created edges");
-                foreach (var edge in graphViewChange.edgesToCreate) {
+                foreach (Edge edge in graphViewChange.edgesToCreate) {
                     GraphObject.GraphData.AddEdge(edge);
                 }
 
@@ -125,15 +125,15 @@ namespace GeometryGraph.Editor {
 
             if (graphViewChange.elementsToRemove != null) {
                 editorWindow.GraphObject.RegisterCompleteObjectUndo("Removed elements");
-                foreach (var node in graphViewChange.elementsToRemove.OfType<AbstractNode>()) {
+                foreach (AbstractNode node in graphViewChange.elementsToRemove.OfType<AbstractNode>()) {
                     GraphObject.GraphData.RemoveNode(node.Owner);
                 }
 
-                foreach (var edge in graphViewChange.elementsToRemove.OfType<Edge>()) {
+                foreach (Edge edge in graphViewChange.elementsToRemove.OfType<Edge>()) {
                     GraphObject.GraphData.RemoveEdge((SerializedEdge)edge.userData);
                 }
 
-                foreach (var property in graphViewChange.elementsToRemove.OfType<BlackboardField>()) {
+                foreach (BlackboardField property in graphViewChange.elementsToRemove.OfType<BlackboardField>()) {
                     GraphObject.GraphData.RemoveProperty(property.userData as AbstractProperty);
                 }
             }
@@ -176,15 +176,15 @@ namespace GeometryGraph.Editor {
                 }
             });
             GraphObject.GraphData.Edges.ForEach(edge => {
-                var outputNode = GraphView.nodes.First(node => node.viewDataKey == edge.Output) as AbstractNode;
-                var inputNode = GraphView.nodes.First(node => node.viewDataKey == edge.Input) as AbstractNode;
-                var outputPort = (GraphFrameworkPort)outputNode.Owner.GuidPortDictionary[edge.OutputPort];
-                var inputPort = (GraphFrameworkPort)inputNode.Owner.GuidPortDictionary[edge.InputPort];
+                AbstractNode outputNode = GraphView.nodes.First(node => node.viewDataKey == edge.Output) as AbstractNode;
+                AbstractNode inputNode = GraphView.nodes.First(node => node.viewDataKey == edge.Input) as AbstractNode;
+                GraphFrameworkPort outputPort = (GraphFrameworkPort)outputNode.Owner.GuidPortDictionary[edge.OutputPort];
+                GraphFrameworkPort inputPort = (GraphFrameworkPort)inputNode.Owner.GuidPortDictionary[edge.InputPort];
 
                 if (inputPort != null && outputPort != null) {
-                    var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
-                    var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    var connection = new Connection { Output = runtimeOutput, Input = runtimeInput };
+                    RuntimePort runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
+                    RuntimePort runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
+                    Connection connection = new Connection { Output = runtimeOutput, Input = runtimeInput };
                     runtimeOutput.Node.NotifyConnectionCreated(connection, runtimeOutput);
                     runtimeInput.Node.NotifyConnectionCreated(connection, runtimeInput);
                 } else {
@@ -208,7 +208,7 @@ namespace GeometryGraph.Editor {
                 searchWindowProvider.RegenerateEntries = true;
             blackboardProvider.HandleChanges();
 
-            foreach (var removedNode in GraphObject.GraphData.RemovedNodes) {
+            foreach (SerializedNode removedNode in GraphObject.GraphData.RemovedNodes) {
                 removedNode.Node.NotifyRuntimeNodeRemoved();
                 if (removedNode.Node is OutputNode) {
                     GraphView.GraphOutputNode = null;
@@ -218,14 +218,14 @@ namespace GeometryGraph.Editor {
                 GraphObject.RuntimeGraph.OnNodeRemoved(removedNode.Node.Runtime);
             }
 
-            foreach (var removedEdge in GraphObject.GraphData.RemovedEdges) {
+            foreach (SerializedEdge removedEdge in GraphObject.GraphData.RemovedEdges) {
                 GraphObject.RuntimeGraph.OnConnectionRemoved(removedEdge.OutputPort, removedEdge.InputPort);
 
                 RemoveEdge(removedEdge);
             }
 
-            var anyCollapsedNode = false;
-            foreach (var addedNode in GraphObject.GraphData.AddedNodes) {
+            bool anyCollapsedNode = false;
+            foreach (SerializedNode addedNode in GraphObject.GraphData.AddedNodes) {
                 AddNode(addedNode);
                 if (addedNode.DrawState.Expanded == false) {
                     anyCollapsedNode = true;
@@ -240,31 +240,31 @@ namespace GeometryGraph.Editor {
                 addedNode.Node.OnPropertyUpdated(null);
             }
 
-            foreach (var addedEdge in GraphObject.GraphData.AddedEdges) {
+            foreach (SerializedEdge addedEdge in GraphObject.GraphData.AddedEdges) {
                 AddEdge(addedEdge);
-                var outputPort = (GraphFrameworkPort)addedEdge.Edge?.output;
-                var inputPort = (GraphFrameworkPort)addedEdge.Edge?.input;
+                GraphFrameworkPort outputPort = (GraphFrameworkPort)addedEdge.Edge?.output;
+                GraphFrameworkPort inputPort = (GraphFrameworkPort)addedEdge.Edge?.input;
 
                 if (inputPort != null && outputPort != null) {
-                    var runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
-                    var runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    var connection = new Connection { Output = runtimeOutput, OutputGuid = runtimeOutput.Guid, Input = runtimeInput, InputGuid = runtimeInput.Guid};
+                    RuntimePort runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
+                    RuntimePort runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
+                    Connection connection = new Connection { Output = runtimeOutput, OutputGuid = runtimeOutput.Guid, Input = runtimeInput, InputGuid = runtimeInput.Guid};
                     GraphObject.RuntimeGraph.OnConnectionAdded(connection);
                 }
             }
 
             if (anyCollapsedNode) {
-                foreach (var addedNode in GraphObject.GraphData.AddedNodes) {
+                foreach (SerializedNode addedNode in GraphObject.GraphData.AddedNodes) {
                     addedNode.Node.SetExpandedWithoutNotify(addedNode.DrawState.Expanded);
                     addedNode.Node.RefreshPorts();
                 }
             }
 
-            foreach (var queuedNode in GraphObject.GraphData.NodeSelectionQueue) {
+            foreach (SerializedNode queuedNode in GraphObject.GraphData.NodeSelectionQueue) {
                 graphView.AddToSelection(queuedNode.Node);
             }
 
-            foreach (var queuedEdge in GraphObject.GraphData.EdgeSelectionQueue) {
+            foreach (SerializedEdge queuedEdge in GraphObject.GraphData.EdgeSelectionQueue) {
                 graphView.AddToSelection(queuedEdge.Edge);
             }
         }
@@ -278,7 +278,7 @@ namespace GeometryGraph.Editor {
             if (nodeToRemove.Node != null)
                 graphView.RemoveElement(nodeToRemove.Node);
             else {
-                var view = graphView.GetNodeByGuid(nodeToRemove.GUID);
+                Node view = graphView.GetNodeByGuid(nodeToRemove.GUID);
                 if (view != null)
                     graphView.RemoveElement(view);
             }

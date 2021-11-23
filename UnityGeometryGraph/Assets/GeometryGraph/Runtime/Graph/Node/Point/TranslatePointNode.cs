@@ -24,7 +24,7 @@ namespace GeometryGraph.Runtime.Graph {
         private void Calculate() {
             if (Input == null) return;
             Result = Input.Clone();
-            var positionAttr = Result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
+            Vector3Attribute positionAttr = Result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             if (Mode == TranslatePointNode_Mode.Vector) {
                 positionAttr.Yield(position => position + Translation).Into(positionAttr);
                 
@@ -45,7 +45,7 @@ namespace GeometryGraph.Runtime.Graph {
                     return;
                 }
                 
-                var otherAttribute = Result.GetAttribute<Vector3Attribute>(AttributeName, AttributeDomain.Vertex);
+                Vector3Attribute otherAttribute = Result.GetAttribute<Vector3Attribute>(AttributeName, AttributeDomain.Vertex);
                 positionAttr.YieldWithAttribute(otherAttribute, (position, translation) => position + translation).Into(positionAttr);
                 Result.StoreAttribute(positionAttr);
             }

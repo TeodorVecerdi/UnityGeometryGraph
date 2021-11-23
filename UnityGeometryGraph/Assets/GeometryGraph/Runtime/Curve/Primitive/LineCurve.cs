@@ -23,12 +23,12 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
         }
 
         internal override void Generate() {
-            var pointCount = PointCount();
-            var points = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var job = new LineJob(points, tangents, normals, binormals, Resolution, start, end);
+            int pointCount = PointCount();
+            NativeArray<float3> points = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            LineJob job = new LineJob(points, tangents, normals, binormals, Resolution, start, end);
             job.Schedule(pointCount, Environment.ProcessorCount).Complete();
 
             Points = new List<float3>(points);
@@ -75,7 +75,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public void Execute(int index) {
-                var t = index / (float)resolution;
+                float t = index / (float)resolution;
                 points[index] = Position(t);
                 tangents[index] = Tangent(t);
                 normals[index] = Normal(t);

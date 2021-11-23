@@ -49,14 +49,14 @@ namespace GeometryGraph.Editor {
         private Input IntegerInput => (Input)textInputBase;
 
         private void ClampWithoutNotify() {
-            var val = value;
+            int val = value;
             if (min != null) val = val.MinClamped((int)min);
             if (max != null) val = val.MaxClamped((int)max);
             SetValueWithoutNotify(val);
         }
 
         private void Clamp() {
-            var val = value;
+            int val = value;
             if (min != null) val = val.MinClamped((int)min);
             if (max != null) val = val.MaxClamped((int)max);
             if (val != value) value = val;
@@ -67,7 +67,7 @@ namespace GeometryGraph.Editor {
         }
 
         protected override int StringToValue(string str) {
-            if (long.TryParse(str, out var num)) return MathUtils.ClampToInt(num);
+            if (long.TryParse(str, out long num)) return MathUtils.ClampToInt(num);
 
             return default;
         }
@@ -93,8 +93,8 @@ namespace GeometryGraph.Editor {
 
             public override void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, int startValue) {
                 double dragSensitivity = NumericFieldDraggerUtility.CalculateIntDragSensitivity(startValue);
-                var acceleration = NumericFieldDraggerUtility.Acceleration(speed == DeltaSpeed.Fast, speed == DeltaSpeed.Slow);
-                var num = StringToValue(text) + (long)Math.Round(NumericFieldDraggerUtility.NiceDelta(delta, acceleration) * dragSensitivity);
+                float acceleration = NumericFieldDraggerUtility.Acceleration(speed == DeltaSpeed.Fast, speed == DeltaSpeed.Slow);
+                long num = StringToValue(text) + (long)Math.Round(NumericFieldDraggerUtility.NiceDelta(delta, acceleration) * dragSensitivity);
 
                 if (ParentField.min != null) num = num.MinClamped((long)ParentField.min);
                 if (ParentField.max != null) num = num.MaxClamped((long)ParentField.max);
@@ -108,7 +108,7 @@ namespace GeometryGraph.Editor {
             }
 
             protected override int StringToValue(string str) {
-                if (long.TryParse(str, out var num)) return MathUtils.ClampToInt(num);
+                if (long.TryParse(str, out long num)) return MathUtils.ClampToInt(num);
 
                 return default;
             }

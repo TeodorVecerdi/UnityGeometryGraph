@@ -43,7 +43,7 @@ namespace GeometryGraph.Editor {
             pointsField.Min = Constants.MIN_HELIX_CURVE_RESOLUTION + 1;
             pointsField.Max = Constants.MAX_CURVE_RESOLUTION + 1;
             pointsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Clamped(Constants.MIN_HELIX_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+                int newValue = evt.newValue.Clamped(Constants.MIN_HELIX_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
                 if (newValue == points) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change helix curve points");
                 points = newValue;
@@ -68,7 +68,7 @@ namespace GeometryGraph.Editor {
 
             topRadiusField.Min = Constants.MIN_CIRCULAR_CURVE_RADIUS;
             topRadiusField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+                float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
                 if (Math.Abs(newValue - topRadius) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change helix curve top radius");
@@ -78,7 +78,7 @@ namespace GeometryGraph.Editor {
             
             bottomRadiusField.Min = Constants.MIN_CIRCULAR_CURVE_RADIUS;
             bottomRadiusField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
+                float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
                 if (Math.Abs(newValue - bottomRadius) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change helix curve bottom radius");
@@ -118,8 +118,8 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root =  base.GetNodeData();
-            var array = new JArray {
+            JObject root =  base.GetNodeData();
+            JArray array = new JArray {
                 points,
                 rotations,
                 pitch,
@@ -131,7 +131,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void SetNodeData(JObject jsonData) {
-            var array = jsonData["d"] as JArray;
+            JArray array = jsonData["d"] as JArray;
 
             points = array!.Value<int>(0);
             rotations = array!.Value<float>(1);

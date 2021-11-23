@@ -36,42 +36,42 @@ namespace GeometryGraph.Editor {
 
         public void GenerateNodeEntries() {
             // First build up temporary data structure containing group & title as an array of strings (the last one is the actual title) and associated node type.
-            var nodeEntries = new List<NodeEntry>();
-            foreach (var type in TypeCache.GetTypesDerivedFrom<AbstractNode>()) {
+            List<NodeEntry> nodeEntries = new List<NodeEntry>();
+            foreach (Type type in TypeCache.GetTypesDerivedFrom<AbstractNode>()) {
                 if (!type.IsClass || type.IsAbstract)
                     continue;
                 
                 if(type == outputNodeType && editorView.GraphView.GraphOutputNode != null) continue;
 
                 if (type.GetCustomAttributes(typeof(TitleAttribute), false) is TitleAttribute[] attrs && attrs.Length > 0) {
-                    foreach (var attr in attrs) {
+                    foreach (TitleAttribute attr in attrs) {
                         AddEntries(type, attr.Title, nodeEntries);
                     }
                 }
             }
 
-            foreach (var property in editorView.GraphObject.GraphData.Properties) {
-                var node = new SerializedNode(PropertyUtils.PropertyTypeToSystemType(property.Type), new Rect(Vector2.zero, EditorView.DefaultNodeSize));
+            foreach (AbstractProperty property in editorView.GraphObject.GraphData.Properties) {
+                SerializedNode node = new SerializedNode(PropertyUtils.PropertyTypeToSystemType(property.Type), new Rect(Vector2.zero, EditorView.DefaultNodeSize));
                 node.BuildNode(editorView, editorView.EdgeConnectorListener, false);
-                var propertyNode = node.Node;
+                AbstractNode propertyNode = node.Node;
                 propertyNode.PropertyGuid = property.GUID;
                 node.BuildPortData();
                 AddEntries(node, new[] {"Properties", $"{property.Type}: {property.DisplayName}"}, nodeEntries);
             }
 
             nodeEntries.Sort((entry1, entry2) => {
-                for (var i = 0; i < entry1.Title.Length; i++) {
+                for (int i = 0; i < entry1.Title.Length; i++) {
                     if (i >= entry2.Title.Length)
                         return 1;
-                    var value = string.Compare(entry1.Title[i], entry2.Title[i], StringComparison.Ordinal);
+                    int value = string.Compare(entry1.Title[i], entry2.Title[i], StringComparison.Ordinal);
                     if (value == 0)
                         continue;
 
                     // Make sure that leaves go before nodes
                     if (entry1.Title.Length != entry2.Title.Length && (i == entry1.Title.Length - 1 || i == entry2.Title.Length - 1)) {
                         //once nodes are sorted, sort slot entries by slot order instead of alphebetically 
-                        var alphaOrder = entry1.Title.Length < entry2.Title.Length ? -1 : 1;
-                        var slotOrder = entry1.CompatiblePortIndex.CompareTo(entry2.CompatiblePortIndex);
+                        int alphaOrder = entry1.Title.Length < entry2.Title.Length ? -1 : 1;
+                        int slotOrder = entry1.CompatiblePortIndex.CompareTo(entry2.CompatiblePortIndex);
                         return alphaOrder.CompareTo(slotOrder);
                     }
 
@@ -90,15 +90,15 @@ namespace GeometryGraph.Editor {
                 return;
             }
 
-            var portIndices = new List<int>();
-            for (var i = 0; i < node.Node.Ports.Count; i++) {
+            List<int> portIndices = new List<int>();
+            for (int i = 0; i < node.Node.Ports.Count; i++) {
                 if (ConnectedPort.IsCompatibleWith(node.Node.Ports[i]) && ConnectedPort.direction != node.Node.Ports[i].direction && node.Node.Ports[i].PortVisible) {
                     portIndices.Add(i);
                 }
             }
 
-            foreach (var portIndex in portIndices) {
-                var newTitle = new string[title.Length];
+            foreach (int portIndex in portIndices) {
+                string[] newTitle = new string[title.Length];
                 for (int i = 0; i < title.Length - 1; i++)
                     newTitle[i] = title[i];
 
@@ -116,17 +116,17 @@ namespace GeometryGraph.Editor {
                 return;
             }
 
-            var node = (AbstractNode) Activator.CreateInstance(nodeType);
+            AbstractNode node = (AbstractNode) Activator.CreateInstance(nodeType);
             node.InitializeNode(null);
-            var portIndices = new List<int>();
-            for (var i = 0; i < node.Ports.Count; i++) {
+            List<int> portIndices = new List<int>();
+            for (int i = 0; i < node.Ports.Count; i++) {
                 if (ConnectedPort.IsCompatibleWith(node.Ports[i]) && ConnectedPort.direction != node.Ports[i].direction && node.Ports[i].PortVisible) {
                     portIndices.Add(i);
                 }
             }
 
-            foreach (var portIndex in portIndices) {
-                var newTitle = new string[title.Length];
+            foreach (int portIndex in portIndices) {
+                string[] newTitle = new string[title.Length];
                 for (int i = 0; i < title.Length - 1; i++)
                     newTitle[i] = title[i];
                 newTitle[title.Length - 1] = title[title.Length - 1] + $" ({node.Ports[portIndex].OriginalLabel})";
@@ -142,15 +142,15 @@ namespace GeometryGraph.Editor {
             }
 
             //create empty root for searcher tree 
-            var root = new List<SearcherItem>();
-            var dummyEntry = new NodeEntry();
+            List<SearcherItem> root = new List<SearcherItem>();
+            NodeEntry dummyEntry = new NodeEntry();
 
-            foreach (var nodeEntry in CurrentNodeEntries) {
+            foreach (NodeEntry nodeEntry in CurrentNodeEntries) {
                 SearcherItem parent = null;
                 for (int i = 0; i < nodeEntry.Title.Length; i++) {
-                    var pathEntry = nodeEntry.Title[i];
-                    var children = parent != null ? parent.Children : root;
-                    var item = children.Find(x => x.Name == pathEntry);
+                    string pathEntry = nodeEntry.Title[i];
+                    List<SearcherItem> children = parent != null ? parent.Children : root;
+                    SearcherItem item = children.Find(x => x.Name == pathEntry);
 
                     if (item == null) {
                         //if we don't have slot entries and are at a leaf, add userdata to the entry
@@ -175,28 +175,28 @@ namespace GeometryGraph.Editor {
                 }
             }
 
-            var nodeDatabase = SearcherDatabase.Create(root, string.Empty, false);
-            var searcher = new Searcher(nodeDatabase, new SearchWindowAdapter("Create Node"));
+            SearcherDatabase nodeDatabase = SearcherDatabase.Create(root, string.Empty, false);
+            Searcher searcher = new Searcher(nodeDatabase, new SearchWindowAdapter("Create Node"));
             return searcher;
         }
 
         public bool OnSelectEntry(SearcherItem selectedEntry, Vector2 mousePosition) {
-            var searchNodeItem = selectedEntry as SearchNodeItem;
+            SearchNodeItem searchNodeItem = selectedEntry as SearchNodeItem;
             
             if (searchNodeItem == null || searchNodeItem.NodeEntry is { Type: null, Node: null }) {
                 return false;
             }
 
-            var nodeEntry = searchNodeItem.NodeEntry;
-            var windowMousePosition = editorWindow.rootVisualElement.ChangeCoordinatesTo(editorWindow.rootVisualElement.parent, mousePosition);
-            var graphMousePosition = editorView.GraphView.contentViewContainer.WorldToLocal(windowMousePosition);
+            NodeEntry nodeEntry = searchNodeItem.NodeEntry;
+            Vector2 windowMousePosition = editorWindow.rootVisualElement.ChangeCoordinatesTo(editorWindow.rootVisualElement.parent, mousePosition);
+            Vector2 graphMousePosition = editorView.GraphView.contentViewContainer.WorldToLocal(windowMousePosition);
 
             SerializedNode node;
             if (nodeEntry.Node != null) {
                 node = nodeEntry.Node;
                 node.DrawState.Position.position = graphMousePosition;
             } else {
-                var nodeType = nodeEntry.Type;
+                Type nodeType = nodeEntry.Type;
                 node = new SerializedNode(nodeType, new Rect(graphMousePosition, EditorView.DefaultNodeSize));
             }
 
@@ -206,7 +206,7 @@ namespace GeometryGraph.Editor {
             if (ConnectedPort != null) {
                 if (nodeEntry.Node == null)
                     node.BuildNode(editorView, null);
-                var edge = new SerializedEdge {
+                SerializedEdge edge = new SerializedEdge {
                     Output = ConnectedPort.node.viewDataKey,
                     Input = node.GUID,
                     OutputPort = ConnectedPort.viewDataKey,

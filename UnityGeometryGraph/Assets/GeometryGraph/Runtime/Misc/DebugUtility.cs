@@ -13,8 +13,8 @@ namespace GeometryGraph.Runtime {
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Log(string message, [CallerFilePath] string filePath = "", [CallerMemberName] string memberName = "", [CallerLineNumber] int lineNumber = 0) {
             if (!RuntimeGraphObject.DebugEnabled) return;
-            var fileName = filePath[(filePath.LastIndexOfAny(new[] { '/', '\\' }) + 1)..];
-            var className = fileName[..^3];
+            string fileName = filePath[(filePath.LastIndexOfAny(new[] { '/', '\\' }) + 1)..];
+            string className = fileName[..^3];
             UnityEngine.Debug.unityLogger.Log(LogType.Log, "<color=#FFA500>DEBUG</color>", $"{className}::{memberName}:\n<color=#FF2400><b>{message}</b></color> (at {fileName}:{lineNumber})");
         }
     }

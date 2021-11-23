@@ -17,7 +17,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public CurveData GetDisplayCurve() {
             DebugUtility.Log("Getting display curve");
-            var curve = GetValue(CurvePort, (CurveData) null);
+            CurveData curve = GetValue(CurvePort, (CurveData) null);
             if (curve == null) {
                 DebugUtility.Log("Curve was null");
             }
@@ -26,7 +26,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         public GeometryData EvaluateGraph() {
             DebugUtility.Log("Evaluating Graph");
-            var value = GetValue(GeometryPort, (GeometryData)null);
+            GeometryData value = GetValue(GeometryPort, (GeometryData)null);
 
             if (value == null) {
                 DebugUtility.Log("Return value was null");

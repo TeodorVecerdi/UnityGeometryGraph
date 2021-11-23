@@ -23,7 +23,7 @@ namespace GeometryGraph.Runtime.Graph {
         public float3 VectorValue;
 
         public T Value<T>() {
-            var tType = typeof(T);
+            Type tType = typeof(T);
             if (tType == typeof(int)) return (T)(object)IntValue;
             if (tType == typeof(float)) return (T)(object)FloatValue;
             if (tType == typeof(float3)) return (T)(object)VectorValue;

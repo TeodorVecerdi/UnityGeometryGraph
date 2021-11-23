@@ -25,17 +25,17 @@ namespace GeometryGraph.Runtime.Graph {
 
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
-            var translation = GetValue(TranslationPort, Translation);
-            var rotation = GetValue(RotationPort, Rotation);
-            var scale = GetValue(ScalePort, Scale);
-            var rotQuaternion = quaternion.Euler(math.radians(rotation));
-            var trs = float4x4.TRS(translation, rotQuaternion, scale);
-            var trsNormal = float4x4.TRS(float3.zero, rotQuaternion, scale);
+            float3 translation = GetValue(TranslationPort, Translation);
+            float3 rotation = GetValue(RotationPort, Rotation);
+            float3 scale = GetValue(ScalePort, Scale);
+            quaternion rotQuaternion = quaternion.Euler(math.radians(rotation));
+            float4x4 trs = float4x4.TRS(translation, rotQuaternion, scale);
+            float4x4 trsNormal = float4x4.TRS(float3.zero, rotQuaternion, scale);
             Result = Input.Clone();
 
-            var positionAttribute = Result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
+            Vector3Attribute positionAttribute = Result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             positionAttribute.Yield(pos => math.mul(trs, new float4(pos, 1.0f)).xyz).Into(positionAttribute);
-            var normalAttribute = Result.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
+            Vector3Attribute normalAttribute = Result.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
             normalAttribute.Yield(normal => math.normalize(math.mul(trsNormal, new float4(normal, 1.0f)).xyz)).Into(normalAttribute);
 
             Result.StoreAttribute(positionAttribute, AttributeDomain.Vertex);

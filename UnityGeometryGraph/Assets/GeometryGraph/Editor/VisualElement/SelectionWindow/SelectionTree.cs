@@ -23,9 +23,9 @@ namespace GeometryGraph.Editor {
         }
 
         public float GetWidth() {
-            var columns = new List<List<SelectionCategory>>{new List<SelectionCategory>()};
-            var currentColumn = 0;
-            foreach (var category in categories) {
+            List<List<SelectionCategory>> columns = new List<List<SelectionCategory>>{new List<SelectionCategory>()};
+            int currentColumn = 0;
+            foreach (SelectionCategory category in categories) {
                 if (!category.IsStacked) {
                     columns[currentColumn].Add(category);
                     columns.Add(new List<SelectionCategory>());
@@ -40,9 +40,9 @@ namespace GeometryGraph.Editor {
         }
 
         public float GetHeight() {
-            var columns = new List<List<SelectionCategory>>{new List<SelectionCategory>()};
-            var currentColumn = 0;
-            foreach (var category in categories) {
+            List<List<SelectionCategory>> columns = new List<List<SelectionCategory>>{new List<SelectionCategory>()};
+            int currentColumn = 0;
+            foreach (SelectionCategory category in categories) {
                 if (!category.IsStacked) {
                     columns[currentColumn].Add(category);
                     columns.Add(new List<SelectionCategory>());
@@ -57,13 +57,13 @@ namespace GeometryGraph.Editor {
         }
 
         public VisualElement CreateElement(EditorWindow window, Action<object> onSelect) {
-            var root = new VisualElement();
+            VisualElement root = new VisualElement();
             root.AddToClassList("tree-root");
 
-            var actualSizes = CalculateActualSizes();
+            List<int> actualSizes = CalculateActualSizes();
 
             for (int i = 0; i < categories.Count; i++) {
-                var selectionCategory = categories[i];
+                SelectionCategory selectionCategory = categories[i];
                 root.Add(selectionCategory.CreateElement(valueProvider, (SelectionCategory.CategorySize)actualSizes[i], onSelect, window));
             }
 
@@ -71,13 +71,13 @@ namespace GeometryGraph.Editor {
         }
 
         private List<int> CalculateActualSizes() {
-            var actualSizes = new List<int>(categories.Select(_ => -1));
-            var currentSize = (int)categories[0].Size;
-            for (var i = 0; i < categories.Count; i++) {
-                var category = categories[i];
+            List<int> actualSizes = new List<int>(categories.Select(_ => -1));
+            int currentSize = (int)categories[0].Size;
+            for (int i = 0; i < categories.Count; i++) {
+                SelectionCategory category = categories[i];
                 
                 if (!category.IsStacked) {
-                    for (var i1 = i - 1; i1 >= 0; i1--) {
+                    for (int i1 = i - 1; i1 >= 0; i1--) {
                         if (actualSizes[i1] != -1) break;
                         actualSizes[i1] = currentSize;
                     }
@@ -88,7 +88,7 @@ namespace GeometryGraph.Editor {
                 currentSize = Math.Max(currentSize, (int)category.Size);
             }
 
-            for (var i = categories.Count - 1; i >= 0; i--) {
+            for (int i = categories.Count - 1; i >= 0; i--) {
                 if (actualSizes[i] != -1) break;
                 actualSizes[i] = currentSize;
             }

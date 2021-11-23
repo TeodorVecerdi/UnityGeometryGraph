@@ -24,7 +24,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public static RuntimePort Create(PortType type, PortDirection direction, RuntimeNode owner) {
-            var port = new RuntimePort(type, direction, owner);
+            RuntimePort port = new RuntimePort(type, direction, owner);
             owner.Ports.Add(port);
             return port;
         }

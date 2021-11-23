@@ -27,12 +27,12 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
         }
 
         internal override void Generate() {
-            var pointCount = PointCount();
-            var points = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            var job = new CubicBezierJob(points, tangents, normals, binormals, Resolution, start, controlA, controlB, end);
+            int pointCount = PointCount();
+            NativeArray<float3> points = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            NativeArray<float3> binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
+            CubicBezierJob job = new CubicBezierJob(points, tangents, normals, binormals, Resolution, start, controlA, controlB, end);
             job.Schedule(pointCount, Environment.ProcessorCount).Complete();
 
             Points = new List<float3>(points);
@@ -74,9 +74,9 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public void Execute(int index) {
-                var t = index / (float)resolution;
-                var tangent = Tangent(t);
-                var binormal = Binormal(t);
+                float t = index / (float)resolution;
+                float3 tangent = Tangent(t);
+                float3 binormal = Binormal(t);
                 
                 points[index] = Position(t);
                 tangents[index] = tangent;
@@ -85,9 +85,9 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public float3 Position(float t) {
-                var t0 = 1.0f - t;
-                var t1 = t0 * t0;
-                var t2 = t1 * t0;
+                float t0 = 1.0f - t;
+                float t1 = t0 * t0;
+                float t2 = t1 * t0;
                 return t2 * start +
                        3.0f * t1 * t * controlA +
                        3.0f * t0 * t * t * controlB +
@@ -95,17 +95,17 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public float3 Tangent(float t) {
-                var t0 = 1.0f - t;
-                var t1 = t0 * t0;
-                var tangent = 3.0f * t1 * (controlA - start) +
-                              6.0f * t0 * t * (controlB - controlA) +
-                              3.0f * t * t * (end - controlB);
+                float t0 = 1.0f - t;
+                float t1 = t0 * t0;
+                float3 tangent = 3.0f * t1 * (controlA - start) +
+                                 6.0f * t0 * t * (controlB - controlA) +
+                                 3.0f * t * t * (end - controlB);
                 return math.normalizesafe(tangent, float3_ext.forward);
             }
 
             public float3 Normal(float t) {
-                var normal = 6.0f * (1.0f - t) * (controlB - 2.0f * controlA + start) + 
-                             6.0f * t * (end - 2.0f * controlB + controlA);
+                float3 normal = 6.0f * (1.0f - t) * (controlB - 2.0f * controlA + start) + 
+                                6.0f * t * (end - 2.0f * controlB + controlA);
                 return math.normalizesafe(normal, float3_ext.right);
             }
 

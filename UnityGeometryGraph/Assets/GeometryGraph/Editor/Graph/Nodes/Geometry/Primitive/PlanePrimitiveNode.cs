@@ -33,7 +33,7 @@ namespace GeometryGraph.Editor {
 
             widthField.Min = 0.0f;
             widthField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(0.0f);
+                float newValue = evt.newValue.MinClamped(0.0f);
                 if (MathF.Abs(newValue - size.x) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change width");
@@ -43,7 +43,7 @@ namespace GeometryGraph.Editor {
             
             heightField.Min = 0.0f;
             heightField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(0.0f);
+                float newValue = evt.newValue.MinClamped(0.0f);
                 if (MathF.Abs(newValue - size.y) < Constants.FLOAT_TOLERANCE) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change height");
@@ -53,7 +53,7 @@ namespace GeometryGraph.Editor {
 
             subdivisionsField.Min = 0;
             subdivisionsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.MinClamped(0);
+                int newValue = evt.newValue.MinClamped(0);
                 if (newValue == subdivisions) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivisions");
@@ -85,7 +85,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["w"] = size.x;
             root["h"] = size.y;

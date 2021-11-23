@@ -43,31 +43,31 @@ namespace GeometryGraph.Runtime.Graph {
         protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
             if (port == ResultPort) return;
             if (port == PointsPort) {
-                var newValue = GetValue(connection, (int)points);
+                int newValue = GetValue(connection, (int)points);
                 if (newValue == points) return;
                 points.Value = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == PitchPort) {
-                var newValue = GetValue(connection, pitch);
+                float newValue = GetValue(connection, pitch);
                 if (Math.Abs(newValue - pitch) < Constants.FLOAT_TOLERANCE) return;
                 pitch = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == RotationsPort) {
-                var newValue = GetValue(connection, rotations);
+                float newValue = GetValue(connection, rotations);
                 if (Math.Abs(newValue - rotations) < Constants.FLOAT_TOLERANCE) return;
                 rotations = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == TopRadiusPort) {
-                var newValue = GetValue(connection, (float)topRadius);
+                float newValue = GetValue(connection, (float)topRadius);
                 if (Math.Abs(newValue - topRadius) < Constants.FLOAT_TOLERANCE) return;
                 topRadius.Value = newValue;
                 CalculateResult();
                 NotifyPortValueChanged(ResultPort);
             } else if (port == BottomRadiusPort) {
-                var newValue = GetValue(connection, (float)bottomRadius);
+                float newValue = GetValue(connection, (float)bottomRadius);
                 if (Math.Abs(newValue - bottomRadius) < Constants.FLOAT_TOLERANCE) return;
                 bottomRadius.Value = newValue;
                 CalculateResult();
@@ -82,7 +82,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override string GetCustomData() {
-            var array = new JArray {
+            JArray array = new JArray {
                 (int)points,
                 rotations,
                 pitch,
@@ -95,7 +95,7 @@ namespace GeometryGraph.Runtime.Graph {
         public override void SetCustomData(string json) {
             if (string.IsNullOrEmpty(json)) return;
 
-            var data = JArray.Parse(json);
+            JArray data = JArray.Parse(json);
             points = new MinMaxInt(data.Value<int>(0), Constants.MIN_HELIX_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             rotations = data.Value<float>(1);
             pitch = data.Value<float>(2);

@@ -69,7 +69,7 @@ namespace GeometryGraph.Editor {
 
                 case IntegerProperty integerProperty: {
                     defaultValueField = new IntegerField() {isDelayed = true, value = integerProperty.Value};
-                    var intField = (IntegerField) defaultValueField;
+                    IntegerField intField = (IntegerField) defaultValueField;
                     intField.RegisterValueChangedCallback(evt => {
                         editorView.GraphObject.RegisterCompleteObjectUndo($"Change {property.DisplayName} default value");
                         integerProperty.Value = evt.newValue;
@@ -79,7 +79,7 @@ namespace GeometryGraph.Editor {
                 }
                 case FloatProperty floatProperty: {
                     defaultValueField = new FloatField() {isDelayed = true, value = floatProperty.Value};
-                    var floatField = (FloatField) defaultValueField;
+                    FloatField floatField = (FloatField) defaultValueField;
                     floatField.RegisterValueChangedCallback(evt => {
                         editorView.GraphObject.RegisterCompleteObjectUndo($"Change {property.DisplayName} default value");
                         floatProperty.Value = evt.newValue;
@@ -89,7 +89,7 @@ namespace GeometryGraph.Editor {
                 }
                 case VectorProperty vectorProperty: {
                     defaultValueField = new Vector3Field() {value = vectorProperty.Value};
-                    var vecField = (Vector3Field) defaultValueField;
+                    Vector3Field vecField = (Vector3Field) defaultValueField;
                     vecField.RegisterValueChangedCallback(evt => {
                         editorView.GraphObject.RegisterCompleteObjectUndo($"Change {property.DisplayName} default value");
                         vectorProperty.Value = evt.newValue;
@@ -107,7 +107,7 @@ namespace GeometryGraph.Editor {
         }
 
         public VisualElement AddRow(string labelText, VisualElement control, bool enabled = true) {
-            var rowView = CreateRow(labelText, control, enabled);
+            VisualElement rowView = CreateRow(labelText, control, enabled);
             Add(rowView);
             rows.Add(rowView);
             return rowView;
@@ -119,10 +119,10 @@ namespace GeometryGraph.Editor {
         }
 
         private VisualElement CreateRow(string labelText, VisualElement control, bool enabled) {
-            var rowView = new VisualElement();
+            VisualElement rowView = new VisualElement();
             rowView.AddToClassList("rowView");
             if (!string.IsNullOrEmpty(labelText)) {
-                var label = new Label(labelText);
+                Label label = new Label(labelText);
                 label.SetEnabled(enabled);
                 label.AddToClassList("rowViewLabel");
                 rowView.Add(label);

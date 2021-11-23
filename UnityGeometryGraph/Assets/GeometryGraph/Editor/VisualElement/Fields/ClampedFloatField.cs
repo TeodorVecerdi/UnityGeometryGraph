@@ -50,14 +50,14 @@ namespace GeometryGraph.Editor {
         private Input FloatInput => (Input)textInputBase;
 
         private void ClampWithoutNotify() {
-            var val = value;
+            float val = value;
             if (min != null) val = val.MinClamped((float)min);
             if (max != null) val = val.MaxClamped((float)max);
             SetValueWithoutNotify(val);
         }
 
         private void Clamp() {
-            var val = value;
+            float val = value;
             if (min != null) val = val.MinClamped((float)min);
             if (max != null) val = val.MaxClamped((float)max);
             if (Math.Abs(val - value) > Constants.FLOAT_TOLERANCE) value = val;
@@ -68,7 +68,7 @@ namespace GeometryGraph.Editor {
         }
 
         protected override float StringToValue(string str) {
-            if (double.TryParse(str, out var num)) return MathUtils.ClampToFloat(num);
+            if (double.TryParse(str, out double num)) return MathUtils.ClampToFloat(num);
 
             return default;
         }
@@ -93,10 +93,10 @@ namespace GeometryGraph.Editor {
             protected override string allowedCharacters => "inftynaeINFTYNAE0123456789.,-*/+%^()cosqrludxvRL=pP#";
 
             public override void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, float startValue) {
-                var dragSensitivity = NumericFieldDraggerUtility.CalculateFloatDragSensitivity(startValue);
-                var acceleration = NumericFieldDraggerUtility.Acceleration(speed == DeltaSpeed.Fast, speed == DeltaSpeed.Slow);
-                var num = MathUtils.RoundBasedOnMinimumDifference(StringToValue(text) + NumericFieldDraggerUtility.NiceDelta(delta, acceleration) * dragSensitivity,
-                                                                  dragSensitivity);
+                double dragSensitivity = NumericFieldDraggerUtility.CalculateFloatDragSensitivity(startValue);
+                float acceleration = NumericFieldDraggerUtility.Acceleration(speed == DeltaSpeed.Fast, speed == DeltaSpeed.Slow);
+                double num = MathUtils.RoundBasedOnMinimumDifference(StringToValue(text) + NumericFieldDraggerUtility.NiceDelta(delta, acceleration) * dragSensitivity,
+                                                                     dragSensitivity);
 
                 if (ParentField.min != null) num = num.MinClamped((double)ParentField.min);
                 if (ParentField.max != null) num = num.MaxClamped((double)ParentField.max);
@@ -110,7 +110,7 @@ namespace GeometryGraph.Editor {
             }
 
             protected override float StringToValue(string str) {
-                if (double.TryParse(str, out var num)) return MathUtils.ClampToFloat(num);
+                if (double.TryParse(str, out double num)) return MathUtils.ClampToFloat(num);
 
                 return default;
             }

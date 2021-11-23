@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
             levelsField.Min = 0;
             levelsField.Max = Constants.MAX_SUBDIVISIONS;
             levelsField.RegisterValueChangedCallback(evt => {
-                var newValue = evt.newValue.Clamped(0, Constants.MAX_SUBDIVISIONS);
+                int newValue = evt.newValue.Clamped(0, Constants.MAX_SUBDIVISIONS);
                 if (newValue == levels) return;
                 
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivision levels");
@@ -53,7 +53,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["l"] = levels;
             

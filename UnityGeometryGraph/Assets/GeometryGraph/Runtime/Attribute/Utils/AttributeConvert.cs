@@ -136,12 +136,12 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     edgeIndexList
                     // Get all face corners on faces that neighbour the edge
                     .SelectMany(faceIndex => {
-                        var face = geometry.Faces[faceIndex];
+                        GeometryData.Face face = geometry.Faces[faceIndex];
                         return new[] { face.FaceCornerA, face.FaceCornerB, face.FaceCornerC };
                     })
                     // Filter out any face corner that isn't on the edge
                     .Where(faceCornerIndex => {
-                        var faceCorner = geometry.FaceCorners[faceCornerIndex];
+                        GeometryData.FaceCorner faceCorner = geometry.FaceCorners[faceCornerIndex];
                         return edge.VertA == faceCorner.Vert || edge.VertB == faceCorner.Vert;
                     })
                     // Get attribute value
@@ -173,7 +173,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         
         // NOTE: Maybe there is a better / more correct way to 'average' boolean values but idk
         private static bool Average(IEnumerable<bool> values) {
-            var count = 0;
+            int count = 0;
             return values.Count(b => {
                 ++count;
                 return b;
@@ -183,7 +183,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         private static int Average(IEnumerable<int> values) => (int) values.Average();
         private static float Average(IEnumerable<float> values) => values.Average();
         private static float2 Average(IEnumerable<float2> values) {
-            var count = 1; // 1 because Aggregate already consumes one element before beginning
+            int count = 1; // 1 because Aggregate already consumes one element before beginning
             return values.Aggregate((a, b) => {
                 ++count;
                 return a + b;
@@ -191,7 +191,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         }
 
         private static float3 Average(IEnumerable<float3> values) {
-            var count = 1;
+            int count = 1;
             return values.Aggregate((a, b) => {
                 ++count;
                 return a + b;
@@ -202,8 +202,8 @@ namespace GeometryGraph.Runtime.AttributeSystem {
     // Misc
     internal static partial class AttributeConvert {
         internal static AttributeType GetType(object value) {
-            var valueType = value.GetType();
-            var type = typeConversionDictionary.ContainsKey(valueType) ? typeConversionDictionary[valueType] : AttributeType.Invalid;
+            Type valueType = value.GetType();
+            AttributeType type = typeConversionDictionary.ContainsKey(valueType) ? typeConversionDictionary[valueType] : AttributeType.Invalid;
             return type;
         }
         

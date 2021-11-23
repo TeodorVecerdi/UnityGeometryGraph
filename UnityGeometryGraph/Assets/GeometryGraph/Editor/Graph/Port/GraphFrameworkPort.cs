@@ -87,7 +87,7 @@ namespace GeometryGraph.Editor {
         }
 
         public static GraphFrameworkPort Create(string name, Direction portDirection, Capacity portCapacity, PortType type, AbstractNode ownerNode, bool hideLabel = false, Action<Edge, GraphFrameworkPort> onConnect = null, Action<Edge, GraphFrameworkPort> onDisconnect = null) {
-            var port = new GraphFrameworkPort(name, ownerNode, Orientation.Horizontal, portDirection, portCapacity);
+            GraphFrameworkPort port = new GraphFrameworkPort(name, ownerNode, Orientation.Horizontal, portDirection, portCapacity);
             if (ownerNode.EdgeConnectorListener != null) {
                 port.m_EdgeConnector = new EdgeConnector<Edge>(ownerNode.EdgeConnectorListener);
                 port.AddManipulator(port.m_EdgeConnector);
@@ -104,11 +104,11 @@ namespace GeometryGraph.Editor {
             if(onDisconnect != null) port.OnDisconnect += onDisconnect;
 
             if (hideLabel) {
-                var label = port.Q<Label>();
-                var fs = label.style.fontSize;
+                Label label = port.Q<Label>();
+                StyleLength fs = label.style.fontSize;
                 fs.value = -1;
                 label.style.fontSize = fs;
-                var color = label.style.color;
+                StyleColor color = label.style.color;
                 color.value = Color.clear;
                 label.style.color = color;
             }
@@ -117,8 +117,8 @@ namespace GeometryGraph.Editor {
         }
 
         public static (GraphFrameworkPort port, T field) CreateWithBackingField<T, TVal>(string name, PortType type, AbstractNode ownerNode, bool hideLabel = false, bool showLabelOnField = true, Action<Edge, GraphFrameworkPort> onConnect = null, Action<Edge, GraphFrameworkPort> onDisconnect = null) where T : BaseField<TVal>, new() {
-            var port = Create(name, Direction.Input, Capacity.Single, type, ownerNode, hideLabel);
-            var field = new T();
+            GraphFrameworkPort port = Create(name, Direction.Input, Capacity.Single, type, ownerNode, hideLabel);
+            T field = new T();
             if (showLabelOnField) field.label = name;
             field.AddToClassList("port-backing-field");
             port.fieldLabel = field.labelElement;

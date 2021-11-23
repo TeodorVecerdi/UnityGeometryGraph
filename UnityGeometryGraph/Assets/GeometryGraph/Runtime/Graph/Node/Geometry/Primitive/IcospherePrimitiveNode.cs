@@ -41,7 +41,7 @@ namespace GeometryGraph.Runtime.Graph {
             } else {
                 DebugUtility.Log("Recalculated radius on existing geometry");
                 // Re-project on sphere with new radius
-                var positionAttribute = Result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
+                Vector3Attribute positionAttribute = Result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
                 positionAttribute!.Yield(pos => math.normalize(pos) * Radius).Into(positionAttribute);
                 Result.StoreAttribute(positionAttribute);
             }

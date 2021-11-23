@@ -141,7 +141,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["t"] = (int)rotationMode;
             root["v"] = JsonConvert.SerializeObject(vector, float3Converter.Converter);

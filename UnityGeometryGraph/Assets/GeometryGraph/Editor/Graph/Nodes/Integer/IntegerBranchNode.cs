@@ -71,8 +71,8 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
-            var array = new JArray {
+            JObject root = base.GetNodeData();
+            JArray array = new JArray {
                 condition ? 1 : 0,
                 ifTrue,
                 ifFalse,
@@ -82,7 +82,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override void SetNodeData(JObject jsonData) {
-            var array = jsonData["d"] as JArray;
+            JArray array = jsonData["d"] as JArray;
             
             condition = array!.Value<int>(0) == 1;
             ifTrue = array.Value<int>(1);

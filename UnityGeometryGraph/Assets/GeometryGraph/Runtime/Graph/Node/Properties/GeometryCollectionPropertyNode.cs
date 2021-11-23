@@ -20,7 +20,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         protected override object GetValueForPort(RuntimePort port) {
             GeometryCollection objectValue = null;
-            var value = Property?.Value;
+            object value = Property?.Value;
             if ((Object)value != null) {
                 objectValue = (GeometryCollection)value;
             }
@@ -34,7 +34,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override void SetCustomData(string json) {
-            var jsonObject = JObject.Parse(json);
+            JObject jsonObject = JObject.Parse(json);
             PropertyGuid = jsonObject.Value<string>("p");
         }
     }

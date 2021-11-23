@@ -15,21 +15,21 @@ namespace GeometryGraph.Editor {
 
         protected override bool canCutSelection {
             get {
-                var onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
+                bool onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
                 return !onlyOutputNode && base.canCutSelection;
             }
         }
 
         protected override bool canDuplicateSelection {
             get {
-                var onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
+                bool onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
                 return !onlyOutputNode && base.canCutSelection;
             }
         }
 
         protected override bool canCopySelection {
             get {
-                var onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
+                bool onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
                 if (onlyOutputNode) return false;
                 
                 return selection.OfType<AbstractNode>().Any() || selection.OfType<Group>().Any() || selection.OfType<BlackboardField>().Any();
@@ -47,29 +47,29 @@ namespace GeometryGraph.Editor {
 
         private void UnserializeAndPasteImpl(string operation, string data) {
             editorView.GraphObject.RegisterCompleteObjectUndo(operation);
-            var copyPasteData = CopyPasteData.FromJson(data);
+            CopyPasteData copyPasteData = CopyPasteData.FromJson(data);
             this.InsertCopyPasteData(copyPasteData);
         }
 
         private string SerializeGraphElementsImpl(IEnumerable<GraphElement> elements) {
-            var elementsList = elements.ToList();
-            var nodes = 
+            List<GraphElement> elementsList = elements.ToList();
+            IEnumerable<SerializedNode> nodes = 
                 elementsList
                         .OfType<AbstractNode>()
                         .Where(node => !(node is OutputNode))
                         .Select(x => x.Owner);
-            var edges =
+            IEnumerable<SerializedEdge> edges =
                 elementsList
                         .OfType<Edge>()
                         .Where(edge => !(edge.output.node is OutputNode || edge.input.node is OutputNode))
                         .Select(x => x.userData).OfType<SerializedEdge>();
-            var properties = selection.OfType<BlackboardField>().Select(x => x.userData as AbstractProperty);
+            IEnumerable<AbstractProperty> properties = selection.OfType<BlackboardField>().Select(x => x.userData as AbstractProperty);
 
             // Collect the property nodes and get the corresponding properties
-            var propertyNodeGuids = this.nodes.Where(node => ((AbstractNode)node).IsProperty).Select(node => ((AbstractNode)node).PropertyGuid);
-            var metaProperties = editorView.GraphObject.GraphData.Properties.Where(x => propertyNodeGuids.Contains(x.GUID));
+            IEnumerable<string> propertyNodeGuids = this.nodes.Where(node => ((AbstractNode)node).IsProperty).Select(node => ((AbstractNode)node).PropertyGuid);
+            IEnumerable<AbstractProperty> metaProperties = editorView.GraphObject.GraphData.Properties.Where(x => propertyNodeGuids.Contains(x.GUID));
 
-            var copyPasteData = new CopyPasteData(editorView, nodes, edges, properties, metaProperties);
+            CopyPasteData copyPasteData = new CopyPasteData(editorView, nodes, edges, properties, metaProperties);
             return JsonUtility.ToJson(copyPasteData);
         }
 
@@ -90,7 +90,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter) {
-            var compatiblePorts = new List<Port>();
+            List<Port> compatiblePorts = new List<Port>();
             ports.ForEach(port => {
                 if (startPort != port /*&& startPort.node != port.node*/ && port.direction != startPort.direction && (startPort as GraphFrameworkPort).IsCompatibleWith(port as GraphFrameworkPort)) {
                     compatiblePorts.Add(port);
@@ -100,15 +100,15 @@ namespace GeometryGraph.Editor {
         }
 
         private void DeleteSelectionImpl(string operation, AskUser askUser) {
-            var nodesToDelete = selection.OfType<AbstractNode>().Select(node => node.Owner);
+            IEnumerable<SerializedNode> nodesToDelete = selection.OfType<AbstractNode>().Select(node => node.Owner);
             editorView.GraphObject.RegisterCompleteObjectUndo(operation);
             editorView.GraphObject.GraphData.RemoveElements(nodesToDelete.ToList(),
                 selection.OfType<Edge>().Select(e => e.userData).OfType<SerializedEdge>().ToList());
             
             
-            foreach (var selectable in selection) {
+            foreach (ISelectable selectable in selection) {
                 if (!(selectable is BlackboardField field) || field.userData == null) continue;
-                var property = (AbstractProperty) field.userData;
+                AbstractProperty property = (AbstractProperty) field.userData;
                 editorView.GraphObject.GraphData.RemoveProperty(property);
             }
             
@@ -117,8 +117,8 @@ namespace GeometryGraph.Editor {
         
         #region Drag & Drop
         private void OnDragUpdated(DragUpdatedEvent evt) {
-            var selection = DragAndDrop.GetGenericData("DragSelection") as List<ISelectable>;
-            var dragging = false;
+            List<ISelectable> selection = DragAndDrop.GetGenericData("DragSelection") as List<ISelectable>;
+            bool dragging = false;
             if (selection != null)
                 if (selection.OfType<BlackboardField>().Any())
                     dragging = true;
@@ -131,12 +131,12 @@ namespace GeometryGraph.Editor {
         private void OnDragPerformed(DragPerformEvent evt) {
             Vector2 localPos = (evt.currentTarget as VisualElement).ChangeCoordinatesTo(this.contentViewContainer, evt.localMousePosition);
 
-            var selection = DragAndDrop.GetGenericData("DragSelection") as List<ISelectable>;
+            List<ISelectable> selection = DragAndDrop.GetGenericData("DragSelection") as List<ISelectable>;
             if (selection != null) {
                 // Blackboard
                 if (selection.OfType<BlackboardField>().Any()) {
-                    var fields = selection.OfType<BlackboardField>();
-                    foreach (var field in fields) {
+                    IEnumerable<BlackboardField> fields = selection.OfType<BlackboardField>();
+                    foreach (BlackboardField field in fields) {
                         CreateNode(field, localPos);
                     }
                 }
@@ -146,12 +146,12 @@ namespace GeometryGraph.Editor {
         private void CreateNode(object obj, Vector2 nodePosition) {
             if (obj is BlackboardField blackboardField) {
                 editorView.GraphObject.RegisterCompleteObjectUndo("Drag Blackboard Field");
-                var property = blackboardField.userData as AbstractProperty;
-                var node = new SerializedNode(PropertyUtils.PropertyTypeToSystemType(property.Type), new Rect(nodePosition, EditorView.DefaultNodeSize));
+                AbstractProperty property = blackboardField.userData as AbstractProperty;
+                SerializedNode node = new SerializedNode(PropertyUtils.PropertyTypeToSystemType(property.Type), new Rect(nodePosition, EditorView.DefaultNodeSize));
                 editorView.GraphObject.GraphData.AddNode(node);
                 node.BuildNode(editorView, editorView.EdgeConnectorListener, false);
                 
-                var propertyNode = node.Node;
+                AbstractNode propertyNode = node.Node;
                 propertyNode.PropertyGuid = property.GUID;
                 propertyNode.Property = property;
                 node.BuildPortData();

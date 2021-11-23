@@ -21,7 +21,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         
         public override void Fill(IEnumerable<float> values) {
             Values.Clear();
-            foreach (var value in values) {
+            foreach (float value in values) {
                 Values.Add(value.Clamped01());
             }
         }

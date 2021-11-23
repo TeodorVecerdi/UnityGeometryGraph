@@ -13,9 +13,9 @@ namespace GeometryGraph.Editor {
         
         [MenuItem("Geometry Graph/Print InstanceID")]
         public static void PrintInstanceId() {
-            var selection = Selection.activeObject;
-            var allAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(selection));
-            foreach (var asset in allAssets) {
+            Object selection = Selection.activeObject;
+            Object[] allAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(selection));
+            foreach (Object asset in allAssets) {
                 Debug.LogWarning($"{asset.name}:{asset.GetType().Name}:{asset.GetInstanceID()}");
                 
             }
@@ -23,18 +23,18 @@ namespace GeometryGraph.Editor {
         
         [MenuItem("Geometry Graph/Find all instances")]
         public static void FindGFOInstances() {
-            var instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
+            GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
             Debug.Log(instances.Length);
-            foreach (var graphFrameworkObject in instances) {
+            foreach (GraphFrameworkObject graphFrameworkObject in instances) {
                 Debug.Log($"{graphFrameworkObject.name}:{graphFrameworkObject.GetInstanceID()}");
             }
         }
         
         [MenuItem("Geometry Graph/Delete all instances")]
         public static void DeleteGFOInstances() {
-            var instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
+            GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
             Debug.Log(instances.Length);
-            foreach (var graphFrameworkObject in instances) {
+            foreach (GraphFrameworkObject graphFrameworkObject in instances) {
                 Debug.Log($"{graphFrameworkObject.name}:{graphFrameworkObject.GetInstanceID()}");
                 Object.DestroyImmediate(graphFrameworkObject, true);
             }
