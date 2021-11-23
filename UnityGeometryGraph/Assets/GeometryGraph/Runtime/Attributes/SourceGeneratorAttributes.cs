@@ -54,10 +54,10 @@ namespace GeometryGraph.Runtime.Attributes {
         ///     <para>
         ///         <list type="bullet">
         ///             <listheader>Supports the following placeholders:</listheader>
-        ///             <item><c>{fileName}</c> - The name of the original file without extension</item> //todo:
-        ///             <item><c>{extension}</c> - The extension of the original file</item> //todo:
-        ///             <item><c>{namespace}</c> - The namespace of the original file</item> //todo:
-        ///             <item><c>{className}</c> - The name of the original class</item> //todo:
+        ///             <item><c>{fileName}</c> - The name of the original file without extension</item>
+        ///             <item><c>{extension}</c> - The extension of the original file</item>
+        ///             <item><c>{namespace}</c> - The namespace of the original file</item>
+        ///             <item><c>{className}</c> - The name of the original class</item>
         ///         </list>
         ///     </para>
         /// </summary>
@@ -117,8 +117,8 @@ namespace GeometryGraph.Runtime.Attributes {
         ///     <para>
         ///         <list type="bullet">
         ///             <listheader>Supports the following placeholders:</listheader>
-        ///             <item><c>{self}</c> - The name of the property</item> //todo:
-        ///             <item><c>{Self}</c> - The capitalized name of the property</item> //todo:
+        ///             <item><c>{self}</c> - The name of the property</item>
+        ///             <item><c>{Self}</c> - The capitalized name of the property</item>
         ///         </list>
         ///     </para>
         /// </summary>
@@ -133,7 +133,7 @@ namespace GeometryGraph.Runtime.Attributes {
         ///         <list type="bullet">
         ///             <listheader>Supports the following placeholders:</listheader>
         ///             <item><c>{self}</c> - The name of the property</item>
-        ///             <item><c>{portName}</c> - The name of the port</item> //todo:
+        ///             <item><c>{portName}</c> - The name of the port</item>
         ///             <item><c>{type}</c> - The name of the property</item>
         ///         </list>
         ///     </para>
@@ -150,7 +150,7 @@ namespace GeometryGraph.Runtime.Attributes {
         ///             <listheader>Supports the following placeholders:</listheader>
         ///             <item><c>{self}</c> - The name of the property</item>
         ///             <item><c>{other}</c> - The name of the other variable (usually <c>newValue</c>)</item>
-        ///             <item><c>{portName}</c> - The name of the port</item> //todo:
+        ///             <item><c>{portName}</c> - The name of the port</item>
         ///             <item><c>{default}</c> - The default value of the property</item>
         ///             <item><c>{indent}</c> - The indentation level</item>
         ///         </list>
@@ -167,9 +167,9 @@ namespace GeometryGraph.Runtime.Attributes {
         ///         <list type="bullet">
         ///             <listheader>Supports the following placeholders:</listheader>
         ///             <item><c>{self}</c> - The name of the property</item>
-        ///             <item><c>{portName}</c> - The name of the port</item> //todo:
+        ///             <item><c>{portName}</c> - The name of the port</item>
         ///             <item><c>{other}</c> - The name of the other variable (usually <c>newValue</c>)</item>
-        ///             <item><c>{default}</c> - The default value of the property</item> //todo:
+        ///             <item><c>{default}</c> - The default value of the property</item>
         ///             <item><c>{indent}</c> - The indentation level</item>
         ///         </list>
         ///     </para>
@@ -235,8 +235,8 @@ namespace GeometryGraph.Runtime.Attributes {
         ///     <para>
         ///         <list type="bullet">
         ///             <listheader>Supports the following placeholders:</listheader>
-        ///             <item><c>{self}</c> - The name of the property</item> //todo:
-        ///             <item><c>{Self}</c> - The capitalized name of the property</item> //todo:
+        ///             <item><c>{self}</c> - The name of the property</item>
+        ///             <item><c>{Self}</c> - The capitalized name of the property</item>
         ///         </list>
         ///     </para>
         /// </summary>
@@ -254,20 +254,20 @@ namespace GeometryGraph.Runtime.Attributes {
     ///         Default: <c>{self}</c><br />
     ///         <list type="bullet">
     ///             <listheader>Supports the following placeholders:</listheader>
-    ///             <item><c>{self}</c> - The name of the property</item> //todo:
-    ///             <item><c>{type}</c> - The type of the property</item> //todo:
-    ///             <item><c>{default}</c> - The default value of the property</item> //todo:
+    ///             <item><c>{self}</c> - The name of the property</item>
+    ///             <item><c>{type}</c> - The type of the property</item>
+    ///             <item><c>{default}</c> - The default value of the property</item>
     ///         </list>
     ///         <b><i>deserializationCode</i></b> - The code used to deserialize the property.<br />
     ///         Default: <c>{self} = {storage}.Value&lt;{type}&gt;({index});</c><br />
     ///         <list type="bullet">
     ///             <listheader>Supports the following placeholders:</listheader>
-    ///             <item><c>{self}</c> - The name of the property</item> //todo:
-    ///             <item><c>{type}</c> - The type of the property</item> //todo:
-    ///             <item><c>{default}</c> - The default value of the property</item> //todo:
-    ///             <item><c>{storage}</c> - The name of the storage field</item> //todo:
-    ///             <item><c>{index}</c> - The index of the property in the storage field</item> //todo:
-    ///             <item><c>{indent}</c> - The indentation level</item> //todo:
+    ///             <item><c>{self}</c> - The name of the property</item>
+    ///             <item><c>{type}</c> - The type of the property</item>
+    ///             <item><c>{default}</c> - The default value of the property</item>
+    ///             <item><c>{storage}</c> - The name of the storage field</item>
+    ///             <item><c>{index}</c> - The index of the property in the storage field</item>
+    ///             <item><c>{indent}</c> - The indentation level</item>
     ///         </list>
     ///     </para>
     /// </summary>
@@ -305,11 +305,11 @@ namespace GeometryGraph.Runtime.Attributes {
     ///         Default: <c>{self}</c><br />
     ///         <list type="bullet">
     ///             <listheader>Supports the following placeholders:</listheader>
-    ///             <item><c>{self}</c> - The name of the property</item> //todo:
-    ///             <item><c>{other}</c> - The name of the other variable (usually <c>newValue</c>)</item> //todo:
-    ///             <item><c>{default}</c> - The name of the property</item> //todo:
-    ///             <item><c>{type}</c> - The type of the property</item> //todo:
-    ///             <item><c>{indent}</c> - The indentation level</item> //todo:
+    ///             <item><c>{self}</c> - The name of the property</item>
+    ///             <item><c>{other}</c> - The name of the other variable (usually <c>newValue</c>)</item>
+    ///             <item><c>{default}</c> - The name of the property</item>
+    ///             <item><c>{type}</c> - The type of the property</item>
+    ///             <item><c>{indent}</c> - The indentation level</item>
     ///         </list>
     ///     </para>
     /// </summary>
@@ -339,10 +339,10 @@ namespace GeometryGraph.Runtime.Attributes {
     /// <list type="bullet">
     ///     <listheader>Supports the following placeholders:</listheader>
     ///         <item><c>{self}</c> - The name of the property</item>
-    ///         <item><c>{portName}</c> - The name of the port</item> //todo:
-    ///         <item><c>{type}</c> - The type of the property</item> //todo:
-    ///         <item><c>{default}</c> - The default value of the property</item> //todo:
-    ///         <item><c>{indent}</c> - The indentation level</item> //todo:
+    ///         <item><c>{portName}</c> - The name of the port</item>
+    ///         <item><c>{type}</c> - The type of the property</item>
+    ///         <item><c>{default}</c> - The default value of the property</item>
+    ///         <item><c>{indent}</c> - The indentation level</item>
     /// </list>
     ///     </para>
     /// </summary>
@@ -386,12 +386,12 @@ namespace GeometryGraph.Runtime.Attributes {
     ///     <para>
     ///         <list type="bullet">
     ///             <listheader>Supports the following placeholders:</listheader>
-    ///             <item><c>{self}</c> - The name of the property</item> //todo:
-    ///             <item><c>{portName}</c> - The name of the port</item> //todo:
-    ///             <item><c>{type}</c> - The type of the property</item> //todo:
-    ///             <item><c>{other}</c> - The name of the other variable (usually <c>newValue</c>)</item> //todo:
-    ///             <item><c>{default}</c> - The default value of the property</item> //todo:
-    ///             <item><c>{indent}</c> - The indentation level</item> //todo:
+    ///             <item><c>{self}</c> - The name of the property</item>
+    ///             <item><c>{portName}</c> - The name of the port</item>
+    ///             <item><c>{type}</c> - The type of the property</item>
+    ///             <item><c>{other}</c> - The name of the other variable (usually <c>newValue</c>)</item>
+    ///             <item><c>{default}</c> - The default value of the property</item>
+    ///             <item><c>{indent}</c> - The indentation level</item>
     ///         </list>
     ///     </para>
     /// </summary>
