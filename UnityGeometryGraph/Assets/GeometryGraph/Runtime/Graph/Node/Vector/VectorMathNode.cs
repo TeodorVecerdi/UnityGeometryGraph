@@ -5,15 +5,31 @@ using Unity.Mathematics;
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
     public partial class VectorMathNode {
-        [Setting] public VectorMathNode_Operation Operation { get; private set; }
-        [In(GenerateEquality = false)] public float3 X { get; private set; }
-        [In(GenerateEquality = false)] public float3 Y { get; private set; }
-        [In(GenerateEquality = false)] public float3 WrapMax { get; private set; }
-        [In, UpdatesProperties(nameof(VectorResult))] public float IOR { get; private set; }
-        [In, UpdatesProperties(nameof(VectorResult))] public float Scale { get; private set; }
-        [In, UpdatesProperties(nameof(VectorResult))] public float Distance { get; private set; }
-        [Out] public float3 VectorResult { get; private set; }
-        [Out] public float FloatResult { get; private set; }
+        [Setting] 
+        public VectorMathNode_Operation Operation { get; private set; }
+        
+        [In(GenerateEquality = false)] 
+        public float3 X { get; private set; }
+        
+        [In(GenerateEquality = false)] 
+        public float3 Y { get; private set; }
+        
+        [In(GenerateEquality = false)] 
+        public float3 WrapMax { get; private set; }
+        
+        [In, UpdatesProperties(nameof(VectorResult))] 
+        public float IOR { get; private set; }
+        
+        [In, UpdatesProperties(nameof(VectorResult))] 
+        public float Scale { get; private set; }
+        
+        [In, UpdatesProperties(nameof(VectorResult))] 
+        public float Distance { get; private set; }
+        
+        [Out] 
+        public float3 VectorResult { get; private set; }
+        [Out] 
+        public float FloatResult { get; private set; }
 
 
         [GetterMethod(nameof(FloatResult))]
