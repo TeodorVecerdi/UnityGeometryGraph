@@ -80,7 +80,7 @@ namespace GeometryGraph.Editor {
         }
 
         public override JObject GetNodeData() {
-            var root = base.GetNodeData();
+            JObject root = base.GetNodeData();
 
             root["o"] = (int)operation;
             root["a"] = x ? 1 : 0;

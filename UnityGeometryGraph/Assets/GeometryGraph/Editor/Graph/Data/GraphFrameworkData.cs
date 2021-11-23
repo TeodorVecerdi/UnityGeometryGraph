@@ -267,34 +267,7 @@ namespace GeometryGraph.Editor {
 
                     node.PortData[i] = newPortGuid;
                 }
-
-                /* Note: Left as reference. Idk if i'll need it
-                // Change dynamic port guid
-                if (node.Type == typeof(SelfNode).FullName) {
-                    var data = JObject.Parse(node.NodeData);
-                    var lines = JsonConvert.DeserializeObject<List<LineDataSelf>>(data.Value<string>("lines"));
-
-                    foreach (var currLine in lines) {
-                        currLine.PortGuidA = portGuidMap[currLine.PortGuidA];
-                        currLine.PortGuidB = portGuidMap[currLine.PortGuidB];
-                    }
-
-                    data["lines"] = new JValue(JsonConvert.SerializeObject(lines));
-                    node.NodeData = data.ToString(Formatting.None);
-                } else if (node.Type == typeof(NpcNode).FullName) {
-                    var data = JObject.Parse(node.NodeData);
-                    var lines = JsonConvert.DeserializeObject<List<LineDataNpc>>(data.Value<string>("lines"));
-
-                    foreach (var currLine in lines) {
-                        currLine.PortGuidA = portGuidMap[currLine.PortGuidA];
-                        currLine.PortGuidB = portGuidMap[currLine.PortGuidB];
-                        currLine.PortGuidC = portGuidMap[currLine.PortGuidC];
-                    }
-
-                    data["lines"] = new JValue(JsonConvert.SerializeObject(lines));
-                    node.NodeData = data.ToString(Formatting.None);
-                }*/
-
+                
                 // offset the pasted node slightly so it's not on top of the original one
                 NodeDrawState drawState = node.DrawState;
                 Rect position = drawState.Position;

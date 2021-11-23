@@ -47,16 +47,16 @@ namespace GeometryGraph.Runtime.Graph {
                 return;
             }
 
-            var rotationQuat = quaternion.Euler(math.radians(Rotation));
-            var matrix = float4x4.TRS(Translation, rotationQuat, Scale);
-            var matrixNormal = float4x4.TRS(float3.zero, rotationQuat, Scale);
+            quaternion rotationQuat = quaternion.Euler(math.radians(Rotation));
+            float4x4 matrix = float4x4.TRS(Translation, rotationQuat, Scale);
+            float4x4 matrixNormal = float4x4.TRS(float3.zero, rotationQuat, Scale);
 
-            var position = new List<float3>(Input.Points);
-            var tangent = new List<float3>(Input.Points);
-            var normal = new List<float3>(Input.Points);
-            var binormal = new List<float3>(Input.Points);
+            List<float3> position = new List<float3>(Input.Points);
+            List<float3> tangent = new List<float3>(Input.Points);
+            List<float3> normal = new List<float3>(Input.Points);
+            List<float3> binormal = new List<float3>(Input.Points);
 
-            for (var i = 0; i < Input.Points; i++) {
+            for (int i = 0; i < Input.Points; i++) {
                 position.Add(math.mul(matrix, Input.Position[i].float4(1.0f)).xyx);
                 tangent.Add(math.mul(matrixNormal, Input.Tangent[i].float4(1.0f)).xyx);
                 normal.Add(math.mul(matrixNormal, Input.Normal[i].float4(1.0f)).xyx);
