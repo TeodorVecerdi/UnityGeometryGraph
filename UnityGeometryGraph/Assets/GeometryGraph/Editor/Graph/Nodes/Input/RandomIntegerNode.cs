@@ -5,7 +5,7 @@ using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace GeometryGraph.Editor {
-    [Title("Input", "Random Float")]
+    [Title("Input", "Random Integer")]
     public class RandomIntegerNode : AbstractNode<GeometryGraph.Runtime.Graph.RandomIntegerNode> {
         private int seed;
         private int min = 0;
