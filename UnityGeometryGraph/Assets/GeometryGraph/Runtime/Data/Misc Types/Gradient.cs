@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
@@ -16,7 +17,12 @@ namespace GeometryGraph.Runtime.Data {
 
         public Gradient(UnityEngine.Gradient unityGradient) {
             this.unityGradient = unityGradient;
-            mode = unityGradient.mode;
+            try {
+                mode = unityGradient.mode;
+            } catch (UnityException) {
+                //Exception: get_mode is not allowed to be called during serialization
+                mode = GradientMode.Blend;
+            }
             colorKeys = new List<GradientColorKey>(unityGradient.colorKeys);
             alphaKeys = new List<GradientAlphaKey>(unityGradient.alphaKeys);
         }
@@ -25,11 +31,21 @@ namespace GeometryGraph.Runtime.Data {
             this.mode = mode;
             this.colorKeys = colorKeys;
             this.alphaKeys = alphaKeys;
-            unityGradient = new UnityEngine.Gradient{mode = mode, colorKeys = colorKeys.ToArray(), alphaKeys = alphaKeys.ToArray()};
+            try {
+                unityGradient = new UnityEngine.Gradient{mode = mode, colorKeys = colorKeys.ToArray(), alphaKeys = alphaKeys.ToArray()};
+            } catch (UnityException) {
+                //Exception: set_mode is not allowed to be called during serialization
+                unityGradient = new UnityEngine.Gradient{colorKeys = colorKeys.ToArray(), alphaKeys = alphaKeys.ToArray()};
+            }
         }
 
         public RGBAlphaPair Evaluate(float time) {
-            unityGradient ??= new UnityEngine.Gradient{mode = mode, colorKeys = colorKeys.ToArray(), alphaKeys = alphaKeys.ToArray()};
+            try {
+                unityGradient ??= new UnityEngine.Gradient{mode = mode, colorKeys = colorKeys.ToArray(), alphaKeys = alphaKeys.ToArray()};
+            } catch (UnityException) {
+                //Exception: set_mode is not allowed to be called during serialization
+                unityGradient ??= new UnityEngine.Gradient{colorKeys = colorKeys.ToArray(), alphaKeys = alphaKeys.ToArray()};
+            }
             return (RGBAlphaPair)unityGradient.Evaluate(time);
         }
         
