@@ -19,7 +19,7 @@ namespace GeometryGraph.Editor {
         public GraphFrameworkData GraphData {
             get => graphData;
             set {
-                Debug.LogWarning("GraphFrameworkObject::set_GraphData");
+                // Debug.LogWarning("GraphFrameworkObject::set_GraphData");
                 graphData = value;
                 if (graphData != null)
                     graphData.Owner = this;
@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void Initialize(GraphFrameworkData graphData) {
-            Debug.LogWarning("GraphFrameworkObject::Initialize");
+            // Debug.LogWarning("GraphFrameworkObject::Initialize");
             GraphData = graphData;
             RuntimeGraph = CreateInstance<RuntimeGraphObject>();
             GraphData.Load(RuntimeGraph);
@@ -50,7 +50,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void OnBeforeSerialize() {
-            Debug.LogWarning($"GraphFrameworkObject::OnBeforeSerialize {GetInstanceID()}");
+            // Debug.LogWarning($"GraphFrameworkObject::OnBeforeSerialize {GetInstanceID()}");
             if (graphData == null) return;
 
             serializedGraph = JsonUtility.ToJson(graphData);
@@ -58,9 +58,9 @@ namespace GeometryGraph.Editor {
         }
 
         public void OnAfterDeserialize() {
-            Debug.LogWarning($"GraphFrameworkObject::OnAfterDeserialize {GetInstanceID()}");
+            // Debug.LogWarning($"GraphFrameworkObject::OnAfterDeserialize {GetInstanceID()}");
             if (GraphData != null) {
-                Debug.LogWarning($"Graph data not null {GetInstanceID()}");
+                // Debug.LogWarning($"Graph data not null {GetInstanceID()}");
                 return;
             }
             GraphData = Deserialize();
@@ -69,7 +69,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void HandleUndoRedo() {
-            Debug.LogWarning("GraphFrameworkObject::HandleUndoRedo");
+            // Debug.LogWarning("GraphFrameworkObject::HandleUndoRedo");
             if (!WasUndoRedoPerformed) {
                 Debug.LogError("Trying to handle undo/redo when undo/redo was not performed", this);
                 return;
