@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using AnimationCurve = GeometryGraph.Runtime.Data.AnimationCurve;
+using Gradient = GeometryGraph.Runtime.Data.Gradient;
 
 namespace GeometryGraph.Runtime.Serialization {
     public static class Serializer {
@@ -23,6 +25,35 @@ namespace GeometryGraph.Runtime.Serialization {
                 keys.Add(keyData);
             }
             data["k"] = keys;
+            return data;
+        }
+
+        public static JArray Color(Color color) {
+            return new JArray { color.r, color.g, color.b, color.a };
+        }
+
+        public static JObject Gradient(Gradient gradient) {
+            JObject data = new JObject {
+                ["m"] = (int)gradient.Mode
+            };
+            JArray colorKeys = new JArray();
+            foreach (GradientColorKey colorKey in gradient.ColorKeys) {
+                JObject keyData = new JObject {
+                    ["t"] = colorKey.time,
+                    ["c"] = Color(colorKey.color),
+                };
+                colorKeys.Add(keyData);
+            }
+            JArray alphaKeys = new JArray();
+            foreach (GradientAlphaKey alphaKey in gradient.AlphaKeys) {
+                JObject keyData = new JObject {
+                    ["t"] = alphaKey.time,
+                    ["a"] = alphaKey.alpha
+                };
+                alphaKeys.Add(keyData);
+            }
+            data["c"] = colorKeys;
+            data["a"] = alphaKeys;
             return data;
         }
     }

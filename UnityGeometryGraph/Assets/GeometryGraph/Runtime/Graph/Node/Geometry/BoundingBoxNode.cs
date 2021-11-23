@@ -21,6 +21,7 @@ namespace GeometryGraph.Runtime.Graph {
         
         [CalculatesAllProperties]
         private void CalculateResult() {
+            Input ??= GeometryData.Empty;
             (Min, Max, BoundingBox) = Geometry.Geometry.BoundingBox(Input);
         }
     }

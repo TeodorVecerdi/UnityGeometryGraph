@@ -19,14 +19,13 @@ namespace GeometryGraph.Editor {
 
         private FloatField valueField;
         private CurveField curveField;
-        private FloatField maxField;
 
         private float value;
         private AnimationCurve curve = new AnimationCurve(UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f));
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Curve Map");
+            Initialize("Curve Map (Float)");
 
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Value", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
