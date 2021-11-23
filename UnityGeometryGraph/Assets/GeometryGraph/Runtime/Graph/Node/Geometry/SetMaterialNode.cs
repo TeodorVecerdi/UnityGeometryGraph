@@ -5,6 +5,7 @@ using GeometryGraph.Runtime.Geometry;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
+    [AdditionalUsingStatements("UnityCommons")]
     public partial class SetMaterialNode {
         [In] public GeometryData Input { get; private set; }
         
