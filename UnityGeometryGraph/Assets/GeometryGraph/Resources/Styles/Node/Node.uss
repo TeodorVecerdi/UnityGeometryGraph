@@ -63,6 +63,17 @@ Vector3Field.port-backing-field .unity-vector3-field__input FloatField Label {
     /*font-size: 8px;*/
 }
 
+CurveField.unity-curve-field > VisualElement.unity-curve-field__input {
+    min-height: 64px;
+    min-width: 96px;
+    background-color: #2E2E2E;
+    --unity-curve-color: #FFFFFF;
+}
+
+CurveField.unity-curve-field > VisualElement.unity-curve-field__input > VisualElement.unity-curve-field__content > VisualElement {
+    height: 0;
+}
+
 /*
  * @section General Node
  */
