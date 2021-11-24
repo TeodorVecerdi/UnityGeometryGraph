@@ -5,6 +5,7 @@ using GeometryGraph.Runtime.Curve.TEMP;
 using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
+using GeometryGraph.Runtime.Serialization;
 using Unity.Mathematics;
 using UnityEngine;
 using Object = UnityEngine.Object;

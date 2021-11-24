@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿#nullable enable
+
+using System.Globalization;
 using Newtonsoft.Json;
 
 namespace GeometryGraph.Runtime.Serialization {
@@ -11,7 +13,7 @@ namespace GeometryGraph.Runtime.Serialization {
             if (string.IsNullOrEmpty(str))
                 return null;
 
-            return float.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out float valueParsed) ? valueParsed : 0f;
+            return float.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out float valueParsed) ? valueParsed : null;
         }
     }
 }
