@@ -172,3 +172,7 @@ sysinfo.txt
 #UnityGeometryGraph/Assets/Plugins/Sirenix.meta
 
 UnityGeometryGraph/Assets/Backup~/
+
+UnityGeometryGraph/Assets/GeometryGraph/Resources/Inspector/gg_common.uss.map
+
+*.uss.map
