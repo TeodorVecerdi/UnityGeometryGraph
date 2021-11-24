@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public abstract class RuntimeNode {
@@ -46,7 +47,10 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public void NotifyPortValueChanged(RuntimePort port) {
-            if(port.Direction != PortDirection.Output) return;
+            if (port.Direction != PortDirection.Output) {
+                Debug.LogError($"Attempting notify an input port that its value changed: {GetType()}");
+                return;
+            }
 
             DebugUtility.Log($"Connection count: {port.Connections.Count}");
 
@@ -77,6 +81,11 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         protected T GetValue<T>(RuntimePort port, T defaultValue) {
+            if (port.Direction == PortDirection.Output) {
+                Debug.LogError($"Attempting to get a value from an output port: {GetType()}");
+                return defaultValue;
+            }
+            
             Connection firstConnection = port.Connections.FirstOrDefault();
             if (firstConnection == null) {
                 return defaultValue;
@@ -87,6 +96,11 @@ namespace GeometryGraph.Runtime.Graph {
 
         protected IEnumerable<T> GetValues<T>(RuntimePort port, int count, T defaultValue) {
             if (count <= 0) yield break;
+            if (port.Direction == PortDirection.Output) {
+                Debug.LogError($"Attempting to get values from an output port: {GetType()}");
+                yield break;
+            }
+            
             Connection firstConnection = port.Connections.FirstOrDefault();
             if (firstConnection == null) {
                 for (int i = 0; i < count; i++) {
@@ -123,6 +137,10 @@ namespace GeometryGraph.Runtime.Graph {
 
         protected IEnumerable<T> GetValues<T>(RuntimePort port, T defaultValue) {
             if (port.Connections.Count == 0) yield return defaultValue;
+            if (port.Direction == PortDirection.Output) {
+                Debug.LogError($"Attempting to get a value from an output port: {GetType()}");
+                yield return defaultValue;
+            }
             foreach (Connection connection in port.Connections) {
                 object value = connection.Output.Node.GetValueForPort(connection.Output);
                 if (PortTypeUtility.IsUnmanagedType(connection.Output.Type) && value is T tValueUnmanaged) {
