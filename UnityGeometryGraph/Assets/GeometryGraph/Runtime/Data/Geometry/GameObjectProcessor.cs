@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Data {
@@ -8,13 +9,13 @@ namespace GeometryGraph.Runtime.Data {
 
         public virtual void Process() {
             int newHashCode = ComputeChildrenHashCode(transform);
-        
+
             if (ChildrenHashCode != newHashCode || Processed == null) {
                 ChildrenHashCode = newHashCode;
                 Processed = Process(CollectChildren());
             }
         }
-    
+
         protected abstract TProcessed Process(List<TChild> children);
         protected abstract TChild CollectChild(Transform childTransform);
 
@@ -28,16 +29,19 @@ namespace GeometryGraph.Runtime.Data {
         }
 
         protected virtual int ComputeChildrenHashCode(Transform transform) {
-            // TODO(#14): Write a better ComputeChildrenHashCode function for GameObjectProcessor.
-            // It should include things like transform data, childCount/child components.
-            // Currently it changes only if you add/remove objects or disable/enable objects
-            
             unchecked {
-                int hashCode = transform.gameObject.GetHashCode() * 137 + transform.gameObject.activeSelf.GetHashCode();
+                int hashCode = HashCode.Combine(transform.gameObject,
+                                                transform.gameObject.activeSelf,
+                                                transform.localPosition,
+                                                transform.localRotation,
+                                                transform.localScale,
+                                                transform.childCount,
+                                                transform.GetComponents<Renderer>().Length
+                );
                 if (transform.childCount == 0) return hashCode;
-            
+
                 for (int i = 0; i < transform.childCount; i++) {
-                    hashCode = hashCode * 239 + ComputeChildrenHashCode(transform.GetChild(i));
+                    hashCode = HashHelpers.Combine(hashCode, ComputeChildrenHashCode(transform.GetChild(i)));
                 }
 
                 return hashCode;
