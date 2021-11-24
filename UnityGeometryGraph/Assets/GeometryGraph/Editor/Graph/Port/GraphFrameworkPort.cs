@@ -53,7 +53,9 @@ namespace GeometryGraph.Editor {
         internal void Show() {
             portVisible = true;
             RemoveFromClassList("d-none");
-            field?.RemoveFromClassList("d-none");
+            if (fieldVisible) {
+                field?.RemoveFromClassList("d-none");
+            }
         }
 
         internal void HideAndDisconnect() {
@@ -127,11 +129,11 @@ namespace GeometryGraph.Editor {
             if (showLabelOnField) {
                 port.m_ConnectorText.text = string.Empty;
                 port.fieldVisible = true;
-                port.OnConnect += (_, __) => SetCompFieldVisible(port, false);
-                port.OnDisconnect += (_, __) => SetCompFieldVisible(port, true);
+                port.OnConnect += (_, _) => SetCompFieldVisible(port, false);
+                port.OnDisconnect += (_, _) => SetCompFieldVisible(port, true);
             } else {
-                port.OnConnect += (_, __) => SetFieldVisible(port, false);
-                port.OnDisconnect += (_, __) => SetFieldVisible(port, true);
+                port.OnConnect += (_, _) => SetFieldVisible(port, false);
+                port.OnDisconnect += (_, _) => SetFieldVisible(port, true);
             }
 
             if(onConnect != null) port.OnConnect += onConnect;
