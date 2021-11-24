@@ -62,7 +62,7 @@ namespace GeometryGraph.Editor {
 
         public override void OnPropertyUpdated(AbstractProperty property) {
             if(property != null && property.GUID != propertyGuid) return;
-            AbstractProperty? prop = Owner.EditorView.GraphObject.GraphData.Properties.FirstOrGivenDefault(abstractProperty => abstractProperty.GUID == propertyGuid, null);
+            AbstractProperty prop = Owner.EditorView.GraphObject.GraphData.Properties.FirstOrGivenDefault(abstractProperty => abstractProperty.GUID == propertyGuid, null);
             title = prop?.DisplayName ?? "null property";
             Refresh();
         }
