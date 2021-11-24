@@ -1,0 +1,8 @@
+VisualElement#GeometryGraphInspector {
+  --inspector-bg: #C8C8C8;
+  --obj-field-bg: #F0F0F0;
+  --obj-field-selector-bg: #DEDEDE;
+  --obj-field-selector-bg--hover: #CCCCCC;
+}
+
+/*# sourceMappingURL=gg_light.uss.map */

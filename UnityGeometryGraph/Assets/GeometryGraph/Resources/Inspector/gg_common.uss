@@ -1,0 +1,100 @@
+.d-none {
+  display: none;
+}
+
+VisualElement#GeometryGraphInspector {
+  margin-bottom: -7px;
+  margin-top: -1px;
+  background-color: var(--inspector-bg);
+  overflow: hidden;
+}
+VisualElement#GeometryGraphInspector > VisualElement.title {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 4px 16px;
+}
+VisualElement#GeometryGraphInspector > VisualElement.title > .title-icon {
+  min-width: 48px;
+  min-height: 48px;
+  width: 48px;
+  height: 48px;
+  background-image: resource("Textures/gg_feature@64");
+  margin-right: 8px;
+}
+VisualElement#GeometryGraphInspector > VisualElement.title > .title-label {
+  -unity-font-style: bold;
+  font-size: 22px;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content {
+  padding-left: 8px;
+  padding-right: 8px;
+  min-height: 32px;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content ObjectField.unity-object-field > VisualElement.unity-object-field__input.unity-base-field__input {
+  background-color: var(--obj-field-bg);
+}
+VisualElement#GeometryGraphInspector > VisualElement.content ObjectField.unity-object-field > VisualElement.unity-object-field__input.unity-base-field__input > ObjectFieldSelector.unity-object-field__selector {
+  background-color: var(--obj-field-selector-bg);
+}
+VisualElement#GeometryGraphInspector > VisualElement.content ObjectField.unity-object-field > VisualElement.unity-object-field__input.unity-base-field__input > ObjectFieldSelector.unity-object-field__selector:hover {
+  background-color: var(--obj-field-selector-bg--hover);
+}
+VisualElement#GeometryGraphInspector > VisualElement.content ObjectField > Label, VisualElement#GeometryGraphInspector > VisualElement.content IntegerField > Label, VisualElement#GeometryGraphInspector > VisualElement.content FloatField > Label, VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > Label {
+  min-width: 80px;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content ObjectField > .unity-base-field__input, VisualElement#GeometryGraphInspector > VisualElement.content IntegerField > .unity-base-field__input, VisualElement#GeometryGraphInspector > VisualElement.content FloatField > .unity-base-field__input, VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > .unity-base-field__input {
+  border-radius: 0;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-x-input > Label {
+  background-color: #e82609;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-y-input > Label {
+  background-color: #53c627;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-z-input > Label {
+  background-color: #1b88ff;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input .unity-composite-field__field > Label {
+  color: #ffffff;
+  -unity-font-style: bold;
+  padding-left: 6px;
+  padding-right: 6px;
+  min-width: 21px;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content PropertyField#exporter-field {
+  margin-bottom: 8px;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Foldout.properties-container > Toggle.unity-foldout__toggle {
+  margin-left: -8px;
+  margin-right: -8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background-color: #e88300;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Foldout.properties-container > Toggle.unity-foldout__toggle Label.unity-toggle__text {
+  -unity-font-style: bold;
+  color: #ffffff;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Foldout.properties-container > Toggle.unity-foldout__toggle #unity-checkmark {
+  background-image: resource("Textures/ui/triangle_right@32");
+  -unity-background-scale-mode: scale-to-fit;
+  width: 10px;
+  margin-left: 4px;
+  -unity-slice-left: 0;
+  -unity-slice-top: 0;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Foldout.properties-container > Toggle.unity-foldout__toggle:checked #unity-checkmark {
+  margin-top: 2px;
+  background-image: resource("Textures/ui/triangle_down@32");
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Foldout.properties-container > VisualElement#unity-content {
+  margin-top: -4px;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+VisualElement#GeometryGraphInspector > VisualElement.content Foldout.properties-container > .foldout-content {
+  margin: 4px 8px;
+}
+
+/*# sourceMappingURL=gg_common.uss.map */

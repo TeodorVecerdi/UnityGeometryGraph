@@ -1,0 +1,135 @@
+﻿.d-none {
+    display: none;
+}
+
+VisualElement#GeometryGraphInspector {
+    // Fixes padding that unity adds to inspectors
+    margin-bottom: -7px;
+    margin-top: -1px;
+    
+    background-color: var(--inspector-bg);
+    overflow: hidden;
+
+    & > VisualElement.title {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 8px 4px 16px;
+
+        & > .title-icon {
+            min-width: 48px;
+            min-height: 48px;
+            width: 48px;
+            height: 48px;
+            background-image: resource("Textures/gg_feature@64");
+            margin-right: 8px;
+        }
+
+        & > .title-label {
+            -unity-font-style: bold;
+            font-size: 22px;
+        }
+    }
+
+    & > VisualElement.content {
+        padding-left: 8px;
+        padding-right: 8px;
+        min-height: 32px;
+        
+        ObjectField.unity-object-field {
+            & > VisualElement.unity-object-field__input.unity-base-field__input {
+                background-color: var(--obj-field-bg);
+                
+                & > ObjectFieldSelector.unity-object-field__selector {
+                    background-color: var(--obj-field-selector-bg);
+                    
+                    &:hover {
+                        background-color: var(--obj-field-selector-bg--hover);
+                    }
+                }
+            }
+        }
+
+        ObjectField, IntegerField, FloatField, Vector3Field {
+            & > Label {
+                min-width: 80px;
+            }
+            
+            & > .unity-base-field__input {
+                border-radius: 0;
+            }
+        }
+        
+        Vector3Field {
+            & > VisualElement.unity-vector3-field__input {
+                & FloatField#unity-x-input > Label {
+                    background-color: #e82609;
+                }
+                & FloatField#unity-y-input > Label {
+                    background-color: #53c627;
+                }
+                & FloatField#unity-z-input > Label {
+                    background-color: #1b88ff;
+                }
+                
+                & .unity-composite-field__field > Label {
+                    color: #ffffff;
+                    -unity-font-style: bold;
+                    //-unity-text-outline-color: #000000;
+                    //-unity-text-outline-width: 0.4px;
+                    //margin-left: 0;
+                    padding-left: 6px;
+                    padding-right: 6px;
+                    min-width: 21px;
+                }
+            }
+        }
+        
+        PropertyField#exporter-field {
+            margin-bottom: 8px;
+        }
+        
+        Foldout.properties-container {
+            //margin-left: 8px;
+            
+            & > Toggle.unity-foldout__toggle {
+                margin-left: -8px;
+                margin-right: -8px;
+                padding-top: 2px;
+                padding-bottom: 2px;
+                background-color: #e88300;
+                
+                Label.unity-toggle__text {
+                    -unity-font-style: bold;
+                    color: #ffffff;
+                }
+                
+                & #unity-checkmark {
+                    background-image: resource("Textures/ui/triangle_right@32");
+                    -unity-background-scale-mode: scale-to-fit;
+                    width: 10px;
+                    margin-left: 4px;
+                    -unity-slice-left: 0;
+                    -unity-slice-top: 0;
+                }
+            }
+
+            & > Toggle.unity-foldout__toggle:checked {
+                & #unity-checkmark {
+                    margin-top: 2px;
+                    background-image: resource("Textures/ui/triangle_down@32");
+                }
+            }
+            
+            & > VisualElement#unity-content {
+                margin-top: -4px;
+                margin-left: -8px;
+                margin-right: -8px;
+            }
+
+            & > .foldout-content {
+                margin: 4px 8px;
+            }
+        }
+    }
+}

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GeometryGraph.Runtime.Curve.TEMP;
+using GeometryGraph.Runtime.Curve;
 using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
@@ -13,32 +13,41 @@ using Object = UnityEngine.Object;
 namespace GeometryGraph.Runtime {
     public class GeometryGraph : MonoBehaviour {
         [SerializeField] private RuntimeGraphObject graph;
-        [SerializeField] private GeometryGraphSceneData sceneData = new GeometryGraphSceneData();
-        [Space]
         [SerializeField] private GeometryExporter exporter;
-        [SerializeField] private CurveVisualizer curveVisualizer;
+        
+        [SerializeField] private GeometryGraphSceneData sceneData = new GeometryGraphSceneData();
+        [SerializeField] private CurveVisualizerSettings curveVisualizerSettings;
 
+        // Evaluation data
+        [SerializeField] private CurveData curveData;
+        [SerializeField] private GeometryData geometryData;
+        
         [SerializeField] private string graphGuid;
 
         public RuntimeGraphObject Graph {
             get => graph;
             set => graph = value;
         }
+        public GeometryExporter Exporter {
+            get => exporter;
+            set => exporter = value;
+        }
         public GeometryGraphSceneData SceneData => sceneData;
         public string GraphGuid {
             get => graphGuid;
             set => graphGuid = value;
         }
+        
+        public bool HasCurveData => curveData is { };
+        public CurveVisualizerSettings CurveVisualizerSettings => curveVisualizerSettings;
 
         public void Evaluate() {
-            if(exporter == null) return;
             GeometryGraphEvaluationResult evaluationResult = graph.Evaluate(sceneData);
-            if (exporter != null) {
-                exporter.Export(evaluationResult.GeometryData ?? GeometryData.Empty);
-            }
+            curveData = evaluationResult.CurveData;
+            geometryData = evaluationResult.GeometryData;
             
-            if (curveVisualizer != null) {
-                curveVisualizer.Load(evaluationResult.CurveData);
+            if (exporter != null) {
+                exporter.Export(geometryData ?? GeometryData.Empty);
             }
         }
 
@@ -62,9 +71,44 @@ namespace GeometryGraph.Runtime {
 
     }
 
-    [Serializable] public class GeometryGraphSceneData {
+    [Serializable]
+    public class CurveVisualizerSettings {
+        // Enable/disable different visualizations
+        public bool Enabled = true;
+        public bool ShowSpline = true;
+        public bool ShowPoints = true;
+        public bool ShowDirectionVectors = true;
+        
+        // Spline settings
+        public float SplineWidth = 2.0f;
+        public Color SplineColor = Color.white;
+        
+        // Point settings
+        public float PointSize = 0.01f;
+        public Color PointColor = Color.white;
+        
+        // Direction vector settings
+        public float DirectionVectorLength = 0.1f;
+        public float DirectionVectorWidth = 2.0f;
+        public Color DirectionTangentColor = Color.blue;
+        public Color DirectionNormalColor = Color.red;
+        public Color DirectionBinormalColor = Color.green;
+        
+#if UNITY_EDITOR
+        public bool SplineSettingsFoldout = true;
+        public bool PointSettingsFoldout = true;
+        public bool DirectionVectorSettingsFoldout = true;
+#endif
+    }
+
+    [Serializable] 
+    public class GeometryGraphSceneData {
         [SerializeField] private PropertyDataDictionary propertyData = new PropertyDataDictionary();
         [SerializeField] private int propertyHashCode;
+        
+#if UNITY_EDITOR
+        public bool PropertiesFoldout = true;
+#endif
 
         public PropertyDataDictionary PropertyData => propertyData;
 
@@ -84,10 +128,11 @@ namespace GeometryGraph.Runtime {
 
     [Serializable] public class PropertyValue {
         [SerializeField] public bool HasCustomValue;
-        [SerializeField] public Object ObjectValue;
+        [SerializeField] public GeometryObject ObjectValue;
+        [SerializeField] public GeometryCollection CollectionValue;
         [SerializeField] public int IntValue;
         [SerializeField] public float FloatValue;
-        [SerializeField] public float3 VectorValue;
+        [SerializeField] public Vector3 VectorValue;
         //!! Add more here as needed
 
         public PropertyValue(Property property) {
@@ -99,8 +144,10 @@ namespace GeometryGraph.Runtime {
             if (HasCustomValue) return;
             switch(type) {
                 case PropertyType.GeometryObject:
-                case PropertyType.GeometryCollection:
                     ObjectValue = null;
+                    break;
+                case PropertyType.GeometryCollection:
+                    CollectionValue = null;
                     break;
                 case PropertyType.Integer:
                     IntValue = defaultPropertyValue.IntValue;
@@ -117,13 +164,11 @@ namespace GeometryGraph.Runtime {
 
         public object GetValueForPropertyType(PropertyType type) {
             switch (type) {
-                case PropertyType.GeometryObject:
-                case PropertyType.GeometryCollection:
-                    return ObjectValue;
-
+                case PropertyType.GeometryObject: return ObjectValue;
+                case PropertyType.GeometryCollection: return CollectionValue;
                 case PropertyType.Integer: return IntValue;
-                case PropertyType.Float:   return FloatValue;
-                case PropertyType.Vector:  return VectorValue;
+                case PropertyType.Float: return FloatValue;
+                case PropertyType.Vector: return (float3)VectorValue;
 
                 default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
