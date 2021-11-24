@@ -3,6 +3,12 @@ VisualElement#GeometryGraphInspector {
   --obj-field-bg: #F0F0F0;
   --obj-field-selector-bg: #DEDEDE;
   --obj-field-selector-bg--hover: #CCCCCC;
+  --vector3-x-label-bg: #e82609;
+  --vector3-y-label-bg: #53c627;
+  --vector3-z-label-bg: #1b88ff;
+  --vector3-comps-label: #ffffff;
+  --text-white: #ffffff;
+  --theme-dark: #e88300;
 }
 
 /*# sourceMappingURL=gg_light.uss.map */

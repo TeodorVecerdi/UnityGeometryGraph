@@ -47,16 +47,16 @@ VisualElement#GeometryGraphInspector > VisualElement.content ObjectField > .unit
   border-radius: 0;
 }
 VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-x-input > Label {
-  background-color: #e82609;
+  background-color: var(--vector3-x-label-bg);
 }
 VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-y-input > Label {
-  background-color: #53c627;
+  background-color: var(--vector3-y-label-bg);
 }
 VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-z-input > Label {
-  background-color: #1b88ff;
+  background-color: var(--vector3-z-label-bg);
 }
 VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input .unity-composite-field__field > Label {
-  color: #ffffff;
+  color: var(--vector3-comps-label);
   -unity-font-style: bold;
   padding-left: 6px;
   padding-right: 6px;
@@ -70,11 +70,11 @@ VisualElement#GeometryGraphInspector > VisualElement.content Foldout.properties-
   margin-right: -8px;
   padding-top: 2px;
   padding-bottom: 2px;
-  background-color: #e88300;
+  background-color: var(--theme-dark);
 }
 VisualElement#GeometryGraphInspector > VisualElement.content Foldout.properties-container > Toggle.unity-foldout__toggle Label.unity-toggle__text {
   -unity-font-style: bold;
-  color: #ffffff;
+  color: var(--text-white);
 }
 VisualElement#GeometryGraphInspector > VisualElement.content Foldout.properties-container > Toggle.unity-foldout__toggle #unity-checkmark {
   background-image: resource("Textures/ui/triangle_right@32");

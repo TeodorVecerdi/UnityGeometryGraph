@@ -63,21 +63,18 @@ VisualElement#GeometryGraphInspector {
         Vector3Field {
             & > VisualElement.unity-vector3-field__input {
                 & FloatField#unity-x-input > Label {
-                    background-color: #e82609;
+                    background-color: var(--vector3-x-label-bg);
                 }
                 & FloatField#unity-y-input > Label {
-                    background-color: #53c627;
+                    background-color: var(--vector3-y-label-bg);
                 }
                 & FloatField#unity-z-input > Label {
-                    background-color: #1b88ff;
+                    background-color: var(--vector3-z-label-bg);
                 }
                 
                 & .unity-composite-field__field > Label {
-                    color: #ffffff;
+                    color: var(--vector3-comps-label);
                     -unity-font-style: bold;
-                    //-unity-text-outline-color: #000000;
-                    //-unity-text-outline-width: 0.4px;
-                    //margin-left: 0;
                     padding-left: 6px;
                     padding-right: 6px;
                     min-width: 21px;
@@ -97,11 +94,11 @@ VisualElement#GeometryGraphInspector {
                 margin-right: -8px;
                 padding-top: 2px;
                 padding-bottom: 2px;
-                background-color: #e88300;
+                background-color: var(--theme-dark);
                 
                 Label.unity-toggle__text {
                     -unity-font-style: bold;
-                    color: #ffffff;
+                    color: var(--text-white);
                 }
                 
                 & #unity-checkmark {
