@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
     [Serializable]
-    public partial class GeometryData : ICloneable {
+    public partial class GeometryData : ICloneable, ISerializationCallbackReceiver {
         [SerializeField] private List<Vertex> vertices;
         [SerializeField] private List<Edge> edges;
         [SerializeField] private List<Face> faces;
@@ -164,6 +164,13 @@ namespace GeometryGraph.Runtime.Geometry {
                 fcB.Vert = face.VertB;
                 fcC.Vert = face.VertC;
             }
+        }
+
+        public void OnBeforeSerialize() {
+        }
+
+        public void OnAfterDeserialize() {
+            attributeManager.SetOwner(this);
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Serialization;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
@@ -11,17 +10,16 @@ namespace GeometryGraph.Runtime.Geometry {
 
     [Serializable]
     public class AttributeManager : ISerializationCallbackReceiver {
-        [ShowInInspector] private AttributeDictionary vertexAttributes;
-        [ShowInInspector] private AttributeDictionary edgeAttributes;
-        [ShowInInspector] private AttributeDictionary faceAttributes;
-        [ShowInInspector] private AttributeDictionary faceCornerAttributes;
+        private AttributeDictionary vertexAttributes;
+        private AttributeDictionary edgeAttributes;
+        private AttributeDictionary faceAttributes;
+        private AttributeDictionary faceCornerAttributes;
+        [NonSerialized] private GeometryData owner;
 
-        [SerializeReference] private GeometryData owner;
-
-        internal IReadOnlyDictionary<string, BaseAttribute> VertexAttributes => vertexAttributes;
-        internal IReadOnlyDictionary<string, BaseAttribute> EdgeAttributes => edgeAttributes;
-        internal IReadOnlyDictionary<string, BaseAttribute> FaceAttributes => faceAttributes;
-        internal IReadOnlyDictionary<string, BaseAttribute> FaceCornerAttributes => faceCornerAttributes;
+        internal AttributeDictionary VertexAttributes => vertexAttributes;
+        internal AttributeDictionary EdgeAttributes => edgeAttributes;
+        internal AttributeDictionary FaceAttributes => faceAttributes;
+        internal AttributeDictionary FaceCornerAttributes => faceCornerAttributes;
 
         private bool dirty;
         [SerializeField, HideInInspector] private SerializedAttributeDictionary serializedVertexAttributes;
@@ -35,6 +33,10 @@ namespace GeometryGraph.Runtime.Geometry {
             faceAttributes = new AttributeDictionary();
             faceCornerAttributes = new AttributeDictionary();
             dirty = true;
+            this.owner = owner;
+        }
+        
+        public void SetOwner(GeometryData owner) {
             this.owner = owner;
         }
 
