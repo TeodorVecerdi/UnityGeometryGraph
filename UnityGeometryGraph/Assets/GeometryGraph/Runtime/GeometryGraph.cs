@@ -8,6 +8,7 @@ using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
 using GeometryGraph.Runtime.Serialization;
+using UnityEditor;
 
 namespace GeometryGraph.Runtime {
     public class GeometryGraph : MonoBehaviour {
@@ -23,23 +24,14 @@ namespace GeometryGraph.Runtime {
         
         [SerializeField] private string graphGuid;
 
-        public RuntimeGraphObject Graph {
-            get => graph;
-            set => graph = value;
-        }
-        public GeometryExporter Exporter {
-            get => exporter;
-            set => exporter = value;
-        }
+        public RuntimeGraphObject Graph => graph;
         public GeometryGraphSceneData SceneData => sceneData;
+        
         public string GraphGuid {
             get => graphGuid;
             set => graphGuid = value;
         }
         
-        public bool HasCurveData => curveData is { };
-        public CurveVisualizerSettings CurveVisualizerSettings => curveVisualizerSettings;
-
         public void Evaluate() {
             GeometryGraphEvaluationResult evaluationResult = graph.Evaluate(sceneData);
             curveData = evaluationResult.CurveData;
@@ -67,6 +59,44 @@ namespace GeometryGraph.Runtime {
         public void OnDefaultPropertyValueChanged(Property property) {
             sceneData.PropertyData[property.Guid].UpdateDefaultValue(property.DefaultValue);
         }
+        
+        private void OnDrawGizmos() {
+            if (!curveVisualizerSettings.Enabled || curveData == null) return;
+
+            Handles.matrix = Gizmos.matrix = transform.localToWorldMatrix;
+
+            if (curveVisualizerSettings.ShowPoints || curveVisualizerSettings.ShowSpline) {
+                Vector3[] points = curveData.Position.Select(float3 => (Vector3)float3).ToArray();
+                Handles.color = curveVisualizerSettings.SplineColor;
+                if (curveVisualizerSettings.ShowSpline) {
+                    Handles.DrawAAPolyLine(curveVisualizerSettings.SplineWidth, points);
+                    if (curveData.IsClosed) Handles.DrawAAPolyLine(curveVisualizerSettings.SplineWidth, points[0], points[^1]);
+                }
+
+                if (curveVisualizerSettings.ShowPoints) {
+                    Gizmos.color = curveVisualizerSettings.PointColor;
+                    foreach (Vector3 p in points) {
+                        Gizmos.DrawSphere(p, curveVisualizerSettings.PointSize);
+                    }
+                }
+            }
+
+            if (curveVisualizerSettings.ShowDirectionVectors) {
+                for (int i = 0; i < curveData.Position.Count; i++) {
+                    float3 p = curveData.Position[i];
+                    float3 t = curveData.Tangent[i];
+                    float3 n = curveData.Normal[i];
+                    float3 b = curveData.Binormal[i];
+
+                    Handles.color = curveVisualizerSettings.DirectionTangentColor;
+                    Handles.DrawAAPolyLine(curveVisualizerSettings.DirectionVectorWidth, p, p + t * curveVisualizerSettings.DirectionVectorLength);
+                    Handles.color = curveVisualizerSettings.DirectionNormalColor;
+                    Handles.DrawAAPolyLine(curveVisualizerSettings.DirectionVectorWidth, p, p + n * curveVisualizerSettings.DirectionVectorLength);
+                    Handles.color = curveVisualizerSettings.DirectionBinormalColor;
+                    Handles.DrawAAPolyLine(curveVisualizerSettings.DirectionVectorWidth, p, p + b * curveVisualizerSettings.DirectionVectorLength);
+                }
+            }
+        }
 
     }
 
@@ -92,12 +122,6 @@ namespace GeometryGraph.Runtime {
         public Color DirectionTangentColor = Color.blue;
         public Color DirectionNormalColor = Color.red;
         public Color DirectionBinormalColor = Color.green;
-        
-#if UNITY_EDITOR
-        public bool SplineSettingsFoldout = true;
-        public bool PointSettingsFoldout = true;
-        public bool DirectionVectorSettingsFoldout = true;
-#endif
     }
 
     [Serializable] 

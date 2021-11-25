@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace GeometryGraph.Runtime.Curve.TEMP {
     public class CurveVisualizer : MonoBehaviour {
-        // TODO(#13): Move CurveVisualizer into GeometryGraph MonoBehaviour and integrate it into the custom editor.  
         public bool ShowSpline = true;
         [ShowIf(nameof(ShowSpline))] public float SplineWidth = 2.0f;
         [ShowIf(nameof(ShowSpline))] public Color SplineColor = Color.white;
