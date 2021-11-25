@@ -1,12 +1,15 @@
-﻿using UnityEngine.UIElements;
+﻿using System;
+using UnityEngine.UIElements;
 
 namespace GeometryGraph.Editor {
     public class TabContainer : VisualElement {
         private readonly VisualElement tabButtonsContainer;
         private readonly VisualElement tabContentContainer;
         private int selectedIndex = -1;
+        private Action<int> onTabSelected;
 
-        public TabContainer() {
+        public TabContainer(Action<int> onTabSelected = null) {
+            this.onTabSelected = onTabSelected;
             AddToClassList("tab-container");
             
             tabButtonsContainer = new VisualElement();
@@ -42,6 +45,9 @@ namespace GeometryGraph.Editor {
 
         public void SetActive(int index) {
             if (selectedIndex == index) return;
+            
+            onTabSelected?.Invoke(index);
+            
             if (selectedIndex != -1) {
                 tabContentContainer[selectedIndex].RemoveFromClassList("tab-content__active");
                 tabButtonsContainer[selectedIndex].RemoveFromClassList("tab-button__active");

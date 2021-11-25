@@ -3,11 +3,14 @@ VisualElement#GeometryGraphInspector {
   --obj-field-bg: #F0F0F0;
   --obj-field-selector-bg: #DEDEDE;
   --obj-field-selector-bg--hover: #CCCCCC;
-  --vector3-x-label-bg: #e82609;
-  --vector3-y-label-bg: #53c627;
-  --vector3-z-label-bg: #1b88ff;
-  --vector3-comps-label: #ffffff;
+  --toggle-button-bg: #CCCCCC;
+  --toggle-button-bg--active: #D7D7D7;
+  --vector3-x-label-bg: #c62c15;
+  --vector3-y-label-bg: #439a24;
+  --vector3-z-label-bg: #1e6cc2;
+  --vector3-comps-label: var(--text-white);
   --text-white: #ffffff;
+  --theme: #FFA300;
   --theme-dark: #e88300;
 }
 

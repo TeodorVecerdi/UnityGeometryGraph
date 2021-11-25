@@ -20,6 +20,7 @@ namespace GeometryGraph.Editor {
         private TabContainer tabContainer;
         private VisualElement missingGraphNotice;
         private VisualElement propertiesTab;
+        private VisualElement curveVisualizerTab;
         private VisualElement noPropertiesNotice;
         
         private int activeTab;
@@ -87,16 +88,12 @@ namespace GeometryGraph.Editor {
             BuildMissingGraphNotice();
             content.Add(missingGraphNotice);
 
-            tabContainer = new TabContainer();
+            tabContainer = new TabContainer(tabIndex => {
+                EditorPrefs.SetInt($"{targetGraph.GetInstanceID()}_activeTab", tabIndex);
+            });
             BuildTabs();
 
             content.Add(tabContainer);
-            
-            content.Add(new Button(() => {
-                foreach ((string key, PropertyValue value) in targetGraph.SceneData.PropertyData) {
-                    Debug.Log($"Key: {key}\nValue: {value}");
-                }
-            }) {text = "Dump scene data"});
 
             root.Add(title);
             root.Add(content);
@@ -112,17 +109,34 @@ namespace GeometryGraph.Editor {
             missingGraphNoticeLabel.AddToClassList("missing-graph-notice-main");
             missingGraphNotice.Add(missingGraphNoticeLabel);
             
-            Label missingGraphNoticeSubLabel = new Label("Assign one or create a new graph");
-            missingGraphNoticeSubLabel.AddToClassList("missing-graph-notice-sub");
-            missingGraphNotice.Add(missingGraphNoticeSubLabel);
+            VisualElement cta = new VisualElement();
+            cta.AddToClassList("missing-graph-notice-cta");
+            missingGraphNotice.Add(cta);
             
-            Button createNewGraphButton = new Button(CreateAndAssignGraph) {text = "Create new graph"};
-            createNewGraphButton.AddToClassList("missing-graph-notice-button");
-            missingGraphNotice.Add(createNewGraphButton);
+            Label missingGraphNoticeCta0 = new Label("Assign one or");
+            missingGraphNoticeCta0.AddToClassList("missing-graph-notice-cta-0");
+            cta.Add(missingGraphNoticeCta0);
+            
+            Button missingGraphNoticeCtaButton = new Button(CreateAndAssignGraph) {text = "create new graph"};
+            missingGraphNoticeCtaButton.AddToClassList("missing-graph-notice-cta-button");
+            cta.Add(missingGraphNoticeCtaButton);
+            
+            Label missingGraphNoticeCta1 = new Label(".");
+            missingGraphNoticeCta1.AddToClassList("missing-graph-notice-cta-1");
+            cta.Add(missingGraphNoticeCta1);
         }
 
         private void CreateAndAssignGraph() {
-            // throw new NotImplementedException();
+            string path = EditorUtility.SaveFilePanel("Create a new Geometry Graph", Application.dataPath, "New Geometry Graph", GraphFrameworkImporter.Extension);
+            if (string.IsNullOrEmpty(path)) return;
+
+            if (!path.EndsWith($".{GraphFrameworkImporter.Extension}")) path += $".{GraphFrameworkImporter.Extension}";
+            path = path.Replace(Application.dataPath, "Assets");
+            CreateGraphObject.CreateObject(path);
+            RuntimeGraphObject graphObject = AssetDatabase.LoadAssetAtPath<RuntimeGraphObject>(path);
+            serializedObject.Update();
+            serializedObject.FindProperty("graph").objectReferenceValue = graphObject;
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void BuildTabs() {
@@ -130,13 +144,16 @@ namespace GeometryGraph.Editor {
             propertiesTab.AddToClassList("properties-container");
             
             noPropertiesNotice = new Label("No properties");
+            noPropertiesNotice.AddToClassList("no-properties-notice");
             noPropertiesNotice.AddToClassList("d-none");
             propertiesTab.Add(noPropertiesNotice);
+
+            curveVisualizerTab = tabContainer.CreateTab("Curve Visualizer");
+            curveVisualizerTab.AddToClassList("curve-visualizer-container");
             
             UpdateTabs(targetGraph.Graph);
 
-            VisualElement curveVisualizerTab = tabContainer.CreateTab("Curve Visualizer");
-            curveVisualizerTab.Add(new Label("Test"));
+            
             tabContainer.SetActive(activeTab);
         }
 
@@ -158,10 +175,11 @@ namespace GeometryGraph.Editor {
             tabContainer.RemoveFromClassList("d-none");
             missingGraphNotice.AddToClassList("d-none");
             
-            BuildProperties(graphObject);
+            BuildPropertiesTab(graphObject);
+            BuildCurveTab();
         }
 
-        private void BuildProperties(RuntimeGraphObject graphObject) {
+        private void BuildPropertiesTab(RuntimeGraphObject graphObject) {
             if (graphObject == null) {
                 return;
             }
@@ -231,6 +249,132 @@ namespace GeometryGraph.Editor {
             foreach (PropertyField propertyField in properties) {
                 contentContainer.Add(propertyField);
             }
+        }
+
+        private void BuildCurveTab() {
+            UnityEditor.SerializedProperty settingsProperty = serializedObject.FindProperty("curveVisualizerSettings");
+
+            VisualElement mainContainer = curveVisualizerTab.Q<VisualElement>("CurveVisualizerMain");
+            if (mainContainer == null) {
+                mainContainer = new VisualElement {name = "CurveVisualizerMain"};
+                mainContainer.AddToClassList("curve-visualizer-container");
+                curveVisualizerTab.Add(mainContainer);
+            }
+            mainContainer.Clear();
+            
+            (PropertyField enabledField, Button enabledButton) = MakeToggleButton("Enable Curve Visualizer", "Enabled", settingsProperty);
+            mainContainer.Add(enabledField);
+            mainContainer.Add(enabledButton);
+            
+            VisualElement splineSettingsContainer = new VisualElement();
+            splineSettingsContainer.AddToClassList("spline-settings-container");
+            splineSettingsContainer.AddToClassList("curve-settings-container");
+            mainContainer.Add(splineSettingsContainer);
+            {
+                Label splineSettingsLabel = new Label("Spline Settings");
+                splineSettingsLabel.AddToClassList("curve-settings-category-title");
+                splineSettingsLabel.AddToClassList("spline-settings-label");
+                splineSettingsContainer.Add(splineSettingsLabel);
+                
+                (PropertyField showSplineField, Button showSplineButton) = MakeToggleButton("Show Splines", "ShowSpline", settingsProperty);
+                splineSettingsContainer.Add(showSplineField);
+                splineSettingsContainer.Add(showSplineButton);
+                
+                PropertyField splineWidthField = new (settingsProperty.FindPropertyRelative("SplineWidth"), "Width");
+                splineWidthField.Bind(serializedObject);
+                splineSettingsContainer.Add(splineWidthField);
+                
+                PropertyField splineColorField = new(settingsProperty.FindPropertyRelative("SplineColor"), "Color");
+                splineColorField.Bind(serializedObject);
+                splineSettingsContainer.Add(splineColorField);
+            }
+            
+            VisualElement pointSettingsContainer = new VisualElement();
+            pointSettingsContainer.AddToClassList("point-settings-container");
+            pointSettingsContainer.AddToClassList("curve-settings-container");
+            mainContainer.Add(pointSettingsContainer);
+            {
+                Label pointSettingsLabel = new Label("Point Settings");
+                pointSettingsLabel.AddToClassList("curve-settings-category-title");
+                pointSettingsLabel.AddToClassList("point-settings-label");
+                pointSettingsContainer.Add(pointSettingsLabel);
+                
+                (PropertyField showPointsField, Button showPointsButton) = MakeToggleButton("Show Points", "ShowPoints", settingsProperty);
+                pointSettingsContainer.Add(showPointsField);
+                pointSettingsContainer.Add(showPointsButton);
+                
+                PropertyField pointSizeField = new(settingsProperty.FindPropertyRelative("PointSize"), "Size");
+                pointSizeField.Bind(serializedObject);
+                pointSettingsContainer.Add(pointSizeField);
+                UnityEditor.SerializedProperty pointColorProperty = settingsProperty.FindPropertyRelative("PointColor");
+                PropertyField pointColorField = new(settingsProperty.FindPropertyRelative("PointColor"), "Color");
+                pointColorField.Bind(serializedObject);
+                pointSettingsContainer.Add(pointColorField);
+            }
+
+            VisualElement directionVectorSettingsContainer = new VisualElement();
+            directionVectorSettingsContainer.AddToClassList("curve-settings-container");
+            directionVectorSettingsContainer.AddToClassList("direction-vector-settings-container");
+            mainContainer.Add(directionVectorSettingsContainer);
+            {
+                Label directionVectorSettingsLabel = new Label("Direction Vector Settings");
+                directionVectorSettingsLabel.AddToClassList("curve-settings-category-title");
+                directionVectorSettingsLabel.AddToClassList("direction-vector-settings-label");
+                directionVectorSettingsContainer.Add(directionVectorSettingsLabel);
+                
+                (PropertyField showDirectionVectorsField, Button showDirectionVectorsButton) = MakeToggleButton("Show Direction Vectors", "ShowDirectionVectors", settingsProperty);
+                directionVectorSettingsContainer.Add(showDirectionVectorsField);
+                directionVectorSettingsContainer.Add(showDirectionVectorsButton);
+                
+                PropertyField directionVectorLengthField = new(settingsProperty.FindPropertyRelative("DirectionVectorLength"), "Length");
+                directionVectorLengthField.Bind(serializedObject);
+                directionVectorSettingsContainer.Add(directionVectorLengthField);
+                
+                PropertyField directionVectorWidthField = new(settingsProperty.FindPropertyRelative("DirectionVectorWidth"), "Width");
+                directionVectorWidthField.Bind(serializedObject);
+                directionVectorSettingsContainer.Add(directionVectorWidthField);
+                
+                PropertyField directionTangentColorField = new(settingsProperty.FindPropertyRelative("DirectionTangentColor"), "Tangent Color");
+                directionTangentColorField.Bind(serializedObject);
+                directionVectorSettingsContainer.Add(directionTangentColorField);
+                
+                PropertyField directionNormalColorField = new(settingsProperty.FindPropertyRelative("DirectionNormalColor"), "Normal Color");
+                directionNormalColorField.Bind(serializedObject);
+                directionVectorSettingsContainer.Add(directionNormalColorField);
+                
+                PropertyField directionBinormalColorField = new(settingsProperty.FindPropertyRelative("DirectionBinormalColor"), "Binormal Color");
+                directionBinormalColorField.Bind(serializedObject);
+                directionVectorSettingsContainer.Add(directionBinormalColorField);
+            }
+            
+            curveVisualizerTab.Add(mainContainer);
+        }
+
+        private (PropertyField field, Button button) MakeToggleButton(string label, string propertyName, UnityEditor.SerializedProperty settingsProperty) {
+            PropertyField field = new(settingsProperty.FindPropertyRelative(propertyName));
+            field.Bind(serializedObject);
+            field.AddToClassList("d-none");
+
+            Button button = new Button() { text = label };
+            button.AddToClassList("toggle-button");
+            button.clicked += () => {
+                serializedObject.Update();
+                UnityEditor.SerializedProperty enabledProperty = settingsProperty.FindPropertyRelative(propertyName);
+                enabledProperty.boolValue = !enabledProperty.boolValue;
+                serializedObject.ApplyModifiedProperties();
+            };
+            if (settingsProperty.FindPropertyRelative(propertyName).boolValue) {
+                button.AddToClassList("toggle-button__active");
+            }
+
+            field.RegisterValueChangeCallback(evt => {
+                if (evt.changedProperty.boolValue) {
+                    button.AddToClassList("toggle-button__active");
+                } else {
+                    button.RemoveFromClassList("toggle-button__active");
+                }
+            });
+            return (field, button);
         }
 
         private void ResetPropertyToDefault(Property property, string targetPropertyName, UnityEditor.SerializedProperty targetProperty, UnityEditor.SerializedProperty valueProperty) {

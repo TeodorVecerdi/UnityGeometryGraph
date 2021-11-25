@@ -2,6 +2,27 @@
     display: none;
 }
 
+Button.toggle-button {
+    cursor: link;
+    background-color: var(--toggle-button-bg);
+    padding: 3px;
+    color: var(--text-white);
+    font-size: 13px;
+    border-radius: 0;
+    -unity-overflow-clip-box: content-box;
+    
+    &.toggle-button__active {
+        //border-color: var(--theme-dark);
+        background-color: var(--toggle-button-bg--active);
+        -unity-font-style: bold;
+    }
+    
+    &:focus {
+        border-color: var(--theme-dark);
+        //background-color: var(--toggle-button-bg--focus);
+    }
+}
+
 VisualElement#GeometryGraphInspector {
     // Fixes padding that unity adds to inspectors
     margin-bottom: -7px;
@@ -30,6 +51,7 @@ VisualElement#GeometryGraphInspector {
 
         & > .title-label {
             -unity-font-style: bold;
+            color: var(--text-white);
             font-size: 22px;
         }
         
@@ -56,9 +78,9 @@ VisualElement#GeometryGraphInspector {
             }
         }
 
-        ObjectField, IntegerField, FloatField, Vector3Field {
+        ObjectField, IntegerField, FloatField, Vector3Field, ColorField, Toggle {
             & > Label {
-                min-width: 80px;
+                min-width: 92px;
             }
             
             & > .unity-base-field__input {
@@ -81,9 +103,13 @@ VisualElement#GeometryGraphInspector {
                 & .unity-composite-field__field > Label {
                     color: var(--vector3-comps-label);
                     -unity-font-style: bold;
+                    -unity-text-align: upper-center;
                     padding-left: 6px;
                     padding-right: 6px;
                     min-width: 21px;
+                }
+                & .unity-composite-field__field--first > Label {
+                    padding-left: 5px;
                 }
             }
         }
@@ -93,8 +119,10 @@ VisualElement#GeometryGraphInspector {
         }
         
         VisualElement.properties-container {
-            //margin-left: 8px;
-            
+            & .no-properties-notice {
+                color: var(--text-white);
+                -unity-text-align: middle-center;
+            }
         }
     }
     
@@ -106,14 +134,14 @@ VisualElement#GeometryGraphInspector {
             & > Button.tab-button {
                 margin: 0;
                 border-radius: 0;
+                border-width: 0;
                 
                 flex-shrink: 1;
                 width: 100%;
                 //min-width: 0;
                 
                 margin-right: 1px;
-                
-                border-width: 0;
+                cursor: link;
                 border-top-width: 2px;
                 border-top-color: var(--inspector-bg);
                 
@@ -138,6 +166,73 @@ VisualElement#GeometryGraphInspector {
                     border-color: var(--obj-field-bg);
                     display: flex;
                 }
+            }
+        }
+    }
+    
+    VisualElement#MissingGraphNotice {
+        padding: 4px;
+        Label.missing-graph-notice-main {
+            color: var(--text-white);
+            -unity-font-style: bold;
+            -unity-text-align: middle-center;
+            font-size: 18px;
+        }
+        VisualElement.missing-graph-notice-cta {
+            flex-direction: row;
+            justify-content: center;
+            color: var(--text-white);
+            font-size: 14px;
+
+            Label.missing-graph-notice-cta-0 {
+                margin: 0;
+                padding: 0;
+                margin-right: 4px;
+            }
+            Label.missing-graph-notice-cta-1 {
+                margin: 0;
+                padding: 0;
+            }
+
+            Button.missing-graph-notice-cta-button {
+                margin: 0;
+                padding: 0;
+                border-width: 0;
+                border-radius: 0;
+                background-color: transparent;
+                
+                font-size: 14px;
+                
+                border-bottom-width: 1px;
+                border-bottom-color: var(--inspector-bg);
+                -unity-overflow-clip-box: content-box;
+                color: var(--theme);
+                cursor: link;
+                
+                &:hover {
+                    color: var(--theme-dark);
+                    border-bottom-color: var(--theme-dark);
+                }
+                
+                &:focus {
+                    color: var(--theme-dark);
+                    border-bottom-color: var(--theme-dark);
+                }
+            }    
+        }
+        
+    }
+    
+    VisualElement.curve-visualizer-container > VisualElement#CurveVisualizerMain {
+        VisualElement.curve-settings-container {
+            margin-top: 12px;
+            
+            Label.curve-settings-category-title {
+                font-size: 14px;
+                color: var(--text-white);
+                -unity-font-style: bold;
+                margin-left: 3px;
+                margin-bottom: 4px;
             }
         }
     }

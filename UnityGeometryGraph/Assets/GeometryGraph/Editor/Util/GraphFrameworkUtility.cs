@@ -15,7 +15,7 @@ namespace GeometryGraph.Editor {
     public static class GraphFrameworkUtility {
         #region IO Utilities
 
-        private static readonly LZ4EncoderSettings EncoderSettings = new LZ4EncoderSettings { CompressionLevel = LZ4Level.L09_HC };
+        private static readonly LZ4EncoderSettings encoderSettings = new LZ4EncoderSettings { CompressionLevel = LZ4Level.L09_HC };
 
         public static bool CreateFile(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
             if (graphObject == null || string.IsNullOrEmpty(path)) return false;
@@ -110,7 +110,7 @@ namespace GeometryGraph.Editor {
         internal static void WriteCompressed(string value, string path) {
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(value);
             using MemoryStream byteStream = new MemoryStream(bytes);
-            using LZ4EncoderStream lz4Stream = LZ4Stream.Encode(File.Create(path), EncoderSettings);
+            using LZ4EncoderStream lz4Stream = LZ4Stream.Encode(File.Create(path), encoderSettings);
             byteStream.CopyTo(lz4Stream);
         }
 

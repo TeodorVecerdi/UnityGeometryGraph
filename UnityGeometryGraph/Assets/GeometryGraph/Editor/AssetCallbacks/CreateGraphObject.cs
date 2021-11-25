@@ -12,6 +12,21 @@ namespace GeometryGraph.Editor {
                 $"New Geometry Graph.{GraphFrameworkImporter.Extension}", Resources.Load<Texture2D>(GraphFrameworkResources.DARK_ICON_BIG), null);
         }
 
+        public static void CreateObject(string path) {
+            RuntimeGraphObject runtimeGraphObject = CreateInstance<RuntimeGraphObject>();
+
+            GraphFrameworkData graphData = new GraphFrameworkData(runtimeGraphObject);
+            GraphFrameworkObject graphObject = CreateInstance<GraphFrameworkObject>();
+            
+            graphObject.Initialize(graphData);
+            graphObject.GraphData.GraphVersion = GraphFrameworkVersion.Version.GetValue();
+
+            GraphFrameworkUtility.CreateFile(path, graphObject, false);
+            
+            AssetDatabase.ImportAsset(path);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+        }
+
         public override void Action(int instanceId, string pathName, string resourceFile) {
             RuntimeGraphObject runtimeGraphObject = CreateInstance<RuntimeGraphObject>();
 
@@ -24,6 +39,7 @@ namespace GeometryGraph.Editor {
             graphObject.AssetGuid = graphObject.GraphData.AssetGuid;
 
             GraphFrameworkUtility.CreateFile(pathName, graphObject, false);
+            Debug.Log(pathName);
             
             AssetDatabase.ImportAsset(pathName);
         }

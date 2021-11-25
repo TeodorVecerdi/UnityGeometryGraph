@@ -4,12 +4,15 @@ VisualElement#GeometryGraphInspector {
   --obj-field-selector-bg: #373737;
   --obj-field-selector-bg--hover: #4C4C4C;
   --title-separator: #5C5C5C;
-  --vector3-x-label-bg: #e82609;
-  --vector3-y-label-bg: #53c627;
-  --vector3-z-label-bg: #1b88ff;
-  --vector3-comps-label: #ffffff;
-  --text-white: #ffffff;
-  --theme-dark: #e88300;
+  --toggle-button-bg: #4C4C4C;
+  --toggle-button-bg--active: #676767;
+  --vector3-x-label-bg: #c62c15;
+  --vector3-y-label-bg: #439a24;
+  --vector3-z-label-bg: #1e6cc2;
+  --vector3-comps-label: var(--text-white);
+  --text-white: #DFDFDF;
+  --theme: #FFA300;
+  --theme-dark: #E88300;
 }
 
 /*# sourceMappingURL=gg_dark.uss.map */
