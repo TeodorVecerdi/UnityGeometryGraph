@@ -2,8 +2,62 @@
     display: none;
 }
 
-Button.toggle-button {
+Button {
     cursor: link;
+    border-radius: 0;
+}
+
+ObjectField.unity-object-field {
+    & > VisualElement.unity-object-field__input.unity-base-field__input {
+        background-color: var(--obj-field-bg);
+
+        & > ObjectFieldSelector.unity-object-field__selector {
+            background-color: var(--obj-field-selector-bg);
+
+            &:hover {
+                background-color: var(--obj-field-selector-bg--hover);
+            }
+        }
+    }
+}
+
+ObjectField, IntegerField, FloatField, Vector3Field, ColorField, Toggle {
+    & > Label {
+        min-width: 92px;
+    }
+
+    & > .unity-base-field__input {
+        border-radius: 0;
+    }
+}
+
+Vector3Field {
+    & > VisualElement.unity-vector3-field__input {
+        & FloatField#unity-x-input > Label {
+            background-color: var(--vector3-x-label-bg);
+        }
+        & FloatField#unity-y-input > Label {
+            background-color: var(--vector3-y-label-bg);
+        }
+        & FloatField#unity-z-input > Label {
+            background-color: var(--vector3-z-label-bg);
+        }
+
+        & .unity-composite-field__field > Label {
+            color: var(--vector3-comps-label);
+            -unity-font-style: bold;
+            -unity-text-align: upper-center;
+            padding-left: 6px;
+            padding-right: 6px;
+            min-width: 21px;
+        }
+        & .unity-composite-field__field--first > Label {
+            padding-left: 5px;
+        }
+    }
+}
+
+Button.toggle-button {
     background-color: var(--toggle-button-bg);
     padding: 3px;
     color: var(--text-white);
@@ -64,58 +118,9 @@ VisualElement#GeometryGraphInspector {
         padding-right: 8px;
         min-height: 32px;
         
-        ObjectField.unity-object-field {
-            & > VisualElement.unity-object-field__input.unity-base-field__input {
-                background-color: var(--obj-field-bg);
-                
-                & > ObjectFieldSelector.unity-object-field__selector {
-                    background-color: var(--obj-field-selector-bg);
-                    
-                    &:hover {
-                        background-color: var(--obj-field-selector-bg--hover);
-                    }
-                }
-            }
-        }
-
-        ObjectField, IntegerField, FloatField, Vector3Field, ColorField, Toggle {
-            & > Label {
-                min-width: 92px;
-            }
-            
-            & > .unity-base-field__input {
-                border-radius: 0;
-            }
-        }
-        
-        Vector3Field {
-            & > VisualElement.unity-vector3-field__input {
-                & FloatField#unity-x-input > Label {
-                    background-color: var(--vector3-x-label-bg);
-                }
-                & FloatField#unity-y-input > Label {
-                    background-color: var(--vector3-y-label-bg);
-                }
-                & FloatField#unity-z-input > Label {
-                    background-color: var(--vector3-z-label-bg);
-                }
-                
-                & .unity-composite-field__field > Label {
-                    color: var(--vector3-comps-label);
-                    -unity-font-style: bold;
-                    -unity-text-align: upper-center;
-                    padding-left: 6px;
-                    padding-right: 6px;
-                    min-width: 21px;
-                }
-                & .unity-composite-field__field--first > Label {
-                    padding-left: 5px;
-                }
-            }
-        }
-        
-        PropertyField#exporter-field {
-            margin-bottom: 8px;
+        Button.evaluate-button {
+            margin: 4px 0 8px 0;
+            padding: 4px;
         }
         
         VisualElement.properties-container {
@@ -133,7 +138,6 @@ VisualElement#GeometryGraphInspector {
             
             & > Button.tab-button {
                 margin: 0;
-                border-radius: 0;
                 border-width: 0;
                 
                 flex-shrink: 1;
@@ -141,7 +145,6 @@ VisualElement#GeometryGraphInspector {
                 //min-width: 0;
                 
                 margin-right: 1px;
-                cursor: link;
                 border-top-width: 2px;
                 border-top-color: var(--inspector-bg);
                 

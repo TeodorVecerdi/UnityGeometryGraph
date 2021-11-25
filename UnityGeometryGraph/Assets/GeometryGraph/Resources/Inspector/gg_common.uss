@@ -2,8 +2,50 @@
   display: none;
 }
 
-Button.toggle-button {
+Button {
   cursor: link;
+  border-radius: 0;
+}
+
+ObjectField.unity-object-field > VisualElement.unity-object-field__input.unity-base-field__input {
+  background-color: var(--obj-field-bg);
+}
+ObjectField.unity-object-field > VisualElement.unity-object-field__input.unity-base-field__input > ObjectFieldSelector.unity-object-field__selector {
+  background-color: var(--obj-field-selector-bg);
+}
+ObjectField.unity-object-field > VisualElement.unity-object-field__input.unity-base-field__input > ObjectFieldSelector.unity-object-field__selector:hover {
+  background-color: var(--obj-field-selector-bg--hover);
+}
+
+ObjectField > Label, IntegerField > Label, FloatField > Label, Vector3Field > Label, ColorField > Label, Toggle > Label {
+  min-width: 92px;
+}
+ObjectField > .unity-base-field__input, IntegerField > .unity-base-field__input, FloatField > .unity-base-field__input, Vector3Field > .unity-base-field__input, ColorField > .unity-base-field__input, Toggle > .unity-base-field__input {
+  border-radius: 0;
+}
+
+Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-x-input > Label {
+  background-color: var(--vector3-x-label-bg);
+}
+Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-y-input > Label {
+  background-color: var(--vector3-y-label-bg);
+}
+Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-z-input > Label {
+  background-color: var(--vector3-z-label-bg);
+}
+Vector3Field > VisualElement.unity-vector3-field__input .unity-composite-field__field > Label {
+  color: var(--vector3-comps-label);
+  -unity-font-style: bold;
+  -unity-text-align: upper-center;
+  padding-left: 6px;
+  padding-right: 6px;
+  min-width: 21px;
+}
+Vector3Field > VisualElement.unity-vector3-field__input .unity-composite-field__field--first > Label {
+  padding-left: 5px;
+}
+
+Button.toggle-button {
   background-color: var(--toggle-button-bg);
   padding: 3px;
   color: var(--text-white);
@@ -54,43 +96,9 @@ VisualElement#GeometryGraphInspector > VisualElement.content {
   padding-right: 8px;
   min-height: 32px;
 }
-VisualElement#GeometryGraphInspector > VisualElement.content ObjectField.unity-object-field > VisualElement.unity-object-field__input.unity-base-field__input {
-  background-color: var(--obj-field-bg);
-}
-VisualElement#GeometryGraphInspector > VisualElement.content ObjectField.unity-object-field > VisualElement.unity-object-field__input.unity-base-field__input > ObjectFieldSelector.unity-object-field__selector {
-  background-color: var(--obj-field-selector-bg);
-}
-VisualElement#GeometryGraphInspector > VisualElement.content ObjectField.unity-object-field > VisualElement.unity-object-field__input.unity-base-field__input > ObjectFieldSelector.unity-object-field__selector:hover {
-  background-color: var(--obj-field-selector-bg--hover);
-}
-VisualElement#GeometryGraphInspector > VisualElement.content ObjectField > Label, VisualElement#GeometryGraphInspector > VisualElement.content IntegerField > Label, VisualElement#GeometryGraphInspector > VisualElement.content FloatField > Label, VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > Label, VisualElement#GeometryGraphInspector > VisualElement.content ColorField > Label, VisualElement#GeometryGraphInspector > VisualElement.content Toggle > Label {
-  min-width: 92px;
-}
-VisualElement#GeometryGraphInspector > VisualElement.content ObjectField > .unity-base-field__input, VisualElement#GeometryGraphInspector > VisualElement.content IntegerField > .unity-base-field__input, VisualElement#GeometryGraphInspector > VisualElement.content FloatField > .unity-base-field__input, VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > .unity-base-field__input, VisualElement#GeometryGraphInspector > VisualElement.content ColorField > .unity-base-field__input, VisualElement#GeometryGraphInspector > VisualElement.content Toggle > .unity-base-field__input {
-  border-radius: 0;
-}
-VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-x-input > Label {
-  background-color: var(--vector3-x-label-bg);
-}
-VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-y-input > Label {
-  background-color: var(--vector3-y-label-bg);
-}
-VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input FloatField#unity-z-input > Label {
-  background-color: var(--vector3-z-label-bg);
-}
-VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input .unity-composite-field__field > Label {
-  color: var(--vector3-comps-label);
-  -unity-font-style: bold;
-  -unity-text-align: upper-center;
-  padding-left: 6px;
-  padding-right: 6px;
-  min-width: 21px;
-}
-VisualElement#GeometryGraphInspector > VisualElement.content Vector3Field > VisualElement.unity-vector3-field__input .unity-composite-field__field--first > Label {
-  padding-left: 5px;
-}
-VisualElement#GeometryGraphInspector > VisualElement.content PropertyField#exporter-field {
-  margin-bottom: 8px;
+VisualElement#GeometryGraphInspector > VisualElement.content Button.evaluate-button {
+  margin: 4px 0 8px 0;
+  padding: 4px;
 }
 VisualElement#GeometryGraphInspector > VisualElement.content VisualElement.properties-container .no-properties-notice {
   color: var(--text-white);
@@ -102,12 +110,10 @@ VisualElement#GeometryGraphInspector TabContainer.tab-container > VisualElement.
 }
 VisualElement#GeometryGraphInspector TabContainer.tab-container > VisualElement.tab-buttons-container > Button.tab-button {
   margin: 0;
-  border-radius: 0;
   border-width: 0;
   flex-shrink: 1;
   width: 100%;
   margin-right: 1px;
-  cursor: link;
   border-top-width: 2px;
   border-top-color: var(--inspector-bg);
   padding-top: 3px;

@@ -105,8 +105,8 @@ namespace GeometryGraph.Runtime {
         // Enable/disable different visualizations
         public bool Enabled = true;
         public bool ShowSpline = true;
-        public bool ShowPoints = true;
-        public bool ShowDirectionVectors = true;
+        public bool ShowPoints = false;
+        public bool ShowDirectionVectors = false;
         
         // Spline settings
         public float SplineWidth = 2.0f;

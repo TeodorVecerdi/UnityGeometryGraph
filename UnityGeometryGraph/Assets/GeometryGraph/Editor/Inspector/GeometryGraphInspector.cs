@@ -16,7 +16,8 @@ namespace GeometryGraph.Editor {
         private GGraph targetGraph;
         
         private VisualElement root;
-        
+
+        private VisualElement mainContent;
         private TabContainer tabContainer;
         private VisualElement missingGraphNotice;
         private VisualElement propertiesTab;
@@ -87,13 +88,23 @@ namespace GeometryGraph.Editor {
 
             BuildMissingGraphNotice();
             content.Add(missingGraphNotice);
+            
+            mainContent = new VisualElement();
+            mainContent.AddToClassList("main-content");
+            
+            Button evaluateButton = new Button(() => {
+                targetGraph.Evaluate();
+            }) {text = "Evaluate Graph"};
+            evaluateButton.AddToClassList("evaluate-button");
+            mainContent.Add(evaluateButton);
 
             tabContainer = new TabContainer(tabIndex => {
                 EditorPrefs.SetInt($"{targetGraph.GetInstanceID()}_activeTab", tabIndex);
             });
             BuildTabs();
 
-            content.Add(tabContainer);
+            mainContent.Add(tabContainer);
+            content.Add(mainContent);
 
             root.Add(title);
             root.Add(content);
@@ -159,7 +170,7 @@ namespace GeometryGraph.Editor {
 
         private void UpdateTabs(RuntimeGraphObject graphObject) {
             if (graphObject == null) {
-                tabContainer.AddToClassList("d-none");
+                mainContent.AddToClassList("d-none");
                 missingGraphNotice.RemoveFromClassList("d-none");
                 return;
             }
@@ -172,7 +183,7 @@ namespace GeometryGraph.Editor {
                 noPropertiesNotice.AddToClassList("d-none");
             }
             
-            tabContainer.RemoveFromClassList("d-none");
+            mainContent.RemoveFromClassList("d-none");
             missingGraphNotice.AddToClassList("d-none");
             
             BuildPropertiesTab(graphObject);
