@@ -33,8 +33,7 @@ namespace GeometryGraph.Editor {
             }
             
             foreach (Property property in targetGraph.Graph.RuntimeData.Properties) {
-                if (targetGraph.SceneData.PropertyData[property.Guid].HasCustomValue) continue;
-                targetGraph.SceneData.PropertyData[property.Guid].UpdateDefaultValue(property.Type, property.DefaultValue);
+                targetGraph.SceneData.PropertyData[property.Guid].UpdateDefaultValue(property.DefaultValue);
             }
         }
 
@@ -303,19 +302,23 @@ namespace GeometryGraph.Editor {
             contentContainer.AddToClassList("foldout-content");
             propertiesContainer.Add(contentContainer);
 
-            Dictionary<string, Property> propertyDictionary = graphObject.RuntimeData.Properties.ToDictionary(property => property.Guid);
+            int propIndex = 0;
+            Dictionary<string, (Property property, int index)> propertyDictionary = 
+                graphObject.RuntimeData.Properties.ToDictionary(property => property.Guid, property => (property, propIndex++));
+            
             UnityEditor.SerializedProperty keysProperty = serializedObject.FindProperty("sceneData.propertyData.keys");
             UnityEditor.SerializedProperty valuesProperty = serializedObject.FindProperty("sceneData.propertyData.values");
             IEnumerator keysEnumerator = keysProperty.GetEnumerator();
             IEnumerator valuesEnumerator = valuesProperty.GetEnumerator();
+            SortedSet<PropertyField> properties = new(Comparer<PropertyField>.Create((field1, field2) => ((int)field1.userData).CompareTo((int)field2.userData)));
             while (keysEnumerator.MoveNext() && valuesEnumerator.MoveNext()) {
                 string propertyGuid = (keysEnumerator.Current as UnityEditor.SerializedProperty)?.stringValue;
                 if (!propertyDictionary.ContainsKey(propertyGuid)) {
                     Debug.LogError($"Property with GUID {propertyGuid} not found in graph {graphObject.name}");
                     continue;
                 }
-                
-                Property property = propertyDictionary[propertyGuid];
+
+                (Property property, int index) = propertyDictionary[propertyGuid];
                 string relativePropertyName = property.Type switch {
                     PropertyType.GeometryObject => "ObjectValue",
                     PropertyType.GeometryCollection => "CollectionValue",
@@ -324,21 +327,73 @@ namespace GeometryGraph.Editor {
                     PropertyType.Vector => "VectorValue",
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
-                UnityEditor.SerializedProperty relativeProperty = (valuesEnumerator.Current as UnityEditor.SerializedProperty)!.FindPropertyRelative(relativePropertyName);
-                PropertyField propertyField = new (relativeProperty, property.DisplayName);
-                propertyField.RegisterValueChangeCallback(_ => {
-                    targetGraph.SceneData.PropertyData[propertyGuid].HasCustomValue = true;
+
+                UnityEditor.SerializedProperty valueProperty = valuesEnumerator.Current as UnityEditor.SerializedProperty;
+                UnityEditor.SerializedProperty relativeProperty = valueProperty!.FindPropertyRelative(relativePropertyName);
+                PropertyField propertyField = new (relativeProperty, property.DisplayName) {
+                    userData = index
+                };
+
+                propertyField.schedule.Execute(() => {
+                    propertyField.RegisterCallback((ContextualMenuPopulateEvent evt) => {
+                        evt.menu.AppendAction("Reset to Default", _ => { ResetPropertyToDefault(property, relativePropertyName, relativeProperty, valueProperty); }, DropdownMenuAction.AlwaysEnabled);
+                    });
+                    
+                    if (propertyField.childCount <= 0) return;
+                    
+                    if (propertyField[0] is ObjectField objectField) {
+                        objectField[1][0].AddManipulator(new ContextualMenuManipulator(evt => {
+                            evt.menu.AppendAction("Reset to Default", _ => { ResetPropertyToDefault(property, relativePropertyName, relativeProperty, valueProperty); }, DropdownMenuAction.AlwaysEnabled);
+                        }));
+                    }
+                    
+                    VisualElement propertyFieldInput = propertyField[0][0];
+                    propertyFieldInput.AddManipulator(new ContextualMenuManipulator(evt => {
+                        evt.menu.AppendAction("Reset to Default", _ => { ResetPropertyToDefault(property, relativePropertyName, relativeProperty, valueProperty); }, DropdownMenuAction.AlwaysEnabled);
+                    }));
                 });
+                
                 propertyField.Bind(serializedObject);
+                properties.Add(propertyField);
+            }
+            
+            foreach (PropertyField propertyField in properties) {
                 contentContainer.Add(propertyField);
             }
             
             contentContainer.Add(new Button(() => {
                 foreach ((string key, PropertyValue value) in targetGraph.SceneData.PropertyData) {
-                    Debug.Log($"Key: {key}\n  ObjectValue: {value.ObjectValue}\n  CollectionValue: {value.CollectionValue}\n  IntValue: {value.IntValue}\n  FloatValue: {value.FloatValue}\n  VectorValue: {value.VectorValue}");
+                    Debug.Log($"Key: {key}\nValue: {value}");
                 }
             }) {text = "Dump scene data"});
+        }
+
+        private void ResetPropertyToDefault(Property property, string targetPropertyName, UnityEditor.SerializedProperty targetProperty, UnityEditor.SerializedProperty valueProperty) {
+            serializedObject.Update();
+
+            UnityEditor.SerializedProperty defaultPropertyRelative = valueProperty.FindPropertyRelative($"Default{targetPropertyName}");
+            switch (property.Type) {
+                case PropertyType.GeometryObject:
+                case PropertyType.GeometryCollection: {
+                    targetProperty.objectReferenceValue = defaultPropertyRelative.objectReferenceValue;
+                    break;
+                }
+                case PropertyType.Integer: {
+                    targetProperty.intValue = defaultPropertyRelative.intValue;
+                    break;
+                }
+                case PropertyType.Float: {
+                    targetProperty.floatValue = defaultPropertyRelative.floatValue;
+                    break;
+                }
+                case PropertyType.Vector: {
+                    targetProperty.vector3Value = defaultPropertyRelative.vector3Value;
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException();
+            }
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void OnGraphPropertyChanged(SerializedPropertyChangeEvent evt) {

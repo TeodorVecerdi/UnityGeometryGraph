@@ -42,5 +42,9 @@ namespace GeometryGraph.Runtime.Graph {
                 default: throw new ArgumentOutOfRangeException(nameof(propertyType), propertyType, null);
             }
         }
+
+        public override string ToString() {
+            return $"Int: `{IntValue}` -- Float: `{FloatValue}` -- Vector: `{VectorValue}`";
+        }
     }
 }

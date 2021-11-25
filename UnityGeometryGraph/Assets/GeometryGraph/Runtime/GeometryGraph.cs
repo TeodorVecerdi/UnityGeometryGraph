@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
+using UnityEngine;
 using GeometryGraph.Runtime.Curve;
 using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
 using GeometryGraph.Runtime.Serialization;
-using Unity.Mathematics;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace GeometryGraph.Runtime {
     public class GeometryGraph : MonoBehaviour {
@@ -66,7 +65,7 @@ namespace GeometryGraph.Runtime {
         }
 
         public void OnDefaultPropertyValueChanged(Property property) {
-            sceneData.PropertyData[property.Guid].UpdateDefaultValue(property.Type, property.DefaultValue);
+            sceneData.PropertyData[property.Guid].UpdateDefaultValue(property.DefaultValue);
         }
 
     }
@@ -127,38 +126,60 @@ namespace GeometryGraph.Runtime {
     [Serializable] public class PropertyDataDictionary : SerializedDictionary<string, PropertyValue> {}
 
     [Serializable] public class PropertyValue {
-        [SerializeField] public bool HasCustomValue;
         [SerializeField] public GeometryObject ObjectValue;
         [SerializeField] public GeometryCollection CollectionValue;
         [SerializeField] public int IntValue;
         [SerializeField] public float FloatValue;
-        [SerializeField] public Vector3 VectorValue;
+        [SerializeField] public Vector3 VectorValue; 
+        
+        [SerializeField] public GeometryObject DefaultObjectValue;
+        [SerializeField] public GeometryCollection DefaultCollectionValue;
+        [SerializeField] public int DefaultIntValue;
+        [SerializeField] public float DefaultFloatValue;
+        [SerializeField] public Vector3 DefaultVectorValue;
         //!! Add more here as needed
 
+        [SerializeField] public PropertyType PropertyType;
+
         public PropertyValue(Property property) {
-            HasCustomValue = false;
-            UpdateDefaultValue(property.Type, property.DefaultValue);
+            PropertyType = property.Type;
+            UpdateDefaultValue(property.DefaultValue, true);
         }
 
-        public void UpdateDefaultValue(PropertyType type, DefaultPropertyValue defaultPropertyValue) {
-            if (HasCustomValue) return;
-            switch(type) {
+        public bool HasDefaultValue() {
+            return PropertyType switch {
+                PropertyType.GeometryObject => ObjectValue != DefaultObjectValue,
+                PropertyType.GeometryCollection => CollectionValue != DefaultCollectionValue,
+                PropertyType.Integer => IntValue != DefaultIntValue,
+                PropertyType.Float => Math.Abs(FloatValue - DefaultFloatValue) > Constants.FLOAT_TOLERANCE,
+                PropertyType.Vector => (VectorValue - DefaultVectorValue).sqrMagnitude > Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        public void UpdateDefaultValue(DefaultPropertyValue defaultPropertyValue, bool forceUpdate = false) {
+            switch(PropertyType) {
                 case PropertyType.GeometryObject:
-                    ObjectValue = null;
+                    if (forceUpdate || !HasDefaultValue()) ObjectValue = null;
+                    DefaultObjectValue = null;
                     break;
                 case PropertyType.GeometryCollection:
-                    CollectionValue = null;
+                    if (forceUpdate || !HasDefaultValue()) CollectionValue = null;
+                    DefaultCollectionValue = null;
                     break;
                 case PropertyType.Integer:
-                    IntValue = defaultPropertyValue.IntValue;
+                    if (forceUpdate || !HasDefaultValue()) IntValue = defaultPropertyValue.IntValue;
+                    DefaultIntValue = defaultPropertyValue.IntValue;
                     break;
                 case PropertyType.Float:
-                    FloatValue = defaultPropertyValue.FloatValue;
+                    if (forceUpdate || !HasDefaultValue()) FloatValue = defaultPropertyValue.FloatValue;
+                    DefaultFloatValue = defaultPropertyValue.FloatValue;
                     break;
                 case PropertyType.Vector:
-                    VectorValue = defaultPropertyValue.VectorValue;
+                    if (forceUpdate || !HasDefaultValue()) VectorValue = defaultPropertyValue.VectorValue;
+                    DefaultVectorValue = defaultPropertyValue.VectorValue;
                     break;
-                default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                default: throw new ArgumentOutOfRangeException(nameof(PropertyType), PropertyType, null);
             }
         }
 
@@ -172,6 +193,28 @@ namespace GeometryGraph.Runtime {
 
                 default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
+
+        public override string ToString() {
+            string value = PropertyType switch {
+                PropertyType.GeometryObject => ObjectValue != null ? ObjectValue.name : "null",
+                PropertyType.GeometryCollection => CollectionValue != null ? CollectionValue.name : "null",
+                PropertyType.Integer => $"{IntValue}",
+                PropertyType.Float => $"{FloatValue}",
+                PropertyType.Vector => $"{VectorValue}",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            string defaultValue = PropertyType switch {
+                PropertyType.GeometryObject => DefaultObjectValue != null ? DefaultObjectValue.name : "null",
+                PropertyType.GeometryCollection => DefaultCollectionValue != null ? DefaultCollectionValue.name : "null",
+                PropertyType.Integer => $"{DefaultIntValue}",
+                PropertyType.Float => $"{DefaultFloatValue}",
+                PropertyType.Vector => $"{DefaultVectorValue}",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            return $"{value} (default: {defaultValue})";
         }
     }
 }
