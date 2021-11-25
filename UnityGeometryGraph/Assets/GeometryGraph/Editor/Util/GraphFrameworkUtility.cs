@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GeometryGraph.Runtime;
+using GeometryGraph.Runtime.Graph;
 using K4os.Compression.LZ4;
 using K4os.Compression.LZ4.Streams;
 using UnityEditor;
@@ -93,11 +94,26 @@ namespace GeometryGraph.Editor {
             if (string.IsNullOrEmpty(assetPath)) return null;
             Object[] allAssetsAtPath = AssetDatabase.LoadAllAssetsAtPath(assetPath);
 
+            GraphFrameworkObject graphFrameworkObject = null;
+            RuntimeGraphObject runtimeGraphObject = null;
             foreach (Object asset in allAssetsAtPath) {
-                if (asset is GraphFrameworkObject graphFrameworkObject) {
-                    graphFrameworkObject.RecalculateAssetGuid(assetPath);
-                    return graphFrameworkObject;
+                if (asset is GraphFrameworkObject gfo) {
+                    graphFrameworkObject = gfo;
+                } else if (asset is RuntimeGraphObject rgo) {
+                    runtimeGraphObject = rgo;
                 }
+            }
+
+            if (graphFrameworkObject != null) {
+                if (runtimeGraphObject != null) {
+                    graphFrameworkObject.RuntimeGraph = runtimeGraphObject;
+                    graphFrameworkObject.GraphData.RuntimeGraphData = runtimeGraphObject.RuntimeData;
+                } else {
+                    Debug.LogWarning($"RuntimeGraphObject not found while loading Graph at path: `{assetPath}`");
+                }
+                
+                graphFrameworkObject.RecalculateAssetGuid(assetPath);
+                return graphFrameworkObject;
             }
             return null;
         }

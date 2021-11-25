@@ -204,6 +204,7 @@ namespace GeometryGraph.Editor {
             if (newIndex == currentIndex) {
                 return;
             }
+
             properties.RemoveAt(currentIndex);
             Property runtimeProperty = RuntimeGraphData.Properties[currentIndex];
             RuntimeGraphData.Properties.RemoveAt(currentIndex);
