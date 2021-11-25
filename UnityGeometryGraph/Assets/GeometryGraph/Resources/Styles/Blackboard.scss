@@ -1,0 +1,26 @@
+BlackboardRow {
+    .property-GeometryObject, .property-GeometryCollection {
+        #expandButton {
+            display: none;
+        }    
+    }
+}
+
+BlackboardRow .blackboardPropertyView {
+    * {
+        font-size: 11px;
+    }
+    
+    & > .rowView {
+        flex-direction: row;
+        padding: 2px 2px 2px 10px;
+        
+        & > .rowViewLabel {
+            min-width: 50px;
+            
+            & > .rowViewControl {
+                flex: 1;
+            }
+        }
+    }
+}

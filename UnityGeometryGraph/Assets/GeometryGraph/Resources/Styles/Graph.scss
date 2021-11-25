@@ -1,0 +1,138 @@
+﻿EditorView {
+    flex-direction: column;
+    flex: 1;
+
+    & > #content {
+        flex-direction: row;
+        flex: 1;
+
+        & > GraphFrameworkGraphView {
+            flex: 1;
+
+            & > GridBackground {
+                --grid-background-color: #282828;
+                --line-color: rgba(55, 55, 55, 0.2);
+                --thick-line-color: rgba(20, 20, 20, 0.4);
+                --spacing: 20;
+            }
+        }
+    }
+}
+
+.node.collapsed {
+    Toggle.unity-toggle, ClampedIntegerField, ClampedFloatField, EnumField,
+    Vector3Field.port-backing-field, EnumSelectionDropdown.enum-selection-dropdown,
+    EnumSelectionToggle.enum-selection-toggle, CurveField.unity-curve-field,
+    VisualElement.gradient-container {
+        display: none;
+    }
+}
+
+/* 
+    Region: Enum Selection Dropdown
+*/
+EnumSelectionDropdown.enum-selection-dropdown {
+    flex-direction: row;
+    align-items: center;
+
+    Label {
+        margin-left: 6px;
+    }
+
+    .enum-dropdown-button {
+        padding: 2px 4px 2px 4px;
+        margin-left: 3px;
+        margin-right: 3px;
+        -unity-text-align: middle-left;
+        flex-grow: 1;
+
+        .arrow-down {
+            width: 14px;
+            height: 14px;
+            align-self: flex-end;
+            background-image: resource("d_dropdown");
+        }
+    }
+}
+
+/* 
+    Region: Enum Selection Toggle
+*/
+EnumSelectionToggle.enum-selection-toggle {
+    flex-direction: row;
+    padding: 3px;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    .toggle-button {
+        margin: 0;
+        height: 20px;
+        border-radius: 0;
+        border-left-width: 0;
+        flex-grow: 1;
+
+        &.selected {
+            background-color: #216bcb;
+        }
+
+        &.first {
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+            border-left-width: 1px;
+        }
+
+        &.last {
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+    }
+}
+
+
+/* 
+    Region: Curve Field
+*/
+CurveField.unity-curve-field {
+    & > VisualElement.unity-curve-field__input {
+        min-height: 64px;
+        min-width: 96px;
+        background-color: #2E2E2E;
+        --unity-curve-color: #FFFFFF;
+
+        & > VisualElement.unity-curve-field__content > VisualElement {
+            height: 0;
+        }
+    }
+}
+
+/* 
+    Region: Gradient Field
+*/
+VisualElement.gradient-container {
+    & > GradientField.unity-gradient-field {
+        &.gradient-field-main {
+            margin-bottom: 0;
+        }
+
+        &.gradient-field-color {
+            opacity: 1;
+            margin-top: -6px;
+            margin-left: 4px;
+            margin-right: 4px;
+
+            & > VisualElement.unity-gradient-field__input {
+                min-height: 5px;
+                min-width: 96px;
+                border-bottom-width: 0;
+                border-top-width: 0;
+                border-right-width: 0;
+                border-left-width: 0;
+            }
+        }
+
+        & > VisualElement.unity-gradient-field__input {
+            min-height: 24px;
+            min-width: 96px;
+        }
+    }
+}

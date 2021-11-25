@@ -1,0 +1,41 @@
+GraphFrameworkPort {
+    &.input {
+        margin-left: -12px;
+    }
+    
+    &.output {
+        margin-right: -12px;
+    }
+
+    &.portType-Integer {
+        --port-color: #f00;
+    }
+    
+    &.portType-Float {
+        --port-color: #ff0;
+    }
+
+    &.portType-Vector {
+        --port-color: #0ff;
+    }
+    
+    &.portType-Boolean {
+        --port-color: #f0f;
+    }
+    
+    &.portType-Geometry {
+        --port-color: #0f0;
+    }
+    
+    &.portType-Collection {
+        --port-color: #00f;
+    }
+    
+    &.portType-String {
+        --port-color: #8dcd0d;
+    }
+    
+    &.portType-Curve {
+        --port-color: #0ac778;
+    }
+}

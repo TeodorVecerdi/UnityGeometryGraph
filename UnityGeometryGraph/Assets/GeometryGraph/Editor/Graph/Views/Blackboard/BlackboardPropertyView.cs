@@ -30,7 +30,6 @@ namespace GeometryGraph.Editor {
         public EventCallback<FocusOutEvent> FocusOutCallback => focusOutCallback;
 
         public BlackboardPropertyView(BlackboardField field, EditorView editorView, AbstractProperty property) {
-            this.AddStyleSheet("Styles/PropertyView/Blackboard");
             this.field = field;
             this.editorView = editorView;
             this.property = property;

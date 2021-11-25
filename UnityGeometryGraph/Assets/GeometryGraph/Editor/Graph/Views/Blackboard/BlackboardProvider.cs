@@ -35,6 +35,7 @@ namespace GeometryGraph.Editor {
                 addItemRequested = AddItemRequested,
                 moveItemRequested = MoveItemRequested
             };
+            Blackboard.AddStyleSheet("Styles/Blackboard");
 
             section = new BlackboardSection {title = "Properties"};
             Blackboard.Add(section);

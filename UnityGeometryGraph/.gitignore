@@ -153,3 +153,4 @@ sysinfo.txt
 
 *.gen.cs
 *.gen.cs.meta
+*.uss.map.meta

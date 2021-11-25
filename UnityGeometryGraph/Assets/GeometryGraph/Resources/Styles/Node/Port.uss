@@ -1,52 +1,32 @@
-.optional #connector {
-    border-radius: 2px;
-}
-
-.optional #connector #cap {
-    border-radius: 1px;
-}
-
-#connector #cap {
-    border-width: 1px;
-    margin: -1px;
-}
-
 GraphFrameworkPort.input {
-    margin-left: -12px;
+  margin-left: -12px;
 }
-
 GraphFrameworkPort.output {
-    margin-right: -12px;
+  margin-right: -12px;
 }
-
-GraphFrameworkPort {
-    --port-color: #000;
-}
-
-GraphFrameworkPort.portType-Boolean {
-    --port-color: #f0f;
-}
-
 GraphFrameworkPort.portType-Integer {
-    --port-color: #f00;
+  --port-color: #f00;
 }
-
 GraphFrameworkPort.portType-Float {
-    --port-color: #ff0;
+  --port-color: #ff0;
 }
-
 GraphFrameworkPort.portType-Vector {
-    --port-color: #0ff;
+  --port-color: #0ff;
 }
-
+GraphFrameworkPort.portType-Boolean {
+  --port-color: #f0f;
+}
 GraphFrameworkPort.portType-Geometry {
-    --port-color: #0f0;
+  --port-color: #0f0;
 }
-
 GraphFrameworkPort.portType-Collection {
-    --port-color: #00f;
+  --port-color: #00f;
+}
+GraphFrameworkPort.portType-String {
+  --port-color: #8dcd0d;
+}
+GraphFrameworkPort.portType-Curve {
+  --port-color: #0ac778;
 }
 
-GraphFrameworkPort.portType-Curve {
-    --port-color: #0ac778;
-}
+/*# sourceMappingURL=Port.uss.map */

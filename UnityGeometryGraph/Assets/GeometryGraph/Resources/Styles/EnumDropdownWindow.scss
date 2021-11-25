@@ -1,0 +1,38 @@
+﻿#EnumDropdownWindow {
+    display: flex;
+    flex-direction: row;
+    padding: 8px 5px;
+    
+    background-color: #333;
+
+    .column {
+        display: flex;
+        flex: 1 1 100%;
+        flex-direction: column;
+        padding-left: 3px;
+        padding-right: 3px;
+
+        Button {
+            height: 24px;
+            margin: 0;
+            background-color: transparent;
+            border-color: transparent;
+            opacity: 1;
+            
+            &:hover {
+                background-color: #242424;
+                opacity: 1;
+            }
+        }
+    }
+    
+    .column-separator {
+        width: 0;
+        padding-left: 1px;
+        height: 150px;
+        margin-top: -3px;
+        margin-left: 2px;
+        margin-right: 2px;
+        background-color: #2a2a2a;
+    }
+}

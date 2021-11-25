@@ -1,211 +1,106 @@
 /*
  * @section Misc
  */
-
 .d-none {
-    display: none;
+  display: none;
 }
 
-.unity-base-field> Label.unity-label.unity-base-field__label {
-    min-width: 0;
-    padding-left: 2px;
-    padding-right: 4px;
+.unity-base-field > Label.unity-label.unity-base-field__label {
+  min-width: 0;
+  padding-left: 2px;
+  padding-right: 4px;
 }
 
 .unity-base-field.unity-base-text-field > #unity-text-input.unity-base-text-field__input {
-    min-width: 64px;
+  min-width: 64px;
 }
 
 .unity-base-field.unity-base-text-field.port-backing-field {
-    flex-grow: 1;
-    flex-shrink: 1;
-    margin-right: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  margin-right: 0;
 }
 
 .node > VisualElement#node-border > VisualElement#contents > VisualElement#top > VisualElement#input {
-    flex-shrink: 1;
+  flex-shrink: 1;
 }
 
 EnumField > .unity-text-element.unity-label.unity-enum-field__label.unity-base-field__label {
-    padding-right: 12px;
+  padding-right: 12px;
 }
 EnumField .unity-enum-field__input {
-    min-width: 96px;
+  min-width: 96px;
 }
 
 .port-backing-field {
-    margin-left: -6px;
+  margin-left: -6px;
+}
+.port-backing-field > Label {
+  height: 16px;
+  align-self: center;
+  -unity-text-align: middle-left;
+  padding-top: 0;
 }
 
 Vector3Field.port-backing-field {
-    margin-left: initial;
+  margin-left: initial;
 }
-
-.port-backing-field Label {
-    height: 16px;
-    align-self: center;
-    -unity-text-align: middle-left;
-    padding-top: 0;
-}
-
 Vector3Field.port-backing-field .unity-vector3-field__input {
-    flex-grow: 1;
-    flex-direction: column;
+  flex-grow: 1;
+  flex-direction: column;
 }
-
 Vector3Field.port-backing-field .unity-vector3-field__input FloatField {
-    flex-shrink: 1;
-    flex-grow: 0;
-    flex-basis: auto;
-    margin-top: 2px;
+  flex-shrink: 1;
+  flex-grow: 0;
+  flex-basis: auto;
+  margin-top: 2px;
 }
-
-Vector3Field.port-backing-field .unity-vector3-field__input FloatField.unity-composite-field__field--first {
-    margin-top: 0;
-}
-
-Vector3Field.port-backing-field .unity-vector3-field__input FloatField.unity-composite-field__field > FloatInput#unity-text-input {
-    min-width: 48px;
-    /*font-size: 8px;*/
-}
-
 Vector3Field.port-backing-field .unity-vector3-field__input FloatField Label {
-    margin-left: 6px;
-    /*font-size: 8px;*/
+  margin-left: 6px;
+  /*font-size: 8px;*/
 }
-
-/* CurveField */
-CurveField.unity-curve-field > VisualElement.unity-curve-field__input {
-    min-height: 64px;
-    min-width: 96px;
-    background-color: #2E2E2E;
-    --unity-curve-color: #FFFFFF;
+Vector3Field.port-backing-field .unity-vector3-field__input FloatField.unity-composite-field__field--first {
+  margin-top: 0;
 }
-
-CurveField.unity-curve-field > VisualElement.unity-curve-field__input > VisualElement.unity-curve-field__content > VisualElement {
-    height: 0;
-}
-
-/* GradientField */
-VisualElement.gradient-container > GradientField.unity-gradient-field > VisualElement.unity-gradient-field__input {
-    min-height: 24px;
-    min-width: 96px;
-}
-
-VisualElement.gradient-container > GradientField.unity-gradient-field.gradient-field-main {
-    margin-bottom: 0;
-}
-
-VisualElement.gradient-container > GradientField.unity-gradient-field.gradient-field-color {
-    opacity: 1;
-    margin-top: -6px;
-    margin-left: 4px;
-    margin-right: 4px;
-}
-
-VisualElement.gradient-container > GradientField.unity-gradient-field.gradient-field-color > VisualElement.unity-gradient-field__input {
-    min-height: 5px;
-    min-width: 96px;
-    border-bottom-width: 0;
-    border-top-width: 0;
-    border-right-width: 0;
-    border-left-width: 0;
+Vector3Field.port-backing-field .unity-vector3-field__input FloatField.unity-composite-field__field--first > FloatInput#unity-text-input {
+  min-width: 48px;
 }
 
 /*
  * @section General Node
  */
-
-#node-border {
-    overflow: visible;
-    border-width: 0;
+.node #title-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
 }
-#selection-border {
-    margin: 2px;
-    border-radius: 6px;
-    border-width: 1px;
-    border-color: #191919;
-}
-
-.node:checked #selection-border, .node:hover:checked #selection-border {
-    border-width: 3px;
-    margin: 1px;
-}
-
-#title {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-PropertyNode #title, #collapsible-area {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-#title-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-}
-
-#title-label {
-    -unity-font-style: bold;
-    color: #e2e2e2;
-    margin-left: 16px;
-}
-
-PropertyNode #title-label {
-    margin-left: 6px;
-}
-
-PropertyNode #collapse-button {
-    display: none;
-}
-
-PropertyNode #title {
-    align-items: center;
-}
-
-PropertyNode #title.property-port-input #title-label {
-    margin-left: 0px;
-    margin-right: 6px;
-}
-
-/*
- * @section Misc
- */
-.flex-break {
-    height: 0;
-    flex-basis: 100%;
-}
-
-#divider.horizontal-divider {
-    margin-bottom: 6px;
-    margin-top: 4px;
-}
-
-/*
- * @section Specific node styling
- */
-.node {
-
-    --property-selection: #d5293d;
-    --property-node: #8d131a;
-    --property-collapse: rgba(107, 10, 16, 255);
-    
-    --extension-padding: 4px 4px;
-}
-
 .node #collapsible-area {
-    background-color: #212121;
+  background-color: #212121;
 }
-.node #extension {
-    padding: var(--extension-padding);
+.node #title-label {
+  -unity-font-style: bold;
+  color: #e2e2e2;
+  margin-left: 16px;
+}
+.node #node-border {
+  overflow: visible;
+  border-width: 0;
+}
+.node #selection-border {
+  margin: 2px;
+  border-radius: 0;
+  border-width: 1px;
+  border-color: #191919;
+}
+.node:hover #selection-border {
+  margin: 1px;
+  border-width: 2px;
+}
+.node:checked #selection-border, .node:hover:checked #selection-border {
+  margin: 2px;
+  border-width: 1px;
+  border-color: #216bcb;
 }
 
-PropertyNode #title {
-    background-color: var(--property-node);
-}
-PropertyNode:checked #selection-border, PropertyNode:hover #selection-border, PropertyNode:checked:hover #selection-border  {
-    border-color: var(--property-selection);
-}
+/*# sourceMappingURL=Node.uss.map */
