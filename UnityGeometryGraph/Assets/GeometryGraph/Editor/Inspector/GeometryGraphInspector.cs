@@ -145,7 +145,6 @@ namespace GeometryGraph.Editor {
             path = path.Replace(Application.dataPath, "Assets");
             CreateGraphObject.CreateObject(path);
             RuntimeGraphObject graphObject = AssetDatabase.LoadAssetAtPath<RuntimeGraphObject>(path);
-            serializedObject.Update();
             serializedObject.FindProperty("graph").objectReferenceValue = graphObject;
             serializedObject.ApplyModifiedProperties();
         }
