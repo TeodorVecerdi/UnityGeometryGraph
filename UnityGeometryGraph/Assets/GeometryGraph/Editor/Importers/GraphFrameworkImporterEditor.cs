@@ -58,7 +58,6 @@ namespace GeometryGraph.Editor {
             }
 
             GraphFrameworkEditorWindow window = EditorWindow.CreateWindow<GraphFrameworkEditorWindow>(typeof(GraphFrameworkEditorWindow), typeof(SceneView));
-            window.titleContent = EditorGUIUtility.TrTextContentWithIcon(guid, Resources.Load<Texture2D>(GraphFrameworkResources.IconSmall));
             window.SetGraphObject(graphObject);
             window.BuildWindow();
             window.Focus();

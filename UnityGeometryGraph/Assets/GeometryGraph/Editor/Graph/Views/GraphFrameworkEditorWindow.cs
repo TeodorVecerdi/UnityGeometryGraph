@@ -139,6 +139,7 @@ namespace GeometryGraph.Editor {
 
         private void OnEnable() {
             this.SetAntiAliasing(4);
+            titleContent.image = Resources.Load<Texture2D>(EditorGUIUtility.isProSkin ? GraphFrameworkResources.DARK_ICON_SMALL : GraphFrameworkResources.LIGHT_ICON_SMALL);
         }
 
         private bool VersionCheck() {

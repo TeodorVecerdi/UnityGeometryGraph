@@ -9,7 +9,7 @@ namespace GeometryGraph.Editor {
         public static void CreateObject()
         {
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, CreateInstance<CreateGraphObject>(),
-                $"New Geometry Graph.{GraphFrameworkImporter.Extension}", Resources.Load<Texture2D>(GraphFrameworkResources.IconBig), null);
+                $"New Geometry Graph.{GraphFrameworkImporter.Extension}", Resources.Load<Texture2D>(GraphFrameworkResources.DARK_ICON_BIG), null);
         }
 
         public override void Action(int instanceId, string pathName, string resourceFile) {

@@ -3,6 +3,7 @@ VisualElement#GeometryGraphInspector {
   --obj-field-bg: #2A2A2A;
   --obj-field-selector-bg: #373737;
   --obj-field-selector-bg--hover: #4C4C4C;
+  --title-separator: #5C5C5C;
   --vector3-x-label-bg: #e82609;
   --vector3-y-label-bg: #53c627;
   --vector3-z-label-bg: #1b88ff;

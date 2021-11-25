@@ -14,7 +14,10 @@ VisualElement#GeometryGraphInspector {
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        padding: 8px 4px 16px;
+        padding: 8px 4px 6px;
+        margin-bottom: 12px;
+        margin-left: 32px;
+        margin-right: 32px;
 
         & > .title-icon {
             min-width: 48px;
@@ -29,6 +32,9 @@ VisualElement#GeometryGraphInspector {
             -unity-font-style: bold;
             font-size: 22px;
         }
+        
+        border-bottom-width: 1px;
+        border-bottom-color: var(--theme-dark);
     }
 
     & > VisualElement.content {
@@ -86,46 +92,52 @@ VisualElement#GeometryGraphInspector {
             margin-bottom: 8px;
         }
         
-        Foldout.properties-container {
+        VisualElement.properties-container {
             //margin-left: 8px;
             
-            & > Toggle.unity-foldout__toggle {
-                margin-left: -8px;
-                margin-right: -8px;
-                padding-top: 2px;
-                padding-bottom: 2px;
-                background-color: var(--theme-dark);
-                
-                Label.unity-toggle__text {
-                    -unity-font-style: bold;
-                    color: var(--text-white);
-                }
-                
-                & #unity-checkmark {
-                    background-image: resource("Textures/ui/triangle_right@32");
-                    -unity-background-scale-mode: scale-to-fit;
-                    width: 10px;
-                    margin-left: 4px;
-                    -unity-slice-left: 0;
-                    -unity-slice-top: 0;
-                }
-            }
-
-            & > Toggle.unity-foldout__toggle:checked {
-                & #unity-checkmark {
-                    margin-top: 2px;
-                    background-image: resource("Textures/ui/triangle_down@32");
-                }
-            }
+        }
+    }
+    
+    TabContainer.tab-container {
+        & > VisualElement.tab-buttons-container {
+            flex-direction: row;
+            align-content: flex-start;
             
-            & > VisualElement#unity-content {
-                margin-top: -4px;
-                margin-left: -8px;
-                margin-right: -8px;
-            }
+            & > Button.tab-button {
+                margin: 0;
+                border-radius: 0;
+                
+                flex-shrink: 1;
+                width: 100%;
+                //min-width: 0;
+                
+                margin-right: 1px;
+                
+                border-width: 0;
+                border-top-width: 2px;
+                border-top-color: var(--inspector-bg);
+                
+                padding-top: 3px;
+                padding-bottom: 3px;
 
-            & > .foldout-content {
-                margin: 4px 8px;
+                &.tab-button__active {
+                    border-top-color: var(--theme-dark);
+                }
+            }
+        }
+
+        & > VisualElement.tab-content-container {
+            padding-bottom: 4px;
+            & > VisualElement.tab-content {
+                display: none;
+                
+                &.tab-content__active {
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    border-width: 1px;
+                    border-color: var(--obj-field-bg);
+                    display: flex;
+                }
             }
         }
     }
