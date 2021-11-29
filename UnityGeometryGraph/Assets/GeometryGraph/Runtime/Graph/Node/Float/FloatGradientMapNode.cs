@@ -27,21 +27,42 @@ namespace GeometryGraph.Runtime.Graph {
         private float GetResultAlpha() => result.Alpha;
 
         [CalculatesAllProperties]
-        private void Calculate() {
-            result = Gradient.Evaluate(Value);
-        }
+        private void Calculate() => result = Gradient.Evaluate(Value);
+
+        [CalculatesAllProperties]
+        private void MarkResultsDirty() => resultsDirty = true;
+
+        private readonly List<RGBAlphaPair> results = new List<RGBAlphaPair>();
+        private bool resultsDirty = true;
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
             if (count <= 0) yield break;
+            if (!resultsDirty && results.Count == count) {
+                for (int i = 0; i < count; i++) {
+                    if (port == ResultRGBPort) {
+                        yield return results[i].RGB;
+                    } else if (port == ResultAlphaPort) {
+                        yield return results[i].Alpha;
+                    }
+                }
+                
+                yield break;
+            }
+            
             IEnumerable<float> values = GetValues(ValuePort, count, Value);
+            results.Clear();
+            
             foreach (float value in values) {
                 RGBAlphaPair evaluated = Gradient.Evaluate(value);
+                results.Add(evaluated);
                 if (port == ResultRGBPort) {
                     yield return evaluated.RGB;
                 } else if (port == ResultAlphaPort) {
                     yield return evaluated.Alpha;
                 }
             }
+            
+            resultsDirty = false;
         }
 
         public static UnityEngine.Gradient Default => new() {
