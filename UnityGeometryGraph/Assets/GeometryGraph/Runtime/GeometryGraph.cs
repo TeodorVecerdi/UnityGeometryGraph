@@ -61,7 +61,7 @@ namespace GeometryGraph.Runtime {
         }
         
         private void OnDrawGizmos() {
-            if (!curveVisualizerSettings.Enabled || curveData == null) return;
+            if (!curveVisualizerSettings.Enabled || curveData == null || curveData.Type == CurveType.None) return;
 
             Handles.matrix = Gizmos.matrix = transform.localToWorldMatrix;
 
