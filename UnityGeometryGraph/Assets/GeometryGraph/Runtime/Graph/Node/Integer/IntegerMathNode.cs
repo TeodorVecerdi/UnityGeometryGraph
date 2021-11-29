@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GeometryGraph.Runtime.Attributes;
 
 namespace GeometryGraph.Runtime.Graph {
@@ -11,32 +13,66 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public IntegerMathNode_Operation Operation { get; private set; }
         [Out] public int Result { get; private set; }
 
+        private readonly List<int> results = new List<int>();
+        private bool resultsDirty = true;
+        
+        [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
+        
         [GetterMethod(nameof(Result))]
         private int Calculate() {
+            return Calculate(X, Y, Tolerance, Extra);
+        }
+
+        public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
+            if(port != ResultPort || count <= 0) yield break;
+            if (!resultsDirty && results.Count == count) {
+                for (int i = 0; i < count; i++) {
+                    yield return results[i];
+                }
+                
+                yield break;
+            }
+
+            List<int> xs = GetValues(XPort, count, X).ToList();
+            List<int> ys = GetValues(YPort, count, Y).ToList();
+            List<float> tolerances = GetValues(TolerancePort, count, Tolerance).ToList();
+            List<int> extras = GetValues(ExtraPort, count, Extra).ToList();
+            results.Clear();
+            
+            for (int i = 0; i < count; i++) {
+                int result = Calculate(xs[i], ys[i], tolerances[i], extras[i]);
+                results.Add(result);
+                yield return result;
+            }
+            
+            resultsDirty = false;
+        }
+
+        private int Calculate(int x, int y, float tolerance, int extra) {
             return Operation switch {
-                IntegerMathNode_Operation.Add => X + Y,
-                IntegerMathNode_Operation.Subtract => X - Y,
-                IntegerMathNode_Operation.Multiply => X * Y,
-                IntegerMathNode_Operation.IntegerDivision => X / Y,
-                IntegerMathNode_Operation.FloatDivision => (int)(X / (float)Y),
-                IntegerMathNode_Operation.Power => (int)Math.Pow(X, Y),
-                IntegerMathNode_Operation.Logarithm => (int)Math.Log(X, Y),
-                IntegerMathNode_Operation.SquareRoot => (int)Math.Sqrt(X),
-                IntegerMathNode_Operation.Absolute => Math.Abs(X),
-                IntegerMathNode_Operation.Exponent => (int)Math.Exp(X),
+                IntegerMathNode_Operation.Add => x + y,
+                IntegerMathNode_Operation.Subtract => x - y,
+                IntegerMathNode_Operation.Multiply => x * y,
+                IntegerMathNode_Operation.IntegerDivision => x / y,
+                IntegerMathNode_Operation.FloatDivision => (int)(x / (float)y),
+                IntegerMathNode_Operation.Power => (int)Math.Pow(x, y),
+                IntegerMathNode_Operation.Logarithm => (int)Math.Log(x, y),
+                IntegerMathNode_Operation.SquareRoot => (int)Math.Sqrt(x),
+                IntegerMathNode_Operation.Absolute => Math.Abs(x),
+                IntegerMathNode_Operation.Exponent => (int)Math.Exp(x),
 
-                IntegerMathNode_Operation.Minimum => Math.Min(X, Y),
-                IntegerMathNode_Operation.Maximum => Math.Max(X, Y),
-                IntegerMathNode_Operation.LessThan => X < Y ? 1 : 0,
-                IntegerMathNode_Operation.GreaterThan => X > Y ? 1 : 0,
-                IntegerMathNode_Operation.Sign => X < 0 ? -1 : X == 0 ? 0 : 1,
-                IntegerMathNode_Operation.Compare => X == Y ? 1 : 0,
-                IntegerMathNode_Operation.SmoothMinimum => (int)math_ext.smooth_min(X, Y, Tolerance),
-                IntegerMathNode_Operation.SmoothMaximum => (int)math_ext.smooth_max(X, Y, Tolerance),
+                IntegerMathNode_Operation.Minimum => Math.Min(x, y),
+                IntegerMathNode_Operation.Maximum => Math.Max(x, y),
+                IntegerMathNode_Operation.LessThan => x < y ? 1 : 0,
+                IntegerMathNode_Operation.GreaterThan => x > y ? 1 : 0,
+                IntegerMathNode_Operation.Sign => x < 0 ? -1 : x == 0 ? 0 : 1,
+                IntegerMathNode_Operation.Compare => x == y ? 1 : 0,
+                IntegerMathNode_Operation.SmoothMinimum => (int)math_ext.smooth_min(x, y, tolerance),
+                IntegerMathNode_Operation.SmoothMaximum => (int)math_ext.smooth_max(x, y, tolerance),
 
-                IntegerMathNode_Operation.Modulo => X % Y,
-                IntegerMathNode_Operation.Wrap => X = ((X - Y) % (Extra - Y) + (Extra - Y)) % (Extra - Y) + Y,
-                IntegerMathNode_Operation.Snap => (int) Math.Round((float)X / Y) * Y,
+                IntegerMathNode_Operation.Modulo => x % y,
+                IntegerMathNode_Operation.Wrap => ((x - y) % (extra - y) + (extra - y)) % (extra - y) + y,
+                IntegerMathNode_Operation.Snap => (int) Math.Round((float)x / y) * y,
 
                 _ => throw new ArgumentOutOfRangeException(nameof(Operation), Operation, null)
             };
