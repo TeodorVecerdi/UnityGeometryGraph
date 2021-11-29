@@ -30,7 +30,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateSize(size);
             });
 
-            sizeField.SetValueWithoutNotify(float3_ext.one);
+            sizeField.SetValueWithoutNotify(size);
 
             AddPort(sizePort);
             inputContainer.Add(sizeField);

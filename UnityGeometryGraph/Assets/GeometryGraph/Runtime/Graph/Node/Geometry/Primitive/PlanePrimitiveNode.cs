@@ -14,6 +14,12 @@ namespace GeometryGraph.Runtime.Graph {
         
         [Out] public GeometryData Result { get; private set; }
         
+        [GetterMethod(nameof(Result), Inline = true)]
+        private GeometryData GetResult() {
+            if (Result == null) CalculateResult();
+            return Result;
+        }
+        
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             Result = GeometryPrimitive.Plane(new float2(Width, Height), Subdivisions);

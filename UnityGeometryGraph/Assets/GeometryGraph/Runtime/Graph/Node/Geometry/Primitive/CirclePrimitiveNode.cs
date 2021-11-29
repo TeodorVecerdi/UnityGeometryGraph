@@ -12,10 +12,15 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public int Points { get; private set; } = 8;
         
         [Out] public GeometryData Result { get; private set; }
+        
+        [GetterMethod(nameof(Result), Inline = true)]
+        private GeometryData GetResult() {
+            if (Result == null) CalculateResult();
+            return Result;
+        }
 
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
-            DebugUtility.Log("Calculated result");
             Result = GeometryPrimitive.Circle(Radius, Points);
         }
     }
