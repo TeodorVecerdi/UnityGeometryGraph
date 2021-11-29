@@ -30,7 +30,6 @@ namespace GeometryGraph.Runtime.Graph {
 
             if (value == null) {
                 DebugUtility.Log("Return value was null");
-                return GeometryData.Empty;
             }
 
             return value;

@@ -38,7 +38,8 @@ namespace GeometryGraph.Runtime {
             geometryData = evaluationResult.GeometryData;
             
             if (exporter != null) {
-                exporter.Export(geometryData ?? GeometryData.Empty);
+                if (geometryData != null) exporter.Export(geometryData);
+                else exporter.Clear();
             }
         }
 

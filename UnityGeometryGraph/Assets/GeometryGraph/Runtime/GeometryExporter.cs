@@ -31,7 +31,14 @@ namespace GeometryGraph.Runtime.Geometry {
         public GeometryData Geometry => geometry;
         public Matrix4x4 LocalToWorldMatrix => transform.localToWorldMatrix;
 
+        public void Clear() {
+            DebugUtility.Log("Clearing Mesh");
+            geometry = GeometryData.Empty;
+            ClearMesh();
+        }
+
         public void Export(GeometryData geometry) {
+            DebugUtility.Log("Exporting Mesh");
             if (target == null || geometry == null) {
                 Debug.LogError("Target MeshFilter or Source is null");
                 return;
@@ -39,7 +46,8 @@ namespace GeometryGraph.Runtime.Geometry {
 
             this.geometry = geometry;
 
-            PrepareMesh();
+            ClearMesh();
+            ClearLists();
             positionAttr = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             normalAttr = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
             uvAttr = geometry.GetAttribute<Vector2Attribute>("uv", AttributeDomain.FaceCorner);
@@ -158,7 +166,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return (t0, t1, t2);
         }
 
-        private void PrepareMesh() {
+        private void ClearMesh() {
             if (mesh == null) mesh = target.sharedMesh;
             if (mesh == null) {
                 mesh = new Mesh {
@@ -170,6 +178,9 @@ namespace GeometryGraph.Runtime.Geometry {
 
             mesh.Clear();
             mesh.subMeshCount = geometry.SubmeshCount;
+        }
+
+        private void ClearLists() {
             vertices.Clear();
             normals.Clear();
             uvs.Clear();
