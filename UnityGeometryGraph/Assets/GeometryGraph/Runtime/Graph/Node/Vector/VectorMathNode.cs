@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GeometryGraph.Runtime.Attributes;
 using Unity.Mathematics;
 
@@ -26,74 +28,127 @@ namespace GeometryGraph.Runtime.Graph {
         [In, UpdatesProperties(nameof(VectorResult))] 
         public float Distance { get; private set; }
         
-        [Out] 
-        public float3 VectorResult { get; private set; }
-        [Out] 
-        public float FloatResult { get; private set; }
+        [Out] public float3 VectorResult { get; private set; }
+        [Out] public float FloatResult { get; private set; }
 
+        private readonly List<float3> vectorResults = new List<float3>();
+        private readonly List<float> floatResults = new List<float>();
+        private bool vectorResultDirty = true;
+        private bool floatResultDirty = true;
+        
+        [CalculatesProperty(nameof(VectorResult))] private void MarkVectorResultDirty() => vectorResultDirty = true;
+        [CalculatesProperty(nameof(FloatResult))] private void MarkFloatResultDirty() => floatResultDirty = true;
 
-        [GetterMethod(nameof(FloatResult))]
-        private float CalculateFloat() {
+        [GetterMethod(nameof(FloatResult), Inline = true)]
+        private float CalculateFloat() => CalculateFloat(X, Y);
+
+        [GetterMethod(nameof(VectorResult), Inline = true)]
+        private float3 CalculateVector() => CalculateVector(X, Y, WrapMax, IOR, Scale, Distance);
+
+        public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
+            if (count <= 0) yield break;
+            if (port == VectorResultPort) {
+                if (!vectorResultDirty && vectorResults.Count == count) {
+                    for (int i = 0; i < count; i++) {
+                        yield return vectorResults[i];
+                    }
+                    yield break;
+                }
+                
+                vectorResultDirty = false;
+                vectorResults.Clear();
+                List<float3> x = GetValues(XPort, count, X).ToList();
+                List<float3> y = GetValues(YPort, count, Y).ToList();
+                List<float3> wrapMax = GetValues(WrapMaxPort, count, WrapMax).ToList();
+                List<float> ior = GetValues(IORPort, count, IOR).ToList();
+                List<float> scale = GetValues(ScalePort, count, Scale).ToList();
+                List<float> distance = GetValues(DistancePort, count, Distance).ToList();
+                
+                for (int i = 0; i < count; i++) {
+                    float3 result = CalculateVector(x[i], y[i], wrapMax[i], ior[i], scale[i], distance[i]);
+                    vectorResults.Add(result);
+                    yield return result;
+                }
+            } else if (port == FloatResultPort) {
+                if (!floatResultDirty && floatResults.Count == count) {
+                    for (int i = 0; i < count; i++) {
+                        yield return floatResults[i];
+                    }
+                    yield break;
+                }
+                
+                floatResultDirty = false;
+                floatResults.Clear();
+                List<float3> x = GetValues(XPort, count, X).ToList();
+                List<float3> y = GetValues(YPort, count, Y).ToList();
+                for (int i = 0; i < count; i++) {
+                    float result = CalculateFloat(x[i], y[i]);
+                    floatResults.Add(result);
+                    yield return result;
+                }
+            }
+        }
+
+        private float CalculateFloat(float3 x, float3 y) {
             return Operation switch {
-                VectorMathNode_Operation.Length => math.length(X),
-                VectorMathNode_Operation.LengthSquared => math.lengthsq(X),
-                VectorMathNode_Operation.Distance => math.distance(X, Y),
-                VectorMathNode_Operation.DistanceSquared => math.distancesq(X, Y),
-                VectorMathNode_Operation.DotProduct => math.dot(X, Y),
+                VectorMathNode_Operation.Length => math.length(x),
+                VectorMathNode_Operation.LengthSquared => math.lengthsq(x),
+                VectorMathNode_Operation.Distance => math.distance(x, y),
+                VectorMathNode_Operation.DistanceSquared => math.distancesq(x, y),
+                VectorMathNode_Operation.DotProduct => math.dot(x, y),
                 _ => throw new ArgumentOutOfRangeException(nameof(Operation), Operation, null)
             };
         }
 
-        [GetterMethod(nameof(VectorResult))]
-        private float3 CalculateVector() {
+        private float3 CalculateVector(float3 x, float3 y, float3 wrapMax, float ior, float scale, float distance) {
             return Operation switch {
-                VectorMathNode_Operation.Add => X + Y,
-                VectorMathNode_Operation.Subtract => X - Y,
-                VectorMathNode_Operation.Multiply => X * Y,
-                VectorMathNode_Operation.Divide => X / Y,
-                VectorMathNode_Operation.Scale => X * Scale,
-                VectorMathNode_Operation.Normalize => math.normalize(X),
-                VectorMathNode_Operation.CrossProduct => math.cross(X, Y),
-                VectorMathNode_Operation.Project => math.project(X, Y),
-                VectorMathNode_Operation.Reflect => math.reflect(X, Y),
-                VectorMathNode_Operation.Refract => math.refract(X, Y, IOR),
-                VectorMathNode_Operation.Absolute => math.abs(X),
-                VectorMathNode_Operation.Minimum => math.min(X, Y),
-                VectorMathNode_Operation.Maximum => math.max(X, Y),
-                VectorMathNode_Operation.LessThan => new float3(X.x < Y.x ? 1.0f : 0.0f, X.y < Y.y ? 1.0f : 0.0f, X.z < Y.z ? 1.0f : 0.0f),
-                VectorMathNode_Operation.GreaterThan => new float3(X.x > Y.x ? 1.0f : 0.0f, X.y > Y.y ? 1.0f : 0.0f, X.z > Y.z ? 1.0f : 0.0f),
-                VectorMathNode_Operation.Sign => math.sign(X),
-                VectorMathNode_Operation.Compare => new float3(MathF.Abs(X.x - Y.x) < Distance ? 1.0f : 0.0f, 
-                                                               MathF.Abs(X.y - Y.y) < Distance ? 1.0f : 0.0f, 
-                                                               MathF.Abs(X.z - Y.z) < Distance ? 1.0f : 0.0f),
-                VectorMathNode_Operation.SmoothMinimum => new float3(math_ext.smooth_min(X.x, Y.x, Distance), 
-                                                                     math_ext.smooth_min(X.y, Y.y, Distance), 
-                                                                     math_ext.smooth_min(X.z, Y.z, Distance)),
-                VectorMathNode_Operation.SmoothMaximum => new float3(math_ext.smooth_max(X.x, Y.x, Distance), 
-                                                                     math_ext.smooth_max(X.y, Y.y, Distance), 
-                                                                     math_ext.smooth_max(X.z, Y.z, Distance)),
-                VectorMathNode_Operation.Round => math.round(X),
-                VectorMathNode_Operation.Floor => math.floor(X),
-                VectorMathNode_Operation.Ceil => math.ceil(X),
-                VectorMathNode_Operation.Truncate => math.trunc(X),
-                VectorMathNode_Operation.Fraction => math.frac(X),
-                VectorMathNode_Operation.Modulo => math.fmod(X, Y),
-                VectorMathNode_Operation.Wrap => new float3(math_ext.wrap(X.x, Y.x, WrapMax.x),
-                                                            math_ext.wrap(X.y, Y.y, WrapMax.y),
-                                                            math_ext.wrap(X.z, Y.z, WrapMax.z)),
-                VectorMathNode_Operation.Snap => new float3(MathF.Round(X.x / Y.x) * Y.x,
-                                                            MathF.Round(X.y / Y.y) * Y.y,
-                                                            MathF.Round(X.z / Y.z) * Y.z),
-                VectorMathNode_Operation.Sine => math.sin(X),
-                VectorMathNode_Operation.Cosine => math.cos(X),
-                VectorMathNode_Operation.Tangent => math.tan(X),
-                VectorMathNode_Operation.Arcsine => math.asin(X),
-                VectorMathNode_Operation.Arccosine => math.acos(X),
-                VectorMathNode_Operation.Arctangent => math.atan(X),
-                VectorMathNode_Operation.Atan2 => math.atan2(X, Y),
-                VectorMathNode_Operation.ToRadians => math.radians(X),
-                VectorMathNode_Operation.ToDegrees => math.degrees(X),
-                VectorMathNode_Operation.Lerp => math.lerp(X, Y, Distance),
+                VectorMathNode_Operation.Add => x + y,
+                VectorMathNode_Operation.Subtract => x - y,
+                VectorMathNode_Operation.Multiply => x * y,
+                VectorMathNode_Operation.Divide => x / y,
+                VectorMathNode_Operation.Scale => x * scale,
+                VectorMathNode_Operation.Normalize => math.normalize(x),
+                VectorMathNode_Operation.CrossProduct => math.cross(x, y),
+                VectorMathNode_Operation.Project => math.project(x, y),
+                VectorMathNode_Operation.Reflect => math.reflect(x, y),
+                VectorMathNode_Operation.Refract => math.refract(x, y, ior),
+                VectorMathNode_Operation.Absolute => math.abs(x),
+                VectorMathNode_Operation.Minimum => math.min(x, y),
+                VectorMathNode_Operation.Maximum => math.max(x, y),
+                VectorMathNode_Operation.LessThan => new float3(x.x < y.x ? 1.0f : 0.0f, x.y < y.y ? 1.0f : 0.0f, x.z < y.z ? 1.0f : 0.0f),
+                VectorMathNode_Operation.GreaterThan => new float3(x.x > y.x ? 1.0f : 0.0f, x.y > y.y ? 1.0f : 0.0f, x.z > y.z ? 1.0f : 0.0f),
+                VectorMathNode_Operation.Sign => math.sign(x),
+                VectorMathNode_Operation.Compare => new float3(MathF.Abs(x.x - y.x) < distance ? 1.0f : 0.0f, 
+                                                               MathF.Abs(x.y - y.y) < distance ? 1.0f : 0.0f, 
+                                                               MathF.Abs(x.z - y.z) < distance ? 1.0f : 0.0f),
+                VectorMathNode_Operation.SmoothMinimum => new float3(math_ext.smooth_min(x.x, y.x, distance), 
+                                                                     math_ext.smooth_min(x.y, y.y, distance), 
+                                                                     math_ext.smooth_min(x.z, y.z, distance)),
+                VectorMathNode_Operation.SmoothMaximum => new float3(math_ext.smooth_max(x.x, y.x, distance), 
+                                                                     math_ext.smooth_max(x.y, y.y, distance), 
+                                                                     math_ext.smooth_max(x.z, y.z, distance)),
+                VectorMathNode_Operation.Round => math.round(x),
+                VectorMathNode_Operation.Floor => math.floor(x),
+                VectorMathNode_Operation.Ceil => math.ceil(x),
+                VectorMathNode_Operation.Truncate => math.trunc(x),
+                VectorMathNode_Operation.Fraction => math.frac(x),
+                VectorMathNode_Operation.Modulo => math.fmod(x, y),
+                VectorMathNode_Operation.Wrap => new float3(math_ext.wrap(x.x, y.x, wrapMax.x),
+                                                            math_ext.wrap(x.y, y.y, wrapMax.y),
+                                                            math_ext.wrap(x.z, y.z, wrapMax.z)),
+                VectorMathNode_Operation.Snap => new float3(MathF.Round(x.x / y.x) * y.x,
+                                                            MathF.Round(x.y / y.y) * y.y,
+                                                            MathF.Round(x.z / y.z) * y.z),
+                VectorMathNode_Operation.Sine => math.sin(x),
+                VectorMathNode_Operation.Cosine => math.cos(x),
+                VectorMathNode_Operation.Tangent => math.tan(x),
+                VectorMathNode_Operation.Arcsine => math.asin(x),
+                VectorMathNode_Operation.Arccosine => math.acos(x),
+                VectorMathNode_Operation.Arctangent => math.atan(x),
+                VectorMathNode_Operation.Atan2 => math.atan2(x, y),
+                VectorMathNode_Operation.ToRadians => math.radians(x),
+                VectorMathNode_Operation.ToDegrees => math.degrees(x),
+                VectorMathNode_Operation.Lerp => math.lerp(x, y, distance),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
