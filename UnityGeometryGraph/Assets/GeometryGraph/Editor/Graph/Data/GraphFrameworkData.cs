@@ -109,8 +109,6 @@ namespace GeometryGraph.Editor {
             foreach (AbstractProperty property in otherGraphData.properties) {
                 AddProperty(property);
             }
-            
-            RuntimeGraphData.Load(otherGraphData.RuntimeGraphData);
         }
 
         public void AddNode(SerializedNode node) {

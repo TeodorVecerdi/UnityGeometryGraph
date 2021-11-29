@@ -16,11 +16,11 @@ namespace GeometryGraph.Runtime.Graph {
             }
 
             LoadScenePropertyValues(sceneData.PropertyData);
-            GeometryData result = RuntimeData.OutputNode.EvaluateGraph();
+            GeometryData geometry = RuntimeData.OutputNode.EvaluateGraph();
             CurveData curve = RuntimeData.OutputNode.GetDisplayCurve();
             CleanupScenePropertyValues();
             
-            return new GeometryGraphEvaluationResult(result, curve);
+            return new GeometryGraphEvaluationResult(geometry, curve);
         }
 
         public void Load(RuntimeGraphObjectData runtimeData) {

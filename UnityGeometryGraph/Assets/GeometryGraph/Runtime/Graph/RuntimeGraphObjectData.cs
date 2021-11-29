@@ -39,7 +39,7 @@ namespace GeometryGraph.Runtime {
 
         public void Load(RuntimeGraphObjectData runtimeData) {
             Guid = runtimeData.Guid;
-            
+
             Nodes.Clear();
             Nodes.AddRange(runtimeData.Nodes);
             Connections.Clear();

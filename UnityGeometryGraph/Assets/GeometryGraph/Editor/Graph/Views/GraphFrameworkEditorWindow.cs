@@ -85,7 +85,7 @@ namespace GeometryGraph.Editor {
 
             bool wasUndoRedoPerformed = graphObject.WasUndoRedoPerformed;
             if (wasUndoRedoPerformed) {
-                editorView.HandleChanges();
+                // editorView.HandleChanges();
                 graphObject.GraphData.ClearChanges();
                 graphObject.HandleUndoRedo();
             }
