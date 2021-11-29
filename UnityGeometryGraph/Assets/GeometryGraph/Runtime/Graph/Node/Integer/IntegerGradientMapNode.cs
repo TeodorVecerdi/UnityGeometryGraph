@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Data;
 using Unity.Mathematics;
@@ -31,21 +32,50 @@ namespace GeometryGraph.Runtime.Graph {
 
         [CalculatesAllProperties]
         private void Calculate() {
-            if (Min > Max) (Min, Max) = (Max, Min);
-            result = Gradient.Evaluate(((float)Value).Map(Min, Max, 0.0f, 1.0f));
+            result = Calculate(Value, Min, Max);
         }
-        
+
+        [CalculatesAllProperties]
+        private void MarkResultsDirty() => resultsDirty = true;
+
+        private readonly List<RGBAlphaPair> results = new List<RGBAlphaPair>();
+        private bool resultsDirty = true;
+
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
             if (count <= 0) yield break;
-            IEnumerable<int> values = GetValues(ValuePort, count, Value);
-            foreach (int value in values) {
-                RGBAlphaPair evaluated = Gradient.Evaluate(((float)value).Map(Min, Max, 0.0f, 1.0f));
+            if (!resultsDirty && results.Count == count) {
+                for (int i = 0; i < count; i++) {
+                    if (port == ResultRGBPort) {
+                        yield return results[i].RGB;
+                    } else if (port == ResultAlphaPort) {
+                        yield return results[i].Alpha;
+                    }
+                }
+                
+                yield break;
+            }
+            
+            List<int> values = GetValues(ValuePort, count, Value).ToList();
+            List<int> mins = GetValues(MinPort, count, Min).ToList();
+            List<int> maxs = GetValues(MaxPort, count, Max).ToList();
+            results.Clear();
+            
+            for(int i = 0; i < count; i++) {
+                RGBAlphaPair evaluated = Calculate(values[i], mins[i], maxs[i]);
+                results.Add(evaluated);
                 if (port == ResultRGBPort) {
                     yield return evaluated.RGB;
                 } else if (port == ResultAlphaPort) {
                     yield return evaluated.Alpha;
                 }
             }
+            
+            resultsDirty = false;
+        }
+
+        private RGBAlphaPair Calculate(int value, int min, int max) {
+            if (min > max) (min, max) = (min, max);
+            return Gradient.Evaluate(((float)value).Map(min, max, 0.0f, 1.0f));
         }
 
         public static UnityEngine.Gradient Default => new() {
