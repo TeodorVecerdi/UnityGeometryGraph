@@ -197,7 +197,6 @@ namespace GeometryGraph.Runtime.Geometry {
             const int faceCount = 12;
             const int edgeCount = 18;
             
-            
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = new bool[faceCount].ToList();
             List<float> creases = new float[edgeCount].ToList();
@@ -233,28 +232,28 @@ namespace GeometryGraph.Runtime.Geometry {
             float2 up = float2_ext.up;
             float2 one = float2_ext.one;
             List<float2> uvs = new List<float2> {
-                zero, right, up, one, up, right,
-                zero, right, up, one, up, right, 
-                zero, right, up, one, up, right,
-                zero, right, up, one, up, right,
-                zero, right, up, one, up, right,
-                zero, right, up, one, up, right
+                right, zero, one, up, one, zero,
+                zero, up, right, one, right, up, 
+                zero, up, right, one, right, up,
+                zero, up, right, one, right, up,
+                zero, up, right, one, right, up,
+                zero, up, right, one, right, up,
             };
 
             int fcI = 0;
-            List<GeometryData.Face> faces = new List<GeometryData.Face> {
-                new GeometryData.Face(2, 1, 3, fcI++, fcI++, fcI++, 1, 4, 2), 
-                new GeometryData.Face(1, 0, 3, fcI++, fcI++, fcI++, 0, 3, 4),
-                new GeometryData.Face(0, 1, 4, fcI++, fcI++, fcI++, 0, 9, 5), 
-                new GeometryData.Face(5, 4, 1, fcI++, fcI++, fcI++, 13, 9, 6),
-                new GeometryData.Face(1, 2, 5, fcI++, fcI++, fcI++, 1, 10, 6), 
-                new GeometryData.Face(6, 5, 2, fcI++, fcI++, fcI++, 14, 10, 7),
-                new GeometryData.Face(2, 3, 6, fcI++, fcI++, fcI++, 2, 11, 7), 
-                new GeometryData.Face(7, 6, 3, fcI++, fcI++, fcI++, 15, 11, 8),
-                new GeometryData.Face(3, 0, 7, fcI++, fcI++, fcI++, 3, 12, 8), 
-                new GeometryData.Face(4, 7, 0, fcI++, fcI++, fcI++, 16, 12, 5),
-                new GeometryData.Face(4, 5, 7, fcI++, fcI++, fcI++, 13, 17, 16), 
-                new GeometryData.Face(6, 7, 5, fcI++, fcI++, fcI++, 15, 17, 14),
+            List<GeometryData.Face> faces = new() {
+                new GeometryData.Face(2, 3, 1, fcI++, fcI++, fcI++, 2, 4, 1), 
+                new GeometryData.Face(0, 1, 3, fcI++, fcI++, fcI++, 4, 3, 0),
+                new GeometryData.Face(0, 4, 1, fcI++, fcI++, fcI++, 5, 9, 0), 
+                new GeometryData.Face(5, 1, 4, fcI++, fcI++, fcI++, 6, 9, 13),
+                new GeometryData.Face(1, 5, 2, fcI++, fcI++, fcI++, 6, 10, 1), 
+                new GeometryData.Face(6, 2, 5, fcI++, fcI++, fcI++, 7, 10, 14),
+                new GeometryData.Face(2, 6, 3, fcI++, fcI++, fcI++, 7, 11, 2), 
+                new GeometryData.Face(7, 3, 6, fcI++, fcI++, fcI++, 8, 11, 15),
+                new GeometryData.Face(3, 7, 0, fcI++, fcI++, fcI++, 8, 12, 3), 
+                new GeometryData.Face(4, 0, 7, fcI++, fcI++, fcI++, 5, 12, 16),
+                new GeometryData.Face(4, 7, 5, fcI++, fcI++, fcI++, 16, 17, 13), 
+                new GeometryData.Face(6, 5, 7, fcI++, fcI++, fcI++, 14, 17, 15),
             };
 
             int eI = 0;
