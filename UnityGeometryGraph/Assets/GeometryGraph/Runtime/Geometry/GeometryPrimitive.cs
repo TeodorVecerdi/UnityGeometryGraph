@@ -415,14 +415,14 @@ namespace GeometryGraph.Runtime.Geometry {
             for (int i = 0; i < points; i++) {
                 faces.Add(
                     new GeometryData.Face(
-                        (i + 1) * 2, 0, ((i + 1) % points + 1) * 2,
+                        (i + 1) * 2, ((i + 1) % points + 1) * 2, 0,
                         fcI++, fcI++, fcI++,
                         i * 6, ((i + 1) % points) * 6, i * 6 + 4
                     )
                 );
                 faces.Add(
                     new GeometryData.Face(
-                        1, (i + 1) * 2 + 1, ((i + 1) % points + 1) * 2 + 1,
+                        1, ((i + 1) % points + 1) * 2 + 1, (i + 1) * 2 + 1, 
                         fcI++, fcI++, fcI++,
                         i * 6 + 2, i * 6 + 5, ((i + 1) % points) * 6 + 2
                     )
@@ -443,11 +443,11 @@ namespace GeometryGraph.Runtime.Geometry {
                 );
                 
                 uvs.Add(vertexUvs[(i + 1) * 2]);
-                uvs.Add(vertexUvs[0]);
                 uvs.Add(vertexUvs[((i + 1) % points + 1) * 2]);
+                uvs.Add(vertexUvs[0]);
                 uvs.Add(vertexUvs[1]);
-                uvs.Add(vertexUvs[(i + 1) * 2 + 1]);
                 uvs.Add(vertexUvs[((i + 1) % points + 1) * 2 + 1]);
+                uvs.Add(vertexUvs[(i + 1) * 2 + 1]);
                 
                 uvs.Add(float2.zero);
                 uvs.Add(float2_ext.up);
