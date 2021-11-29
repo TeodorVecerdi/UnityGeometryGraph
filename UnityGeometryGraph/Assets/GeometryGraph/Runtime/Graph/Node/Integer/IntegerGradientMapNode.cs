@@ -74,7 +74,6 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         private RGBAlphaPair Calculate(int value, int min, int max) {
-            if (min > max) (min, max) = (min, max);
             return Gradient.Evaluate(((float)value).Map(min, max, 0.0f, 1.0f));
         }
 
