@@ -132,6 +132,7 @@ VisualElement#GeometryGraphInspector TabContainer.tab-container > VisualElement.
   padding-top: 8px;
   padding-bottom: 8px;
   border-width: 1px;
+  margin-right: 1px;
   border-color: var(--obj-field-bg);
   display: flex;
 }

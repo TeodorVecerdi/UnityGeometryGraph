@@ -8,8 +8,8 @@ VisualElement#GeometryGraphInspector {
   --vector3-x-label-bg: #c62c15;
   --vector3-y-label-bg: #439a24;
   --vector3-z-label-bg: #1e6cc2;
-  --vector3-comps-label: var(--text-white);
-  --text-white: #ffffff;
+  --vector3-comps-label: #DFDFDF;
+  --text-white: #181818;
   --theme: #FFA300;
   --theme-dark: #e88300;
 }
