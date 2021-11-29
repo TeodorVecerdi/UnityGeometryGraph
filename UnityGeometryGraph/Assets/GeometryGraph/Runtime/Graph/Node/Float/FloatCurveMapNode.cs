@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Data;
 
@@ -14,17 +15,35 @@ namespace GeometryGraph.Runtime.Graph {
         
         [Out] public float Result { get; private set; }
 
-        public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
-            if (port != ResultPort || count <= 0) yield break;
-            IEnumerable<float> values = GetValues(ValuePort, count, Value);
-            foreach (float value in values) {
-                yield return Curve.Evaluate(value);
-            }
-        }
+        private readonly List<float> results = new List<float>();
+        private bool resultsDirty = true;
 
         [CalculatesProperty(nameof(Result))]
-        private void Calculate() {
-            Result = Curve.Evaluate(Value);
+        private void Calculate() => Result = Curve.Evaluate(Value);
+
+        [CalculatesProperty(nameof(Result))]
+        private void MarkResultsDirty() => resultsDirty = true;
+
+        public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
+            if (port != ResultPort || count <= 0) yield break;
+            if (!resultsDirty && results.Count == count) {
+                for (int i = 0; i < count; i++) {
+                    yield return results[i];
+                }
+                
+                yield break;
+            }
+
+            List<float> values = GetValues(ValuePort, count, Value).ToList();
+            results.Clear();
+            
+            for (int i = 0; i < count; i++) {
+                float result = Curve.Evaluate(values[i]);
+                results.Add(result);
+                yield return result;
+            }
+            
+            resultsDirty = false;
         }
     }
 }
