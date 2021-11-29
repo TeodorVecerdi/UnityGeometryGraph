@@ -15,24 +15,45 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float ToMax { get; private set; } = 1.0f;
         [Out] public float Result { get; private set; }
 
+        private readonly List<float> results = new List<float>();
+        private bool resultsDirty = true;
+
         [GetterMethod(nameof(Result), Inline = true), UsedImplicitly]
         private float GetResult() {
-            float value = Value.Map(FromMin, FromMax, ToMin, ToMax);
-            return Clamp ? value.Clamped(ToMin, ToMax) : value;
+            return CalculateResult(Value, FromMin, FromMax, ToMin, ToMax, Clamp);
         }
+        
+        [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
-            if (port != ResultPort) yield break;
-            if (count <= 0) yield break;
-
-            IEnumerable<float> values;
-            if (ValuePort.IsConnected) values = GetValues(ValuePort, count, Value);
-            else values = Enumerable.Repeat(Value, count);
-            
-            foreach (float value in values) {
-                float mapped = value.Map(FromMin, FromMax, ToMin, ToMax);
-                yield return Clamp ? mapped.Clamped(ToMin, ToMax) : mapped;
+            if (port != ResultPort || count <= 0) yield break;
+            if (!resultsDirty && results.Count == count) {
+                for (int i = 0; i < count; i++) {
+                    yield return results[i];
+                }
+                
+                yield break;
             }
+
+            List<float> values = GetValues(ValuePort, count, Value).ToList();
+            List<float> fromMin = GetValues(FromMinPort, count, FromMin).ToList();
+            List<float> fromMax = GetValues(FromMaxPort, count, FromMax).ToList();
+            List<float> toMin = GetValues(ToMinPort, count, ToMin).ToList();
+            List<float> toMax = GetValues(ToMaxPort, count, ToMax).ToList();
+            results.Clear();
+
+            for (int i = 0; i < count; i++) {
+                float result = CalculateResult(values[i], fromMin[i], fromMax[i], toMin[i], toMax[i], Clamp);
+                results.Add(result);
+                yield return result;
+            }
+            
+            resultsDirty = false;
+        }
+
+        private float CalculateResult(float value, float fromMin, float fromMax, float toMin, float toMax, bool clamp) {
+            float calculated = value.Map(fromMin, fromMax, toMin, toMax);
+            return clamp ? calculated.Clamped(toMin, toMax) : calculated;
         }
     }
 }
