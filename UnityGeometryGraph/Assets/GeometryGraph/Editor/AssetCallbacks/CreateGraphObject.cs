@@ -39,8 +39,6 @@ namespace GeometryGraph.Editor {
             graphObject.AssetGuid = graphObject.GraphData.AssetGuid;
 
             GraphFrameworkUtility.CreateFile(pathName, graphObject, false);
-            Debug.Log(pathName);
-            
             AssetDatabase.ImportAsset(pathName);
         }
     }

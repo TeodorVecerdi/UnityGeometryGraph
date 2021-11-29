@@ -260,12 +260,12 @@ namespace GeometryGraph.Runtime.Curve {
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
                     faceCorners.Add(new GeometryData.FaceCorner(faces.Count - 1));
+                    uvs.Add(float2_ext.right);
                     uvs.Add(float2_ext.zero);
-                    uvs.Add(float2_ext.right);
-                    uvs.Add(float2_ext.up);
-                    uvs.Add(float2_ext.right);
                     uvs.Add(float2_ext.one);
+                    uvs.Add(float2_ext.zero);
                     uvs.Add(float2_ext.up);
+                    uvs.Add(float2_ext.one);
                 }
             }
 
