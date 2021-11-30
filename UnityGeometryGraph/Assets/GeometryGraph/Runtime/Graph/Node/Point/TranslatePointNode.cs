@@ -1,4 +1,6 @@
-﻿using GeometryGraph.Runtime.Attributes;
+﻿using System.Collections;
+using System.Collections.Generic;
+using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Geometry;
 using Unity.Mathematics;
@@ -26,8 +28,10 @@ namespace GeometryGraph.Runtime.Graph {
             Result = Input.Clone();
             Vector3Attribute positionAttr = Result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             if (Mode == TranslatePointNode_Mode.Vector) {
-                positionAttr.Yield(position => position + Translation).Into(positionAttr);
-                
+                Vector3Attribute translations = GetValues(TranslationPort, positionAttr.Count, Translation)
+                                               .Into<Vector3Attribute>("temp_translation", AttributeDomain.Vertex);
+                positionAttr.YieldWithAttribute(translations, (position, translation) => position + translation).Into(positionAttr);
+
                 /*
                 Storing even though I'm writing to the same attribute (with the .Into call) because AttributeManager
                 makes no guarantee that it will return the original attribute and not a clone of the attribute.

@@ -33,16 +33,16 @@ namespace GeometryGraph.Runtime.Graph {
             Vector3Attribute rotAttribute = Result.GetAttributeOrDefault<Vector3Attribute, float3>("rotation", AttributeDomain.Vertex, float3.zero);
             if (RotationType == RotatePointNode_RotationType.Euler) {
                 Vector3Attribute tmpAttribute = RotationMode == RotatePointNode_RotationMode.Vector 
-                    ? Enumerable.Repeat(Rotation, rotAttribute.Count).Into<Vector3Attribute>("tmp", AttributeDomain.Vertex) 
+                    ? GetValues(RotationPort, rotAttribute.Count, Rotation).Into<Vector3Attribute>("rotAttribute", AttributeDomain.Vertex) 
                     : Result.GetAttributeOrDefault<Vector3Attribute, float3>(RotationAttribute, AttributeDomain.Vertex, float3.zero);
                 
                 rotAttribute.YieldWithAttribute(tmpAttribute, (rot, euler) => math.rotate(quaternion.Euler(euler), rot)).Into(rotAttribute);
             } else {
                 Vector3Attribute axisAttribute = AxisMode == RotatePointNode_AxisMode.Vector 
-                    ? Enumerable.Repeat(Axis, rotAttribute.Count).Into<Vector3Attribute>("axisAttribute", AttributeDomain.Vertex) 
+                    ? GetValues(AxisPort, rotAttribute.Count, Axis).Into<Vector3Attribute>("axisAttribute", AttributeDomain.Vertex) 
                     : Result.GetAttributeOrDefault<Vector3Attribute, float3>(AxisAttribute, AttributeDomain.Vertex, float3_ext.up);
                 FloatAttribute angleAttribute = AngleMode == RotatePointNode_AngleMode.Float
-                    ? Enumerable.Repeat(Angle, rotAttribute.Count).Into<FloatAttribute>("angleAttribute", AttributeDomain.Vertex)
+                    ? GetValues(AnglePort, rotAttribute.Count, Angle).Into<FloatAttribute>("angleAttribute", AttributeDomain.Vertex)
                     : Result.GetAttributeOrDefault<FloatAttribute, float>(AngleAttribute, AttributeDomain.Vertex, 0.0f);
                 rotAttribute.YieldWithAttribute(axisAttribute, angleAttribute,
                                                      (rot, axis, angle) => math.rotate(quaternion.AxisAngle(axis, angle), rot))
