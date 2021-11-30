@@ -21,10 +21,6 @@
   margin-right: 0;
 }
 
-.node > VisualElement#node-border > VisualElement#contents > VisualElement#top > VisualElement#input {
-  flex-shrink: 1;
-}
-
 EnumField > .unity-text-element.unity-label.unity-enum-field__label.unity-base-field__label {
   padding-right: 12px;
 }
@@ -76,23 +72,66 @@ VectorValueNode VisualElement#extension Vector3Field.unity-vector3-field > Visua
 /*
  * @section General Node
  */
-.node #title-container {
+.categorized .node #title {
+  border-bottom-width: 8px;
+  border-bottom-color: var(--category-color);
+}
+.categorized .node #title > #title-label {
+  margin-bottom: 0;
+  margin-top: 8px;
+}
+
+.node {
+  --category-color: #242424;
+}
+.node.category-Input {
+  --category-color: #DB1533;
+}
+.node.category-Float {
+  --category-color: #84E4E7;
+}
+.node.category-Integer {
+  --category-color: #CB3022;
+}
+.node.category-Vector {
+  --category-color: #F6FF9A;
+}
+.node.category-Boolean {
+  --category-color: #9481E6;
+}
+.node.category-Geometry {
+  --category-color: #FFA300;
+}
+.node.category-Curve {
+  --category-color: #0AC778;
+}
+.node.category-Point {
+  --category-color: #216BCB;
+}
+.node.category-Properties {
+  --category-color: #ff6200;
+}
+.node #collapsible-area {
+  background-color: #212121;
+}
+.node #node-border {
+  overflow: visible;
+  border-width: 0;
+}
+.node #node-border #title {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
 }
-.node #collapsible-area {
-  background-color: #212121;
-}
-.node #title-label {
+.node #node-border #title #title-label {
   -unity-font-style: bold;
   color: #e2e2e2;
   margin-left: 16px;
+  -unity-overflow-clip-box: content-box;
 }
-.node #node-border {
-  overflow: visible;
-  border-width: 0;
+.node #node-border > VisualElement#contents > VisualElement#top > VisualElement#input {
+  flex-shrink: 1;
 }
 .node #selection-border {
   margin: 2px;
@@ -107,7 +146,7 @@ VectorValueNode VisualElement#extension Vector3Field.unity-vector3-field > Visua
 .node:checked #selection-border, .node:hover:checked #selection-border {
   margin: 2px;
   border-width: 1px;
-  border-color: #216bcb;
+  border-color: #216BCB;
 }
 
 /*# sourceMappingURL=Node.uss.map */

@@ -5,28 +5,28 @@ GraphFrameworkPort.output {
   margin-right: -12px;
 }
 GraphFrameworkPort.portType-Integer {
-  --port-color: #cb3022;
+  --port-color: #CB3022;
 }
 GraphFrameworkPort.portType-Float {
-  --port-color: #84e4e7;
+  --port-color: #84E4E7;
 }
 GraphFrameworkPort.portType-Vector {
-  --port-color: #f6ff9a;
+  --port-color: #F6FF9A;
 }
 GraphFrameworkPort.portType-Boolean {
-  --port-color: #9481e6;
+  --port-color: #9481E6;
 }
 GraphFrameworkPort.portType-Geometry {
   --port-color: #FFA300;
 }
 GraphFrameworkPort.portType-Collection {
-  --port-color: #216bcb;
+  --port-color: #216BCB;
 }
 GraphFrameworkPort.portType-String {
-  --port-color: #8dcd0d;
+  --port-color: #8DCD0D;
 }
 GraphFrameworkPort.portType-Curve {
-  --port-color: #0ac778;
+  --port-color: #0AC778;
 }
 
 /*# sourceMappingURL=Port.uss.map */

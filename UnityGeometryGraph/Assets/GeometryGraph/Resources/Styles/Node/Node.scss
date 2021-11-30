@@ -22,10 +22,6 @@
     margin-right: 0;
 }
 
-.node > VisualElement#node-border > VisualElement#contents > VisualElement#top > VisualElement#input {
-    flex-shrink: 1;
-}
-
 EnumField {
     & > .unity-text-element.unity-label.unity-enum-field__label.unity-base-field__label {
         padding-right: 12px;
@@ -89,32 +85,82 @@ VectorValueNode VisualElement#extension Vector3Field.unity-vector3-field {
  * @section General Node
  */
 
+.categorized {
+    .node #title {
+        border-bottom-width: 8px;
+        border-bottom-color: var(--category-color);
+        
+        & > #title-label {
+            margin-bottom: 0;
+            margin-top: 8px;
+        }
+    }
+}
+
 .node {
-    #title {
-        //border-top-left-radius: 5px;
-        //border-top-right-radius: 5px;
-    }
+    --category-color: #242424;
 
-    #title-container {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: center;
-    }
-
-    #collapsible-area {
-        background-color: #212121;
+    &.category-Input {
+        --category-color: #DB1533;
     }
     
-    #title-label {
-        -unity-font-style: bold;
-        color: #e2e2e2;
-        margin-left: 16px;
+    &.category-Float {
+        --category-color: #84E4E7;
+    }
+    
+    &.category-Integer {
+        --category-color: #CB3022;
+    }
+
+    &.category-Vector {
+        --category-color: #F6FF9A;
+    }
+    
+    &.category-Boolean {
+        --category-color: #9481E6;
+    }
+    
+    &.category-Geometry {
+        --category-color: #FFA300;
+    }
+    
+    &.category-Curve {
+        --category-color: #0AC778;
+    }
+    
+    &.category-Point {
+        --category-color: #216BCB;
+    }
+    
+    &.category-Properties {
+        --category-color: #ff6200;
+    }
+    
+    #collapsible-area {
+        background-color: #212121;
     }
     
     #node-border {
         overflow: visible;
         border-width: 0;
+
+        #title {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+
+            #title-label {
+                -unity-font-style: bold;
+                color: #e2e2e2;
+                margin-left: 16px;
+                -unity-overflow-clip-box: content-box;
+            }
+        }
+        
+        & > VisualElement#contents > VisualElement#top > VisualElement#input {
+            flex-shrink: 1;
+        }
     }
     
     #selection-border {
@@ -135,7 +181,7 @@ VectorValueNode VisualElement#extension Vector3Field.unity-vector3-field {
         #selection-border {
             margin: 2px;
             border-width: 1px;
-            border-color: #216bcb;
+            border-color: #216BCB;
         }
     }
 }
