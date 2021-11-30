@@ -5,13 +5,18 @@ using UnityEngine;
 
 namespace GeometryGraph.Editor {
     public static class MenuItems {
-        [MenuItem("Geometry Graph/Toggle Debug")]
+        [MenuItem("Geometry Graph/Recompile Code", priority = 0)]
+        public static void RecompileCode() {
+            CompilationPipeline.RequestScriptCompilation();
+        }
+
+        [MenuItem("Geometry Graph/Toggle Debug", priority = 1)]
         public static void ToggleDebug() {
             Debug.Log(RuntimeGraphObject.DebugEnabled ? "Disabled debug." : "Enabled debug.");
             RuntimeGraphObject.DebugEnabled = !RuntimeGraphObject.DebugEnabled;
         }
-        
-        [MenuItem("Geometry Graph/Print InstanceID")]
+
+        [MenuItem("Geometry Graph/Print InstanceID", priority = 100)]
         public static void PrintInstanceId() {
             Object selection = Selection.activeObject;
             Object[] allAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(selection));
@@ -20,8 +25,8 @@ namespace GeometryGraph.Editor {
                 
             }
         }
-        
-        [MenuItem("Geometry Graph/Find all instances")]
+
+        [MenuItem("Geometry Graph/Find all instances", priority = 101)]
         public static void FindGFOInstances() {
             GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
             Debug.Log($"Graph Objects: {instances.Length}");
@@ -35,8 +40,8 @@ namespace GeometryGraph.Editor {
                 Debug.Log($"RGO:{runtimeGraphObject.name}/{runtimeGraphObject.GetInstanceID()}");
             }
         }
-        
-        [MenuItem("Geometry Graph/Delete all instances")]
+
+        [MenuItem("Geometry Graph/Delete all instances", priority = 102)]
         public static void DeleteGFOInstances() {
             GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
             Debug.Log(instances.Length);
@@ -45,8 +50,8 @@ namespace GeometryGraph.Editor {
                 Object.DestroyImmediate(graphFrameworkObject, true);
             }
         }
-        
-        [MenuItem("Geometry Graph/Delete negative instances")]
+
+        [MenuItem("Geometry Graph/Delete negative instances", priority = 103)]
         public static void DeleteNegativeGFOInstances() {
             GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
             foreach (GraphFrameworkObject graphFrameworkObject in instances) {
@@ -63,11 +68,6 @@ namespace GeometryGraph.Editor {
                     Object.DestroyImmediate(runtimeGraphObject, true);
                 }
             }
-        }
-        
-        [MenuItem("Geometry Graph/Force recompile")]
-        public static void ForceRecompile() {
-            CompilationPipeline.RequestScriptCompilation();
         }
     }
 }
