@@ -68,11 +68,21 @@ namespace GeometryGraph.Editor {
                     string saved = GraphFrameworkUtility.ReadCompressed(AssetDatabase.GUIDToAssetPath(GraphObject.AssetGuid));
                     Debug.Log($"{current}\n\n{saved}");
                 }
-                if (GUILayout.Button("Debug 2", EditorStyles.toolbarButton)) {
-                    string assetGuid = GraphObject.AssetGuid;
-                    string assetGuidSelected = EditorWindow.SelectedAssetGuid;
-                    string calculated = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(GraphObject));
-                    Debug.Log($"{assetGuid} ;; {assetGuidSelected} ;; {calculated}");
+                if (GUILayout.Button("Is Same Asset", EditorStyles.toolbarButton)) {
+                    string path = AssetDatabase.GUIDToAssetPath(GraphObject.AssetGuid);
+                    Object[] allAssetsAtPath = AssetDatabase.LoadAllAssetsAtPath(path);
+                    GraphFrameworkObject gfo = null;
+                    RuntimeGraphObject rgo = null;
+                    foreach (Object o in allAssetsAtPath) {
+                        if (o is GraphFrameworkObject gfo2) {
+                            gfo = gfo2;
+                        } else if (o is RuntimeGraphObject rgo2) {
+                            rgo = rgo2;
+                        }
+                    }
+
+                    Debug.Log($"GO: {GraphObject == gfo} ;; {GraphObject.GetInstanceID()} - {(gfo != null ? gfo.GetInstanceID() : -1)}");
+                    Debug.Log($"RGO: {GraphObject.RuntimeGraph == rgo} ;; {GraphObject.RuntimeGraph.GetInstanceID()} - {(rgo != null ? rgo.GetInstanceID() : -1)}");
                 }
 
                 GUILayout.FlexibleSpace();

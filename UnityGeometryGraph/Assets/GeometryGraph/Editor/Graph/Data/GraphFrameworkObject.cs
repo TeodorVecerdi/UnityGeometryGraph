@@ -12,10 +12,11 @@ namespace GeometryGraph.Editor {
         [SerializeField] public string AssetGuid;
         [SerializeField] public bool IsBlackboardVisible;
         [SerializeField] public bool AreCategoriesEnabled;
+        [SerializeField] public RuntimeGraphObject RuntimeGraph;
+        
         [SerializeField] private string serializedGraph;
         [SerializeField] private int fileVersion;
         [SerializeField] private bool isDirty;
-        [SerializeField] public RuntimeGraphObject RuntimeGraph;
 
         public GraphFrameworkData GraphData {
             get => graphData;

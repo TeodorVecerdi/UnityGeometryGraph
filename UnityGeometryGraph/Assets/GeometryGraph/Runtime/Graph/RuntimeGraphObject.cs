@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using GeometryGraph.Runtime.Curve;
 using GeometryGraph.Runtime.Data;
@@ -43,6 +42,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (UnityEditor.Selection.activeGameObject == null || (graph = UnityEditor.Selection.activeGameObject.GetComponent<GeometryGraph>()) == null) return;
             graph.OnPropertiesChanged(RuntimeData.PropertyHashCode);
 #endif
+            // RuntimeData.OnBeforeSerialize();
         }
 
         internal void OnPropertyRemoved(string propertyGuid) {
@@ -57,6 +57,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (UnityEditor.Selection.activeGameObject == null || (graph = UnityEditor.Selection.activeGameObject.GetComponent<GeometryGraph>()) == null) return;
             graph.OnPropertiesChanged(RuntimeData.PropertyHashCode);
 #endif
+            // RuntimeData.OnBeforeSerialize();
         }
 
         internal void OnPropertyDefaultValueChanged(string propertyGuid, object newValue) {
@@ -87,13 +88,17 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         internal void OnNodeAdded(RuntimeNode node) {
+            Debug.Log($"Adding node: `{node.Guid}`");
             RuntimeData.Nodes.Add(node);
             if (node is OutputNode outputNode) RuntimeData.OutputNode = outputNode;
+            // RuntimeData.OnBeforeSerialize();
         }
 
         internal void OnNodeRemoved(RuntimeNode node) {
+            Debug.Log($"Removing node: `{node.Guid}`");
             RuntimeData.Nodes.RemoveAll(n => n.Guid == node.Guid);
             if (node is OutputNode) RuntimeData.OutputNode = null;
+            // RuntimeData.OnBeforeSerialize();
         }
 
         internal void OnConnectionAdded(Connection connection) {
@@ -102,6 +107,7 @@ namespace GeometryGraph.Runtime.Graph {
             connection.Input.Connections.Add(connection);
             connection.Output.Node.NotifyConnectionCreated(connection, connection.Output);
             connection.Input.Node.NotifyConnectionCreated(connection, connection.Input);
+            // RuntimeData.OnBeforeSerialize();
         }
 
         internal void OnConnectionRemoved(string outputGuid, string inputGuid) {
@@ -118,6 +124,7 @@ namespace GeometryGraph.Runtime.Graph {
 
             int removed = RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
             if (removed != 0) Debug.LogWarning("Removed connection when it was supposed to already be removed");
+            // RuntimeData.OnBeforeSerialize();
         }
 
         internal void OnPropertyDisplayNameUpdated(string propertyGuid, string newDisplayName) {
@@ -127,6 +134,7 @@ namespace GeometryGraph.Runtime.Graph {
                 runtimeDataProperty.DisplayName = newDisplayName;
                 break;
             }
+            // RuntimeData.OnBeforeSerialize();
         }
         
         internal void OnPropertyReferenceNameUpdated(string propertyGuid, string newReferenceName) {
@@ -136,6 +144,7 @@ namespace GeometryGraph.Runtime.Graph {
                 runtimeDataProperty.ReferenceName = newReferenceName;
                 break;
             }
+            // RuntimeData.OnBeforeSerialize();
         }
 
         internal void AssignProperty(RuntimeNode runtimeNode, string propertyGuid) {
