@@ -62,11 +62,21 @@ Vector3Field .unity-vector3-field__input FloatField.unity-composite-field__field
   min-width: 48px;
 }
 
+/*
+ * @section Node specific styles
+ */
 VectorValueNode VisualElement#extension Vector3Field.unity-vector3-field > Label.unity-vector3-field__label {
   display: none;
 }
 VectorValueNode VisualElement#extension Vector3Field.unity-vector3-field > VisualElement.unity-vector3-field__input > FloatField > Label {
   margin-left: 4px;
+}
+
+CylinderPrimitiveNode #input > Label#uvSettingsTitle {
+  margin-top: 8px;
+  margin-left: 10px;
+  font-size: 12px;
+  -unity-font-style: bold;
 }
 
 /*

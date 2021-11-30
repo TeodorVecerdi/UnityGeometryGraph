@@ -17,6 +17,12 @@ namespace GeometryGraph.Runtime.Graph {
         [AdditionalValueChangedCode("{other} = {other}.Clamped(Constants.MIN_CIRCULAR_GEOMETRY_POINTS, Constants.MAX_CIRCULAR_GEOMETRY_POINTS);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
         [In] public int Points { get; private set; } = 8;
         
+        [AdditionalValueChangedCode("{other} = {other}.MinClamped(1);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
+        [In] public int HorizontalUVRepetitions { get; private set; } = 2;
+        
+        [AdditionalValueChangedCode("{other} = {other}.MinClamped(1);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
+        [In] public int VerticalUVRepetitions { get; private set; } = 1;
+        
         [Out] public GeometryData Result { get; private set; }
         
         [GetterMethod(nameof(Result), Inline = true)]
@@ -27,7 +33,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
-            Result = GeometryPrimitive.Cylinder(BottomRadius, TopRadius, Height, Points);
+            Result = GeometryPrimitive.Cylinder(BottomRadius, TopRadius, Height, Points, new CylinderUVSettings(HorizontalUVRepetitions, VerticalUVRepetitions));
         }
     }
 }

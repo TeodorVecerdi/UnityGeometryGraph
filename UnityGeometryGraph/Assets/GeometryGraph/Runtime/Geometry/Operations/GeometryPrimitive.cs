@@ -370,7 +370,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
         }
 
-        public static GeometryData Cylinder(float bottomRadius, float topRadius, float height, int points) {
+        public static GeometryData Cylinder(float bottomRadius, float topRadius, float height, int points, CylinderUVSettings uvSettings) {
             if (points < 3) points = 3;
             if (Math.Abs(bottomRadius) < 0.0f) bottomRadius = 0.0f;
             if (Math.Abs(topRadius) < 0.0f) topRadius = 0.0f;
@@ -384,7 +384,7 @@ namespace GeometryGraph.Runtime.Geometry {
             
             List<float3> vertexPositions = new List<float3> { float3.zero, float3_ext.up * height };
             List<float2> vertexUvs = new List<float2> { float2_ext.one * 0.5f, float2_ext.one * 0.5f };
-            
+
             for (int i = 0; i < points; i++) {
                 float t = i / (float)points;
                 float angle = math_ext.TWO_PI * t;
@@ -411,6 +411,10 @@ namespace GeometryGraph.Runtime.Geometry {
             List<float2> uvs = new List<float2>();
             List<float3> faceNormals = new List<float3>();
             int fcI = 0;
+            
+            float2 verticalUVOffset = float2_ext.up * (uvSettings.VerticalRepetitions - 1);
+            float2 horizontalUVOffset = float2_ext.zero;
+            float2 horizontalUVOffsetStep = float2_ext.right * ((float) uvSettings.HorizontalRepetitions / points);
             // Faces and FCs
             for (int i = 0; i < points; i++) {
                 faces.Add(
@@ -448,13 +452,13 @@ namespace GeometryGraph.Runtime.Geometry {
                 uvs.Add(vertexUvs[1]);
                 uvs.Add(vertexUvs[((i + 1) % points + 1) * 2 + 1]);
                 uvs.Add(vertexUvs[(i + 1) * 2 + 1]);
-                
-                uvs.Add(float2.zero);
-                uvs.Add(float2_ext.up);
-                uvs.Add(float2_ext.right);
-                uvs.Add(float2_ext.up);
-                uvs.Add(float2_ext.one);
-                uvs.Add(float2_ext.right);
+
+                uvs.Add(horizontalUVOffset);
+                uvs.Add(horizontalUVOffset + float2_ext.up + verticalUVOffset);
+                uvs.Add(horizontalUVOffset + horizontalUVOffsetStep);
+                uvs.Add(horizontalUVOffset + float2_ext.up + verticalUVOffset);
+                uvs.Add(horizontalUVOffset + horizontalUVOffsetStep + float2_ext.up + verticalUVOffset);
+                uvs.Add(horizontalUVOffset + horizontalUVOffsetStep);
                 
                 faceNormals.Add(-float3_ext.up);
                 faceNormals.Add(float3_ext.up);
@@ -487,6 +491,8 @@ namespace GeometryGraph.Runtime.Geometry {
                 faceCorners.Add(new GeometryData.FaceCorner(i * 4 + 3));
                 faceCorners.Add(new GeometryData.FaceCorner(i * 4 + 3));
                 faceCorners.Add(new GeometryData.FaceCorner(i * 4 + 3));
+                
+                horizontalUVOffset += horizontalUVOffsetStep;
             }
 
             return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
