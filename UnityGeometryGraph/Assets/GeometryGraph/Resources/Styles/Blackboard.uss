@@ -1,15 +1,5 @@
-BlackboardRow.property-GeometryObject #expandButton, BlackboardRow.property-GeometryCollection #expandButton {
+BlackboardRow .property-GeometryObject #expandButton, BlackboardRow .property-GeometryCollection #expandButton {
   display: none;
-}
-
-BlackboardRow.hovered #pill #selection-border {
-  background-color: rgba(68, 192, 255, 0.4);
-  border-color: #44C0FF;
-  border-width: 2px;
-  left: 1px;
-  right: 1px;
-  top: 1px;
-  bottom: 1px;
 }
 
 BlackboardRow .blackboardPropertyView * {
@@ -19,16 +9,14 @@ BlackboardRow .blackboardPropertyView > .rowView {
   flex-direction: row;
   padding: 2px 2px 2px 10px;
 }
-BlackboardRow .blackboardPropertyView > .rowView > .rowViewLabel {
-  min-width: 50px;
-}
-BlackboardRow .blackboardPropertyView > .rowView > .rowViewLabel > .rowViewControl {
+BlackboardRow .blackboardPropertyView > .rowView > .rowViewControl {
   flex: 1;
 }
-
-.blackboardPropertyView .blackboardPropertyView > .rowView .blackboardPropertyView > .rowView .blackboardPropertyView > .unity-imgui-container {
-  background-color: #ff00ff;
-  margin: 4px 4px 4px 16px;
+BlackboardRow .blackboardPropertyView > .rowView > .rowViewControl.unity-composite-field {
+  flex-direction: column;
+}
+BlackboardRow .blackboardPropertyView > .rowView > .rowViewControl > Label.unity-label {
+  min-width: 60px;
 }
 
 /*# sourceMappingURL=Blackboard.uss.map */

@@ -10,17 +10,22 @@ BlackboardRow .blackboardPropertyView {
     * {
         font-size: 11px;
     }
-    
+
     & > .rowView {
         flex-direction: row;
         padding: 2px 2px 2px 10px;
-        
-        & > .rowViewLabel {
-            min-width: 50px;
+    
+        & > .rowViewControl {
             
-            & > .rowViewControl {
-                flex: 1;
+            &.unity-composite-field {
+                flex-direction: column;
             }
+            
+            & > Label.unity-label {
+                min-width: 60px;
+            }
+            
+            flex: 1;
         }
     }
 }
