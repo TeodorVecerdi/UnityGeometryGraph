@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using GeometryGraph.Runtime.Curve;
 using GeometryGraph.Runtime.Data;
@@ -10,7 +12,7 @@ namespace GeometryGraph.Runtime.Graph {
         [SerializeField] public RuntimeGraphObjectData RuntimeData = new RuntimeGraphObjectData();
         public static bool DebugEnabled = false;
 
-        public GeometryGraphEvaluationResult Evaluate(GeometryGraphSceneData sceneData) {
+        internal GeometryGraphEvaluationResult Evaluate(GeometryGraphSceneData sceneData) {
             if (RuntimeData.OutputNode == null) {
                 return GeometryGraphEvaluationResult.Empty;
             }
@@ -23,13 +25,17 @@ namespace GeometryGraph.Runtime.Graph {
             return new GeometryGraphEvaluationResult(geometry, curve);
         }
 
-        public void Load(RuntimeGraphObjectData runtimeData) {
+        internal void Load(RuntimeGraphObjectData runtimeData) {
             RuntimeData.Load(runtimeData);
         }
 
-        public void OnPropertyAdded(Property property) {
-            if(RuntimeData.Properties.Any(p => p.Guid == property.Guid))
+        internal void OnPropertyAdded(Property property) {
+            if (RuntimeData.Properties.Any(p => p.Guid == property.Guid)) {
+                Debug.Log($"Property already exists: `{property.Guid}`");
                 return;
+            }
+
+            Debug.Log($"Adding property: `{property.Guid}`");
             RuntimeData.Properties.Add(property);
 
 #if UNITY_EDITOR
@@ -39,10 +45,13 @@ namespace GeometryGraph.Runtime.Graph {
 #endif
         }
 
-        public void OnPropertyRemoved(string propertyGuid) {
+        internal void OnPropertyRemoved(string propertyGuid) {
             int removed = RuntimeData.Properties.RemoveAll(p => p.Guid == propertyGuid);
-            if (removed == 0) return;
-            
+            if (removed == 0) {
+                Debug.Log($"Property not removed: `{propertyGuid}`");
+                return;
+            }
+            Debug.Log($"Removed property: `{propertyGuid}`");
 #if UNITY_EDITOR
             GeometryGraph graph;
             if (UnityEditor.Selection.activeGameObject == null || (graph = UnityEditor.Selection.activeGameObject.GetComponent<GeometryGraph>()) == null) return;
@@ -50,7 +59,7 @@ namespace GeometryGraph.Runtime.Graph {
 #endif
         }
 
-        public void OnPropertyDefaultValueChanged(string propertyGuid, object newValue) {
+        internal void OnPropertyDefaultValueChanged(string propertyGuid, object newValue) {
             Property property = RuntimeData.Properties.Find(p => p.Guid == propertyGuid);
             if (property == null) {
                 Debug.LogError($"Updated value of non-existent property with guid {propertyGuid}");
@@ -77,17 +86,17 @@ namespace GeometryGraph.Runtime.Graph {
 #endif
         }
 
-        public void OnNodeAdded(RuntimeNode node) {
+        internal void OnNodeAdded(RuntimeNode node) {
             RuntimeData.Nodes.Add(node);
             if (node is OutputNode outputNode) RuntimeData.OutputNode = outputNode;
         }
 
-        public void OnNodeRemoved(RuntimeNode node) {
+        internal void OnNodeRemoved(RuntimeNode node) {
             RuntimeData.Nodes.RemoveAll(n => n.Guid == node.Guid);
             if (node is OutputNode) RuntimeData.OutputNode = null;
         }
 
-        public void OnConnectionAdded(Connection connection) {
+        internal void OnConnectionAdded(Connection connection) {
             RuntimeData.Connections.Add(connection);
             connection.Output.Connections.Add(connection);
             connection.Input.Connections.Add(connection);
@@ -95,7 +104,7 @@ namespace GeometryGraph.Runtime.Graph {
             connection.Input.Node.NotifyConnectionCreated(connection, connection.Input);
         }
 
-        public void OnConnectionRemoved(string outputGuid, string inputGuid) {
+        internal void OnConnectionRemoved(string outputGuid, string inputGuid) {
             Connection connection = RuntimeData.Connections.FirstOrDefault(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
             if (connection == null) {
                 return;
@@ -111,7 +120,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (removed != 0) Debug.LogWarning("Removed connection when it was supposed to already be removed");
         }
 
-        public void OnPropertyUpdated(string propertyGuid, string newDisplayName) {
+        internal void OnPropertyDisplayNameUpdated(string propertyGuid, string newDisplayName) {
             foreach (Property runtimeDataProperty in RuntimeData.Properties) {
                 if (runtimeDataProperty.Guid != propertyGuid) continue;
 
@@ -119,8 +128,17 @@ namespace GeometryGraph.Runtime.Graph {
                 break;
             }
         }
+        
+        internal void OnPropertyReferenceNameUpdated(string propertyGuid, string newReferenceName) {
+            foreach (Property runtimeDataProperty in RuntimeData.Properties) {
+                if (runtimeDataProperty.Guid != propertyGuid) continue;
 
-        public void AssignProperty(RuntimeNode runtimeNode, string propertyGuid) {
+                runtimeDataProperty.ReferenceName = newReferenceName;
+                break;
+            }
+        }
+
+        internal void AssignProperty(RuntimeNode runtimeNode, string propertyGuid) {
             switch (runtimeNode) {
                 case GeometryObjectPropertyNode propertyNode: propertyNode.Property = RuntimeData.Properties.FirstOrGivenDefault(property => property.Guid == propertyGuid, null); break;
                 case GeometryCollectionPropertyNode propertyNode: propertyNode.Property = RuntimeData.Properties.FirstOrGivenDefault(property => property.Guid == propertyGuid, null); break;
@@ -130,10 +148,10 @@ namespace GeometryGraph.Runtime.Graph {
             }
         }
 
-        private void LoadScenePropertyValues(PropertyDataDictionary propertyData) {
+        private void LoadScenePropertyValues(IReadOnlyDictionary<string, PropertyValue> propertyData) {
             DebugUtility.Log("Loading Scene Property Values");
             foreach (Property property in RuntimeData.Properties) {
-                property.Value = propertyData[property.Guid].GetValueForPropertyType(property.Type);
+                property.Value = propertyData[property.Guid].GetValue();
                 DebugUtility.Log($"Set Property {property.DisplayName}/{property.Type} value to [{property.Value}]");
             }
 

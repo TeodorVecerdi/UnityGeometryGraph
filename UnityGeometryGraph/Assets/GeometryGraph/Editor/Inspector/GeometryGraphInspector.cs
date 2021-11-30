@@ -42,7 +42,7 @@ namespace GeometryGraph.Editor {
             }
             
             foreach (Property property in targetGraph.Graph.RuntimeData.Properties) {
-                targetGraph.SceneData.PropertyData[property.Guid].UpdateDefaultValue(property.DefaultValue);
+                targetGraph.SceneData.UpdatePropertyDefaultValue(property.Guid, property.DefaultValue);
             }
         }
 
@@ -430,7 +430,7 @@ namespace GeometryGraph.Editor {
         private void OnGraphChanged(RuntimeGraphObject graph) {
             targetGraph.SceneData.Reset();
             foreach (Property property in graph.RuntimeData.Properties) {
-                targetGraph.SceneData.PropertyData.Add(property.Guid, new PropertyValue(property));
+                targetGraph.SceneData.AddProperty(property.Guid, property.ReferenceName, new PropertyValue(property));
             }
             
             serializedObject.Update();

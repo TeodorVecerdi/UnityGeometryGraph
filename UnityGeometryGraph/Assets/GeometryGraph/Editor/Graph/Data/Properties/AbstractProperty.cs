@@ -34,7 +34,10 @@ namespace GeometryGraph.Editor {
 
         public string OverrideReferenceName {
             get => overrideReferenceName;
-            set => overrideReferenceName = value;
+            set {
+                overrideReferenceName = value;
+                if (overrideReferenceName == defaultReferenceName) overrideReferenceName = null;
+            }
         }
 
         public bool Hidden {

@@ -250,7 +250,7 @@ namespace GeometryGraph.Editor {
             if (string.IsNullOrEmpty(name))
                 return;
 
-            property.OverrideReferenceName = GraphFrameworkUtility.SanitizeName(properties.Where(prop => prop.GUID != property.GUID).Select(prop => prop.ReferenceName), "{0} ({1})", name);
+            property.OverrideReferenceName = GraphFrameworkUtility.SanitizeName(properties.Where(prop => prop.GUID != property.GUID).Select(prop => prop.ReferenceName), "{0}__{1}", name);
         }
 
         public void Paste(CopyPasteData copyPasteData, List<SerializedNode> remappedNodes, List<SerializedEdge> remappedEdges) {

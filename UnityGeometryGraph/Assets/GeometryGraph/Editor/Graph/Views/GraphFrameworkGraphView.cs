@@ -147,7 +147,7 @@ namespace GeometryGraph.Editor {
             if (obj is BlackboardField blackboardField) {
                 editorView.GraphObject.RegisterCompleteObjectUndo("Drag Blackboard Field");
                 AbstractProperty property = blackboardField.userData as AbstractProperty;
-                SerializedNode node = new SerializedNode(PropertyUtils.PropertyTypeToSystemType(property.Type), new Rect(nodePosition, EditorView.DefaultNodeSize));
+                SerializedNode node = new SerializedNode(PropertyUtils.PropertyTypeToNodeType(property.Type), new Rect(nodePosition, EditorView.DefaultNodeSize));
                 editorView.GraphObject.GraphData.AddNode(node);
                 node.BuildNode(editorView, editorView.EdgeConnectorListener, false);
                 

@@ -54,8 +54,8 @@ namespace GeometryGraph.Editor {
             property.DisplayName = newText;
             editorView.GraphObject.GraphData.SanitizePropertyName(property);
             field.text = property.DisplayName;
-            Type propertyType = PropertyUtils.PropertyTypeToSystemType(property.Type);
-            editorView.GraphObject.RuntimeGraph.OnPropertyUpdated(property.GUID, property.DisplayName);
+            Type propertyType = PropertyUtils.PropertyTypeToNodeType(property.Type);
+            editorView.GraphObject.RuntimeGraph.OnPropertyDisplayNameUpdated(property.GUID, property.DisplayName);
             IEnumerable<AbstractNode> modifiedNodes = editorView.GraphObject.GraphData.Nodes.Where(node => node.Node.GetType() == propertyType).Select(node => node.Node);
             foreach (AbstractNode modifiedNode in modifiedNodes) {
                 modifiedNode.OnPropertyUpdated(property);

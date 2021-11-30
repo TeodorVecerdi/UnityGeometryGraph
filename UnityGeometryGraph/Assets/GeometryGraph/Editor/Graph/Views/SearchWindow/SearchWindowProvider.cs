@@ -51,7 +51,7 @@ namespace GeometryGraph.Editor {
             }
 
             foreach (AbstractProperty property in editorView.GraphObject.GraphData.Properties) {
-                SerializedNode node = new SerializedNode(PropertyUtils.PropertyTypeToSystemType(property.Type), new Rect(Vector2.zero, EditorView.DefaultNodeSize));
+                SerializedNode node = new SerializedNode(PropertyUtils.PropertyTypeToNodeType(property.Type), new Rect(Vector2.zero, EditorView.DefaultNodeSize));
                 node.BuildNode(editorView, editorView.EdgeConnectorListener, false);
                 AbstractNode propertyNode = node.Node;
                 propertyNode.PropertyGuid = property.GUID;

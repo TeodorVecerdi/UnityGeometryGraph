@@ -23,12 +23,12 @@ namespace GeometryGraph.Runtime {
         public int PropertyHashCode {
             get {
                 unchecked {
-                    int sum = 0;
+                    int hashCode = 13;
                     foreach (Property property in Properties) {
-                        sum += property.Guid.GetHashCode();
+                        hashCode = HashHelpers.Combine(hashCode, HashCode.Combine(property.Guid, property.ReferenceName));
                     }
 
-                    return sum;
+                    return hashCode;
                 }
             }
         }

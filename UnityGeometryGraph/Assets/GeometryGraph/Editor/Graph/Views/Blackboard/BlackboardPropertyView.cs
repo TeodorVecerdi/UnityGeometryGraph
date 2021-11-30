@@ -62,7 +62,25 @@ namespace GeometryGraph.Editor {
 
                 default: throw new ArgumentOutOfRangeException(nameof(property), property, null);
             }
+
+            TextField referenceNameField = new TextField("Reference Name");
+            referenceNameField.SetValueWithoutNotify(property.ReferenceName);
+            referenceNameField.RegisterValueChangedCallback(evt => {
+                string newValue = evt.newValue;
+                if (newValue == property.ReferenceName) return;
+                
+                if (string.IsNullOrEmpty(newValue)) {
+                    newValue = property.GetDefaultReferenceName();
+                    referenceNameField.SetValueWithoutNotify(newValue);
+                }
+                
+                editorView.GraphObject.RegisterCompleteObjectUndo("Edit Property Reference Name");
+                editorView.GraphObject.GraphData.SanitizePropertyReference(property, evt.newValue);
+                referenceNameField.SetValueWithoutNotify(newValue);
+                editorView.GraphObject.RuntimeGraph.OnPropertyReferenceNameUpdated(property.GUID, property.ReferenceName);
+            });
             
+            AddRow(referenceNameField);
             AddRow(defaultValueField);
         }
 
