@@ -11,18 +11,12 @@ using Node = UnityEditor.Experimental.GraphView.Node;
 namespace GeometryGraph.Editor {
     public class BlackboardProvider {
         private static readonly Texture2D exposedIcon = Resources.Load<Texture2D>("GraphView/Nodes/BlackboardFieldExposed");
+        
         public Blackboard Blackboard { get; private set; }
         private readonly EditorView editorView;
         private readonly Dictionary<string, BlackboardRow> inputRows;
-
         private readonly BlackboardSection section;
-
         private readonly List<Node> selectedNodes = new List<Node>();
-
-        public string AssetName {
-            get => Blackboard.title;
-            set => Blackboard.title = value;
-        }
 
         public BlackboardProvider(EditorView editorView) {
             this.editorView = editorView;
@@ -36,36 +30,41 @@ namespace GeometryGraph.Editor {
                 moveItemRequested = MoveItemRequested
             };
             Blackboard.AddStyleSheet("Styles/Blackboard");
+            Blackboard.RegisterCallback<KeyDownEvent>(evt => {
+                if (evt.keyCode == KeyCode.F2) {
+                    foreach (BlackboardRow child in section!.Children().OfType<BlackboardRow>()) {
+                        BlackboardField field = child.Q<BlackboardField>();
+                        if (field is not { selected: true }) continue;
+                        
+                        field.OpenTextEditor();
+                        break;
+                    }
+                }
+            });
 
             section = new BlackboardSection {title = "Properties"};
             Blackboard.Add(section);
-            // checkSection = new BlackboardSection {title = "Checks"};
-            // Blackboard.Add(checkSection);
-            // triggerSection = new BlackboardSection {title = "Triggers"};
-            // Blackboard.Add(triggerSection);
-            // actorSection = new BlackboardSection {title = "Actors"};
-            // Blackboard.Add(actorSection);
         }
 
         private void EditTextRequested(Blackboard blackboard, VisualElement visualElement, string newText) {
             BlackboardField field = (BlackboardField) visualElement;
             AbstractProperty property = (AbstractProperty) field.userData;
-            if (!string.IsNullOrEmpty(newText) && newText != property.DisplayName) {
-                editorView.GraphObject.RegisterCompleteObjectUndo("Edit Property Name");
-                property.DisplayName = newText;
-                editorView.GraphObject.GraphData.SanitizePropertyName(property);
-                field.text = property.DisplayName;
-                Type propertyType = PropertyUtils.PropertyTypeToSystemType(property.Type);
-                editorView.GraphObject.RuntimeGraph.OnPropertyUpdated(property.GUID, property.DisplayName);
-                IEnumerable<AbstractNode> modifiedNodes = editorView.GraphObject.GraphData.Nodes.Where(node => node.Node.GetType() == propertyType).Select(node => node.Node);
-                foreach (AbstractNode modifiedNode in modifiedNodes) {
-                    modifiedNode.OnPropertyUpdated(property);
-                }
+            if (string.IsNullOrEmpty(newText) || newText == property.DisplayName) return;
+            
+            editorView.GraphObject.RegisterCompleteObjectUndo("Edit Property Name");
+            property.DisplayName = newText;
+            editorView.GraphObject.GraphData.SanitizePropertyName(property);
+            field.text = property.DisplayName;
+            Type propertyType = PropertyUtils.PropertyTypeToSystemType(property.Type);
+            editorView.GraphObject.RuntimeGraph.OnPropertyUpdated(property.GUID, property.DisplayName);
+            IEnumerable<AbstractNode> modifiedNodes = editorView.GraphObject.GraphData.Nodes.Where(node => node.Node.GetType() == propertyType).Select(node => node.Node);
+            foreach (AbstractNode modifiedNode in modifiedNodes) {
+                modifiedNode.OnPropertyUpdated(property);
             }
         }
 
         private void MoveItemRequested(Blackboard blackboard, int newIndex, VisualElement visualElement) {
-            if (!(visualElement.userData is AbstractProperty property))
+            if (visualElement.userData is not AbstractProperty property)
                 return;
 
             editorView.GraphObject.RegisterCompleteObjectUndo("Move Property");
@@ -79,19 +78,13 @@ namespace GeometryGraph.Editor {
             menu.AddItem(new GUIContent("Integer"), false, () => AddInputRow(new IntegerProperty(), true));
             menu.AddItem(new GUIContent("Float"), false, () => AddInputRow(new FloatProperty(), true));
             menu.AddItem(new GUIContent("Vector"), false, () => AddInputRow(new VectorProperty(), true));
-            // Note: Left as reference
-            // menu.AddItem(new GUIContent("Trigger"), false, () => AddInputRow(new TriggerProperty(), true));
-            // menu.AddItem(new GUIContent("Actor"), false, () => AddInputRow(new ActorProperty(), true));
             menu.ShowAsContext();
         }
 
         public void AddInputRow(AbstractProperty property, bool create = false, int index = -1) {
             if (inputRows.ContainsKey(property.GUID))
                 return;
-
-            // Note: Select the relevant section here
-            // var section = property.Type == PropertyType.Actor ? actorSection : property.Type == PropertyType.Check ? checkSection : triggerSection;
-
+            
             if (create) {
                 editorView.GraphObject.GraphData.SanitizePropertyName(property);
             }
@@ -111,6 +104,10 @@ namespace GeometryGraph.Editor {
             pill.RegisterCallback<MouseEnterEvent>(evt => OnMouseHover(evt, property));
             pill.RegisterCallback<MouseLeaveEvent>(evt => OnMouseHover(evt, property));
             pill.RegisterCallback<DragUpdatedEvent>(OnDragUpdatedEvent);
+            
+            field.Q<TextField>().RegisterCallback<BlurEvent>(_ => {
+                field.Focus();
+            });
 
             inputRows[property.GUID] = row;
 
