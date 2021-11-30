@@ -24,9 +24,15 @@ namespace GeometryGraph.Editor {
         [MenuItem("Geometry Graph/Find all instances")]
         public static void FindGFOInstances() {
             GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
-            Debug.Log(instances.Length);
+            Debug.Log($"Graph Objects: {instances.Length}");
             foreach (GraphFrameworkObject graphFrameworkObject in instances) {
-                Debug.Log($"{graphFrameworkObject.name}:{graphFrameworkObject.GetInstanceID()}");
+                Debug.Log($"GFO:{graphFrameworkObject.GetInstanceID()}");
+            }
+            
+            RuntimeGraphObject[] runtimeGraphObjects = Resources.FindObjectsOfTypeAll<RuntimeGraphObject>();
+            Debug.Log($"Runtime GO: {runtimeGraphObjects.Length}");
+            foreach (RuntimeGraphObject runtimeGraphObject in runtimeGraphObjects) {
+                Debug.Log($"RGO:{runtimeGraphObject.name}/{runtimeGraphObject.GetInstanceID()}");
             }
         }
         
@@ -37,6 +43,25 @@ namespace GeometryGraph.Editor {
             foreach (GraphFrameworkObject graphFrameworkObject in instances) {
                 Debug.Log($"{graphFrameworkObject.name}:{graphFrameworkObject.GetInstanceID()}");
                 Object.DestroyImmediate(graphFrameworkObject, true);
+            }
+        }
+        
+        [MenuItem("Geometry Graph/Delete negative instances")]
+        public static void DeleteNegativeGFOInstances() {
+            GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
+            foreach (GraphFrameworkObject graphFrameworkObject in instances) {
+                if (graphFrameworkObject.GetInstanceID() < 0) {
+                    Debug.Log($"Delete: {graphFrameworkObject.GetInstanceID()}");
+                    Object.DestroyImmediate(graphFrameworkObject, true);
+                }
+            }
+            
+            RuntimeGraphObject[] runtimeGraphObjects = Resources.FindObjectsOfTypeAll<RuntimeGraphObject>();
+            foreach (RuntimeGraphObject runtimeGraphObject in runtimeGraphObjects) {
+                if (runtimeGraphObject.GetInstanceID() < 0) {
+                    Debug.Log($"Delete: {runtimeGraphObject.GetInstanceID()}");
+                    Object.DestroyImmediate(runtimeGraphObject, true);
+                }
             }
         }
         

@@ -76,7 +76,7 @@ namespace GeometryGraph.Editor {
                 }
 
                 GUILayout.FlexibleSpace();
-                AreCategoriesEnabled = GUILayout.Toggle(AreCategoriesEnabled, "Enable Categories", EditorStyles.toolbarButton);
+                AreCategoriesEnabled = GUILayout.Toggle(AreCategoriesEnabled, "Category Colors", EditorStyles.toolbarButton);
                 IsBlackboardVisible = GUILayout.Toggle(IsBlackboardVisible, "Blackboard", EditorStyles.toolbarButton);
                 GraphObject.AreCategoriesEnabled = AreCategoriesEnabled;
                 GraphObject.IsBlackboardVisible = IsBlackboardVisible;

@@ -25,6 +25,8 @@ namespace GeometryGraph.Editor {
             
             AssetDatabase.ImportAsset(path);
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            DeleteObjectsWithNegativeInstanceID();
         }
 
         public override void Action(int instanceId, string pathName, string resourceFile) {
@@ -40,6 +42,24 @@ namespace GeometryGraph.Editor {
 
             GraphFrameworkUtility.CreateFile(pathName, graphObject, false);
             AssetDatabase.ImportAsset(pathName);
+           
+            DeleteObjectsWithNegativeInstanceID();
+        }
+
+        private static void DeleteObjectsWithNegativeInstanceID() {
+            GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
+            foreach (GraphFrameworkObject graphFrameworkObject in instances) {
+                if (graphFrameworkObject.GetInstanceID() < 0) {
+                    Object.DestroyImmediate(graphFrameworkObject, true);
+                }
+            }
+            
+            RuntimeGraphObject[] runtimeGraphObjects = Resources.FindObjectsOfTypeAll<RuntimeGraphObject>();
+            foreach (RuntimeGraphObject runtimeGraphObject in runtimeGraphObjects) {
+                if (runtimeGraphObject.GetInstanceID() < 0) {
+                    Object.DestroyImmediate(runtimeGraphObject, true);
+                }
+            }
         }
     }
 }

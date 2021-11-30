@@ -10,7 +10,6 @@ namespace GeometryGraph.Editor {
         public EdgeConnectorListener(EditorView editorView, SearchWindowProvider searchWindowProvider) {
             this.editorView = editorView;
             this.searchWindowProvider = searchWindowProvider;
-            
         }
         
         public void OnDropOutsidePort(Edge edge, Vector2 position) {
