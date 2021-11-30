@@ -6,7 +6,6 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Node = UnityEditor.Experimental.GraphView.Node;
 
 namespace GeometryGraph.Editor {
     public class BlackboardProvider {
