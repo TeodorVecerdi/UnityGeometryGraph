@@ -46,7 +46,7 @@ EnumField {
     }
 }
 
-Vector3Field.port-backing-field {
+Vector3Field {
     margin-left: initial;
 
     .unity-vector3-field__input {
@@ -72,6 +72,16 @@ Vector3Field.port-backing-field {
                 }
             }
         }
+    }
+}
+
+VectorValueNode VisualElement#extension Vector3Field.unity-vector3-field {
+    & > Label.unity-vector3-field__label {
+        display: none;
+    }
+    
+    & > VisualElement.unity-vector3-field__input > FloatField > Label {
+        margin-left: 4px;
     }
 }
 

@@ -42,28 +42,35 @@ EnumField .unity-enum-field__input {
   padding-top: 0;
 }
 
-Vector3Field.port-backing-field {
+Vector3Field {
   margin-left: initial;
 }
-Vector3Field.port-backing-field .unity-vector3-field__input {
+Vector3Field .unity-vector3-field__input {
   flex-grow: 1;
   flex-direction: column;
 }
-Vector3Field.port-backing-field .unity-vector3-field__input FloatField {
+Vector3Field .unity-vector3-field__input FloatField {
   flex-shrink: 1;
   flex-grow: 0;
   flex-basis: auto;
   margin-top: 2px;
 }
-Vector3Field.port-backing-field .unity-vector3-field__input FloatField Label {
+Vector3Field .unity-vector3-field__input FloatField Label {
   margin-left: 6px;
   /*font-size: 8px;*/
 }
-Vector3Field.port-backing-field .unity-vector3-field__input FloatField.unity-composite-field__field--first {
+Vector3Field .unity-vector3-field__input FloatField.unity-composite-field__field--first {
   margin-top: 0;
 }
-Vector3Field.port-backing-field .unity-vector3-field__input FloatField.unity-composite-field__field--first > FloatInput#unity-text-input {
+Vector3Field .unity-vector3-field__input FloatField.unity-composite-field__field--first > FloatInput#unity-text-input {
   min-width: 48px;
+}
+
+VectorValueNode VisualElement#extension Vector3Field.unity-vector3-field > Label.unity-vector3-field__label {
+  display: none;
+}
+VectorValueNode VisualElement#extension Vector3Field.unity-vector3-field > VisualElement.unity-vector3-field__input > FloatField > Label {
+  margin-left: 4px;
 }
 
 /*

@@ -8,27 +8,27 @@ GraphFrameworkPort {
     }
 
     &.portType-Integer {
-        --port-color: #f00;
+        --port-color: #cb3022;
     }
     
     &.portType-Float {
-        --port-color: #ff0;
+        --port-color: #84e4e7;
     }
 
     &.portType-Vector {
-        --port-color: #0ff;
+        --port-color: #f6ff9a;
     }
     
     &.portType-Boolean {
-        --port-color: #f0f;
+        --port-color: #9481e6;
     }
     
     &.portType-Geometry {
-        --port-color: #0f0;
+        --port-color: #FFA300;
     }
     
     &.portType-Collection {
-        --port-color: #00f;
+        --port-color: #216bcb;
     }
     
     &.portType-String {
