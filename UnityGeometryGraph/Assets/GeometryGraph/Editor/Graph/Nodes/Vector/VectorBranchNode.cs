@@ -30,7 +30,7 @@ namespace GeometryGraph.Editor {
             base.InitializeNode(edgeConnectorListener);
             Initialize("Branch (Vector)", NodeCategory.Vector);
 
-            (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Vector, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
+            (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
             (ifTruePort, ifTrueField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("If True", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateIfTrue(ifTrue));
             (ifFalsePort, ifFalseField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("If False", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateIfFalse(ifFalse));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
