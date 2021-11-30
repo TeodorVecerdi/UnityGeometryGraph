@@ -20,6 +20,8 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         private static GeometryData Subdivide_Impl(GeometryData geometry) {
+            if (!geometry.HasAttribute("position", AttributeDomain.Vertex)) return GeometryData.Empty;
+            
             Dictionary<int, (int, int)> edgeDict = new Dictionary<int, (int, int)>();
             Dictionary<int, int> midPointDict = new Dictionary<int, int>();
             List<float3> vertexPositions = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex)!.ToList();
