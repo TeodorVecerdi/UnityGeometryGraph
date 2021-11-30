@@ -18,7 +18,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Subdivide (Simple)");
+            Initialize("Subdivide (Simple)", NodeCategory.Geometry);
 
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (levelsPort, levelsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Levels", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateLevels(levels));

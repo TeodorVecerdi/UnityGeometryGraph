@@ -17,7 +17,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Set Material");
+            Initialize("Set Material", NodeCategory.Geometry);
             
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (materialIndexPort, materialIndexField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Material", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMaterialIndex(materialIndex));

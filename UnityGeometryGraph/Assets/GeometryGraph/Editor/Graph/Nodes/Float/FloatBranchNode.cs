@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Branch (Float)");
+            Initialize("Branch (Float)", NodeCategory.Float);
 
             (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
             (ifTruePort, ifTrueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("If True", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfTrue(ifTrue));

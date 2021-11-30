@@ -37,7 +37,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Cubic Bezier Primitive Curve");
+            Initialize("Cubic Bezier Primitive Curve", NodeCategory.Curve);
 
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             (closedPort, closedToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Closed", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateClosed(closed));

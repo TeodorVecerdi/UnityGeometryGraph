@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Compare");
+            Initialize("Compare (Float)", NodeCategory.Float);
 
             (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));
             (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(a));

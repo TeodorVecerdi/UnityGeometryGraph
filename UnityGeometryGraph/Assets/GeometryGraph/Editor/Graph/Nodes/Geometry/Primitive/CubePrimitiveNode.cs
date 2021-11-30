@@ -19,7 +19,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Cube Primitive");
+            Initialize("Cube Primitive", NodeCategory.Geometry);
 
             (sizePort, sizeField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Size", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateSize(size));
             resultPort = GraphFrameworkPort.Create("Cube", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);

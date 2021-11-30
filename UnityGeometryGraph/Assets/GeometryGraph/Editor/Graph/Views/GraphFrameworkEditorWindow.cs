@@ -39,7 +39,8 @@ namespace GeometryGraph.Editor {
 
             editorView = new EditorView(this) {
                 name = "Graph",
-                IsBlackboardVisible = graphObject.IsBlackboardVisible
+                IsBlackboardVisible = graphObject.IsBlackboardVisible,
+                AreCategoriesEnabled = graphObject.AreCategoriesEnabled,
             };
             rootVisualElement.Add(editorView);
             if (VersionCheck()) {

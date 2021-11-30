@@ -10,7 +10,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Curve Info");
+            Initialize("Curve Info", NodeCategory.Curve);
             
             inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
             pointsPort = GraphFrameworkPort.Create("Points", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);

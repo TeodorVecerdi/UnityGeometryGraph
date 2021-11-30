@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Helix Primitive Curve");
+            Initialize("Helix Primitive Curve", NodeCategory.Curve);
 
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             (rotationsPort, rotationsField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Rotations", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRotations(rotations));

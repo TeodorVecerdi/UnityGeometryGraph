@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Map Range");
+            Initialize("Map Range (Float)", NodeCategory.Float);
 
             (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Input", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue));
             (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Min", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateFromMin(fromMin));

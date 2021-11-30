@@ -9,7 +9,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Join Geometry");
+            Initialize("Join Geometry", NodeCategory.Geometry);
 
             aPort = GraphFrameworkPort.Create("Values", Direction.Input, Port.Capacity.Multi, PortType.Geometry, this);
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);

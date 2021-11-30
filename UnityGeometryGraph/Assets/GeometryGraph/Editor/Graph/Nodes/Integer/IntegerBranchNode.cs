@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Branch (Integer)");
+            Initialize("Branch (Integer)", NodeCategory.Integer);
 
             (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
             (ifTruePort, ifTrueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("If True", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfTrue(ifTrue));

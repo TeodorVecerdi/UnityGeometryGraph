@@ -34,7 +34,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Sample Collection");
+            Initialize("Sample Collection", NodeCategory.Geometry);
 
             collectionPort = GraphFrameworkPort.Create("Collection", Direction.Input, Port.Capacity.Single, PortType.Collection, this);
             (indexPort, indexField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Index", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateIndex(index));

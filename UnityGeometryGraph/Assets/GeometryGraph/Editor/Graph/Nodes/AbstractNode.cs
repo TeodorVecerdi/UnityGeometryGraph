@@ -75,7 +75,7 @@ namespace GeometryGraph.Editor {
         public sealed override RuntimeNode Runtime => RuntimeNode;
         protected TRuntimeNode RuntimeNode;
 
-        protected void Initialize(string nodeTitle) {
+        protected void Initialize(string nodeTitle, NodeCategory category = NodeCategory.None) {
             base.title = nodeTitle;
             base.SetPosition(EditorView.DefaultNodePosition);
 
@@ -83,6 +83,10 @@ namespace GeometryGraph.Editor {
                 string guid = Guid.NewGuid().ToString();
                 GUID = guid;
                 viewDataKey = guid;
+            }
+
+            if (category != NodeCategory.None) {
+                AddToClassList($"category-{category}");
             }
 
             if (EdgeConnectorListener != null) {

@@ -18,10 +18,23 @@ namespace GeometryGraph.Editor {
         private readonly BlackboardProvider blackboardProvider;
         private readonly EdgeConnectorListener edgeConnectorListener;
         private SearchWindowProvider searchWindowProvider;
+        private bool areCategoriesEnabled;
 
         public bool IsBlackboardVisible {
             get => blackboardProvider.Blackboard.style.display == DisplayStyle.Flex;
             set => blackboardProvider.Blackboard.style.display = value ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        public bool AreCategoriesEnabled {
+            get => areCategoriesEnabled;
+            set {
+                areCategoriesEnabled = value;
+                if (areCategoriesEnabled) {
+                    graphView.AddToClassList("categorized");
+                } else {
+                    graphView.RemoveFromClassList("categorized");
+                }
+            }
         }
 
         public GraphFrameworkEditorWindow EditorWindow => editorWindow;
@@ -63,7 +76,9 @@ namespace GeometryGraph.Editor {
                 }
 
                 GUILayout.FlexibleSpace();
+                AreCategoriesEnabled = GUILayout.Toggle(AreCategoriesEnabled, "Enable Categories", EditorStyles.toolbarButton);
                 IsBlackboardVisible = GUILayout.Toggle(IsBlackboardVisible, "Blackboard", EditorStyles.toolbarButton);
+                GraphObject.AreCategoriesEnabled = AreCategoriesEnabled;
                 GraphObject.IsBlackboardVisible = IsBlackboardVisible;
 
                 GUILayout.EndHorizontal();

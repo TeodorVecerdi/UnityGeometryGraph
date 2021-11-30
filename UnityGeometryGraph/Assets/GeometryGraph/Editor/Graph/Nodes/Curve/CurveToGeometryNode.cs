@@ -44,7 +44,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Curve To Geometry");
+            Initialize("Curve To Geometry", NodeCategory.Curve);
             
             inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
             profileCurvePort = GraphFrameworkPort.Create("Profile", Direction.Input, Port.Capacity.Single, PortType.Curve, this, onConnect: OnProfileCurveConnected, onDisconnect: OnProfileCurveDisconnected);

@@ -13,6 +13,7 @@ namespace GeometryGraph.Editor {
         public GraphFrameworkObject Owner { get; set; }
         [SerializeField] public string AssetGuid;
         [SerializeField] public bool IsBlackboardVisible;
+        [SerializeField] public bool AreCategoriesEnabled;
         [SerializeField] public string GraphVersion;
         [SerializeReference] public RuntimeGraphObjectData RuntimeGraphData;
 
@@ -60,6 +61,7 @@ namespace GeometryGraph.Editor {
         public void OnBeforeSerialize() {
             if (Owner != null) {
                 IsBlackboardVisible = Owner.IsBlackboardVisible; 
+                AreCategoriesEnabled = Owner.AreCategoriesEnabled; 
             }
             
             serializedProperties.Clear();

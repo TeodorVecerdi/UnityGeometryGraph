@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Gradient Map (Float)");
+            Initialize("Gradient Map (Float)", NodeCategory.Float);
 
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Value", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             resultRGBPort = GraphFrameworkPort.Create("Color", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
