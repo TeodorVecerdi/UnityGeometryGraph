@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEditor;
 using GeometryGraph.Runtime.Curve;
+using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
+using UnityEngine.Rendering;
 
 namespace GeometryGraph.Runtime {
     public partial class GeometryGraph : MonoBehaviour {
@@ -19,6 +21,7 @@ namespace GeometryGraph.Runtime {
 
         [SerializeField] private CurveData curveData;
         [SerializeField] private GeometryData geometryData;
+        [SerializeField] private InstancedGeometryData instancedGeometryData;
         
         internal RuntimeGraphObject Graph => graph;
         internal GeometryGraphSceneData SceneData => sceneData;
@@ -48,7 +51,17 @@ namespace GeometryGraph.Runtime {
         internal void OnDefaultPropertyValueChanged(Property property) {
             sceneData.UpdatePropertyDefaultValue(property.Guid, property.DefaultValue);
         }
-        
+
+        private void HandleEvaluationResult(GeometryGraphEvaluationResult evaluationResult) {
+            curveData = evaluationResult.CurveData;
+            geometryData = evaluationResult.GeometryData;
+            instancedGeometryData = evaluationResult.InstancedGeometryData;
+            
+            if (exporter != null) {
+                if (geometryData != null) exporter.Export(geometryData);
+                else exporter.Clear();
+            }
+        }
         private void OnDrawGizmos() {
             if (!curveVisualizerSettings.Enabled || curveData == null || curveData.Type == CurveType.None) return;
 
