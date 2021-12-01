@@ -1,4 +1,5 @@
-using GeometryGraph.Runtime.Curve;
+﻿using GeometryGraph.Runtime.Curve;
+using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 
 namespace GeometryGraph.Runtime.Graph {
@@ -17,16 +18,7 @@ namespace GeometryGraph.Runtime.Graph {
             return null;
         }
 
-        public CurveData GetDisplayCurve() {
-            DebugUtility.Log("Getting display curve");
-            CurveData curve = GetValue(CurvePort, (CurveData) null);
-            if (curve == null) {
-                DebugUtility.Log("Curve was null");
-            }
-            return curve;
-        }
-
-        public GeometryData EvaluateGraph() {
+        internal GeometryData GetGeometryData() {
             DebugUtility.Log("Evaluating Graph");
             GeometryData value = GetValue(GeometryPort, (GeometryData)null);
 
@@ -37,8 +29,24 @@ namespace GeometryGraph.Runtime.Graph {
             return value;
         }
 
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            
+        internal CurveData GetCurveData() {
+            DebugUtility.Log("Getting curve data");
+            CurveData curve = GetValue(CurvePort, (CurveData) null);
+            if (curve == null) {
+                DebugUtility.Log("Curve was null");
+            }
+            return curve;
         }
+
+        internal InstancedGeometryData GetInstancedGeometryData() {
+            DebugUtility.Log("Getting instanced geometry data");
+            InstancedGeometryData instancedGeometry = GetValue(InstancedGeometryPort, (InstancedGeometryData) null);
+            if (instancedGeometry == null) {
+                DebugUtility.Log("Instanced geometry was null");
+            }
+            return instancedGeometry;
+        }
+
+        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {}
     }
 }

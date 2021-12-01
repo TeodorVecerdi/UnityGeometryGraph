@@ -17,11 +17,12 @@ namespace GeometryGraph.Runtime.Graph {
             }
 
             LoadScenePropertyValues(sceneData.PropertyData);
-            GeometryData geometry = RuntimeData.OutputNode.EvaluateGraph();
-            CurveData curve = RuntimeData.OutputNode.GetDisplayCurve();
+            GeometryData geometry = RuntimeData.OutputNode.GetGeometryData();
+            CurveData curve = RuntimeData.OutputNode.GetCurveData();
+            InstancedGeometryData instancedGeometry = RuntimeData.OutputNode.GetInstancedGeometryData();
             CleanupScenePropertyValues();
             
-            return new GeometryGraphEvaluationResult(geometry, curve);
+            return new GeometryGraphEvaluationResult(geometry, curve, instancedGeometry);
         }
 
         internal void Load(RuntimeGraphObjectData runtimeData) {
