@@ -179,11 +179,13 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnDestroy() {
-            if (!skipOnDestroyCheck && IsDirty && EditorUtility.DisplayDialog("Graph has unsaved changes", "Do you want to save the changes you made in the Geometry Graph?\nYour changes will be lost if you don't save them.", "Save", "Don't Save")) {
-                SaveAsset();
-            } else {
-                // Reimport to reset changes
-                AssetDatabase.ImportAsset(AssetDatabase.GUIDToAssetPath(SelectedAssetGuid));
+            if (!skipOnDestroyCheck && IsDirty) {
+                if (EditorUtility.DisplayDialog("Graph has unsaved changes", "Do you want to save the changes you made in the Geometry Graph?\nYour changes will be lost if you don't save them.", "Save", "Don't Save")) {
+                    SaveAsset();
+                } else {
+                    // Reimport to reset changes
+                    AssetDatabase.ImportAsset(AssetDatabase.GUIDToAssetPath(SelectedAssetGuid));
+                }
             }
         }
 
