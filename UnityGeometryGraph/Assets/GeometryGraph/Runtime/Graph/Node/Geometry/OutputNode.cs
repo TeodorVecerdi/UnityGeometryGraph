@@ -1,14 +1,16 @@
-﻿using GeometryGraph.Runtime.Curve;
+using GeometryGraph.Runtime.Curve;
 using GeometryGraph.Runtime.Geometry;
 
 namespace GeometryGraph.Runtime.Graph {
     public class OutputNode : RuntimeNode {
         public RuntimePort GeometryPort { get; private set; }
         public RuntimePort CurvePort { get; private set; }
+        public RuntimePort InstancedGeometryPort { get; private set; }
 
         public OutputNode(string guid) : base(guid) {
             GeometryPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
             CurvePort = RuntimePort.Create(PortType.Curve, PortDirection.Input, this);
+            InstancedGeometryPort = RuntimePort.Create(PortType.InstancedGeometry, PortDirection.Input, this);
         }
 
         protected override object GetValueForPort(RuntimePort port) {
