@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
@@ -76,6 +76,7 @@ namespace GeometryGraph.Runtime {
         }
 
         private void BakeInstancedGeometry() {
+            // TODO(#16): Implement GetHashCode() in GeometryData and check if the baked geometry is the same as the new geometry before re-baking
             foreach (Mesh mesh in bakedInstancedGeometry) {
                 meshPool.Return(mesh);
             }
