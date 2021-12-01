@@ -49,6 +49,55 @@ namespace GeometryGraph.Runtime {
         }
     }
 
+    public static class quat_ext {
+        public static float compute_euler_x(quaternion quat)
+        {
+            float sinr_cosp = 2 * (quat.value.w * quat.value.x + quat.value.y * quat.value.z);
+            float cosr_cosp = 1 - 2 * (quat.value.x * quat.value.x + quat.value.y * quat.value.y);
+            return math.atan2(sinr_cosp, cosr_cosp);
+        }
+
+        public static float compute_euler_y(quaternion quat)
+        {
+            float sinp = 2 * (quat.value.w * quat.value.y - quat.value.z * quat.value.x);
+            if (math.abs(sinp) >= 1)
+                return math.PI / 2 * math.sign(sinp); // use 90 degrees if out of range
+            return math.asin(sinp);
+        }
+
+        public static float compute_euler_z(quaternion quat)
+        {
+            float siny_cosp = 2 * (quat.value.w * quat.value.z + quat.value.x * quat.value.y);
+            float cosy_cosp = 1 - 2 * (quat.value.y * quat.value.y + quat.value.z * quat.value.z);
+            return math.atan2(siny_cosp, cosy_cosp);
+        }
+
+        public static float3 to_euler(quaternion quat)
+        {
+            return new float3(compute_euler_x(quat), compute_euler_y(quat), compute_euler_z(quat));
+        }
+
+        public static quaternion from_euler(float3 eulerAngles)
+        {
+
+            float cy = math.cos(eulerAngles.z * 0.5f);
+            float sy = math.sin(eulerAngles.z * 0.5f);
+            float cp = math.cos(eulerAngles.y * 0.5f);
+            float sp = math.sin(eulerAngles.y * 0.5f);
+            float cr = math.cos(eulerAngles.x * 0.5f);
+            float sr = math.sin(eulerAngles.x * 0.5f);
+
+            float4 q;
+            q.w = cr * cp * cy + sr * sp * sy;
+            q.x = sr * cp * cy - cr * sp * sy;
+            q.y = cr * sp * cy + sr * cp * sy;
+            q.z = cr * cp * sy - sr * sp * cy;
+
+            return q;
+
+        }
+    }
+
     public static class float3_ext {
         public static readonly float3 zero = float3.zero;
         public static readonly float3 one = new float3(1);
