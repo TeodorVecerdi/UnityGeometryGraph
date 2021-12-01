@@ -9,10 +9,12 @@ namespace GeometryGraph.Runtime.Data {
         [SerializeField] private IndexFormat meshIndexFormat;
         
         public MeshPool(IndexFormat meshIndexFormat, int initialPoolSize = 4, float growthFactor = 2.0f) : base(initialPoolSize, growthFactor) {
+            Debug.Log("Created mesh pool");
             this.meshIndexFormat = meshIndexFormat;
         }
         
         protected override Mesh CreatePooled() {
+            Debug.Log("Creating mesh");
             return new Mesh {
                 name = $"PooledMesh_{Guid.NewGuid():N}",
                 indexFormat = meshIndexFormat
@@ -24,6 +26,7 @@ namespace GeometryGraph.Runtime.Data {
         }
 
         protected override void DestroyPooled(Mesh obj) {
+            Debug.Log("Cleaning mesh pool");
             if(Application.isPlaying) {
                 Object.Destroy(obj);
             } else {

@@ -75,10 +75,12 @@ namespace GeometryGraph.Runtime {
             instancedGeometryData = evaluationResult.InstancedGeometryData;
 
             if (!initializedExporter) {
+                Debug.Log("Initializing exporter");
                 InitializeExporter();
             }
             
             if (!initializedMeshFilter) {
+                Debug.Log("Initializing mesh filter");
                 InitializeMeshFilter();
             }
 
@@ -92,7 +94,8 @@ namespace GeometryGraph.Runtime {
         }
 
         private void InitializeExporter() {
-            meshPool ??= new MeshPool(IndexFormat.UInt32);
+            meshPool?.Cleanup();
+            meshPool = new MeshPool(IndexFormat.UInt32);
             initializedExporter = true;
         }
 
@@ -126,7 +129,7 @@ namespace GeometryGraph.Runtime {
                 Mesh mesh = meshPool.Get();
                 exporter.Export(geometry, mesh);
                 bakedInstancedGeometry.Meshes.Add(mesh);
-                bakedInstancedGeometry.Matrices.Add(instancedGeometryData.TransformData(i).Select(t => Matrix4x4.TRS(t.Translation, Quaternion.Euler(t.EulerRotation), t.Scale)).ToArray());
+                bakedInstancedGeometry.Matrices.Add(instancedGeometryData.TransformData(i).Select(t => transform.localToWorldMatrix * Matrix4x4.TRS(t.Translation, Quaternion.Euler(t.EulerRotation), t.Scale)).ToArray());
             }
         }
 

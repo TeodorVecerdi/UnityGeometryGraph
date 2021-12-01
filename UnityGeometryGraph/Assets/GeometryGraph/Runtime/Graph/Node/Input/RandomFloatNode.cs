@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GeometryGraph.Runtime.Attributes;
 using UnityCommons;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
@@ -16,6 +17,7 @@ namespace GeometryGraph.Runtime.Graph {
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
             if (port != ValuePort) yield break;
             if (count <= 0) yield break;
+            Debug.Log($"Generating {count} random floats in range [{Min}, {Max}]");
             Rand.PushState(Seed);
             for (int i = 0; i < count; i++) {
                 yield return Rand.Range(Min, Max);

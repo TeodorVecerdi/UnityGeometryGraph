@@ -5,20 +5,17 @@ using UnityEngine;
 namespace GeometryGraph.Runtime.Data {
     [Serializable]
     public abstract class ObjectPool<T> {
-        [SerializeField] private int initialPoolSize;
         [SerializeField] private float growthFactor;
 
-        private Queue<T> pool;
+        private readonly Queue<T> pool = new();
         private int size;
     
         public int PooledCount => pool.Count;
         public int FreeCount => size - pool.Count;
 
         protected ObjectPool(int initialPoolSize, float growthFactor) {
-            this.initialPoolSize = initialPoolSize;
             this.growthFactor = growthFactor;
             
-            pool = new Queue<T>();
             size = 0;
             Allocate(initialPoolSize);
         }
@@ -48,7 +45,7 @@ namespace GeometryGraph.Runtime.Data {
         }
         
         public void Cleanup() {
-            while (pool.Count > 0) {
+            while (pool?.Count > 0) {
                 DestroyPooled(pool.Dequeue());
             }
         }

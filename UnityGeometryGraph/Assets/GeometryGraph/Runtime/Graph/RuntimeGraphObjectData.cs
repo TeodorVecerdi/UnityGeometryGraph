@@ -114,9 +114,6 @@ namespace GeometryGraph.Runtime {
                     DebugUtility.Log($"Port on {node.GetType().Name} has {port.Connections.Count} connections");
                 }
 
-                // DebugUtility.Log($"Rebinding ports on {node.GetType().Name}");
-                // node.RebindPorts();
-
                 switch (node) {
                     case GeometryObjectPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
                     case GeometryCollectionPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
