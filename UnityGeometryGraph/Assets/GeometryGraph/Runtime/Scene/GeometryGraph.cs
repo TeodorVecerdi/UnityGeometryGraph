@@ -31,10 +31,10 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private bool realtimeEvaluationAsync;
         
         // Exporter fields
-        private MeshPool meshPool = null;
-        private GeometryExporter exporter = new GeometryExporter();
-        private BakedInstancedGeometry bakedInstancedGeometry = new();
-        private bool initializedExporter = false;
+        private bool initializedExporter;
+        private MeshPool meshPool;
+        private readonly GeometryExporter exporter = new();
+        private readonly BakedInstancedGeometry bakedInstancedGeometry = new();
         [SerializeField] private bool initializedMeshFilter;
         [SerializeField] private Mesh meshFilterMesh;
 
@@ -93,7 +93,6 @@ namespace GeometryGraph.Runtime {
 
         private void InitializeExporter() {
             meshPool ??= new MeshPool(IndexFormat.UInt32);
-            exporter ??= new GeometryExporter();
             initializedExporter = true;
         }
 
@@ -115,15 +114,19 @@ namespace GeometryGraph.Runtime {
 
         private void BakeInstancedGeometry() {
             // TODO(#16): Implement GetHashCode() in GeometryData and check if the baked geometry is the same as the new geometry before re-baking
-            foreach (Mesh mesh in bakedInstancedGeometry) {
+            foreach (Mesh mesh in bakedInstancedGeometry.Meshes) {
                 meshPool.Return(mesh);
             }
-            bakedInstancedGeometry.Clear();
+            bakedInstancedGeometry.Meshes.Clear();
+            bakedInstancedGeometry.Matrices.Clear();
+            
             for (int i = 0; i < instancedGeometryData.GeometryCount; i++) {
                 GeometryData geometry = instancedGeometryData.Geometry(i);
+                
                 Mesh mesh = meshPool.Get();
                 exporter.Export(geometry, mesh);
-                bakedInstancedGeometry.Add(mesh);
+                bakedInstancedGeometry.Meshes.Add(mesh);
+                bakedInstancedGeometry.Matrices.Add(instancedGeometryData.TransformData(i).Select(t => Matrix4x4.TRS(t.Translation, Quaternion.Euler(t.EulerRotation), t.Scale)).ToArray());
             }
         }
 
