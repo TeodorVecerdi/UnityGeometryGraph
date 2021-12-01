@@ -72,18 +72,18 @@ namespace GeometryGraph.Editor {
             VisualElement content = new VisualElement();
             content.AddToClassList("content");
 
-            PropertyField graphPropertyField = new(serializedObject.FindProperty("graph")) {
+            PropertyField graphPropertyField = new(serializedObject.FindProperty("graph"), "Graph") {
                 name = "graph-field"
             };
             graphPropertyField.Bind(serializedObject);
             graphPropertyField.RegisterValueChangeCallback(OnGraphChanged);
             content.Add(graphPropertyField);
             
-            PropertyField exporterPropertyField = new(serializedObject.FindProperty("exporter")) {
-                name = "exporter-field"
+            PropertyField meshFilterPropertyField = new(serializedObject.FindProperty("meshFilter"), "Mesh Filter") {
+                name = "meshFilter-field"
             };
-            exporterPropertyField.Bind(serializedObject);
-            content.Add(exporterPropertyField);
+            meshFilterPropertyField.Bind(serializedObject);
+            content.Add(meshFilterPropertyField);
             
 
             BuildMissingGraphNotice();
