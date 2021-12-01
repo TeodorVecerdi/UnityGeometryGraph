@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
+using UnityCommons;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime {
@@ -37,10 +38,13 @@ namespace GeometryGraph.Runtime {
             
             int geometryCount = instancedGeometryData.GeometryCount;
             for(int i = 0; i < geometryCount; i++) {
+                GeometryData geometry = instancedGeometryData.Geometry(i);
                 Mesh mesh = bakedInstancedGeometry.Meshes[i];
                 Matrix4x4[] matrices = bakedInstancedGeometry.Matrices[i];
-                
-                Graphics.DrawMeshInstanced(mesh, submeshIndex, material, matrices, instancedGeometryData.TransformCount(i));
+                for (int submeshIndex = 0; submeshIndex < geometry.SubmeshCount; submeshIndex++) {
+                    Material material = instancedGeometrySettings.Materials[submeshIndex.MinClamped(instancedGeometrySettings.Materials.Count - 1)];
+                    Graphics.DrawMeshInstanced(mesh, submeshIndex, material, matrices, instancedGeometryData.TransformCount(i));
+                }
             }
         }
     }
