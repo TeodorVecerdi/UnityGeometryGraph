@@ -15,6 +15,8 @@ namespace GeometryGraph.Runtime.Data {
         public int TransformCount(int geometryIndex) => geometryIndex.InRange(transformCount) ? transformCount[geometryIndex] : MiscUtilities.CallThenReturn(() => Debug.LogException(new IndexOutOfRangeException($"Index {geometryIndex} out of range [0, {transformCount.Count - 1}]")), 0); 
         public GeometryData Geometry(int geometryIndex) => geometryIndex.InRange(geometryData) ? geometryData[geometryIndex] : MiscUtilities.CallThenReturn(() => Debug.LogException(new IndexOutOfRangeException($"Index {geometryIndex} out of range [0, {geometryData.Count - 1}]")), (GeometryData)null);
         public IEnumerable<InstancedTransformData> TransformData(int geometryIndex) => geometryIndex.InRange(transformData) ? GetTransformsImpl(geometryIndex) : MiscUtilities.CallThenReturn(() => Debug.LogException(new IndexOutOfRangeException($"Index {geometryIndex} out of range [0, {geometryData.Count - 1}]")), Enumerable.Empty<InstancedTransformData>());
+        
+        public bool IsEmpty => geometryData.Count == 0 || transformCount.Count == 0;
 
         public InstancedGeometryData(List<GeometryData> geometryData, List<List<InstancedTransformData>> transformData) {
             this.geometryData = geometryData;
@@ -44,7 +46,7 @@ namespace GeometryGraph.Runtime.Data {
             return transformData.Skip(transformStartIndex).Take(transformCount[geometryIndex]);
         }
 
-        public static InstancedGeometryData Empty() => new InstancedGeometryData();
+        public static InstancedGeometryData Empty => new InstancedGeometryData();
         
     }
 }
