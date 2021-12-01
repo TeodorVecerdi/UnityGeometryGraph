@@ -107,7 +107,7 @@ namespace GeometryGraph.Runtime {
             for (int i = 0; i < Nodes.Count; i++) {
                 RuntimeNode node = Nodes[i];
                 if (!DeserializingFromJson) {
-                    node.SetCustomData(serializedRuntimeNodes[i].CustomData);
+                    node.Deserialize(serializedRuntimeNodes[i].CustomData);
                 }
                 
                 foreach (RuntimePort port in node.Ports) {
@@ -120,6 +120,13 @@ namespace GeometryGraph.Runtime {
                     case IntegerPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
                     case FloatPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
                     case VectorPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
+                }
+            }
+            
+            for (int i = 0; i < Nodes.Count; i++) {
+                RuntimeNode node = Nodes[i];
+                if (!DeserializingFromJson) {
+                    node.OnAfterDeserialize();
                 }
             }
 

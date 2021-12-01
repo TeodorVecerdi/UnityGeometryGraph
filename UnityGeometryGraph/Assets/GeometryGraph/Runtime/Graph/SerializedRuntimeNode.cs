@@ -17,7 +17,7 @@ namespace GeometryGraph.Runtime.Graph {
             SerializedRuntimeNode serializedNode = new SerializedRuntimeNode {
                 Guid = node.Guid,
                 Type = node.GetType().FullName,
-                CustomData = node.GetCustomData(),
+                CustomData = node.Serialize(),
                 PortGuids = node.Ports.Select(port => port.Guid).ToList()
             };
 

@@ -27,13 +27,13 @@ namespace GeometryGraph.Runtime.Graph {
             return objectValue == null ? defaultValue.Clone() : objectValue.Geometry.Clone();
         }
 
-        public override string GetCustomData() {
+        public override string Serialize() {
             return new JObject {
                 ["p"] = Property?.Guid
             }.ToString(Formatting.None);
         }
 
-        public override void SetCustomData(string json) {
+        public override void Deserialize(string json) {
             JObject jsonObject = JObject.Parse(json);
             PropertyGuid = jsonObject.Value<string>("p");
         }
