@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
@@ -22,7 +22,9 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private CurveData curveData;
         [SerializeField] private GeometryData geometryData;
         [SerializeField] private InstancedGeometryData instancedGeometryData;
-        
+
+        [SerializeField] private bool realtimeEvaluation;
+        [SerializeField] private bool realtimeEvaluationAsync;
         
         [SerializeField] private List<Mesh> bakedInstancedGeometry = new();
         [SerializeField] private MeshPool meshPool = new (IndexFormat.UInt32);
