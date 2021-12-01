@@ -38,4 +38,8 @@ GraphFrameworkPort {
     &.portType-Curve {
         --port-color: #0AC778;
     }
+
+    &.portType-Instances {
+        --port-color: #ECBB02;
+    }
 }
