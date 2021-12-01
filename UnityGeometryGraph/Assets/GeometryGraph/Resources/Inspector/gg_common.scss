@@ -240,4 +240,11 @@ VisualElement#GeometryGraphInspector {
             }
         }
     }
+    
+    VisualElement.instances-container > VisualElement#InstancesContent {
+        PropertyField.materials-list {
+            margin-left: 16px;
+            margin-right: 4px;
+        }
+    }
 }

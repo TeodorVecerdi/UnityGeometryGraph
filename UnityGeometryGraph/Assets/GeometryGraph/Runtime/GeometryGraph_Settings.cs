@@ -233,4 +233,9 @@ namespace GeometryGraph.Runtime {
         public Color DirectionNormalColor = Color.red;
         public Color DirectionBinormalColor = Color.green;
     }
+
+    [Serializable]
+    internal class InstancedGeometrySettings {
+        public List<Material> Materials = new List<Material>();
+    }
 }

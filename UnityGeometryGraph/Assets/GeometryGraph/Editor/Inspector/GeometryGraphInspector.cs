@@ -20,9 +20,11 @@ namespace GeometryGraph.Editor {
         private VisualElement mainContent;
         private TabContainer tabContainer;
         private VisualElement missingGraphNotice;
+        private VisualElement noPropertiesNotice;
+        
         private VisualElement propertiesTab;
         private VisualElement curveVisualizerTab;
-        private VisualElement noPropertiesNotice;
+        private VisualElement instancesTab;
         
         private int activeTab;
 
@@ -157,13 +159,14 @@ namespace GeometryGraph.Editor {
             noPropertiesNotice.AddToClassList("no-properties-notice");
             noPropertiesNotice.AddToClassList("d-none");
             propertiesTab.Add(noPropertiesNotice);
+            
+            instancesTab = tabContainer.CreateTab("Instances");
+            instancesTab.AddToClassList("instances-container");
 
             curveVisualizerTab = tabContainer.CreateTab("Curve Visualizer");
             curveVisualizerTab.AddToClassList("curve-visualizer-container");
-            
-            UpdateTabs(targetGraph.Graph);
 
-            
+            UpdateTabs(targetGraph.Graph);
             tabContainer.SetActive(activeTab);
         }
 
@@ -187,6 +190,7 @@ namespace GeometryGraph.Editor {
             
             BuildPropertiesTab(graphObject);
             BuildCurveTab();
+            BuildInstancesTab();
         }
 
         private void BuildPropertiesTab(RuntimeGraphObject graphObject) {
@@ -358,6 +362,22 @@ namespace GeometryGraph.Editor {
             }
             
             curveVisualizerTab.Add(mainContainer);
+        }
+
+        private void BuildInstancesTab() {
+            UnityEditor.SerializedProperty settingsProperty = serializedObject.FindProperty("instancedGeometrySettings");
+            VisualElement contentContainer = instancesTab.Q<VisualElement>("InstancesContent");
+            if (contentContainer == null) {
+                contentContainer = new VisualElement {name = "InstancesContent"};
+                instancesTab.Add(contentContainer);
+            } else {
+                contentContainer.Clear();
+            }
+            
+            PropertyField materialsListField = new(settingsProperty.FindPropertyRelative("Materials"), "Materials");
+            materialsListField.AddToClassList("materials-list");
+            materialsListField.Bind(serializedObject);
+            contentContainer.Add(materialsListField);
         }
 
         private (PropertyField field, Button button) MakeToggleButton(string label, string propertyName, UnityEditor.SerializedProperty settingsProperty) {

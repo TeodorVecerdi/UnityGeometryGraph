@@ -20,6 +20,7 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private string graphGuid;
         [SerializeField] private GeometryGraphSceneData sceneData = new();
         [SerializeField] private CurveVisualizerSettings curveVisualizerSettings = new();
+        [SerializeField] private InstancedGeometrySettings instancedGeometrySettings = new();
 
         // Evaluation data
         [SerializeField] private CurveData curveData;
