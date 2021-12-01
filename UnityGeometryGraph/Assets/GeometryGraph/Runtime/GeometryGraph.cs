@@ -23,6 +23,12 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private GeometryData geometryData;
         [SerializeField] private InstancedGeometryData instancedGeometryData;
         
+        
+        [SerializeField] private List<Mesh> bakedInstancedGeometry = new();
+        [SerializeField] private MeshPool meshPool = new (IndexFormat.UInt32);
+
+        private bool isAsyncEvaluationComplete = true;
+        
         internal RuntimeGraphObject Graph => graph;
         internal GeometryGraphSceneData SceneData => sceneData;
         
@@ -61,7 +67,25 @@ namespace GeometryGraph.Runtime {
                 if (geometryData != null) exporter.Export(geometryData);
                 else exporter.Clear();
             }
+
+            if (instancedGeometryData != null) {
+                BakeInstancedGeometry();
+            }
         }
+
+        private void BakeInstancedGeometry() {
+            foreach (Mesh mesh in bakedInstancedGeometry) {
+                meshPool.Return(mesh);
+            }
+            bakedInstancedGeometry.Clear();
+            for (int i = 0; i < instancedGeometryData.GeometryCount; i++) {
+                GeometryData geometry = instancedGeometryData.Geometry(i);
+                Mesh mesh = meshPool.Get();
+                GeometryExporter.IntoMesh(geometry, mesh);
+                bakedInstancedGeometry.Add(mesh);
+            }
+        }
+
         private void OnDrawGizmos() {
             if (!curveVisualizerSettings.Enabled || curveData == null || curveData.Type == CurveType.None) return;
 
