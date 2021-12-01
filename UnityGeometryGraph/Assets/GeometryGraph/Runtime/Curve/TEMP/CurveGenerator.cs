@@ -27,6 +27,8 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
                 CurveType.QuadraticBezier => Constants.MIN_BEZIER_CURVE_RESOLUTION,
                 CurveType.CubicBezier => Constants.MIN_BEZIER_CURVE_RESOLUTION,
                 CurveType.Helix => Constants.MIN_HELIX_CURVE_RESOLUTION,
+                CurveType.None => 0,
+                CurveType.Unknown => 0,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
