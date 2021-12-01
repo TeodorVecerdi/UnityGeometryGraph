@@ -13,7 +13,7 @@ namespace GeometryGraph.Editor {
             Initialize("Graph Output", NodeCategory.Geometry);
 
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
-            instancedGeometryPort = GraphFrameworkPort.Create("Instances", Direction.Input, Port.Capacity.Single, PortType.InstancedGeometry, this);
+            instancedGeometryPort = GraphFrameworkPort.Create("Instances", Direction.Input, Port.Capacity.Single, PortType.Instances, this);
             curvePort = GraphFrameworkPort.Create("Display Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
             AddPort(geometryPort);
             AddPort(instancedGeometryPort);

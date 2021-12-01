@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime.Graph {
         public OutputNode(string guid) : base(guid) {
             GeometryPort = RuntimePort.Create(PortType.Geometry, PortDirection.Input, this);
             CurvePort = RuntimePort.Create(PortType.Curve, PortDirection.Input, this);
-            InstancedGeometryPort = RuntimePort.Create(PortType.InstancedGeometry, PortDirection.Input, this);
+            InstancedGeometryPort = RuntimePort.Create(PortType.Instances, PortDirection.Input, this);
         }
 
         protected override object GetValueForPort(RuntimePort port) {
