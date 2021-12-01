@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
@@ -12,13 +12,16 @@ using UnityEngine.Rendering;
 
 namespace GeometryGraph.Runtime {
     public partial class GeometryGraph : MonoBehaviour {
+        // References
         [SerializeField] private RuntimeGraphObject graph;
-        [SerializeField] private GeometryExporter exporter;
+        [SerializeField] private MeshFilter meshFilter;
         
+        // Scene data
         [SerializeField] private string graphGuid;
         [SerializeField] private GeometryGraphSceneData sceneData = new();
         [SerializeField] private CurveVisualizerSettings curveVisualizerSettings = new();
 
+        // Evaluation data
         [SerializeField] private CurveData curveData;
         [SerializeField] private GeometryData geometryData;
         [SerializeField] private InstancedGeometryData instancedGeometryData;
@@ -26,8 +29,14 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private bool realtimeEvaluation;
         [SerializeField] private bool realtimeEvaluationAsync;
         
-        [SerializeField] private List<Mesh> bakedInstancedGeometry = new();
+        // Exporter fields
         [SerializeField] private MeshPool meshPool = new (IndexFormat.UInt32);
+        [SerializeField] private GeometryExporter exporter = new GeometryExporter();
+        [SerializeField] private List<Mesh> bakedInstancedGeometry = new();
+        [SerializeField] private bool initializedMeshFilter;
+        [SerializeField] private Mesh meshFilterMesh;
+        
+
 
         private bool isAsyncEvaluationComplete = true;
         
@@ -64,10 +73,23 @@ namespace GeometryGraph.Runtime {
             curveData = evaluationResult.CurveData;
             geometryData = evaluationResult.GeometryData;
             instancedGeometryData = evaluationResult.InstancedGeometryData;
+
+            if (meshFilter != null && !initializedMeshFilter) {
+                if (meshFilter.sharedMesh != null) {
+                    meshFilterMesh = meshFilter.sharedMesh;
+                } else {
+                    meshFilterMesh = new Mesh();
+                    meshFilter.sharedMesh = meshFilterMesh;
+                }
+                meshFilterMesh.indexFormat = IndexFormat.UInt32;
+                meshFilterMesh.name = "GeometryGraph Mesh";
+                initializedMeshFilter = true;
+            }
             
-            if (exporter != null) {
-                if (geometryData != null) exporter.Export(geometryData);
-                else exporter.Clear();
+            exporter ??= new GeometryExporter();
+            
+            if (meshFilter != null) {
+                exporter.Export(geometryData, meshFilterMesh);
             }
 
             if (instancedGeometryData != null) {
@@ -84,7 +106,7 @@ namespace GeometryGraph.Runtime {
             for (int i = 0; i < instancedGeometryData.GeometryCount; i++) {
                 GeometryData geometry = instancedGeometryData.Geometry(i);
                 Mesh mesh = meshPool.Get();
-                GeometryExporter.IntoMesh(geometry, mesh);
+                exporter.Export(geometry, mesh);
                 bakedInstancedGeometry.Add(mesh);
             }
         }

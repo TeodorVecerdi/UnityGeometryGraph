@@ -2,19 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.AttributeSystem;
-using GeometryGraph.Runtime.Data;
-using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace GeometryGraph.Runtime.Geometry {
-    public class GeometryExporter : MonoBehaviour, IGeometryProvider {
-        [SerializeField] private MeshFilter target;
-
-        [SerializeField] private Mesh mesh;
-        [SerializeField] private float normalAngleThreshold = 0.05f;
-
+    [Serializable]
+    public class GeometryExporter {
         private Vector3Attribute positionAttr;
         private Vector3Attribute normalAttr;
         private Vector2Attribute uvAttr;
@@ -26,27 +19,22 @@ namespace GeometryGraph.Runtime.Geometry {
         private List<Vector2> uvs = new List<Vector2>();
         private List<List<int>> triangles = new List<List<int>>();
         private HashSet<int> exportedFaces = new HashSet<int>();
-        [ShowInInspector] private GeometryData geometry;
+        private GeometryData geometry;
 
-        public GeometryData Geometry => geometry;
-        public Matrix4x4 LocalToWorldMatrix => transform.localToWorldMatrix;
-
-        public void Clear() {
-            DebugUtility.Log("Clearing Mesh");
-            geometry = GeometryData.Empty;
-            ClearMesh();
-        }
-
-        public void Export(GeometryData geometry) {
+        public void Export(GeometryData geometry, Mesh mesh) {
             DebugUtility.Log("Exporting Mesh");
-            if (target == null || geometry == null) {
-                Debug.LogError("Target MeshFilter or Source is null");
+            if (geometry == null) {
+                DebugUtility.Log("Source GeometryData is null");
+                ClearMesh(mesh);
                 return;
             }
-
+            
             this.geometry = geometry;
+            ExportGeometryImpl(mesh);
+        }
 
-            ClearMesh();
+        private void ExportGeometryImpl(Mesh targetMesh) {
+            ClearMesh(targetMesh);
             ClearLists();
             positionAttr = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             normalAttr = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
@@ -55,12 +43,12 @@ namespace GeometryGraph.Runtime.Geometry {
             shadeSmoothAttr = geometry.GetAttribute<BoolAttribute>("shade_smooth", AttributeDomain.Face);
 
             for (int faceIndex = 0; faceIndex < geometry.Faces.Count; faceIndex++) {
-                if(exportedFaces.Contains(faceIndex)) continue;
+                if (exportedFaces.Contains(faceIndex)) continue;
                 exportedFaces.Add(faceIndex);
-                
+
                 float3 faceNormal = normalAttr[faceIndex];
                 GeometryData.Face face = geometry.Faces[faceIndex];
-                
+
                 // Get shared faces' indices, -1 if no adjacent face or if normal doesn't match
                 // TODO(#12): Re-enable sharing vertices with adjacent quad-like faces
                 // Disabled because UVs are not correct in some cases (GeometryExporter.cs)
@@ -77,7 +65,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     normal1 = math.normalize(geometry.Vertices[face.VertB].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
                     normal2 = math.normalize(geometry.Vertices[face.VertC].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
                 }
-                
+
                 (int t0, int t1, int t2) = AddFace(faceIndex, normal0, normal1, normal2);
                 (int triA0, int triA1, int triB0, int triB1, int triC0, int triC1) = GetActualSharedTriangles(face, t0, t1, t2);
                 int triangleOffset = vertices.Count;
@@ -93,25 +81,44 @@ namespace GeometryGraph.Runtime.Geometry {
                     AddAdjacentFace(sharedB, geometry.Edges[face.EdgeB].VertA, geometry.Edges[face.EdgeB].VertB, triangleOffset, triB0, triB1);
                     triangleOffset++;
                 }
-                
+
                 if (sharedC != -1) {
                     exportedFaces.Add(sharedC);
                     AddAdjacentFace(sharedC, geometry.Edges[face.EdgeC].VertA, geometry.Edges[face.EdgeC].VertB, triangleOffset, triC0, triC1);
                 }
             }
-            
-            ApplyMesh();
+
+            ApplyMesh(targetMesh);
         }
 
-        private void ApplyMesh() {
-            mesh.SetVertices(vertices);
-            mesh.SetNormals(normals);
-            mesh.SetUVs(0, uvs);
+        private void ClearMesh(Mesh targetMesh) {
+            targetMesh.Clear();
+            targetMesh.subMeshCount = geometry.SubmeshCount;
+        }
+
+        private void ApplyMesh(Mesh targetMesh) {
+            targetMesh.SetVertices(vertices);
+            targetMesh.SetNormals(normals);
+            targetMesh.SetUVs(0, uvs);
             for (int i = 0; i < triangles.Count; i++) {
-                mesh.SetTriangles(triangles[i], i);
+                targetMesh.SetTriangles(triangles[i], i);
             }
-            mesh.RecalculateTangents();
-            mesh.Optimize();
+            targetMesh.RecalculateTangents();
+            targetMesh.RecalculateBounds();
+            targetMesh.Optimize();
+        }
+
+        private void ClearLists() {
+            vertices.Clear();
+            normals.Clear();
+            uvs.Clear();
+            triangles.Clear();
+
+            for (int i = 0; i < geometry.SubmeshCount; i++) {
+                triangles.Add(new List<int>());
+            }
+            
+            exportedFaces.Clear();
         }
 
         private (int v0Triangle, int v1Triangle, int v2Triangle) AddFace(int faceIndex, float3 normal0, float3 normal1, float3 normal2) {
@@ -166,39 +173,12 @@ namespace GeometryGraph.Runtime.Geometry {
             return (t0, t1, t2);
         }
 
-        private void ClearMesh() {
-            if (mesh == null) mesh = target.sharedMesh;
-            if (mesh == null) {
-                mesh = new Mesh {
-                    name = "Exported Mesh",
-                    indexFormat = IndexFormat.UInt32
-                };
-                target.sharedMesh = mesh;
-            }
-
-            mesh.Clear();
-            mesh.subMeshCount = geometry.SubmeshCount;
-        }
-
-        private void ClearLists() {
-            vertices.Clear();
-            normals.Clear();
-            uvs.Clear();
-            triangles.Clear();
-
-            for (int i = 0; i < geometry.SubmeshCount; i++) {
-                triangles.Add(new List<int>());
-            }
-            
-            exportedFaces.Clear();
-        }
-
         private int GetSharedFace(int faceIndex, int edgeIndex, float3 normal) {
             GeometryData.Edge edge = geometry.Edges[edgeIndex];
             int sharedFaceIndex = edge.FaceA != faceIndex ? edge.FaceA : edge.FaceB;
             
             if (exportedFaces.Contains(sharedFaceIndex)) return -1;
-            if (sharedFaceIndex != -1 && math_ext.angle(normalAttr[sharedFaceIndex], normal) < normalAngleThreshold) {
+            if (sharedFaceIndex != -1 && math_ext.angle(normalAttr[sharedFaceIndex], normal) < 0.01f) {
             // if (sharedFaceIndex != -1 && normalAttr[sharedFaceIndex].Equals(normal)) {
                 return sharedFaceIndex;
             }

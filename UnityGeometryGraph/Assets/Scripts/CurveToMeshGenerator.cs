@@ -1,12 +1,15 @@
 ﻿using GeometryGraph.Runtime.Geometry;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace GeometryGraph.Runtime.Curve.TEMP {
     public class CurveToMeshGenerator : SerializedMonoBehaviour {
         [Required] public ICurveProvider Curve;
         [Required] public ICurveProvider Profile;
-        [Required] public GeometryExporter Exporter;
+        [Required] public MeshFilter MeshFilter;
+        public Mesh Mesh;
+        public GeometryExporter Exporter = new GeometryExporter();
         [Space]
         public bool CloseCaps;
         public bool SeparateMaterialForCaps;
@@ -20,8 +23,18 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
 
         [Button]
         public void Generate() {
+            if (Mesh == null) InitializeMesh();
             Geometry = CurveToGeometry.WithProfile(Curve.Curve, Profile.Curve, new CurveToGeometrySettings(CloseCaps, SeparateMaterialForCaps, ShadeSmoothCurve, ShadeSmoothCaps, RotationOffset, IncrementalRotationOffset, CapUVType));
-            Exporter.Export(Geometry);
+            Exporter.Export(Geometry, Mesh);
+        }
+        
+        private void InitializeMesh() {
+            Mesh = new Mesh {
+                name = "Generated Mesh",
+                indexFormat = IndexFormat.UInt32
+            };
+            if (MeshFilter.sharedMesh != null) DestroyImmediate(MeshFilter.sharedMesh);
+            MeshFilter.sharedMesh = Mesh;
         }
     }
 }
