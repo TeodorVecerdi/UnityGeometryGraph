@@ -93,10 +93,10 @@ namespace GeometryGraph.Runtime.Geometry {
 
         private void ClearMesh(Mesh targetMesh) {
             targetMesh.Clear();
-            targetMesh.subMeshCount = geometry.SubmeshCount;
         }
 
         private void ApplyMesh(Mesh targetMesh) {
+            targetMesh.subMeshCount = geometry.SubmeshCount;
             targetMesh.SetVertices(vertices);
             targetMesh.SetNormals(normals);
             targetMesh.SetUVs(0, uvs);
@@ -106,6 +106,7 @@ namespace GeometryGraph.Runtime.Geometry {
             targetMesh.RecalculateTangents();
             targetMesh.RecalculateBounds();
             targetMesh.Optimize();
+            targetMesh.MarkModified();
         }
 
         private void ClearLists() {
