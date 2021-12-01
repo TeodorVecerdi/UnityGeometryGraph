@@ -21,7 +21,7 @@ namespace GeometryGraph.Runtime {
            
             yield return null;
             GeometryGraphEvaluationResult evaluationResult = graph.Evaluate(sceneData);
-            if (export) HandleEvaluationResult(evaluationResult);
+            HandleEvaluationResult(evaluationResult, export);
             onComplete?.Invoke(evaluationResult);
             isAsyncEvaluationComplete = true;
         }

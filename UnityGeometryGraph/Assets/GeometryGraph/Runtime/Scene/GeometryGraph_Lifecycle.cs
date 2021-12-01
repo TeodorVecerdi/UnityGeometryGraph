@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using GeometryGraph.Runtime.Data;
-using GeometryGraph.Runtime.Geometry;
+﻿using GeometryGraph.Runtime.Geometry;
 using UnityCommons;
 using UnityEngine;
 
@@ -12,26 +9,24 @@ namespace GeometryGraph.Runtime {
         }
 
         private void Update() {
-            Render();
-
-            if (!realtimeEvaluation && !realtimeEvaluationAsync) {
-                return;
+            if (realtimeEvaluation) {
+                if (realtimeEvaluationAsync) {
+                    if (isAsyncEvaluationComplete) {
+                        StartCoroutine(EvaluateAsync(true, null));
+                    }
+                } else {
+                    Evaluate();
+                }
             }
             
-            if (realtimeEvaluationAsync) {
-                if (isAsyncEvaluationComplete) {
-                    StartCoroutine(EvaluateAsync(true, null));
-                }
-            } else {
-                Evaluate();
-            }
+            RenderInstances();
         }
 
         private void OnDestroy() {
             meshPool.Cleanup();
         }
 
-        private void Render() {
+        private void RenderInstances() {
             if (instancedGeometryData is not { GeometryCount: not 0 }) {
                 return;
             }

@@ -69,7 +69,7 @@ namespace GeometryGraph.Runtime {
             sceneData.UpdatePropertyDefaultValue(property.Guid, property.DefaultValue);
         }
 
-        private void HandleEvaluationResult(GeometryGraphEvaluationResult evaluationResult) {
+        private void HandleEvaluationResult(GeometryGraphEvaluationResult evaluationResult, bool export = true) {
             curveData = evaluationResult.CurveData;
             geometryData = evaluationResult.GeometryData;
             instancedGeometryData = evaluationResult.InstancedGeometryData;
@@ -82,7 +82,7 @@ namespace GeometryGraph.Runtime {
                 InitializeMeshFilter();
             }
 
-            if (initializedMeshFilter) {
+            if (initializedMeshFilter && export) {
                 exporter.Export(geometryData, meshFilterMesh);
             }
 
