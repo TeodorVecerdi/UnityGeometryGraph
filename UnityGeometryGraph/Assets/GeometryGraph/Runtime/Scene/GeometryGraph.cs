@@ -33,7 +33,7 @@ namespace GeometryGraph.Runtime {
         // Exporter fields
         private MeshPool meshPool = null;
         private GeometryExporter exporter = new GeometryExporter();
-        private List<Mesh> bakedInstancedGeometry = new();
+        private BakedInstancedGeometry bakedInstancedGeometry = new();
         private bool initializedExporter = false;
         [SerializeField] private bool initializedMeshFilter;
         [SerializeField] private Mesh meshFilterMesh;
