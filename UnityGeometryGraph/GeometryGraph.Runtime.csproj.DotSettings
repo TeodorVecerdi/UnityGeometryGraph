@@ -8,6 +8,8 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Ccurve/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Ccurve_005Cprimitives/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Cgeometry/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Cgeometry_005Caccess/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Cinstances/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Cinteger/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Cpoint/@EntryIndexedValue">True</s:Boolean>

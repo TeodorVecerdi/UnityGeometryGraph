@@ -106,6 +106,7 @@ namespace GeometryGraph.Runtime {
                 indexFormat = IndexFormat.UInt32,
                 name = "GeometryGraph Mesh"
             };
+            meshFilterMesh.MarkDynamic();
 
             if (meshFilter.sharedMesh != null) {
                 DestroyImmediate(meshFilter.sharedMesh);
@@ -171,5 +172,11 @@ namespace GeometryGraph.Runtime {
             }
         }
 
+        private void EnsureCorrectState() {
+            int graphPropertyHashCode = graph.RuntimeData.PropertyHashCode;
+            if (sceneData.PropertyHashCode != graphPropertyHashCode) {
+                OnPropertiesChanged(graphPropertyHashCode);
+            }
+        }
     }
 }

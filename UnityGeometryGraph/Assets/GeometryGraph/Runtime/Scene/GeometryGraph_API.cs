@@ -8,6 +8,7 @@ namespace GeometryGraph.Runtime {
     public partial class GeometryGraph {
         public void Evaluate() {
             if (graph == null) return;
+            EnsureCorrectState();
             GeometryGraphEvaluationResult evaluationResult = graph.Evaluate(sceneData);
             HandleEvaluationResult(evaluationResult);
         }
@@ -17,12 +18,13 @@ namespace GeometryGraph.Runtime {
                 isAsyncEvaluationComplete = true;
                 yield break;
             }
+            EnsureCorrectState();
             isAsyncEvaluationComplete = false;
            
-            yield return null;
             GeometryGraphEvaluationResult evaluationResult = graph.Evaluate(sceneData);
             HandleEvaluationResult(evaluationResult, export);
             onComplete?.Invoke(evaluationResult);
+            yield return null;
             isAsyncEvaluationComplete = true;
         }
 
