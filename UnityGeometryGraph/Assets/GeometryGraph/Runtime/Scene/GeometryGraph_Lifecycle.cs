@@ -1,4 +1,5 @@
-﻿using GeometryGraph.Runtime.Geometry;
+using System.Linq;
+using GeometryGraph.Runtime.Geometry;
 using UnityCommons;
 using UnityEngine;
 
@@ -23,12 +24,18 @@ namespace GeometryGraph.Runtime {
         }
 
         private void OnDestroy() {
-            meshPool.Cleanup();
+            meshPool?.Cleanup();
         }
 
         private void RenderInstances() {
             if (instancedGeometryData is not { GeometryCount: not 0 }) {
                 return;
+            }
+
+            if (instancedGeometrySettings.Materials.Any(material => !material.enableInstancing)) {
+                foreach (Material material in instancedGeometrySettings.Materials) {
+                    material.enableInstancing = true;
+                }
             }
             
             int geometryCount = instancedGeometryData.GeometryCount;
