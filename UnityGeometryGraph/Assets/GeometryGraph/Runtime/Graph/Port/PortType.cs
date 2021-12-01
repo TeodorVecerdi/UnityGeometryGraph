@@ -8,6 +8,7 @@
         Collection,
         String,
         Curve,
+        InstancedGeometry,
         
         Any = int.MaxValue
     }

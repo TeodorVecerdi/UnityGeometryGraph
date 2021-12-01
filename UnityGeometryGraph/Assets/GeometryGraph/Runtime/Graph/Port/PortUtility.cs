@@ -14,6 +14,7 @@ namespace GeometryGraph.Runtime.Graph {
                 case PortType.Collection:
                 case PortType.String:
                 case PortType.Curve:
+                case PortType.InstancedGeometry:
                 case PortType.Any:
                     return false;
                 default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
