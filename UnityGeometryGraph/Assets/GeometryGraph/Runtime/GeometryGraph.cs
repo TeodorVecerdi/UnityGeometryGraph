@@ -30,13 +30,12 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private bool realtimeEvaluationAsync;
         
         // Exporter fields
-        [SerializeField] private MeshPool meshPool = new (IndexFormat.UInt32);
-        [SerializeField] private GeometryExporter exporter = new GeometryExporter();
-        [SerializeField] private List<Mesh> bakedInstancedGeometry = new();
+        private MeshPool meshPool = null;
+        private GeometryExporter exporter = new GeometryExporter();
+        private List<Mesh> bakedInstancedGeometry = new();
+        private bool initializedExporter = false;
         [SerializeField] private bool initializedMeshFilter;
         [SerializeField] private Mesh meshFilterMesh;
-        
-
 
         private bool isAsyncEvaluationComplete = true;
         
@@ -74,27 +73,43 @@ namespace GeometryGraph.Runtime {
             geometryData = evaluationResult.GeometryData;
             instancedGeometryData = evaluationResult.InstancedGeometryData;
 
-            if (meshFilter != null && !initializedMeshFilter) {
-                if (meshFilter.sharedMesh != null) {
-                    meshFilterMesh = meshFilter.sharedMesh;
-                } else {
-                    meshFilterMesh = new Mesh();
-                    meshFilter.sharedMesh = meshFilterMesh;
-                }
-                meshFilterMesh.indexFormat = IndexFormat.UInt32;
-                meshFilterMesh.name = "GeometryGraph Mesh";
-                initializedMeshFilter = true;
+            if (!initializedExporter) {
+                InitializeExporter();
             }
             
-            exporter ??= new GeometryExporter();
-            
-            if (meshFilter != null) {
+            if (!initializedMeshFilter) {
+                InitializeMeshFilter();
+            }
+
+            if (initializedMeshFilter) {
                 exporter.Export(geometryData, meshFilterMesh);
             }
 
             if (instancedGeometryData != null) {
                 BakeInstancedGeometry();
             }
+        }
+
+        private void InitializeExporter() {
+            meshPool ??= new MeshPool(IndexFormat.UInt32);
+            exporter ??= new GeometryExporter();
+            initializedExporter = true;
+        }
+
+        private void InitializeMeshFilter() {
+            if (meshFilter == null) return;
+            
+            meshFilterMesh = new Mesh {
+                indexFormat = IndexFormat.UInt32,
+                name = "GeometryGraph Mesh"
+            };
+
+            if (meshFilter.sharedMesh != null) {
+                DestroyImmediate(meshFilter.sharedMesh);
+                meshFilter.sharedMesh = meshFilterMesh;
+            }
+
+            initializedMeshFilter = true;
         }
 
         private void BakeInstancedGeometry() {
