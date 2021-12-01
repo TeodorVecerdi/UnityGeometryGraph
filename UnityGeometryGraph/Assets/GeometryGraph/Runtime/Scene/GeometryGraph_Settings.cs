@@ -236,6 +236,8 @@ namespace GeometryGraph.Runtime {
 
     [Serializable]
     internal class InstancedGeometrySettings {
+        // TODO(#17): Provide a way to add per-instance per-submesh materials
+        // Maybe using a List<List<Material>>?
         public List<Material> Materials = new List<Material>();
     }
 }
