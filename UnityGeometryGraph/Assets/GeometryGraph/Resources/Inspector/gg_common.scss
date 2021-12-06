@@ -100,6 +100,7 @@ VisualElement#GeometryGraphInspector {
             width: 48px;
             height: 48px;
             background-image: var(--header-image);
+            -unity-background-image-tint-color: var(--header-image-tint);
             margin-right: 8px;
         }
 
