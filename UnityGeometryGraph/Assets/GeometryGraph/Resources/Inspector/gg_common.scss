@@ -1,4 +1,4 @@
-﻿.d-none {
+.d-none {
     display: none;
 }
 
@@ -99,7 +99,7 @@ VisualElement#GeometryGraphInspector {
             min-height: 48px;
             width: 48px;
             height: 48px;
-            background-image: resource("Textures/gg_feature@64");
+            background-image: var(--header-image);
             margin-right: 8px;
         }
 
