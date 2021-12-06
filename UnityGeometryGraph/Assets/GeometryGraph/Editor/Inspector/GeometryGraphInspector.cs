@@ -439,18 +439,21 @@ namespace GeometryGraph.Editor {
             button.clicked += () => {
                 serializedObject.Update();
                 property.boolValue = !property.boolValue;
-                if (property.boolValue) {
-                    button.AddToClassList("toggle-button__active");
-                } else {
-                    button.RemoveFromClassList("toggle-button__active");
-                }
-                button.text = property.boolValue ? onLabel : offLabel;
                 serializedObject.ApplyModifiedProperties();
             };
             
             if (property.boolValue) {
                 button.AddToClassList("toggle-button__active");
             }
+            
+            field.RegisterValueChangeCallback(evt => {
+                if (evt.changedProperty.boolValue) {
+                    button.AddToClassList("toggle-button__active");
+                } else {
+                    button.RemoveFromClassList("toggle-button__active");
+                }
+                button.text = evt.changedProperty.boolValue ? onLabel : offLabel;
+            });
             
             return (field, button);
         }
