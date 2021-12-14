@@ -34,7 +34,7 @@ namespace GeometryGraph.Runtime.Graph {
             IEnumerable<float> xValues = null;
             IEnumerable<float> yValues = null;
             IEnumerable<float> zValues = null;
-            AttributeDomain domain = TargetDomain;
+            AttributeDomain? domain = null;
             
             if (XType is AttributeCombineNode_ComponentType.Attribute && !string.IsNullOrWhiteSpace(XAttribute)) {
                 FloatAttribute xAttr = Geometry.GetAttribute<FloatAttribute>(XAttribute);
@@ -60,6 +60,8 @@ namespace GeometryGraph.Runtime.Graph {
                 }
             }
             
+            domain ??= TargetDomain;
+            
             int count = domain switch {
                 AttributeDomain.Vertex => Geometry.Vertices.Count,
                 AttributeDomain.Edge => Geometry.Edges.Count,
@@ -72,9 +74,9 @@ namespace GeometryGraph.Runtime.Graph {
             yValues ??= YType is AttributeCombineNode_ComponentType.Float ? GetValues(YFloatPort, count, YFloat) : Enumerable.Repeat(0.0f, count);
             zValues ??= ZType is AttributeCombineNode_ComponentType.Float ? GetValues(ZFloatPort, count, ZFloat) : Enumerable.Repeat(0.0f, count);
 
-            Vector3Attribute result = xValues.Zip(yValues, (x, y) => (x, y)).Zip(zValues, (xy, z) => new float3(xy.x, xy.y, z)).Into<Vector3Attribute>(ResultAttribute, domain);
+            Vector3Attribute result = xValues.Zip(yValues, (x, y) => (x, y)).Zip(zValues, (xy, z) => new float3(xy.x, xy.y, z)).Into<Vector3Attribute>(ResultAttribute, domain.Value);
             Result = Geometry.Clone();
-            Result.StoreAttribute(result);
+            Result.StoreAttribute(result, TargetDomain);
         }
 
         public enum AttributeCombineNode_ComponentType {
