@@ -12,14 +12,9 @@ namespace GeometryGraph.Runtime.AttributeSystem {
     // Domain conversion
     internal static partial class AttributeConvert {
         internal static IEnumerable ConvertDomain(GeometryData geometry, BaseAttribute sourceAttribute, AttributeDomain to) {
-            if (sourceAttribute.Domain == AttributeDomain.Spline || to == AttributeDomain.Spline) {
-                Debug.LogWarning("Cannot convert from a Spline domain or into a Spline domain.");
+            if (sourceAttribute.Domain == to) 
                 // NOTE: I use .Yield() so I don't return the attribute itself, but an actual IEnumerable over the attribute values
                 // null turns the action into a NoOp
-                return sourceAttribute.Yield(null);
-            }
-
-            if (sourceAttribute.Domain == to) 
                 return sourceAttribute.Yield(null);
 
             return sourceAttribute.Domain switch {

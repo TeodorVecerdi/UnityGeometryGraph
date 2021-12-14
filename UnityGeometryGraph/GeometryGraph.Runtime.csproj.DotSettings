@@ -6,6 +6,7 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cdata_005Cpools/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgeometry_005Coperations/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Cattribute/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Ccurve/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Ccurve_005Cprimitives/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cgeometrygraph_005Cruntime_005Cgraph_005Cnode_005Cgeometry/@EntryIndexedValue">True</s:Boolean>
