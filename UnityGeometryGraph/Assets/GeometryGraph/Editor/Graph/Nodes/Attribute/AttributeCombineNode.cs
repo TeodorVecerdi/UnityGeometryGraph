@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GeometryGraph.Runtime;
+using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
@@ -21,6 +22,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort resultAttributePort;
         private GraphFrameworkPort resultPort;
 
+        private EnumSelectionDropdown<AttributeDomain> domainDropdown;
         private EnumSelectionDropdown<ComponentType> xTypeDropdown;
         private EnumSelectionDropdown<ComponentType> yTypeDropdown;
         private EnumSelectionDropdown<ComponentType> zTypeDropdown;
@@ -40,6 +42,7 @@ namespace GeometryGraph.Editor {
         private string zAttribute;
         private string resultAttribute;
         
+        private AttributeDomain domain = AttributeDomain.Vertex;
         private ComponentType xType = ComponentType.Attribute;
         private ComponentType yType = ComponentType.Attribute;
         private ComponentType zType = ComponentType.Attribute;
@@ -48,6 +51,15 @@ namespace GeometryGraph.Editor {
             new SelectionCategory("Type", false) {
                 new ("Float", 0, false),
                 new ("Attribute", 1, false)
+            }
+        };
+        
+        private static readonly SelectionTree domainTree = new (new List<object>(Enum.GetValues(typeof(AttributeDomain)).Convert(o => o))) {
+            new SelectionCategory("Domain", false) {
+                new ("Vertex", 0, false),
+                new ("Edge", 1, false),
+                new ("Face", 2, false),
+                new ("FaceCorner", 3, false)
             }
         };
 
@@ -64,9 +76,18 @@ namespace GeometryGraph.Editor {
             (resultAttributePort, resultAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Result", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateResultAttribute(resultAttribute));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
 
+            domainDropdown = new EnumSelectionDropdown<AttributeDomain>(domain, domainTree, "Domain");
             xTypeDropdown = new EnumSelectionDropdown<ComponentType>(xType, componentTypeTree, "X");
             yTypeDropdown = new EnumSelectionDropdown<ComponentType>(yType, componentTypeTree, "Y");
             zTypeDropdown = new EnumSelectionDropdown<ComponentType>(zType, componentTypeTree, "Z");
+
+            domainDropdown.RegisterValueChangedCallback(evt => {
+                if (evt.newValue == domain) return;
+                
+                Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change domain");
+                domain = evt.newValue;
+                RuntimeNode.UpdateTargetDomain(domain);
+            });
             
             xTypeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == xType) return;
@@ -159,6 +180,7 @@ namespace GeometryGraph.Editor {
             zAttributePort.Add(zAttributeField);
             resultAttributePort.Add(resultAttributeField);
             
+            inputContainer.Add(domainDropdown);
             inputContainer.Add(xTypeDropdown);
             inputContainer.Add(yTypeDropdown);
             inputContainer.Add(zTypeDropdown);
