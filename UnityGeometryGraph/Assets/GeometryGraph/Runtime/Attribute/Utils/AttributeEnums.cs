@@ -4,7 +4,6 @@
         Edge,
         Face,
         FaceCorner,
-        Spline, // Unused yet
     }
     
     public enum AttributeType {
