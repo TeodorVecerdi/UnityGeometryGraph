@@ -20,6 +20,14 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public AttributeDomain TargetDomain { get; private set; } = AttributeDomain.Vertex;
         [Setting] public AttributeSplitNode_InputType InputType { get; private set; } = AttributeSplitNode_InputType.Attribute;
 
+        [GetterMethod(nameof(Result), Inline = true)]
+        private GeometryData GetResult() {
+            if (Result == null) {
+                CalculateResult();
+            }
+            return Result;
+        }
+        
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             if (Geometry == null || string.IsNullOrWhiteSpace(Attribute)) {

@@ -24,6 +24,14 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public AttributeCombineNode_ComponentType YType { get; private set; } = AttributeCombineNode_ComponentType.Attribute;
         [Setting] public AttributeCombineNode_ComponentType ZType { get; private set; } = AttributeCombineNode_ComponentType.Attribute;
 
+        [GetterMethod(nameof(Result), Inline = true)]
+        private GeometryData GetResult() {
+            if (Result == null) {
+                CalculateResult();
+            }
+            return Result;
+        }
+        
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             if (Geometry == null || string.IsNullOrWhiteSpace(ResultAttribute)) {
