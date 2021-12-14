@@ -5,20 +5,40 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEditor;
 using GeometryGraph.Runtime.Curve;
+using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 using GeometryGraph.Runtime.Graph;
+using UnityEngine.Rendering;
 
 namespace GeometryGraph.Runtime {
     public partial class GeometryGraph : MonoBehaviour {
+        // References
         [SerializeField] private RuntimeGraphObject graph;
-        [SerializeField] private GeometryExporter exporter;
+        [SerializeField] private MeshFilter meshFilter;
         
+        // Scene data
         [SerializeField] private string graphGuid;
         [SerializeField] private GeometryGraphSceneData sceneData = new();
         [SerializeField] private CurveVisualizerSettings curveVisualizerSettings = new();
+        [SerializeField] private InstancedGeometrySettings instancedGeometrySettings = new();
 
+        // Evaluation data
         [SerializeField] private CurveData curveData;
         [SerializeField] private GeometryData geometryData;
+        [SerializeField] private InstancedGeometryData instancedGeometryData;
+
+        [SerializeField] private bool realtimeEvaluation;
+        [SerializeField] private bool realtimeEvaluationAsync;
+        
+        // Exporter fields
+        private bool initializedExporter;
+        private MeshPool meshPool;
+        private readonly GeometryExporter exporter = new();
+        private readonly BakedInstancedGeometry bakedInstancedGeometry = new();
+        [SerializeField] private bool initializedMeshFilter;
+        [SerializeField] private Mesh meshFilterMesh;
+
+        private bool isAsyncEvaluationComplete = true;
         
         internal RuntimeGraphObject Graph => graph;
         internal GeometryGraphSceneData SceneData => sceneData;
@@ -48,7 +68,72 @@ namespace GeometryGraph.Runtime {
         internal void OnDefaultPropertyValueChanged(Property property) {
             sceneData.UpdatePropertyDefaultValue(property.Guid, property.DefaultValue);
         }
-        
+
+        private void HandleEvaluationResult(GeometryGraphEvaluationResult evaluationResult, bool export = true) {
+            curveData = evaluationResult.CurveData;
+            geometryData = evaluationResult.GeometryData;
+            instancedGeometryData = evaluationResult.InstancedGeometryData;
+
+            if (!initializedExporter) {
+                Debug.Log("Initializing exporter");
+                InitializeExporter();
+            }
+            
+            if (!initializedMeshFilter) {
+                Debug.Log("Initializing mesh filter");
+                InitializeMeshFilter();
+            }
+
+            if (initializedMeshFilter && export) {
+                exporter.Export(geometryData, meshFilterMesh);
+            }
+
+            if (instancedGeometryData != null) {
+                BakeInstancedGeometry();
+            }
+        }
+
+        private void InitializeExporter() {
+            meshPool?.Cleanup();
+            meshPool = new MeshPool(IndexFormat.UInt32);
+            initializedExporter = true;
+        }
+
+        private void InitializeMeshFilter() {
+            if (meshFilter == null) return;
+            
+            meshFilterMesh = new Mesh {
+                indexFormat = IndexFormat.UInt32,
+                name = "GeometryGraph Mesh"
+            };
+            meshFilterMesh.MarkDynamic();
+
+            if (meshFilter.sharedMesh != null) {
+                DestroyImmediate(meshFilter.sharedMesh);
+                meshFilter.sharedMesh = meshFilterMesh;
+            }
+
+            initializedMeshFilter = true;
+        }
+
+        private void BakeInstancedGeometry() {
+            // TODO(#16): Implement GetHashCode() in GeometryData and check if the baked geometry is the same as the new geometry before re-baking
+            foreach (Mesh mesh in bakedInstancedGeometry.Meshes) {
+                meshPool.Return(mesh);
+            }
+            bakedInstancedGeometry.Meshes.Clear();
+            bakedInstancedGeometry.Matrices.Clear();
+            
+            for (int i = 0; i < instancedGeometryData.GeometryCount; i++) {
+                GeometryData geometry = instancedGeometryData.Geometry(i);
+                
+                Mesh mesh = meshPool.Get();
+                exporter.Export(geometry, mesh);
+                bakedInstancedGeometry.Meshes.Add(mesh);
+                bakedInstancedGeometry.Matrices.Add(instancedGeometryData.TransformData(i).Select(t => transform.localToWorldMatrix * Matrix4x4.TRS(t.Translation, Quaternion.Euler(t.EulerRotation), t.Scale)).ToArray());
+            }
+        }
+
         private void OnDrawGizmos() {
             if (!curveVisualizerSettings.Enabled || curveData == null || curveData.Type == CurveType.None) return;
 
@@ -87,5 +172,11 @@ namespace GeometryGraph.Runtime {
             }
         }
 
+        private void EnsureCorrectState() {
+            int graphPropertyHashCode = graph.RuntimeData.PropertyHashCode;
+            if (sceneData.PropertyHashCode != graphPropertyHashCode) {
+                OnPropertiesChanged(graphPropertyHashCode);
+            }
+        }
     }
 }

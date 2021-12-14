@@ -21,19 +21,21 @@ namespace GeometryGraph.Runtime.Graph {
         protected override object GetValueForPort(RuntimePort port) {
             GeometryCollection objectValue = null;
             object value = Property?.Value;
+            if (value == null) return Array.Empty<GeometryData>();
+            
             if ((Object)value != null) {
                 objectValue = (GeometryCollection)value;
             }
             return objectValue == null ? (IEnumerable<GeometryData>)Array.Empty<GeometryData>() : (IEnumerable<GeometryData>)objectValue.Collection.Select(data => data.Clone());
         }
         
-        public override string GetCustomData() {
+        public override string Serialize() {
             return new JObject {
                 ["p"] = Property?.Guid
             }.ToString(Formatting.None);
         }
 
-        public override void SetCustomData(string json) {
+        public override void Deserialize(string json) {
             JObject jsonObject = JObject.Parse(json);
             PropertyGuid = jsonObject.Value<string>("p");
         }

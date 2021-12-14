@@ -54,7 +54,7 @@ namespace GeometryGraph.Runtime.Graph {
             return curve == null ? CurveData.Empty : curve.Clone();
         }
 
-        public override string GetCustomData() {
+        public override string Serialize() {
             JArray array = new JArray {
                 (int)points,
                 (float)radius,
@@ -62,12 +62,15 @@ namespace GeometryGraph.Runtime.Graph {
             return array.ToString(Formatting.None);
         }
 
-        public override void SetCustomData(string json) {
+        public override void Deserialize(string json) {
             if (string.IsNullOrEmpty(json)) return;
 
             JArray data = JArray.Parse(json);
             points = new MinMaxInt(data.Value<int>(0), Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
             radius = new MinMaxFloat(data.Value<float>(1), Constants.MIN_CIRCULAR_CURVE_RADIUS);
+        }
+
+        public override void OnAfterDeserialize() {
             NotifyPortValueChanged(ResultPort);
         }
 

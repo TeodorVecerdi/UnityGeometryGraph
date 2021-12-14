@@ -154,3 +154,7 @@ sysinfo.txt
 *.gen.cs
 *.gen.cs.meta
 *.uss.map.meta
+
+
+Assets/Kenney/
+Assets/Kenney.meta

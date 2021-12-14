@@ -36,7 +36,7 @@ namespace GeometryGraph.Runtime.Graph {
                     ? GetValues(RotationPort, rotAttribute.Count, Rotation).Into<Vector3Attribute>("rotAttribute", AttributeDomain.Vertex) 
                     : Result.GetAttributeOrDefault<Vector3Attribute, float3>(RotationAttribute, AttributeDomain.Vertex, float3.zero);
                 
-                rotAttribute.YieldWithAttribute(tmpAttribute, (rot, euler) => math.rotate(quaternion.Euler(euler), rot)).Into(rotAttribute);
+                rotAttribute.YieldWithAttribute(tmpAttribute, (rot, euler) => math_ext.wrap(euler + rot, -180.0f, 180.0f)).Into(rotAttribute);
             } else {
                 Vector3Attribute axisAttribute = AxisMode == RotatePointNode_AxisMode.Vector 
                     ? GetValues(AxisPort, rotAttribute.Count, Axis).Into<Vector3Attribute>("axisAttribute", AttributeDomain.Vertex) 
@@ -45,7 +45,7 @@ namespace GeometryGraph.Runtime.Graph {
                     ? GetValues(AnglePort, rotAttribute.Count, Angle).Into<FloatAttribute>("angleAttribute", AttributeDomain.Vertex)
                     : Result.GetAttributeOrDefault<FloatAttribute, float>(AngleAttribute, AttributeDomain.Vertex, 0.0f);
                 rotAttribute.YieldWithAttribute(axisAttribute, angleAttribute,
-                                                     (rot, axis, angle) => math.rotate(quaternion.AxisAngle(axis, angle), rot))
+                                                     (rot, axis, angle) => math_ext.wrap(math.degrees(quat_ext.to_euler(quaternion.AxisAngle(axis, math.radians(angle)))) + rot, -180.0f, 180.0f))
                                  .Into(rotAttribute);
             }
             Result.StoreAttribute(rotAttribute);

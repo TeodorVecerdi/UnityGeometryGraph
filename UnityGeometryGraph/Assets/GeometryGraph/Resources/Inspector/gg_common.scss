@@ -99,7 +99,8 @@ VisualElement#GeometryGraphInspector {
             min-height: 48px;
             width: 48px;
             height: 48px;
-            background-image: resource("Textures/gg_feature@64");
+            background-image: var(--header-image);
+            -unity-background-image-tint-color: var(--header-image-tint);
             margin-right: 8px;
         }
 
@@ -231,13 +232,33 @@ VisualElement#GeometryGraphInspector {
         VisualElement.curve-settings-container {
             margin-top: 12px;
             
+            VisualElement.curve-settings-category-header {
+                flex-direction: row;
+                flex-wrap: wrap-reverse;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 4px;
+                
+                & > Button.toggle-button {
+                    padding-top: 2px;
+                    padding-bottom: 2px;
+                    margin-right: 8px;
+                    min-width: 48px;
+                }
+            }
+            
             Label.curve-settings-category-title {
                 font-size: 14px;
                 color: var(--text-white);
                 -unity-font-style: bold;
-                margin-left: 3px;
-                margin-bottom: 4px;
             }
+        }
+    }
+    
+    VisualElement.instances-container > VisualElement#InstancesContent {
+        PropertyField.materials-list {
+            margin-left: 16px;
+            margin-right: 4px;
         }
     }
 }

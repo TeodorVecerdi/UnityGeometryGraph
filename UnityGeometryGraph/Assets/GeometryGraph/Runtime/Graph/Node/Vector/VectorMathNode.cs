@@ -96,7 +96,7 @@ namespace GeometryGraph.Runtime.Graph {
                 VectorMathNode_Operation.Distance => math.distance(x, y),
                 VectorMathNode_Operation.DistanceSquared => math.distancesq(x, y),
                 VectorMathNode_Operation.DotProduct => math.dot(x, y),
-                _ => throw new ArgumentOutOfRangeException(nameof(Operation), Operation, null)
+                _ => 0.0f,
             };
         }
 
@@ -149,7 +149,7 @@ namespace GeometryGraph.Runtime.Graph {
                 VectorMathNode_Operation.ToRadians => math.radians(x),
                 VectorMathNode_Operation.ToDegrees => math.degrees(x),
                 VectorMathNode_Operation.Lerp => math.lerp(x, y, distance),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => float3.zero,
             };
         }
 

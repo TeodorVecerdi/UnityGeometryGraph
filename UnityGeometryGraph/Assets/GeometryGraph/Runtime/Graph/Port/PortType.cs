@@ -8,6 +8,7 @@
         Collection,
         String,
         Curve,
+        Instances,
         
         Any = int.MaxValue
     }

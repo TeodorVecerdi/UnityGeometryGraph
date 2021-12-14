@@ -24,7 +24,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         [CalculatesProperty(nameof(Result))]
         private void Calculate() {
-            if (Input == null) return;
+            if (Input == null || Input.SubmeshCount == 0) return;
             Result = Input.Clone();
             Vector3Attribute positionAttr = Result.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             if (Mode == TranslatePointNode_Mode.Vector) {

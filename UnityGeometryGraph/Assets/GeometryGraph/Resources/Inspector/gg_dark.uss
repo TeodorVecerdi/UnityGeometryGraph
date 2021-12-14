@@ -13,6 +13,8 @@ VisualElement#GeometryGraphInspector {
   --text-white: #DFDFDF;
   --theme: #FFA300;
   --theme-dark: #E88300;
+  --header-image: resource("Textures/gg_feature@64");
+  --header-image-tint: #FFFFFF;
 }
 
 /*# sourceMappingURL=gg_dark.uss.map */

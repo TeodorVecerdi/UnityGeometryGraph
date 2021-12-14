@@ -10,5 +10,6 @@
         Curve,
         Point,
         Properties,
+        Instances,
     }
 }

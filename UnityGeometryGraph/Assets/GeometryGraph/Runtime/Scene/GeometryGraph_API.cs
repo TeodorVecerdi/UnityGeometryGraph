@@ -1,18 +1,31 @@
-﻿using GeometryGraph.Runtime.Data;
+﻿using System;
+using System.Collections;
+using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Graph;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime {
     public partial class GeometryGraph {
         public void Evaluate() {
+            if (graph == null) return;
+            EnsureCorrectState();
             GeometryGraphEvaluationResult evaluationResult = graph.Evaluate(sceneData);
-            curveData = evaluationResult.CurveData;
-            geometryData = evaluationResult.GeometryData;
-            
-            if (exporter != null) {
-                if (geometryData != null) exporter.Export(geometryData);
-                else exporter.Clear();
+            HandleEvaluationResult(evaluationResult);
+        }
+
+        public IEnumerator EvaluateAsync(bool export, Action<GeometryGraphEvaluationResult> onComplete) {
+            if (graph == null) {
+                isAsyncEvaluationComplete = true;
+                yield break;
             }
+            EnsureCorrectState();
+            isAsyncEvaluationComplete = false;
+           
+            GeometryGraphEvaluationResult evaluationResult = graph.Evaluate(sceneData);
+            HandleEvaluationResult(evaluationResult, export);
+            onComplete?.Invoke(evaluationResult);
+            yield return null;
+            isAsyncEvaluationComplete = true;
         }
 
         #region Set Property Value Using Reference Name

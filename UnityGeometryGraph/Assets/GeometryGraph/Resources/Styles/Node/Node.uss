@@ -121,6 +121,9 @@ CylinderPrimitiveNode #input > Label#uvSettingsTitle {
 .node.category-Properties {
   --category-color: #ff6200;
 }
+.node.category-Instances {
+  --category-color: #ECBB02;
+}
 .node #collapsible-area {
   background-color: #212121;
 }

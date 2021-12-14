@@ -64,7 +64,7 @@ namespace GeometryGraph.Runtime.Graph {
             return curve == null ? CurveData.Empty : curve.Clone();
         }
 
-        public override string GetCustomData() {
+        public override string Serialize() {
             JArray array = new JArray {
                 (int)points,
                 JsonConvert.SerializeObject(start, float3Converter.Converter),
@@ -73,13 +73,16 @@ namespace GeometryGraph.Runtime.Graph {
             return array.ToString(Formatting.None);
         }
 
-        public override void SetCustomData(string json) {
+        public override void Deserialize(string json) {
             if (string.IsNullOrEmpty(json)) return;
 
             JArray data = JArray.Parse(json);
             points = new MinMaxInt(data.Value<int>(0), Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
             start = JsonConvert.DeserializeObject<float3>(data.Value<string>(1)!, float3Converter.Converter);
             end = JsonConvert.DeserializeObject<float3>(data.Value<string>(2)!, float3Converter.Converter);
+        }
+
+        public override void OnAfterDeserialize() {
             NotifyPortValueChanged(ResultPort);
         }
 

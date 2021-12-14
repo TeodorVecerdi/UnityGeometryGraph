@@ -28,5 +28,8 @@ GraphFrameworkPort.portType-String {
 GraphFrameworkPort.portType-Curve {
   --port-color: #0AC778;
 }
+GraphFrameworkPort.portType-Instances {
+  --port-color: #ECBB02;
+}
 
 /*# sourceMappingURL=Port.uss.map */
