@@ -174,7 +174,9 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         }
 
         protected BaseAttribute(string name, IEnumerable<T> values) : base(name) {
-            Fill(values);
+            foreach (T value in values) {
+                Values.Add(value);
+            }
         }
 
         public new Enumerator GetEnumerator() => new Enumerator(base.GetEnumerator());
