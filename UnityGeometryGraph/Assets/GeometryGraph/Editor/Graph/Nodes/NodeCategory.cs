@@ -11,5 +11,6 @@
         Point,
         Properties,
         Instances,
+        Attribute,
     }
 }
