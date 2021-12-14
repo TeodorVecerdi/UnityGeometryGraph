@@ -132,6 +132,7 @@ namespace GeometryGraph.Editor {
                 port.OnConnect += (_, _) => SetCompFieldVisible(port, false);
                 port.OnDisconnect += (_, _) => SetCompFieldVisible(port, true);
             } else {
+                port.fieldVisible = true;
                 port.OnConnect += (_, _) => SetFieldVisible(port, false);
                 port.OnDisconnect += (_, _) => SetFieldVisible(port, true);
             }
