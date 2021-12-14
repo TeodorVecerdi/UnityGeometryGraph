@@ -40,7 +40,7 @@ namespace GeometryGraph.Runtime.Geometry {
             this.owner = owner;
         }
 
-        public bool HasAttribute(string name) {
+        internal bool HasAttribute(string name) {
             if (name == null) return false;
             return vertexAttributes.ContainsKey(name) ||
                    edgeAttributes.ContainsKey(name) ||
@@ -48,7 +48,7 @@ namespace GeometryGraph.Runtime.Geometry {
                    faceCornerAttributes.ContainsKey(name);
         }
 
-        public bool HasAttribute(string name, AttributeType type) {
+        internal bool HasAttribute(string name, AttributeType type) {
             if (name == null) return false;
             return vertexAttributes.ContainsKey(name) && vertexAttributes[name].Type == type ||
                    edgeAttributes.ContainsKey(name) && edgeAttributes[name].Type == type ||
@@ -56,7 +56,7 @@ namespace GeometryGraph.Runtime.Geometry {
                    faceCornerAttributes.ContainsKey(name) && faceCornerAttributes[name].Type == type;
         }
 
-        public bool HasAttribute(string name, AttributeDomain domain) {
+        internal bool HasAttribute(string name, AttributeDomain domain) {
             if (name == null) return false;
             AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
@@ -69,7 +69,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return searchDict.ContainsKey(name);
         }
 
-        public bool HasAttribute(string name, AttributeType type, AttributeDomain domain) {
+        internal bool HasAttribute(string name, AttributeType type, AttributeDomain domain) {
             if (name == null) return false;
             AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
@@ -82,7 +82,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return searchDict.ContainsKey(name) && searchDict[name].Type == type;
         }
 
-        public bool Store(BaseAttribute attribute) {
+        internal bool Store(BaseAttribute attribute) {
             AttributeDictionary destDict = attribute.Domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
@@ -98,7 +98,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return overwritten;
         }
 
-        public bool Store(BaseAttribute attribute, AttributeDomain targetDomain) {
+        internal bool Store(BaseAttribute attribute, AttributeDomain targetDomain) {
             if (attribute.Domain != targetDomain) {
                 AttributeConvert.ConvertDomain(owner, attribute, targetDomain).Into(attribute);
                 attribute.Domain = targetDomain;
@@ -118,7 +118,43 @@ namespace GeometryGraph.Runtime.Geometry {
             return overwritten;
         }
 
-        public BaseAttribute Request(string name) {
+        internal bool Remove(string name) {
+            if (vertexAttributes.ContainsKey(name)) return vertexAttributes.Remove(name);
+            if (edgeAttributes.ContainsKey(name)) return edgeAttributes.Remove(name);
+            if (faceAttributes.ContainsKey(name)) return faceAttributes.Remove(name);
+            if (faceCornerAttributes.ContainsKey(name)) return faceCornerAttributes.Remove(name);
+            return false;
+        }
+        
+        internal bool Remove(string name, AttributeDomain domain) {
+            AttributeDictionary searchDict = domain switch {
+                AttributeDomain.Vertex => vertexAttributes,
+                AttributeDomain.Edge => edgeAttributes,
+                AttributeDomain.Face => faceAttributes,
+                AttributeDomain.FaceCorner => faceCornerAttributes,
+                _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
+            };
+
+            if (searchDict.ContainsKey(name)) return searchDict.Remove(name);
+            return false;
+        }
+
+        internal bool Remove(BaseAttribute attribute) {
+            AttributeDictionary searchDict = attribute.Domain switch {
+                AttributeDomain.Vertex => vertexAttributes,
+                AttributeDomain.Edge => edgeAttributes,
+                AttributeDomain.Face => faceAttributes,
+                AttributeDomain.FaceCorner => faceCornerAttributes,
+                _ => throw new ArgumentOutOfRangeException(nameof(attribute.Domain), attribute.Domain, null)
+            };
+            
+            if (searchDict.ContainsKey(attribute.Name) && searchDict[attribute.Name] == attribute) {
+                return searchDict.Remove(attribute.Name);
+            }
+            return false;
+        }
+
+        internal BaseAttribute Request(string name) {
             if (vertexAttributes.ContainsKey(name)) return vertexAttributes[name];
             if (edgeAttributes.ContainsKey(name)) return edgeAttributes[name];
             if (faceAttributes.ContainsKey(name)) return faceAttributes[name];
@@ -126,7 +162,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return null;
         }
         
-        public BaseAttribute Request(string name, AttributeType type) {
+        internal BaseAttribute Request(string name, AttributeType type) {
             if (vertexAttributes.ContainsKey(name) && vertexAttributes[name].Type == type) return vertexAttributes[name];
             if (edgeAttributes.ContainsKey(name) && edgeAttributes[name].Type == type) return edgeAttributes[name];
             if (faceAttributes.ContainsKey(name) && faceAttributes[name].Type == type) return faceAttributes[name];
@@ -135,7 +171,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return null;
         }
         
-        public BaseAttribute Request(string name, AttributeDomain domain) {
+        internal BaseAttribute Request(string name, AttributeDomain domain) {
             AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
@@ -148,7 +184,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return null;
         }
         
-        public BaseAttribute Request(string name, AttributeType type, AttributeDomain domain) {
+        internal BaseAttribute Request(string name, AttributeType type, AttributeDomain domain) {
             AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
