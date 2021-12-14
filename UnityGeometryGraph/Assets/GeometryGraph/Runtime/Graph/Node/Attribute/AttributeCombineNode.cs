@@ -9,20 +9,20 @@ using Unity.Mathematics;
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
     public partial class AttributeCombineNode {
-        [In] public GeometryData Geometry { get; set; }
-        [In] public float XFloat { get; set; }
-        [In] public float YFloat { get; set; }
-        [In] public float ZFloat { get; set; }
-        [In] public string XAttribute { get; set; }
-        [In] public string YAttribute { get; set; }
-        [In] public string ZAttribute { get; set; }
-        [In] public string ResultAttribute { get; set; }
-        [Out] public GeometryData Result { get; set; }
-        
-        [Setting] public AttributeDomain TargetDomain { get; set; }
-        [Setting] public AttributeCombineNode_ComponentType XType { get; set; }
-        [Setting] public AttributeCombineNode_ComponentType YType { get; set; }
-        [Setting] public AttributeCombineNode_ComponentType ZType { get; set; }
+        [In] public GeometryData Geometry { get; private set; }
+        [In] public float XFloat { get; private set; }
+        [In] public float YFloat { get; private set; }
+        [In] public float ZFloat { get; private set; }
+        [In] public string XAttribute { get; private set; }
+        [In] public string YAttribute { get; private set; }
+        [In] public string ZAttribute { get; private set; }
+        [In] public string ResultAttribute { get; private set; }
+        [Out] public GeometryData Result { get; private set; }
+
+        [Setting] public AttributeDomain TargetDomain { get; private set; } = AttributeDomain.Vertex;
+        [Setting] public AttributeCombineNode_ComponentType XType { get; private set; } = AttributeCombineNode_ComponentType.Attribute;
+        [Setting] public AttributeCombineNode_ComponentType YType { get; private set; } = AttributeCombineNode_ComponentType.Attribute;
+        [Setting] public AttributeCombineNode_ComponentType ZType { get; private set; } = AttributeCombineNode_ComponentType.Attribute;
 
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
