@@ -45,7 +45,15 @@ namespace GeometryGraph.Runtime {
                 Matrix4x4[] matrices = bakedInstancedGeometry.Matrices[i];
                 for (int submeshIndex = 0; submeshIndex < geometry.SubmeshCount; submeshIndex++) {
                     Material material = instancedGeometrySettings.Materials[submeshIndex.MinClamped(instancedGeometrySettings.Materials.Count - 1)];
-                    Graphics.DrawMeshInstanced(mesh, submeshIndex, material, matrices, instancedGeometryData.TransformCount(i));
+                    int transformCount = instancedGeometryData.TransformCount(i);
+                    if (transformCount <= 1023) {
+                        Graphics.DrawMeshInstanced(mesh, submeshIndex, material, matrices, transformCount);
+                    } else {
+                        for (int j = 0; j < transformCount; j += 1023) {
+                            int count = Mathf.Min(transformCount - j, 1023);
+                            Graphics.DrawMeshInstanced(mesh, submeshIndex, material, matrices.Skip(j).Take(count).ToArray(), count);
+                        }
+                    }
                 }
             }
         }
