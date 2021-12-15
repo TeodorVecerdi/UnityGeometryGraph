@@ -197,6 +197,7 @@ namespace GeometryGraph.Editor {
         public override JObject GetNodeData() {
             JObject root = base.GetNodeData();
             JArray array = new() {
+                attribute,
                 floatValue,
                 integerValue,
                 JsonConvert.SerializeObject(vectorValue, Formatting.None, float3Converter.Converter),
@@ -211,13 +212,15 @@ namespace GeometryGraph.Editor {
 
         public override void SetNodeData(JObject jsonData) {
             JArray array = jsonData["d"] as JArray;
-            floatValue = array!.Value<float>(0);
-            integerValue = array.Value<int>(1);
-            vectorValue = JsonConvert.DeserializeObject<float3>(array.Value<string>(2), float3Converter.Converter);
-            booleanValue = array.Value<int>(3) == 1;
-            domain = (TargetDomain) array.Value<int>(4);
-            type = (FillType) array.Value<int>(5);
+            attribute = array!.Value<string>(0);
+            floatValue = array.Value<float>(1);
+            integerValue = array.Value<int>(2);
+            vectorValue = JsonConvert.DeserializeObject<float3>(array.Value<string>(3), float3Converter.Converter);
+            booleanValue = array.Value<int>(4) == 1;
+            domain = (TargetDomain) array.Value<int>(5);
+            type = (FillType) array.Value<int>(6);
             
+            attributeField.SetValueWithoutNotify(attribute);
             floatField.SetValueWithoutNotify(floatValue);
             integerField.SetValueWithoutNotify(integerValue);
             vectorField.SetValueWithoutNotify(vectorValue);
@@ -225,6 +228,7 @@ namespace GeometryGraph.Editor {
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
             
+            RuntimeNode.UpdateAttribute(attribute);
             RuntimeNode.UpdateFloat(floatValue);
             RuntimeNode.UpdateInteger(integerValue);
             RuntimeNode.UpdateVector(vectorValue);
