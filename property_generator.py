@@ -19,6 +19,20 @@ class PropertyType(IntEnum):
         else:
             return PropertyType.SETTING
 
+    @staticmethod
+    def to_string(property_type: 'PropertyType') -> str:
+        if property_type == PropertyType.IN:
+            return '[In]'
+        elif property_type == PropertyType.OUT:
+            return '[Out]'
+        else:
+            return '[Setting]'
+
+class Mode(Enum):
+    EDITOR = 0
+    RUNTIME = 1
+    BOTH = 2
+
 
 Property = NewType('Property', Tuple[PropertyType, str, str, Optional[str]])
 editor_fields = {
@@ -30,21 +44,19 @@ editor_fields = {
 }
 editor_value_blacklist = ['GeometryData', 'CurveData']
 
-def main(editor_mode: bool) -> None:
+def run(mode: Mode) -> None:
     properties: List[Property] = []
     while True:
-        i = input()
-        if i == '':
-            break
-        split = i.split(' ')
+        entry = input()
+        if entry == '': break
+        vars = entry.split(' ')
+        properties.append(Property((PropertyType.from_string(vars[0]), vars[1], vars[2], vars[3] if len(vars) > 3 else None)))
 
-        properties.append(Property((PropertyType.from_string(split[0]), split[1], split[2], split[3] if len(split) > 3 else None)))
     properties.sort(key=lambda tup: tup[0])
-    if editor_mode:
+    if mode is Mode.EDITOR or mode is Mode.BOTH:
         print_props_editor(properties)
-    else:
-        for prop in properties:
-            print_prop(prop)
+    if mode is Mode.RUNTIME or mode is Mode.BOTH:
+        print_props_runtime(properties)
 
 def print_props_editor(props: List[Property]) -> None:
     ports: str = ''
@@ -62,34 +74,27 @@ def print_props_editor(props: List[Property]) -> None:
             else:
                 fields += f'private FieldTypeFor<{prop[1]}> {camel_case(prop[2])}Field;\n'
             values += f'private {prop[1]} {camel_case(prop[2])}{(f" = {prop[3]}" if prop[3] is not None else "")};\n'
-
-    print(f'''{ports.strip()}
-
-{fields.strip()}
-
-{values.strip()}'''.strip())
+    print(f'''{ports.strip()}\n\n{fields.strip()}\n\n{values.strip()}'''.strip())
 
 
-def print_prop(prop: Property) -> None:
+def print_props_runtime(props: List[Property]) -> None:
     prop_str = '';
-    if prop[0] == PropertyType.IN:
-        prop_str += '[In] '
-    elif prop[0] == PropertyType.OUT:
-        prop_str += '[Out] '
-    elif prop[0] == PropertyType.SETTING:
-        prop_str += '[Setting] '
-    prop_str += f'public {prop[1]} {prop[2]} {{ get; private set; }}'
-    if prop[3] is not None:
-        prop_str += f' = {prop[3]};'
-    print(prop_str)
+    for prop in props:
+        prop_str += f'{PropertyType.to_string(prop[0])} public {prop[1]} {prop[2]} {{ get; private set; }}{(f" = {prop[3]};" if prop[3] is not None else "")}\n'
+    print(prop_str.strip())
 
 def camel_case(string: str) -> str:
     return string[0].lower() + string[1:]
 
 if __name__ == '__main__':
     # Get first argument
-    editor_mode: bool = False
+    mode: Mode = Mode.BOTH
     if len(sys.argv) > 1:
-        editor_mode = sys.argv[1] == '--edit' or sys.argv[1] == '-e'
+        if sys.argv[1] == '--editor' or sys.argv[1] == '-e':
+            mode = Mode.EDITOR
+        elif sys.argv[1] == '--runtime' or sys.argv[1] == '-r':
+            mode = Mode.RUNTIME
+        elif sys.argv[1] == '--both' or sys.argv[1] == '-b':
+            mode = Mode.BOTH
 
-    main(editor_mode)
+    run(mode)
