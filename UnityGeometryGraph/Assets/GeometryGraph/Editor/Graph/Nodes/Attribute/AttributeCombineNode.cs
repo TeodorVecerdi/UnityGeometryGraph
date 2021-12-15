@@ -172,6 +172,11 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateResultAttribute(resultAttribute);
             });
             
+            domainDropdown.SetValueWithoutNotify(domain);
+            xTypeDropdown.SetValueWithoutNotify(xType);
+            yTypeDropdown.SetValueWithoutNotify(yType);
+            zTypeDropdown.SetValueWithoutNotify(zType);
+            
             xFloatPort.Add(xFloatField);
             yFloatPort.Add(yFloatField);
             zFloatPort.Add(zFloatField);

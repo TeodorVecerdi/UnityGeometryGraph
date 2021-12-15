@@ -128,6 +128,9 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateZResult(zResult);
             });
             
+            domainDropdown.SetValueWithoutNotify(domain);
+            typeDropdown.SetValueWithoutNotify(type);
+                
             attributePort.Add(attributeField);
             xResultPort.Add(xResultField);
             yResultPort.Add(yResultField);

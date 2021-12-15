@@ -131,6 +131,9 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateBoolean(booleanValue);
             });
             
+            domainDropdown.SetValueWithoutNotify(domain);
+            typeDropdown.SetValueWithoutNotify(type);
+            
             attributePort.Add(attributeField);
             floatPort.Add(floatField);
             integerPort.Add(integerField);
