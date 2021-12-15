@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
+    [GenerateRuntimeNode]
     public partial class AttributeRandomizeNode {
         [In] public GeometryData Geometry { get; private set; }
         [In] public string Attribute { get; private set; }
