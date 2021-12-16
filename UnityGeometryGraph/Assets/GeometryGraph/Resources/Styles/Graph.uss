@@ -145,4 +145,30 @@ FloatMapRangeField.map-range-field.map-range-field__float > VisualElement.contai
   min-width: 32px;
 }
 
+/* 
+    Region: Inline stuff
+*/
+GraphFrameworkPort.inline-backing-field {
+  margin-top: 4px;
+  height: 16px;
+}
+
+Vector3Field.port-backing-field.inline > VisualElement.unity-base-field__input.unity-composite-field__input.unity-vector3-field__input {
+  flex-direction: row;
+  margin-left: 8px;
+  align-items: center;
+  justify-content: flex-start;
+}
+Vector3Field.port-backing-field.inline > VisualElement.unity-base-field__input.unity-composite-field__input.unity-vector3-field__input > FloatField {
+  margin-top: 0;
+}
+Vector3Field.port-backing-field.inline > VisualElement.unity-base-field__input.unity-composite-field__input.unity-vector3-field__input > FloatField > Label {
+  margin-left: 2px;
+  margin-right: 0;
+  padding-right: 0;
+}
+Vector3Field.port-backing-field.inline.inline-small > VisualElement.unity-base-field__input.unity-composite-field__input.unity-vector3-field__input > FloatField > FloatInput#unity-text-input {
+  min-width: 48px;
+}
+
 /*# sourceMappingURL=Graph.uss.map */

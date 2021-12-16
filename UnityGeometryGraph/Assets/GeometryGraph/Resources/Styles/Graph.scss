@@ -174,3 +174,42 @@ FloatMapRangeField.map-range-field.map-range-field__float {
         }
     }
 }
+
+/* 
+    Region: Inline stuff
+*/
+
+GraphFrameworkPort.inline-backing-field {
+    margin-top: 4px;
+    height: 16px;
+}
+
+Vector3Field.port-backing-field {
+    &.inline {
+        & > VisualElement.unity-base-field__input.unity-composite-field__input.unity-vector3-field__input {
+            flex-direction: row;
+            margin-left: 8px;
+            align-items: center;
+            justify-content: flex-start;
+            
+            & > FloatField {
+                margin-top: 0;
+                & > Label {
+                    margin-left: 2px;
+                    margin-right: 0;
+                    padding-right: 0;
+                }
+            }
+        }
+
+        &.inline-small {
+            & > VisualElement.unity-base-field__input.unity-composite-field__input.unity-vector3-field__input {
+                & > FloatField {
+                    & > FloatInput#unity-text-input {
+                        min-width: 48px;
+                    }
+                }
+            }
+        }
+    }
+}
