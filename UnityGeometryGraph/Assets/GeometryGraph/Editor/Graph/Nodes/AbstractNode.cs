@@ -75,7 +75,7 @@ namespace GeometryGraph.Editor {
         public sealed override RuntimeNode Runtime => RuntimeNode;
         protected TRuntimeNode RuntimeNode;
 
-        protected void Initialize(string nodeTitle, NodeCategory category = NodeCategory.None) {
+        protected void Initialize(string nodeTitle, NodeCategory category) {
             base.title = nodeTitle;
             base.SetPosition(EditorView.DefaultNodePosition);
 

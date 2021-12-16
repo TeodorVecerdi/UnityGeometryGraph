@@ -1,5 +1,4 @@
 ﻿using GeometryGraph.Runtime.Graph;
-using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
@@ -11,7 +10,7 @@ namespace GeometryGraph.Editor {
 
         public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             base.InitializeNode(edgeConnectorListener);
-            Initialize("Debug");
+            Initialize("Debug", NodeCategory.None);
             
             valuePort = GraphFrameworkPort.Create("Value", Direction.Input, Port.Capacity.Single, PortType.Any, this);
 

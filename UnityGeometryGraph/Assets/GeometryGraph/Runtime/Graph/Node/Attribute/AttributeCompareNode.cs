@@ -103,12 +103,12 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public enum AttributeCompareNode_Operation {
-            LessThan,
-            LessThanOrEqual,
-            GreaterThan,
-            GreaterThanOrEqual,
-            Equal,
-            NotEqual
+            [DisplayName("a < b")] LessThan,
+            [DisplayName("a ≤ b")] LessThanOrEqual,
+            [DisplayName("a > b")] GreaterThan,
+            [DisplayName("a ≥ b")] GreaterThanOrEqual,
+            [DisplayName("a = b")] Equal,
+            [DisplayName("a ≠ b")] NotEqual
         }
 
         public enum AttributeCompareNode_Type {
