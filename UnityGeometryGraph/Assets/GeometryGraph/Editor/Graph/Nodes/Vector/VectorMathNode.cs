@@ -98,7 +98,7 @@ namespace GeometryGraph.Editor {
             }
         };
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("X", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateX(x));
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Y", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateY(y));
             (wrapMaxPort, wrapMaxField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Max", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateWrapMax(wrapMax));
@@ -175,7 +175,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(xPort, RuntimeNode.XPort);
             BindPort(yPort, RuntimeNode.YPort);
             BindPort(wrapMaxPort, RuntimeNode.WrapMaxPort);

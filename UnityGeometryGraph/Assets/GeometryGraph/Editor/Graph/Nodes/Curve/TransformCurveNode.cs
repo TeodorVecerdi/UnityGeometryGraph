@@ -34,7 +34,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort isClosedPort;
         private GraphFrameworkPort resultCurvePort;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
 
             (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
@@ -102,7 +102,7 @@ namespace GeometryGraph.Editor {
             AddPort(resultCurvePort);
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(inputCurvePort, RuntimeNode.InputPort);
             BindPort(translationPort, RuntimeNode.TranslationPort);
             BindPort(rotationPort, RuntimeNode.RotationPort);

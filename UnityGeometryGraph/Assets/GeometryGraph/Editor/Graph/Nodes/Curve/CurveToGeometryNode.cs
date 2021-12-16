@@ -45,7 +45,7 @@ namespace GeometryGraph.Editor {
         private bool shadeSmoothCaps;
         private CurveToGeometrySettings.CapUVType capUVType = CurveToGeometrySettings.CapUVType.WorldSpace;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
             profileCurvePort = GraphFrameworkPort.Create("Profile", Direction.Input, Port.Capacity.Single, PortType.Curve, this, onConnect: OnProfileCurveConnected, onDisconnect: OnProfileCurveDisconnected);
             (rotationOffsetPort, rotationOffsetField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Profile Rotation", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRotationOffset(rotationOffset));
@@ -148,7 +148,7 @@ namespace GeometryGraph.Editor {
             capUVTypeDropdown.AddToClassList("d-none");
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(inputCurvePort, RuntimeNode.SourcePort);
             BindPort(profileCurvePort, RuntimeNode.ProfilePort);
             BindPort(rotationOffsetPort, RuntimeNode.RotationOffsetPort);

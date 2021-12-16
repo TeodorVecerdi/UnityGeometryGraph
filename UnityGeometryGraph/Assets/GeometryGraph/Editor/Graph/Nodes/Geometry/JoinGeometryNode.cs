@@ -10,7 +10,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort aPort;
         private GraphFrameworkPort resultPort;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             aPort = GraphFrameworkPort.Create("Values", Direction.Input, Port.Capacity.Multi, PortType.Geometry, this);
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
             
@@ -20,7 +20,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
         
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(aPort, RuntimeNode.InputPort);
             BindPort(resultPort, RuntimeNode.ResultPort);
         }

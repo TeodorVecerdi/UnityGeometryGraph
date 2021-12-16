@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
         private int points = 32;
         private float radius = 1.0f;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));
             resultPort = GraphFrameworkPort.Create("Curve", Direction.Output, Port.Capacity.Multi, PortType.Curve, this);
@@ -60,7 +60,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(pointsPort, RuntimeNode.PointsPort);
             BindPort(radiusPort, RuntimeNode.RadiusPort);
             BindPort(resultPort, RuntimeNode.ResultPort);

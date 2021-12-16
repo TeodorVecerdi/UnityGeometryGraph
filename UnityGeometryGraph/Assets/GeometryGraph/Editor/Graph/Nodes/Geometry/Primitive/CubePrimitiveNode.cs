@@ -20,7 +20,7 @@ namespace GeometryGraph.Editor {
 
         private float3 size = float3_ext.one;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (sizePort, sizeField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Size", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateSize(size));
             resultPort = GraphFrameworkPort.Create("Cube", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
 
@@ -39,7 +39,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(sizePort, RuntimeNode.SizePort);
             BindPort(resultPort, RuntimeNode.ResultPort);
         }

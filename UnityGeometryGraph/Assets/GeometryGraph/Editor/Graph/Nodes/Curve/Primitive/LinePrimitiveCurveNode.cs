@@ -29,7 +29,7 @@ namespace GeometryGraph.Editor {
         private float3 start = float3.zero;
         private float3 end = float3_ext.right;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             (startPort, startField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Start", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateStart(start));
             (endPort, endField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("End", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateEnd(end));
@@ -76,7 +76,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(pointsPort, RuntimeNode.PointsPort);
             BindPort(startPort, RuntimeNode.StartPort);
             BindPort(endPort, RuntimeNode.EndPort);

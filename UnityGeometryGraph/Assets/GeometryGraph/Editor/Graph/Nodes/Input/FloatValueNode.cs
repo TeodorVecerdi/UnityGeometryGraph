@@ -14,7 +14,7 @@ namespace GeometryGraph.Editor {
         private FloatField valueField;
         private GraphFrameworkPort valuePort;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             valuePort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
             valueField = new FloatField("Value");
             valueField.RegisterValueChangedCallback(evt => {
@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
         
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(valuePort, RuntimeNode.ValuePort);
         }
 

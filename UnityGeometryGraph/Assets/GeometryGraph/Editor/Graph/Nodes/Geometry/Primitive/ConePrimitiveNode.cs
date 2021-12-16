@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
         private float height = 2.0f;
         private int points = 8;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateHeight(height));
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
@@ -78,7 +78,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(radiusPort, RuntimeNode.RadiusPort);
             BindPort(heightPort, RuntimeNode.HeightPort);
             BindPort(pointsPort, RuntimeNode.PointsPort);

@@ -23,7 +23,7 @@ namespace GeometryGraph.Editor {
 
         private float3 vector;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
             xPort = GraphFrameworkPort.Create("X", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
             yPort = GraphFrameworkPort.Create("Y", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
@@ -45,7 +45,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
         
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(vectorPort, RuntimeNode.VectorPort);
             BindPort(xPort, RuntimeNode.XPort);
             BindPort(yPort, RuntimeNode.YPort);

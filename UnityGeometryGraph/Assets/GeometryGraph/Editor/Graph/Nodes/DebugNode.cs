@@ -11,7 +11,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort valuePort;
         private Label label;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             valuePort = GraphFrameworkPort.Create("Value", Direction.Input, Port.Capacity.Single, PortType.Any, this);
 
             label = new Label("Value: [none]");
@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
             label.text = $"Value: {obj ?? "[none]"}";
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(valuePort, RuntimeNode.Port);
         }
     }

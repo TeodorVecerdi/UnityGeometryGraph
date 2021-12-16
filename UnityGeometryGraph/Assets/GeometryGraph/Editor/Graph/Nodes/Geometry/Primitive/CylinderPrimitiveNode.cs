@@ -34,7 +34,7 @@ namespace GeometryGraph.Editor {
         private int horizontalUVRepetitions = 2;
         private int verticalUVRepetitions = 1;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (bottomRadiusPort, bottomRadiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Bottom Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateBottomRadius(bottomRadius));
             (topRadiusPort, topRadiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Top Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateTopRadius(topRadius));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateHeight(height));
@@ -132,7 +132,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(bottomRadiusPort, RuntimeNode.BottomRadiusPort);
             BindPort(topRadiusPort, RuntimeNode.TopRadiusPort);
             BindPort(heightPort, RuntimeNode.HeightPort);

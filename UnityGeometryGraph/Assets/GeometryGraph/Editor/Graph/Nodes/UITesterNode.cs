@@ -13,7 +13,7 @@ namespace GeometryGraph.Editor {
 
         private FloatMapRangeField floatMapRangeField;
         
-        public override void CreateNode() {
+        protected override void CreateNode() {
             floatMapRangeField = new FloatMapRangeField("Label", fromMin, fromMax, toMin, toMax);
             floatMapRangeField.RegisterFromMinValueChanged(evt => {
                 Debug.Log("FromMinValueChanged: " + evt.newValue);
@@ -35,6 +35,6 @@ namespace GeometryGraph.Editor {
             inputContainer.Add(floatMapRangeField);
         }
 
-        public override void BindPorts() {}
+        protected override void BindPorts() {}
     }
 }

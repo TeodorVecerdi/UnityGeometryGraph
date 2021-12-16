@@ -61,7 +61,7 @@ namespace GeometryGraph.Editor {
             },
         };
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("X", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(x));
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Y", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateY(y));
             (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));
@@ -117,7 +117,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(xPort, RuntimeNode.XPort);
             BindPort(yPort, RuntimeNode.YPort);
             BindPort(tolerancePort, RuntimeNode.TolerancePort);

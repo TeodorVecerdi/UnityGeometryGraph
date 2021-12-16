@@ -23,7 +23,7 @@ namespace GeometryGraph.Editor {
         private int minValue = 0;
         private int maxValue = 1;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Input", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateInput(inputValue));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(minValue));
             (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Max", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMax(maxValue));
@@ -62,7 +62,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
         
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(minPort, RuntimeNode.MinPort);
             BindPort(maxPort, RuntimeNode.MaxPort);

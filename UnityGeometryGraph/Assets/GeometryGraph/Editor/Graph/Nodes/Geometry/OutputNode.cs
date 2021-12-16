@@ -11,7 +11,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort instancedGeometryPort;
         private GraphFrameworkPort curvePort;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             instancedGeometryPort = GraphFrameworkPort.Create("Instances", Direction.Input, Port.Capacity.Single, PortType.Instances, this);
             curvePort = GraphFrameworkPort.Create("Display Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
@@ -21,7 +21,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(geometryPort, RuntimeNode.GeometryPort);
             BindPort(curvePort, RuntimeNode.CurvePort);
             BindPort(instancedGeometryPort, RuntimeNode.InstancedGeometryPort);

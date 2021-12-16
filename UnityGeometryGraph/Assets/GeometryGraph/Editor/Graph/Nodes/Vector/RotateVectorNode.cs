@@ -48,7 +48,7 @@ namespace GeometryGraph.Editor {
             }
         };
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
             (centerPort, centerField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Center", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateCenter(center));
             (axisPort, axisField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Axis", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateAxis(axis));
@@ -107,7 +107,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(vectorPort, RuntimeNode.VectorPort);
             BindPort(centerPort, RuntimeNode.CenterPort);
             BindPort(axisPort, RuntimeNode.AxisPort);

@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor.WIP {
         private int pointsX = 4;
         private int pointsY = 4;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Width", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateWidth(width));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateHeight(height));
             (pointsXPort, pointsXField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points X", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePointsX(pointsX));
@@ -85,7 +85,7 @@ namespace GeometryGraph.Editor.WIP {
             AddPort(resultPort);
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(widthPort, RuntimeNode.WidthPort);
             BindPort(heightPort, RuntimeNode.HeightPort);
             BindPort(pointsXPort, RuntimeNode.PointsXPort);

@@ -32,7 +32,7 @@ namespace GeometryGraph.Editor {
         private float topRadius = 1.0f;
         private float bottomRadius = 1.0f;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             (rotationsPort, rotationsField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Rotations", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRotations(rotations));
             (pitchPort, pitchField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Pitch", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdatePitch(pitch));
@@ -108,7 +108,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(pointsPort, RuntimeNode.PointsPort);
             BindPort(rotationsPort, RuntimeNode.RotationsPort);
             BindPort(pitchPort, RuntimeNode.PitchPort);

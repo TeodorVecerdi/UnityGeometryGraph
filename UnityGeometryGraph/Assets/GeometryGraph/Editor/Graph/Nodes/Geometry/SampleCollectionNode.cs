@@ -34,7 +34,7 @@ namespace GeometryGraph.Editor {
             }
         };
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             collectionPort = GraphFrameworkPort.Create("Collection", Direction.Input, Port.Capacity.Single, PortType.Collection, this);
             (indexPort, indexField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Index", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateIndex(index));
             (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateSeed(seed));
@@ -87,7 +87,7 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(collectionPort, RuntimeNode.CollectionPort);
             BindPort(indexPort, RuntimeNode.IndexPort);
             BindPort(seedPort, RuntimeNode.SeedPort);

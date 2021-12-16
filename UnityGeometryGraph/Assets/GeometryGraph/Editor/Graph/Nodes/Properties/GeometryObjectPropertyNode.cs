@@ -35,14 +35,14 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             propertyPort = GraphFrameworkPort.Create("Geometry", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
             AddPort(propertyPort);
             
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(propertyPort, RuntimeNode.Port);
         }
 

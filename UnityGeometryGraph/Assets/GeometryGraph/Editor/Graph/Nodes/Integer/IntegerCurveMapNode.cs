@@ -32,7 +32,7 @@ namespace GeometryGraph.Editor {
 
         private AnimationCurve curve = new AnimationCurve(UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f));
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Value", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(min));
             (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Max", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMax(max));
@@ -102,7 +102,7 @@ namespace GeometryGraph.Editor {
             curveField[0][0][0].style.backgroundColor = backgroundColor;
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(valuePort, RuntimeNode.ValuePort);
             BindPort(minPort, RuntimeNode.MinPort);
             BindPort(maxPort, RuntimeNode.MaxPort);

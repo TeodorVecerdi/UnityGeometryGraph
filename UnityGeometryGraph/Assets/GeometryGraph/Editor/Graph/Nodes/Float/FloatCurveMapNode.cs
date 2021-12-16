@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
         private float value;
         private AnimationCurve curve = new AnimationCurve(UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f));
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Value", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
 
@@ -72,7 +72,7 @@ namespace GeometryGraph.Editor {
             curveField[0][0][0].style.backgroundColor = backgroundColor;
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(valuePort, RuntimeNode.ValuePort);
             BindPort(resultPort, RuntimeNode.ResultPort);
         }

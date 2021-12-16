@@ -18,7 +18,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort materialIndexPort;
         private GraphFrameworkPort resultPort;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (materialIndexPort, materialIndexField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Material", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMaterialIndex(materialIndex));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
@@ -42,7 +42,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(materialIndexPort, RuntimeNode.MaterialIndexPort);
             BindPort(resultPort, RuntimeNode.ResultPort);

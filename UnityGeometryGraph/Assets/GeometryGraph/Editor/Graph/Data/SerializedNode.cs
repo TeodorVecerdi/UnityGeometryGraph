@@ -32,8 +32,6 @@ namespace GeometryGraph.Editor {
             Node.Guid = GUID;
             Node.viewDataKey = GUID;
             Node.InitializeNode(edgeConnectorListener);
-            if (edgeConnectorListener != null) 
-                Node.BindPorts();
             Node.SetExpandedWithoutNotify(DrawState.Expanded);
             Node.SetPosition(DrawState.Position);
             if (!string.IsNullOrEmpty(NodeData))

@@ -11,7 +11,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort pointsPort;
         private GraphFrameworkPort isClosedPort;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
             pointsPort = GraphFrameworkPort.Create("Points", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);
             isClosedPort = GraphFrameworkPort.Create("Is Closed", Direction.Output, Port.Capacity.Multi, PortType.Boolean, this);
@@ -21,7 +21,7 @@ namespace GeometryGraph.Editor {
             AddPort(isClosedPort);
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(inputCurvePort, RuntimeNode.CurvePort);
             BindPort(pointsPort, RuntimeNode.PointsPort);
             BindPort(isClosedPort, RuntimeNode.IsClosedPort);

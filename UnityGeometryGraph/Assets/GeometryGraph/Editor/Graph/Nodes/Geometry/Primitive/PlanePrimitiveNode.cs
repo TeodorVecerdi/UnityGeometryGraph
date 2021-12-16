@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
         private float2 size = float2_ext.one;
         private int subdivisions;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Width", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateWidth(size.x));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateHeight(size.y));
             (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Subdivisions", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateSubdivisions(subdivisions));
@@ -77,7 +77,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(widthPort, RuntimeNode.WidthPort);
             BindPort(heightPort, RuntimeNode.HeightPort);
             BindPort(subdivisionsPort, RuntimeNode.SubdivisionsPort);

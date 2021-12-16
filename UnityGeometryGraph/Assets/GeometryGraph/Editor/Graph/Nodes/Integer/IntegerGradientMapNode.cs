@@ -32,7 +32,7 @@ namespace GeometryGraph.Editor {
 
         private Gradient gradient = (Gradient) GeometryGraph.Runtime.Graph.FloatGradientMapNode.Default;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Value", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(min));
             (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Max", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMax(max));
@@ -106,7 +106,7 @@ namespace GeometryGraph.Editor {
             colorOnlyField.value = new UnityEngine.Gradient {colorKeys = gradient.colorKeys, alphaKeys = new []{new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f)}};
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(valuePort, RuntimeNode.ValuePort);
             BindPort(minPort, RuntimeNode.MinPort);
             BindPort(maxPort, RuntimeNode.MaxPort);

@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
         private float toMin = 0.0f;
         private float toMax = 1.0f;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Input", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue));
             (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Min", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateFromMin(fromMin));
             (fromMaxPort, fromMaxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Max", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateFromMax(fromMax));
@@ -95,7 +95,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
         
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(inputPort, RuntimeNode.ValuePort);
             BindPort(fromMinPort, RuntimeNode.FromMinPort);
             BindPort(fromMaxPort, RuntimeNode.FromMaxPort);

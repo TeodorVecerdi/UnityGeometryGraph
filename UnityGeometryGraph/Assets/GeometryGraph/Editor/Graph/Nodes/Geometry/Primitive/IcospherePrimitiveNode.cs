@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
         private float radius = 1.0f;
         private int subdivisions = 2;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));
             (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Subdivisions", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateSubdivisions(subdivisions));
             resultPort = GraphFrameworkPort.Create("Icosphere", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
@@ -61,7 +61,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(radiusPort, RuntimeNode.RadiusPort);
             BindPort(subdivisionsPort, RuntimeNode.SubdivisionsPort);
             BindPort(resultPort, RuntimeNode.ResultPort);

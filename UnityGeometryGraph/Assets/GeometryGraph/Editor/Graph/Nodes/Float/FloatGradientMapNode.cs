@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
         private float value;
         private Gradient gradient = (Gradient) GeometryGraph.Runtime.Graph.FloatGradientMapNode.Default;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Value", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             resultRGBPort = GraphFrameworkPort.Create("Color", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
             resultAlphaPort = GraphFrameworkPort.Create("Alpha", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
@@ -77,7 +77,7 @@ namespace GeometryGraph.Editor {
             colorOnlyField.value = new UnityEngine.Gradient {colorKeys = gradient.colorKeys, alphaKeys = new []{new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f)}};
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(valuePort, RuntimeNode.ValuePort);
             BindPort(resultRGBPort, RuntimeNode.ResultRGBPort);
             BindPort(resultAlphaPort, RuntimeNode.ResultAlphaPort);

@@ -19,7 +19,7 @@ namespace GeometryGraph.Editor {
 
         private int levels = 1;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (levelsPort, levelsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Levels", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateLevels(levels));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
@@ -46,7 +46,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(levelsPort, RuntimeNode.LevelsPort);
             BindPort(resultPort, RuntimeNode.ResultPort);

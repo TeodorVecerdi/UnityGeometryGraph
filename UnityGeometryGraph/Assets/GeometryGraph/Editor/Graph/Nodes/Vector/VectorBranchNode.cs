@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
         private float3 ifTrue;
         private float3 ifFalse;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
             (ifTruePort, ifTrueField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("If True", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateIfTrue(ifTrue));
             (ifFalsePort, ifFalseField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("If False", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateIfFalse(ifFalse));
@@ -69,7 +69,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
         
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(conditionPort, RuntimeNode.ConditionPort);
             BindPort(ifTruePort, RuntimeNode.IfTruePort);
             BindPort(ifFalsePort, RuntimeNode.IfFalsePort);

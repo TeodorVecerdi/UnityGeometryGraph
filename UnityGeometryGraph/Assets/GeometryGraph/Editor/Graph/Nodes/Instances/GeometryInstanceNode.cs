@@ -23,7 +23,7 @@ namespace GeometryGraph.Editor {
         private int collectionSamplingSeed;
         private Mode mode = Mode.Geometry;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             pointsPort = GraphFrameworkPort.Create("Points", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             collectionPort = GraphFrameworkPort.Create("Collection", Direction.Input, Port.Capacity.Single, PortType.Collection, this);
@@ -70,7 +70,7 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(pointsPort, RuntimeNode.PointsPort);
             BindPort(geometryPort, RuntimeNode.GeometryPort);
             BindPort(collectionPort, RuntimeNode.CollectionPort);

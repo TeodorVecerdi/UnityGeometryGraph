@@ -36,6 +36,8 @@ namespace GeometryGraph.Editor {
             EdgeConnectorListener = edgeConnectorListener;
             Initialize();
             CreateNode();
+            if (edgeConnectorListener != null) 
+                BindPorts();
         }
 
         public void Refresh() {
@@ -49,8 +51,8 @@ namespace GeometryGraph.Editor {
 
         protected abstract string Title { get; }
         protected abstract NodeCategory Category { get; }
-        public abstract void CreateNode();
-        public abstract void BindPorts();
+        protected abstract void CreateNode();
+        protected abstract void BindPorts();
 
         // Property specific
         public virtual void OnPropertyUpdated(AbstractProperty property) {}
@@ -58,18 +60,23 @@ namespace GeometryGraph.Editor {
         public virtual string PropertyGuid { get; set; } = string.Empty;
         public virtual AbstractProperty Property { get; set; } = null;
 
-        // Virtual
-        protected internal virtual void OnEdgeConnected(Edge edge, GraphFrameworkPort port) {}
-        protected internal virtual void OnEdgeDisconnected(Edge edge, GraphFrameworkPort port) {}
+        // Edge callbacks
+        protected virtual void OnEdgeConnected(Edge edge, GraphFrameworkPort port) {}
+        protected virtual void OnEdgeDisconnected(Edge edge, GraphFrameworkPort port) {}
+        // Serialization callbacks
+        protected internal virtual void OnNodeSerialized() { }
+        protected internal virtual void OnNodeDeserialized() { }
+        
+        // Serialization implementation
+        protected internal virtual void SetNodeData(JObject jsonData) { }
+        protected internal virtual JObject GetNodeData() => new JObject();
+
+        // Implemented and sealed by AbstractNode<TRuntimeNode>
+        protected internal virtual void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) { }
+        protected internal virtual void NotifyEdgeDisconnected(Edge edge, GraphFrameworkPort port) { }
         protected virtual void OnNodeGuidChanged() { }
         protected virtual void Initialize() { }
-        public virtual void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) { }
-        public virtual void NotifyEdgeDisconnected(Edge edge, GraphFrameworkPort port) { }
-        public virtual void OnNodeSerialized() { }
-        public virtual void OnNodeDeserialized() { }
-        public virtual void SetNodeData(JObject jsonData) { }
-        public virtual JObject GetNodeData() => new JObject();
-        
+
         // Abstract
         public abstract void NotifyRuntimeNodeRemoved();
         public abstract RuntimeNode Runtime { get; }
@@ -105,8 +112,6 @@ namespace GeometryGraph.Editor {
             InjectCustomStyle();
         }
         
-        public abstract override void BindPorts();
-
         public override void NotifyRuntimeNodeRemoved() {
             RuntimeNode.OnNodeRemoved();
         }
@@ -143,13 +148,13 @@ namespace GeometryGraph.Editor {
         }
 
         // Only input ports
-        public sealed override void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) {
+        protected internal sealed override void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) {
             if (port.direction != Direction.Input) return;
             OnEdgeConnected(edge, port);
         }
 
         // Both input & output ports
-        public sealed override void NotifyEdgeDisconnected(Edge edge, GraphFrameworkPort port) {
+        protected internal sealed override void NotifyEdgeDisconnected(Edge edge, GraphFrameworkPort port) {
             OnEdgeDisconnected(edge, port);
         }
     }

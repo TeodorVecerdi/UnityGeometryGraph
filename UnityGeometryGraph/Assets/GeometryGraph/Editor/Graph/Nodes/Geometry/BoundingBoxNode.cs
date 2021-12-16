@@ -12,7 +12,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort maxPort;
         private GraphFrameworkPort boundingBoxPort;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             
             minPort = GraphFrameworkPort.Create("Min", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
         
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(minPort, RuntimeNode.MinPort);
             BindPort(maxPort, RuntimeNode.MaxPort);

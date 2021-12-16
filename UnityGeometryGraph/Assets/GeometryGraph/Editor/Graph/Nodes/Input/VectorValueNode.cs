@@ -17,7 +17,7 @@ namespace GeometryGraph.Editor {
         private Vector3Field valueField;
         private GraphFrameworkPort valuePort;
 
-        public override void CreateNode() {
+        protected override void CreateNode() {
             valuePort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
             valueField = new Vector3Field("Value");
             valueField.RegisterValueChangedCallback(evt => {
@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
             Refresh();
         }
         
-        public override void BindPorts() {
+        protected override void BindPorts() {
             BindPort(valuePort, RuntimeNode.ValuePort);
         }
 
