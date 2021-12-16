@@ -7,7 +7,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Integer", "Map Range")]
     public class MapRangeIntegerNode : AbstractNode<GeometryGraph.Runtime.Graph.MapRangeIntegerNode> {
-        
+        protected override string Title => "Map Range (Integer)";
+        protected override NodeCategory Category => NodeCategory.Integer;
+
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort fromMinPort;
         private GraphFrameworkPort fromMaxPort;
@@ -30,8 +32,6 @@ namespace GeometryGraph.Editor {
         private int toMax = 1;
 
         public override void CreateNode() {
-            Initialize("Map Range (Integer)", NodeCategory.Integer);
-
             (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Input", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue));
             (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("From Min", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateFromMin(fromMin));
             (fromMaxPort, fromMaxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("From Max", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateFromMax(fromMax));

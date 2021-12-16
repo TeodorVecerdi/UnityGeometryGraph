@@ -7,13 +7,14 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Input", "Float Value")]
     public class FloatValueNode : AbstractNode<GeometryGraph.Runtime.Graph.FloatValueNode> {
+        protected override string Title => "Float Value";
+        protected override NodeCategory Category => NodeCategory.Input;
+
         private float value;
         private FloatField valueField;
         private GraphFrameworkPort valuePort;
 
         public override void CreateNode() {
-            Initialize("Float Value", NodeCategory.Input);
-
             valuePort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
             valueField = new FloatField("Value");
             valueField.RegisterValueChangedCallback(evt => {

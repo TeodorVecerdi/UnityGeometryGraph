@@ -12,7 +12,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Vector", "Branch")]
     public class VectorBranchNode : AbstractNode<GeometryGraph.Runtime.Graph.VectorBranchNode> {
-        
+        protected override string Title => "Branch (Vector)";
+        protected override NodeCategory Category => NodeCategory.Vector;
+
         private GraphFrameworkPort conditionPort;
         private GraphFrameworkPort ifTruePort;
         private GraphFrameworkPort ifFalsePort;
@@ -27,8 +29,6 @@ namespace GeometryGraph.Editor {
         private float3 ifFalse;
 
         public override void CreateNode() {
-            Initialize("Branch (Vector)", NodeCategory.Vector);
-
             (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
             (ifTruePort, ifTrueField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("If True", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateIfTrue(ifTrue));
             (ifFalsePort, ifFalseField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("If False", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateIfFalse(ifFalse));

@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Curve", "Primitive", "Circle")]
     public class CirclePrimitiveCurveNode : AbstractNode<GeometryGraph.Runtime.Graph.CirclePrimitiveCurveNode> {
+        protected override string Title => "Circle Primitive Curve";
+        protected override NodeCategory Category => NodeCategory.Curve;
+
         private GraphFrameworkPort pointsPort;
         private GraphFrameworkPort radiusPort;
         private GraphFrameworkPort resultPort;
@@ -20,8 +23,6 @@ namespace GeometryGraph.Editor {
         private float radius = 1.0f;
 
         public override void CreateNode() {
-            Initialize("Circle Primitive Curve", NodeCategory.Curve);
-
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));
             resultPort = GraphFrameworkPort.Create("Curve", Direction.Output, Port.Capacity.Multi, PortType.Curve, this);

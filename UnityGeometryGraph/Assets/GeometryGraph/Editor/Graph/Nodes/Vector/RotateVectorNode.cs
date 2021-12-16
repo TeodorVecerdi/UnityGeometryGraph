@@ -14,6 +14,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Vector", "Rotate")]
     public class RotateVectorNode : AbstractNode<GeometryGraph.Runtime.Graph.RotateVectorNode> {
+        protected override string Title => "Rotate Vector";
+        protected override NodeCategory Category => NodeCategory.Vector;
+
         private GraphFrameworkPort vectorPort;
         private GraphFrameworkPort centerPort;
         private GraphFrameworkPort axisPort;
@@ -46,8 +49,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Rotate Vector", NodeCategory.Vector);
-
             (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
             (centerPort, centerField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Center", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateCenter(center));
             (axisPort, axisField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Axis", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateAxis(axis));

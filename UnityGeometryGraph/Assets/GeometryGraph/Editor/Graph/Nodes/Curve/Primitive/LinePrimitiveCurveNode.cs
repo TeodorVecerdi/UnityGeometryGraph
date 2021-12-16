@@ -13,6 +13,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Curve", "Primitive", "Line")]
     public class LinePrimitiveCurveNode : AbstractNode<GeometryGraph.Runtime.Graph.LinePrimitiveCurveNode> {
+        protected override string Title => "Line Primitive Curve";
+        protected override NodeCategory Category => NodeCategory.Curve;
+
         private GraphFrameworkPort pointsPort;
         private GraphFrameworkPort startPort;
         private GraphFrameworkPort endPort;
@@ -27,8 +30,6 @@ namespace GeometryGraph.Editor {
         private float3 end = float3_ext.right;
 
         public override void CreateNode() {
-            Initialize("Line Primitive Curve", NodeCategory.Curve);
-
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             (startPort, startField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Start", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateStart(start));
             (endPort, endField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("End", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateEnd(end));

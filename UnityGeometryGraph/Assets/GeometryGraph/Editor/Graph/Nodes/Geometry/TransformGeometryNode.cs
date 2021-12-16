@@ -12,6 +12,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Transform Geometry")]
     public class TransformGeometryNode : AbstractNode<GeometryGraph.Runtime.Graph.TransformGeometryNode> {
+        protected override string Title => "Transform Geometry";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private float3 translation;
         private float3 eulerRotation;
         private float3 scale = float3_ext.one;
@@ -28,8 +31,6 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort outputGeometryPort;
 
         public override void CreateNode() {
-            Initialize("Transform Geometry", NodeCategory.Geometry);
-
             inputGeometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             outputGeometryPort = GraphFrameworkPort.Create("Geometry", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
 

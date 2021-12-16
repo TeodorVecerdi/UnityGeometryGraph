@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Input", "Random Float")]
     public class RandomFloatNode : AbstractNode<GeometryGraph.Runtime.Graph.RandomFloatNode> {
+        protected override string Title => "Random Float";
+        protected override NodeCategory Category => NodeCategory.Input;
+
         private int seed;
         private float min = 0.0f;
         private float max = 1.0f;
@@ -23,8 +26,6 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort valuePort;
 
         public override void CreateNode() {
-            Initialize("Random Float", NodeCategory.Input);
-
             valuePort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
             (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateSeed(seed));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Min", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(min));

@@ -16,6 +16,9 @@ using TargetType = GeometryGraph.Runtime.Graph.AttributeRandomizeNode.AttributeR
 namespace GeometryGraph.Editor {
     [Title("Attribute", "Attribute Randomize")]
     public class AttributeRandomizeNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeRandomizeNode> {
+        protected override string Title => "Attribute Randomize";
+        protected override NodeCategory Category => NodeCategory.Attribute;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort attributePort;
         private GraphFrameworkPort seedPort;
@@ -69,7 +72,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Attribute Randomize", NodeCategory.Attribute);
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (attributePort, attributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttribute(attribute));
             (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateSeed(seed));

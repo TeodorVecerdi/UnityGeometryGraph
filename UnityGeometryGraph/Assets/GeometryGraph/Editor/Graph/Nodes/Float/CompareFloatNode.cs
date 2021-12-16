@@ -11,7 +11,9 @@ using CompareOperation = GeometryGraph.Runtime.Graph.CompareFloatNode.CompareFlo
 namespace GeometryGraph.Editor {
     [Title("Float", "Compare")]
     public class CompareFloatNode : AbstractNode<GeometryGraph.Runtime.Graph.CompareFloatNode> {
-        
+        protected override string Title => "Compare (Float)";
+        protected override NodeCategory Category => NodeCategory.Float;
+
         private GraphFrameworkPort tolerancePort;
         private GraphFrameworkPort aPort;
         private GraphFrameworkPort bPort;
@@ -39,8 +41,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Compare (Float)", NodeCategory.Float);
-
             (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));
             (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("A", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(a));
             (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("B", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(b));

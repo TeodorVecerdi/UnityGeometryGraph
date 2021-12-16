@@ -10,7 +10,9 @@ using Operation = GeometryGraph.Runtime.Graph.BooleanMathNode.BooleanMathNode_Op
 namespace GeometryGraph.Editor {
     [Title("Boolean", "Math")]
     public class BooleanMathNode : AbstractNode<GeometryGraph.Runtime.Graph.BooleanMathNode> {
-        
+        protected override string Title => "Math (Boolean)";
+        protected override NodeCategory Category => NodeCategory.Boolean;
+
         private GraphFrameworkPort xPort;
         private GraphFrameworkPort yPort;
         private GraphFrameworkPort resultPort;
@@ -33,8 +35,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Math (Boolean)", NodeCategory.Boolean);
-
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("X", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(x));
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Y", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(y));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Boolean, this);

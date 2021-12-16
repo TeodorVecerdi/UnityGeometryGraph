@@ -15,7 +15,9 @@ using Operation = GeometryGraph.Runtime.Graph.VectorMathNode.VectorMathNode_Oper
 namespace GeometryGraph.Editor {
     [Title("Vector", "Math")]
     public class VectorMathNode : AbstractNode<GeometryGraph.Runtime.Graph.VectorMathNode> {
-        
+        protected override string Title => "Math (Vector)";
+        protected override NodeCategory Category => NodeCategory.Vector;
+
         private GraphFrameworkPort xPort;
         private GraphFrameworkPort yPort;
         private GraphFrameworkPort wrapMaxPort;
@@ -97,8 +99,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Math (Vector)", NodeCategory.Vector);
-
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("X", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateX(x));
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Y", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateY(y));
             (wrapMaxPort, wrapMaxField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Max", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateWrapMax(wrapMax));

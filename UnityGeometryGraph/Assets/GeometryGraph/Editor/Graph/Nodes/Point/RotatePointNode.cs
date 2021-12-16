@@ -18,7 +18,9 @@ using RotationType = GeometryGraph.Runtime.Graph.RotatePointNode.RotatePointNode
 namespace GeometryGraph.Editor {
     [Title("Point", "Rotate Points")]
     public class RotatePointNode : AbstractNode<GeometryGraph.Runtime.Graph.RotatePointNode> {
-        
+        protected override string Title => "Rotate Points";
+        protected override NodeCategory Category => NodeCategory.Point;
+
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort rotationPort;
         private GraphFrameworkPort axisPort;
@@ -74,8 +76,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Rotate Points", NodeCategory.Point);
-
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (rotationPort, rotationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Rotation", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateRotation(rotation));
             (axisPort, axisField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Axis", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateAxis(axis));

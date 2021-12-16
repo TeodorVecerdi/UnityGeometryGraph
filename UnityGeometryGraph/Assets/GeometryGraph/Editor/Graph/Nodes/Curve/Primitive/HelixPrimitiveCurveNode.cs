@@ -10,6 +10,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Curve", "Primitive", "Helix")]
     public class HelixPrimitiveCurveNode : AbstractNode<GeometryGraph.Runtime.Graph.HelixPrimitiveCurveNode> {
+        protected override string Title => "Helix Primitive Curve";
+        protected override NodeCategory Category => NodeCategory.Curve;
+
         private GraphFrameworkPort pointsPort;
         private GraphFrameworkPort rotationsPort;
         private GraphFrameworkPort pitchPort;
@@ -30,8 +33,6 @@ namespace GeometryGraph.Editor {
         private float bottomRadius = 1.0f;
 
         public override void CreateNode() {
-            Initialize("Helix Primitive Curve", NodeCategory.Curve);
-
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             (rotationsPort, rotationsField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Rotations", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRotations(rotations));
             (pitchPort, pitchField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Pitch", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdatePitch(pitch));

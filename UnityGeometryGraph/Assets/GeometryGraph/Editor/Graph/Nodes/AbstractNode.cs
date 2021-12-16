@@ -34,6 +34,7 @@ namespace GeometryGraph.Editor {
 
         public void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             EdgeConnectorListener = edgeConnectorListener;
+            Initialize();
             CreateNode();
         }
 
@@ -46,6 +47,8 @@ namespace GeometryGraph.Editor {
             base.expanded = value;
         }
 
+        protected abstract string Title { get; }
+        protected abstract NodeCategory Category { get; }
         public abstract void CreateNode();
         public abstract void BindPorts();
 
@@ -59,6 +62,7 @@ namespace GeometryGraph.Editor {
         protected internal virtual void OnEdgeConnected(Edge edge, GraphFrameworkPort port) {}
         protected internal virtual void OnEdgeDisconnected(Edge edge, GraphFrameworkPort port) {}
         protected virtual void OnNodeGuidChanged() { }
+        protected virtual void Initialize() { }
         public virtual void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) { }
         public virtual void NotifyEdgeDisconnected(Edge edge, GraphFrameworkPort port) { }
         public virtual void OnNodeSerialized() { }
@@ -77,8 +81,8 @@ namespace GeometryGraph.Editor {
         public sealed override RuntimeNode Runtime => RuntimeNode;
         protected TRuntimeNode RuntimeNode;
 
-        protected void Initialize(string nodeTitle, NodeCategory category) {
-            base.title = nodeTitle;
+        protected sealed override void Initialize() {
+            base.title = Title;
             base.SetPosition(EditorView.DefaultNodePosition);
 
             if (Guid == null) {
@@ -87,8 +91,8 @@ namespace GeometryGraph.Editor {
                 viewDataKey = guid;
             }
 
-            if (category != NodeCategory.None) {
-                AddToClassList($"category-{category}");
+            if (Category != NodeCategory.None) {
+                AddToClassList($"category-{Category}");
             }
 
             if (EdgeConnectorListener != null) {

@@ -7,7 +7,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Float", "Clamp")]
     public class ClampFloatNode : AbstractNode<GeometryGraph.Runtime.Graph.ClampFloatNode> {
-        
+        protected override string Title => "Clamp (Float)";
+        protected override NodeCategory Category => NodeCategory.Float;
+    
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort minPort;
         private GraphFrameworkPort maxPort;
@@ -22,8 +24,6 @@ namespace GeometryGraph.Editor {
         private float maxValue = 1.0f;
 
         public override void CreateNode() {
-            Initialize("Clamp (Float)", NodeCategory.Float);
-
             (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Input", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateInput(inputValue));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Min", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(minValue));
             (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Max", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateMax(maxValue));

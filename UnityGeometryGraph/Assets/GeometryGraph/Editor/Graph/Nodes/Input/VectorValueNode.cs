@@ -10,13 +10,14 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Input", "Vector Value")]
     public class VectorValueNode : AbstractNode<GeometryGraph.Runtime.Graph.VectorValueNode> {
+        protected override string Title => "Vector Value";
+        protected override NodeCategory Category => NodeCategory.Input;
+
         private float3 value;
         private Vector3Field valueField;
         private GraphFrameworkPort valuePort;
 
         public override void CreateNode() {
-            Initialize("Vector Value", NodeCategory.Input);
-
             valuePort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
             valueField = new Vector3Field("Value");
             valueField.RegisterValueChangedCallback(evt => {

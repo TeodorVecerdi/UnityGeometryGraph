@@ -15,7 +15,9 @@ using Mode = GeometryGraph.Runtime.Graph.TranslatePointNode.TranslatePointNode_M
 namespace GeometryGraph.Editor {
     [Title("Point", "Translate Points")]
     public class TranslatePointNode : AbstractNode<GeometryGraph.Runtime.Graph.TranslatePointNode> {
-        
+        protected override string Title => "Translate Points";
+        protected override NodeCategory Category => NodeCategory.Point;
+
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort translationPort;
         private GraphFrameworkPort attributePort;
@@ -37,8 +39,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Translate Points", NodeCategory.Point);
-
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Translation", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateTranslation(translation));
             (attributePort, attributeNameField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttributeName(attributeName));

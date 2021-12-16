@@ -13,7 +13,9 @@ using AnimationCurve = GeometryGraph.Runtime.Data.AnimationCurve;
 namespace GeometryGraph.Editor {
     [Title("Float", "Curve Map")]
     public class FloatCurveMapNode : AbstractNode<GeometryGraph.Runtime.Graph.FloatCurveMapNode> {
-        
+        protected override string Title => "Curve Map (Float)";
+        protected override NodeCategory Category => NodeCategory.Float;
+
         private GraphFrameworkPort valuePort;
         private GraphFrameworkPort resultPort;
 
@@ -24,8 +26,6 @@ namespace GeometryGraph.Editor {
         private AnimationCurve curve = new AnimationCurve(UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f));
 
         public override void CreateNode() {
-            Initialize("Curve Map (Float)", NodeCategory.Float);
-
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Value", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
 

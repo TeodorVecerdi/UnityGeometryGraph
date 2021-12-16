@@ -16,6 +16,9 @@ using InputType = GeometryGraph.Runtime.Graph.AttributeSplitNode.AttributeSplitN
 namespace GeometryGraph.Editor {
     [Title("Attribute", "Attribute Split")]
     public class AttributeSplitNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeSplitNode> {
+        protected override string Title => "Attribute Split";
+        protected override NodeCategory Category => NodeCategory.Attribute;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort vectorPort;
         private GraphFrameworkPort attributePort;
@@ -57,8 +60,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Attribute Split", NodeCategory.Attribute);
-            
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
             (attributePort, attributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Vector", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttribute(attribute));

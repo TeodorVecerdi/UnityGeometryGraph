@@ -14,7 +14,9 @@ using Gradient = GeometryGraph.Runtime.Data.Gradient;
 namespace GeometryGraph.Editor {
     [Title("Float", "Gradient Map")]
     public class FloatGradientMapNode : AbstractNode<GeometryGraph.Runtime.Graph.FloatGradientMapNode> {
-        
+        protected override string Title => "Gradient Map (Float)";
+        protected override NodeCategory Category => NodeCategory.Float;
+
         private GraphFrameworkPort valuePort;
         private GraphFrameworkPort resultRGBPort;
         private GraphFrameworkPort resultAlphaPort;
@@ -27,8 +29,6 @@ namespace GeometryGraph.Editor {
         private Gradient gradient = (Gradient) GeometryGraph.Runtime.Graph.FloatGradientMapNode.Default;
 
         public override void CreateNode() {
-            Initialize("Gradient Map (Float)", NodeCategory.Float);
-
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Value", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             resultRGBPort = GraphFrameworkPort.Create("Color", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
             resultAlphaPort = GraphFrameworkPort.Create("Alpha", Direction.Output, Port.Capacity.Multi, PortType.Float, this);

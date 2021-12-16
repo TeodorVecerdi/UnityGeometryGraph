@@ -10,6 +10,9 @@ using Gradient = GeometryGraph.Runtime.Data.Gradient;
 namespace GeometryGraph.Editor {
     [Title("Integer", "Gradient Map")]
     public class IntegerGradientMapNode : AbstractNode<GeometryGraph.Runtime.Graph.IntegerGradientMapNode> {
+        protected override string Title => "Gradient Map (Integer)";
+        protected override NodeCategory Category => NodeCategory.Integer;
+
         private int value;
         private int min = 0;
         private int max = 100;
@@ -30,8 +33,6 @@ namespace GeometryGraph.Editor {
         private Gradient gradient = (Gradient) GeometryGraph.Runtime.Graph.FloatGradientMapNode.Default;
 
         public override void CreateNode() {
-            Initialize("Gradient Map (Integer)", NodeCategory.Integer);
-
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Value", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(min));
             (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Max", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMax(max));

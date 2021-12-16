@@ -7,7 +7,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Integer", "Clamp")]
     public class ClampIntegerNode : AbstractNode<GeometryGraph.Runtime.Graph.ClampIntegerNode> {
-        
+        protected override string Title => "Clamp (Integer)";
+        protected override NodeCategory Category => NodeCategory.Integer;
+
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort minPort;
         private GraphFrameworkPort maxPort;
@@ -22,8 +24,6 @@ namespace GeometryGraph.Editor {
         private int maxValue = 1;
 
         public override void CreateNode() {
-            Initialize("Clamp (Integer)", NodeCategory.Integer);
-
             (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Input", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateInput(inputValue));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(minValue));
             (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Max", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMax(maxValue));

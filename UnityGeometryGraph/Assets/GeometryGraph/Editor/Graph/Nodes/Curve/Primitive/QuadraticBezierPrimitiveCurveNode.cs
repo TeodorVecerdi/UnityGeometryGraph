@@ -13,6 +13,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Curve", "Primitive", "Quadratic Bezier")]
     public class QuadraticBezierPrimitiveCurveNode : AbstractNode<GeometryGraph.Runtime.Graph.QuadraticBezierPrimitiveCurveNode> {
+        protected override string Title => "Quadratic Bezier Primitive Curve";
+        protected override NodeCategory Category => NodeCategory.Curve;
+
         private GraphFrameworkPort pointsPort;
         private GraphFrameworkPort closedPort;
         private GraphFrameworkPort startPort;
@@ -33,8 +36,6 @@ namespace GeometryGraph.Editor {
         private float3 end = float3_ext.forward;
 
         public override void CreateNode() {
-            Initialize("Quadratic Bezier Primitive Curve", NodeCategory.Curve);
-
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
             (closedPort, closedToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Closed", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateClosed(closed));
             (startPort, startField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Start", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateStart(start));

@@ -16,6 +16,9 @@ using FillType = GeometryGraph.Runtime.Graph.AttributeFillNode.AttributeFillNode
 namespace GeometryGraph.Editor {
     [Title("Attribute", "Attribute Fill")]
     public class AttributeFillNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeFillNode> {
+        protected override string Title => "Attribute Fill";
+        protected override NodeCategory Category => NodeCategory.Attribute;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort attributePort;
         private GraphFrameworkPort floatPort;
@@ -60,8 +63,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Attribute Fill", NodeCategory.Attribute);
-            
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (attributePort, attributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttribute(attribute));
             (floatPort, floatField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Value", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateFloat(floatValue));

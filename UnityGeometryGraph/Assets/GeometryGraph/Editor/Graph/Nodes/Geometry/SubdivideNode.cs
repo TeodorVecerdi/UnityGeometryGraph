@@ -8,6 +8,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Subdivide (Simple)")]
     public class SubdivideNode : AbstractNode<GeometryGraph.Runtime.Graph.SubdivideNode> {
+        protected override string Title => "Subdivide (Simple)";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort levelsPort;
         private GraphFrameworkPort resultPort;
@@ -17,8 +20,6 @@ namespace GeometryGraph.Editor {
         private int levels = 1;
 
         public override void CreateNode() {
-            Initialize("Subdivide (Simple)", NodeCategory.Geometry);
-
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (levelsPort, levelsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Levels", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateLevels(levels));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);

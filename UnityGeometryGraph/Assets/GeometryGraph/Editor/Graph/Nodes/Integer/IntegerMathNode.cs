@@ -10,7 +10,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Integer", "Math")]
     public class IntegerMathNode : AbstractNode<GeometryGraph.Runtime.Graph.IntegerMathNode> {
-        
+        protected override string Title => "Math (Integer)";
+        protected override NodeCategory Category => NodeCategory.Integer;
+
         private GraphFrameworkPort xPort;
         private GraphFrameworkPort yPort;
         private GraphFrameworkPort tolerancePort;
@@ -60,8 +62,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Math (Integer)", NodeCategory.Integer);
-
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("X", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(x));
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Y", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateY(y));
             (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));

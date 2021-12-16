@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Primitive", "Cone")]
     public class ConePrimitiveNode : AbstractNode<GeometryGraph.Runtime.Graph.ConePrimitiveNode> {
+        protected override string Title => "Cone Primitive";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private GraphFrameworkPort radiusPort;
         private GraphFrameworkPort heightPort;
         private GraphFrameworkPort pointsPort;
@@ -23,8 +26,6 @@ namespace GeometryGraph.Editor {
         private int points = 8;
 
         public override void CreateNode() {
-            Initialize("Cone Primitive", NodeCategory.Geometry);
-
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateHeight(height));
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));

@@ -11,7 +11,9 @@ using CompareOperation = GeometryGraph.Runtime.Graph.CompareIntegerNode.CompareI
 namespace GeometryGraph.Editor {
     [Title("Integer", "Compare")]
     public class CompareIntegerNode : AbstractNode<GeometryGraph.Runtime.Graph.CompareIntegerNode> {
-        
+        protected override string Title => "Compare (Integer)";
+        protected override NodeCategory Category => NodeCategory.Integer;
+
         private GraphFrameworkPort aPort;
         private GraphFrameworkPort bPort;
         private GraphFrameworkPort resultPort;
@@ -36,8 +38,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Compare (Integer)", NodeCategory.Integer);
-
             (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("A", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(a));
             (bPort, bField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("B", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateB(b));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Boolean, this);

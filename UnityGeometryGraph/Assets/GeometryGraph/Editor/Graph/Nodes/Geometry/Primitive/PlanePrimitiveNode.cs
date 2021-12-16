@@ -10,6 +10,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Primitive", "Plane")]
     public class PlanePrimitiveNode : AbstractNode<GeometryGraph.Runtime.Graph.PlanePrimitiveNode> {
+        protected override string Title => "Plane Primitive";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private GraphFrameworkPort widthPort;
         private GraphFrameworkPort heightPort;
         private GraphFrameworkPort subdivisionsPort;
@@ -23,8 +26,6 @@ namespace GeometryGraph.Editor {
         private int subdivisions;
 
         public override void CreateNode() {
-            Initialize("Plane Primitive", NodeCategory.Geometry);
-
             (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Width", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateWidth(size.x));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateHeight(size.y));
             (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Subdivisions", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateSubdivisions(subdivisions));

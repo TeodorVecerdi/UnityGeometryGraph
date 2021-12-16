@@ -17,6 +17,9 @@ using TargetDomain = GeometryGraph.Runtime.Graph.AttributeClampNode.AttributeCla
 namespace GeometryGraph.Editor {
     [Title("Attribute", "Attribute Clamp")]
     public class AttributeClampNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeClampNode> {
+        protected override string Title => "Attribute Clamp";
+        protected override NodeCategory Category => NodeCategory.Attribute;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort attributePort;
         private GraphFrameworkPort resultAttributePort;
@@ -70,8 +73,6 @@ namespace GeometryGraph.Editor {
 
 
         public override void CreateNode() {
-            Initialize("Attribute Clamp", NodeCategory.Attribute);
-            
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (attributePort, attributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttribute(attribute));
             (resultAttributePort, resultAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Result", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateResultAttribute(resultAttribute));

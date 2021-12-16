@@ -11,6 +11,9 @@ using TargetType = GeometryGraph.Runtime.Graph.AttributeEnumerateNode.AttributeE
 namespace GeometryGraph.Editor {
     [Title("Attribute", "Attribute Enumerate")]
     public class AttributeEnumerateNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeEnumerateNode> {
+        protected override string Title => "Attribute Enumerate";
+        protected override NodeCategory Category => NodeCategory.Attribute;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort attributePort;
         private GraphFrameworkPort floatPort;
@@ -45,8 +48,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Attribute Enumerate", NodeCategory.Attribute);
-            
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (attributePort, attributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttribute(attribute));
             floatPort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Float, this);

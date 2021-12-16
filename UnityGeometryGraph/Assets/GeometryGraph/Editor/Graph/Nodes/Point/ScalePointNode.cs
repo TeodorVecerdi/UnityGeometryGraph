@@ -15,7 +15,9 @@ using Mode = GeometryGraph.Runtime.Graph.ScalePointNode.ScalePointNode_Mode;
 namespace GeometryGraph.Editor {
     [Title("Point", "Scale Points")]
     public class ScalePointNode : AbstractNode<GeometryGraph.Runtime.Graph.ScalePointNode> {
-        
+        protected override string Title => "Scale Points";
+        protected override NodeCategory Category => NodeCategory.Point;
+
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort vectorPort;
         private GraphFrameworkPort scalarPort;
@@ -41,8 +43,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Scale Points", NodeCategory.Point);
-
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Factor", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
             (scalarPort, scalarField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Factor", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateScalar(scalar));

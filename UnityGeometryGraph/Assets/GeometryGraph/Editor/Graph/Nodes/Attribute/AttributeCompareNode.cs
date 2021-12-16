@@ -12,6 +12,9 @@ using CompareType = GeometryGraph.Runtime.Graph.AttributeCompareNode.AttributeCo
 namespace GeometryGraph.Editor {
     [Title("Attribute", "Attribute Compare")]
     public class AttributeCompareNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeCompareNode> {
+        protected override string Title => "Attribute Compare";
+        protected override NodeCategory Category => NodeCategory.Attribute;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort attributeXPort;
         private GraphFrameworkPort attributeYPort;
@@ -61,8 +64,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Attribute Compare", NodeCategory.Attribute);
-
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (attributeXPort, attributeXField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("X", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttributeX(attributeX));
             (attributeYPort, attributeYField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Y", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttributeY(attributeY));

@@ -8,6 +8,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor.WIP {
     [Title("WIP", "Grid Node")]
     public class GridNode : AbstractNode<GeometryGraph.Runtime.Graph.GridNode> {
+        protected override string Title => "Grid";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private GraphFrameworkPort widthPort;
         private GraphFrameworkPort heightPort;
         private GraphFrameworkPort pointsXPort;
@@ -25,8 +28,6 @@ namespace GeometryGraph.Editor.WIP {
         private int pointsY = 4;
 
         public override void CreateNode() {
-            Initialize("Grid", NodeCategory.Geometry);
-            
             (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Width", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateWidth(width));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateHeight(height));
             (pointsXPort, pointsXField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points X", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePointsX(pointsX));

@@ -10,7 +10,8 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Float", "Math")]
     public class FloatMathNode : AbstractNode<GeometryGraph.Runtime.Graph.FloatMathNode> {
-        
+        protected override string Title => "Math (Float)";
+        protected override NodeCategory Category => NodeCategory.Float;
         private GraphFrameworkPort xPort;
         private GraphFrameworkPort yPort;
         private GraphFrameworkPort tolerancePort;
@@ -79,8 +80,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Math (Float)", NodeCategory.Float);
-
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(x));
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateY(y));
             (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));

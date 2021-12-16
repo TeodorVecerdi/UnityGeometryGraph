@@ -12,6 +12,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Curve", "Curve To Geometry")]
     public class CurveToGeometryNode : AbstractNode<GeometryGraph.Runtime.Graph.CurveToGeometryNode> {
+        protected override string Title => "Curve To Geometry";
+        protected override NodeCategory Category => NodeCategory.Curve;
+
         private GraphFrameworkPort inputCurvePort;
         private GraphFrameworkPort profileCurvePort;
         private GraphFrameworkPort rotationOffsetPort;
@@ -43,8 +46,6 @@ namespace GeometryGraph.Editor {
         private CurveToGeometrySettings.CapUVType capUVType = CurveToGeometrySettings.CapUVType.WorldSpace;
 
         public override void CreateNode() {
-            Initialize("Curve To Geometry", NodeCategory.Curve);
-            
             inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
             profileCurvePort = GraphFrameworkPort.Create("Profile", Direction.Input, Port.Capacity.Single, PortType.Curve, this, onConnect: OnProfileCurveConnected, onDisconnect: OnProfileCurveDisconnected);
             (rotationOffsetPort, rotationOffsetField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Profile Rotation", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRotationOffset(rotationOffset));

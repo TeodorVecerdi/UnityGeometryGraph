@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Primitive", "Cylinder")]
     public class CylinderPrimitiveNode : AbstractNode<GeometryGraph.Runtime.Graph.CylinderPrimitiveNode> {
+        protected override string Title => "Cylinder Primitive";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private GraphFrameworkPort bottomRadiusPort;
         private GraphFrameworkPort topRadiusPort;
         private GraphFrameworkPort heightPort;
@@ -32,8 +35,6 @@ namespace GeometryGraph.Editor {
         private int verticalUVRepetitions = 1;
 
         public override void CreateNode() {
-            Initialize("Cylinder Primitive", NodeCategory.Geometry);
-
             (bottomRadiusPort, bottomRadiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Bottom Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateBottomRadius(bottomRadius));
             (topRadiusPort, topRadiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Top Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateTopRadius(topRadius));
             (heightPort, heightField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Height", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateHeight(height));

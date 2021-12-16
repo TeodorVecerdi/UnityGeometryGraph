@@ -13,6 +13,9 @@ using AnimationCurve = GeometryGraph.Runtime.Data.AnimationCurve;
 namespace GeometryGraph.Editor {
     [Title("Integer", "Curve Map")]
     public class IntegerCurveMapNode : AbstractNode<GeometryGraph.Runtime.Graph.IntegerCurveMapNode> {
+        protected override string Title => "Curve Map (Integer)";
+        protected override NodeCategory Category => NodeCategory.Integer;
+
         private int value;
         private int min = 0;
         private int max = 100;
@@ -30,8 +33,6 @@ namespace GeometryGraph.Editor {
         private AnimationCurve curve = new AnimationCurve(UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f));
 
         public override void CreateNode() {
-            Initialize("Curve Map (Integer)", NodeCategory.Integer);
-
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Value", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(min));
             (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Max", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMax(max));

@@ -10,6 +10,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Vector", "Combine")]
     public class CombineVectorNode : AbstractNode<GeometryGraph.Runtime.Graph.CombineVectorNode> {
+        protected override string Title => "Combine";
+        protected override NodeCategory Category => NodeCategory.Vector;
+
         private GraphFrameworkPort xPort;
         private GraphFrameworkPort yPort;
         private GraphFrameworkPort zPort;
@@ -22,8 +25,6 @@ namespace GeometryGraph.Editor {
         private float3 vector;
 
         public override void CreateNode() {
-            Initialize("Combine", NodeCategory.Vector);
-
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(vector.x));
             (yPort, yField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateY(vector.y));
             (zPort, zField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Z", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateZ(vector.z));

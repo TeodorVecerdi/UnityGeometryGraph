@@ -11,7 +11,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Vector", "Split")]
     public class SplitVectorNode : AbstractNode<GeometryGraph.Runtime.Graph.SplitVectorNode> {
-        
+        protected override string Title => "Split";
+        protected override NodeCategory Category => NodeCategory.Vector;
+
         private GraphFrameworkPort vectorPort;
         private GraphFrameworkPort xPort;
         private GraphFrameworkPort yPort;
@@ -22,8 +24,6 @@ namespace GeometryGraph.Editor {
         private float3 vector;
 
         public override void CreateNode() {
-            Initialize("Split", NodeCategory.Vector);
-
             (vectorPort, vectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Vector", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateVector(vector));
             xPort = GraphFrameworkPort.Create("X", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
             yPort = GraphFrameworkPort.Create("Y", Direction.Output, Port.Capacity.Multi, PortType.Float, this);

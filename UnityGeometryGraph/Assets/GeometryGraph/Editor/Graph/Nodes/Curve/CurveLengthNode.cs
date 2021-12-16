@@ -4,12 +4,13 @@ using UnityEditor.Experimental.GraphView;
 namespace GeometryGraph.Editor {
     [Title("Curve", "Curve Length")]
     public class CurveLengthNode : AbstractNode<GeometryGraph.Runtime.Graph.CurveLengthNode> {
+        protected override string Title => "Curve Length";
+        protected override NodeCategory Category => NodeCategory.Curve;
+
         private GraphFrameworkPort curvePort;
         private GraphFrameworkPort lengthPort;
 
         public override void CreateNode() {
-            Initialize("Curve Length", NodeCategory.Curve);
-            
             curvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
             lengthPort = GraphFrameworkPort.Create("Length", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
             

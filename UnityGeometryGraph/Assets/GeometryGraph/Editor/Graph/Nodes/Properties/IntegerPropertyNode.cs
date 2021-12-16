@@ -5,6 +5,9 @@ using UnityEditor.Experimental.GraphView;
 
 namespace GeometryGraph.Editor {
     public class IntegerPropertyNode : AbstractNode<GeometryGraph.Runtime.Graph.IntegerPropertyNode> {
+        protected override string Title => property != null ? property.DisplayName : "ERROR";
+        protected override NodeCategory Category => NodeCategory.Properties;
+
         public override bool IsProperty => true;
         
         private string propertyGuid;
@@ -33,8 +36,6 @@ namespace GeometryGraph.Editor {
         }
 
         public override void CreateNode() {
-            Initialize(property != null ? property.DisplayName : "ERROR", NodeCategory.Properties);
-
             propertyPort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);
             AddPort(propertyPort);
             

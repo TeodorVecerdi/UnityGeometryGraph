@@ -7,7 +7,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Float", "Map Range")]
     public class MapRangeFloatNode : AbstractNode<GeometryGraph.Runtime.Graph.MapRangeFloatNode> {
-        
+        protected override string Title => "Map Range (Float)";
+        protected override NodeCategory Category => NodeCategory.Float;
+
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort fromMinPort;
         private GraphFrameworkPort fromMaxPort;
@@ -30,8 +32,6 @@ namespace GeometryGraph.Editor {
         private float toMax = 1.0f;
 
         public override void CreateNode() {
-            Initialize("Map Range (Float)", NodeCategory.Float);
-
             (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Input", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue));
             (fromMinPort, fromMinField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Min", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateFromMin(fromMin));
             (fromMaxPort, fromMaxField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("From Max", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateFromMax(fromMax));

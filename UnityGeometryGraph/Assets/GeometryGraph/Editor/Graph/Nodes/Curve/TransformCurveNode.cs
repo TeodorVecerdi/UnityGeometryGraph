@@ -12,6 +12,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Curve", "Transform Curve")]
     public class TransformCurveNode : AbstractNode<GeometryGraph.Runtime.Graph.TransformCurveNode> {
+        protected override string Title => "Transform Curve";
+        protected override NodeCategory Category => NodeCategory.Curve;
+
         private float3 translation;
         private float3 rotation;
         private float3 scale = float3_ext.one;
@@ -32,8 +35,6 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort resultCurvePort;
 
         public override void CreateNode() {
-            Initialize("Transform Curve", NodeCategory.Curve);
-            
             inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
 
             (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(

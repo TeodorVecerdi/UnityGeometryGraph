@@ -10,6 +10,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Primitive", "Cube")]
     public class CubePrimitiveNode : AbstractNode<GeometryGraph.Runtime.Graph.CubePrimitiveNode> {
+        protected override string Title => "Cube Primitive";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private GraphFrameworkPort sizePort;
         private GraphFrameworkPort resultPort;
 
@@ -18,8 +21,6 @@ namespace GeometryGraph.Editor {
         private float3 size = float3_ext.one;
 
         public override void CreateNode() {
-            Initialize("Cube Primitive", NodeCategory.Geometry);
-
             (sizePort, sizeField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Size", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateSize(size));
             resultPort = GraphFrameworkPort.Create("Cube", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
 

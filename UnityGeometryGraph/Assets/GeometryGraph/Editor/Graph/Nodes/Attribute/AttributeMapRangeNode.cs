@@ -16,6 +16,9 @@ using TargetType = GeometryGraph.Runtime.Graph.AttributeMapRangeNode.AttributeMa
 namespace GeometryGraph.Editor {
     [Title("Attribute", "Attribute Map Range")]
     public class AttributeMapRangeNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeMapRangeNode> {
+        protected override string Title => "Attribute Map Range";
+        protected override NodeCategory Category => NodeCategory.Attribute;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort attributePort;
         private GraphFrameworkPort resultAttributePort;
@@ -87,8 +90,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Attribute Map Range", NodeCategory.Attribute);
-
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (attributePort, attributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttribute(attribute));
             (resultAttributePort, resultAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Result", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateResultAttribute(resultAttribute));

@@ -11,7 +11,9 @@ using SampleType = GeometryGraph.Runtime.Graph.SampleCollectionNode.SampleCollec
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Sample Collection")]
     public class SampleCollectionNode : AbstractNode<GeometryGraph.Runtime.Graph.SampleCollectionNode> {
-        
+        protected override string Title => "Sample Collection";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private GraphFrameworkPort collectionPort;
         private GraphFrameworkPort indexPort;
         private GraphFrameworkPort seedPort;
@@ -33,8 +35,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Sample Collection", NodeCategory.Geometry);
-
             collectionPort = GraphFrameworkPort.Create("Collection", Direction.Input, Port.Capacity.Single, PortType.Collection, this);
             (indexPort, indexField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Index", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateIndex(index));
             (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateSeed(seed));

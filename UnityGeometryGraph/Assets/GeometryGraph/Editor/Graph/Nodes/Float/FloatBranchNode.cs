@@ -9,8 +9,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Float", "Branch")]
     public class FloatBranchNode : AbstractNode<GeometryGraph.Runtime.Graph.FloatBranchNode> {
-        
-        private GraphFrameworkPort conditionPort;
+        protected override string Title => "Branch (Float)";
+        protected override NodeCategory Category => NodeCategory.Float;
+    private GraphFrameworkPort conditionPort;
         private GraphFrameworkPort ifTruePort;
         private GraphFrameworkPort ifFalsePort;
         private GraphFrameworkPort resultPort;
@@ -23,10 +24,7 @@ namespace GeometryGraph.Editor {
         private float ifTrue;
         private float ifFalse;
 
-        public override void CreateNode() {
-            Initialize("Branch (Float)", NodeCategory.Float);
-
-            (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
+        public override void CreateNode() {(conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
             (ifTruePort, ifTrueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("If True", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfTrue(ifTrue));
             (ifFalsePort, ifFalseField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("If False", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfFalse(ifFalse));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Float, this);

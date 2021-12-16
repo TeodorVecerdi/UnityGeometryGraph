@@ -8,6 +8,9 @@ using Mode = GeometryGraph.Runtime.Graph.GeometryInstanceNode.GeometryInstanceNo
 namespace GeometryGraph.Editor {
     [Title("Instances", "Geometry Instance")]
     public class GeometryInstanceNode : AbstractNode<GeometryGraph.Runtime.Graph.GeometryInstanceNode> {
+        protected override string Title => "Geometry Instance";
+        protected override NodeCategory Category => NodeCategory.Instances;
+
         private GraphFrameworkPort pointsPort;
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort collectionPort;
@@ -21,8 +24,6 @@ namespace GeometryGraph.Editor {
         private Mode mode = Mode.Geometry;
 
         public override void CreateNode() {
-            Initialize("Geometry Instance", NodeCategory.Instances);
-            
             pointsPort = GraphFrameworkPort.Create("Points", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             collectionPort = GraphFrameworkPort.Create("Collection", Direction.Input, Port.Capacity.Single, PortType.Collection, this);

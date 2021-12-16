@@ -4,12 +4,13 @@ using UnityEditor.Experimental.GraphView;
 namespace GeometryGraph.Editor.Access {
     [Title("Geometry", "Get Position")]
     public class GetPositionNode : AbstractNode<GeometryGraph.Runtime.Graph.GetPositionNode> {
+        protected override string Title => "Get Position";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort positionPort;
 
         public override void CreateNode() {
-            Initialize("Get Position", NodeCategory.Geometry);
-            
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             positionPort = GraphFrameworkPort.Create("Position", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
             

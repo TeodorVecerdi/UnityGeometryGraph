@@ -10,6 +10,9 @@ using Domain = GeometryGraph.Runtime.Graph.AttributeRemoveNode.AttributeRemoveNo
 namespace GeometryGraph.Editor {
     [Title("Attribute", "Attribute Remove")]
     public class AttributeRemoveNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeRemoveNode> {
+        protected override string Title => "Attribute Remove";
+        protected override NodeCategory Category => NodeCategory.Attribute;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort attributePort;
         private GraphFrameworkPort resultPort;
@@ -31,8 +34,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Attribute Remove", NodeCategory.Attribute);
-
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (attributePort, attributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttribute(attribute));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);

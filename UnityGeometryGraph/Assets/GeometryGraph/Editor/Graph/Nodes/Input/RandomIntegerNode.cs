@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Input", "Random Integer")]
     public class RandomIntegerNode : AbstractNode<GeometryGraph.Runtime.Graph.RandomIntegerNode> {
+        protected override string Title => "Random Integer";
+        protected override NodeCategory Category => NodeCategory.Input;
+
         private int seed;
         private int min = 0;
         private int max = 100;
@@ -21,8 +24,6 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort valuePort;
 
         public override void CreateNode() {
-            Initialize("Random Integer", NodeCategory.Input);
-
             valuePort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);
             (seedPort, seedField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Seed", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateSeed(seed));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(min));

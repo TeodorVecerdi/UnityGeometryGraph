@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Integer", "Branch")]
     public class IntegerBranchNode : AbstractNode<GeometryGraph.Runtime.Graph.IntegerBranchNode> {
+        protected override string Title => "Branch (Integer)";
+        protected override NodeCategory Category => NodeCategory.Integer;
+
         private GraphFrameworkPort conditionPort;
         private GraphFrameworkPort ifTruePort;
         private GraphFrameworkPort ifFalsePort;
@@ -21,8 +24,6 @@ namespace GeometryGraph.Editor {
         private int ifFalse;
 
         public override void CreateNode() {
-            Initialize("Branch (Integer)", NodeCategory.Integer);
-
             (conditionPort, conditionToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Condition", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateCondition(condition));
             (ifTruePort, ifTrueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("If True", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfTrue(ifTrue));
             (ifFalsePort, ifFalseField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("If False", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateIfFalse(ifFalse));

@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Primitive", "Icosphere")]
     public class IcospherePrimitiveNode : AbstractNode<GeometryGraph.Runtime.Graph.IcospherePrimitiveNode> {
+        protected override string Title => "Icosphere Primitive";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private GraphFrameworkPort radiusPort;
         private GraphFrameworkPort subdivisionsPort;
         private GraphFrameworkPort resultPort;
@@ -20,8 +23,6 @@ namespace GeometryGraph.Editor {
         private int subdivisions = 2;
 
         public override void CreateNode() {
-            Initialize("Icosphere Primitive", NodeCategory.Geometry);
-
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));
             (subdivisionsPort, subdivisionsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Subdivisions", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateSubdivisions(subdivisions));
             resultPort = GraphFrameworkPort.Create("Icosphere", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);

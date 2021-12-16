@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Geometry", "Set Material")]
     public class SetMaterialNode : AbstractNode<GeometryGraph.Runtime.Graph.SetMaterialNode> {
+        protected override string Title => "Set Material";
+        protected override NodeCategory Category => NodeCategory.Geometry;
+
         private int materialIndex;
         
         private ClampedIntegerField materialIndexField;
@@ -16,8 +19,6 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort resultPort;
 
         public override void CreateNode() {
-            Initialize("Set Material", NodeCategory.Geometry);
-            
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (materialIndexPort, materialIndexField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Material", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMaterialIndex(materialIndex));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);

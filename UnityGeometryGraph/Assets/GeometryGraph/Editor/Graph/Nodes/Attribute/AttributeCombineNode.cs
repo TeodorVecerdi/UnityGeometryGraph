@@ -12,6 +12,9 @@ using ComponentType = GeometryGraph.Runtime.Graph.AttributeCombineNode.Attribute
 namespace GeometryGraph.Editor {
     [Title("Attribute", "Attribute Combine")]
     public class AttributeCombineNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeCombineNode> {
+        protected override string Title => "Attribute Combine";
+        protected override NodeCategory Category => NodeCategory.Attribute;
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort xFloatPort;
         private GraphFrameworkPort yFloatPort;
@@ -64,7 +67,6 @@ namespace GeometryGraph.Editor {
         };
 
         public override void CreateNode() {
-            Initialize("Attribute Combine", NodeCategory.Attribute);
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (xFloatPort, xFloatField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateXFloat(xFloat));
             (yFloatPort, yFloatField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Y", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateYFloat(yFloat));

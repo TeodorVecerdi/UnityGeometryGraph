@@ -7,13 +7,14 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     [Title("Input", "Integer Value")]
     public class IntegerValueNode : AbstractNode<GeometryGraph.Runtime.Graph.IntegerValueNode> {
+        protected override string Title => "Integer Value";
+        protected override NodeCategory Category => NodeCategory.Input;
+
         private int value;
         private IntegerField valueField;
         private GraphFrameworkPort valuePort;
 
         public override void CreateNode() {
-            Initialize("Integer Value", NodeCategory.Input);
-
             valuePort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);
             valueField = new IntegerField("Value");
             valueField.RegisterValueChangedCallback(evt => {
