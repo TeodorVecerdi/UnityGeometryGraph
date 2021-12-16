@@ -8,8 +8,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort instancedGeometryPort;
         private GraphFrameworkPort curvePort;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Graph Output", NodeCategory.Geometry);
 
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);

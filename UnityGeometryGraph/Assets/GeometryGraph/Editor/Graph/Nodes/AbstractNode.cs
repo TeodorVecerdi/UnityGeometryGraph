@@ -32,8 +32,9 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        public virtual void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
+        public void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
             EdgeConnectorListener = edgeConnectorListener;
+            CreateNode();
         }
 
         public void Refresh() {
@@ -44,7 +45,8 @@ namespace GeometryGraph.Editor {
         public void SetExpandedWithoutNotify(bool value) {
             base.expanded = value;
         }
-        
+
+        public abstract void CreateNode();
         public abstract void BindPorts();
 
         // Property specific

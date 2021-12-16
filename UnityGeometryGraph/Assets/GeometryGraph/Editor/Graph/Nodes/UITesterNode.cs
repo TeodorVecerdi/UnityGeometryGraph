@@ -10,8 +10,7 @@ namespace GeometryGraph.Editor {
 
         private FloatMapRangeField floatMapRangeField;
         
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("UI Tester", NodeCategory.None);
             
             floatMapRangeField = new FloatMapRangeField("Label", fromMin, fromMax, toMin, toMax);

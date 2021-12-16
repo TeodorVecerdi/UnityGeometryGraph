@@ -36,8 +36,7 @@ namespace GeometryGraph.Editor {
             }
         };
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Translate Points", NodeCategory.Point);
 
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);

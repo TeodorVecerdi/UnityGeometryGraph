@@ -31,8 +31,7 @@ namespace GeometryGraph.Editor {
         private int horizontalUVRepetitions = 2;
         private int verticalUVRepetitions = 1;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Cylinder Primitive", NodeCategory.Geometry);
 
             (bottomRadiusPort, bottomRadiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Bottom Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateBottomRadius(bottomRadius));

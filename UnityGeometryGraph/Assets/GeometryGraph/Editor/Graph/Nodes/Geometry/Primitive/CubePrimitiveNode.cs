@@ -17,8 +17,7 @@ namespace GeometryGraph.Editor {
 
         private float3 size = float3_ext.one;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Cube Primitive", NodeCategory.Geometry);
 
             (sizePort, sizeField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Size", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateSize(size));

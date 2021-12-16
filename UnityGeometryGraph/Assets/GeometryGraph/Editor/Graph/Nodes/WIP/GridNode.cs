@@ -24,8 +24,7 @@ namespace GeometryGraph.Editor.WIP {
         private int pointsX = 4;
         private int pointsY = 4;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Grid", NodeCategory.Geometry);
             
             (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Width", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateWidth(width));

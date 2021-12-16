@@ -20,8 +20,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort maxPort;
         private GraphFrameworkPort valuePort;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Random Integer", NodeCategory.Input);
 
             valuePort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);

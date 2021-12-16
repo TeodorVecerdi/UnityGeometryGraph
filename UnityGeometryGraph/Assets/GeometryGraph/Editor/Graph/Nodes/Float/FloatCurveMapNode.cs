@@ -23,8 +23,7 @@ namespace GeometryGraph.Editor {
         private float value;
         private AnimationCurve curve = new AnimationCurve(UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f));
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Curve Map (Float)", NodeCategory.Float);
 
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Value", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));

@@ -29,8 +29,7 @@ namespace GeometryGraph.Editor {
         private int toMin = 0;
         private int toMax = 1;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Map Range (Integer)", NodeCategory.Integer);
 
             (inputPort, inputField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Input", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(inputValue));

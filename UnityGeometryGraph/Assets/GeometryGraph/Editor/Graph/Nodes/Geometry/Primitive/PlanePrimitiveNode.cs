@@ -22,8 +22,7 @@ namespace GeometryGraph.Editor {
         private float2 size = float2_ext.one;
         private int subdivisions;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Plane Primitive", NodeCategory.Geometry);
 
             (widthPort, widthField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Width", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateWidth(size.x));

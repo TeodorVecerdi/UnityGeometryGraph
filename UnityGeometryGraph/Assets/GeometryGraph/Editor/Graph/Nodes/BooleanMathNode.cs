@@ -32,8 +32,7 @@ namespace GeometryGraph.Editor {
             }
         };
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Math (Boolean)", NodeCategory.Boolean);
 
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("X", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(x));

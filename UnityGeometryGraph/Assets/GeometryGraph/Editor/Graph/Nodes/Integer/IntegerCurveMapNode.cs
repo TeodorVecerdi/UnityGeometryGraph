@@ -29,8 +29,7 @@ namespace GeometryGraph.Editor {
 
         private AnimationCurve curve = new AnimationCurve(UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f));
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Curve Map (Integer)", NodeCategory.Integer);
 
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Value", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));

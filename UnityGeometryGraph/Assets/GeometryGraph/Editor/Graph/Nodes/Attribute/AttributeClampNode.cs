@@ -69,8 +69,7 @@ namespace GeometryGraph.Editor {
         };
 
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Attribute Clamp", NodeCategory.Attribute);
             
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);

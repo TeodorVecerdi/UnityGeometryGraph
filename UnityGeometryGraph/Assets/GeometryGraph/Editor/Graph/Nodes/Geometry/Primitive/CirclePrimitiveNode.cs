@@ -19,8 +19,7 @@ namespace GeometryGraph.Editor {
         private float radius = 1.0f;
         private int points = 8;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Circle Primitive", NodeCategory.Geometry);
 
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));

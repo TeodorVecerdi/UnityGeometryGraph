@@ -26,8 +26,7 @@ namespace GeometryGraph.Editor {
         private float3 start = float3.zero;
         private float3 end = float3_ext.right;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Line Primitive Curve", NodeCategory.Curve);
 
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));

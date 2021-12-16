@@ -29,8 +29,7 @@ namespace GeometryGraph.Editor {
         private float topRadius = 1.0f;
         private float bottomRadius = 1.0f;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Helix Primitive Curve", NodeCategory.Curve);
 
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));

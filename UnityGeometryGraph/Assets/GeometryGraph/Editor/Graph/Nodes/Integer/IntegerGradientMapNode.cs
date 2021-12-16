@@ -29,8 +29,7 @@ namespace GeometryGraph.Editor {
 
         private Gradient gradient = (Gradient) GeometryGraph.Runtime.Graph.FloatGradientMapNode.Default;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Gradient Map (Integer)", NodeCategory.Integer);
 
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Value", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));

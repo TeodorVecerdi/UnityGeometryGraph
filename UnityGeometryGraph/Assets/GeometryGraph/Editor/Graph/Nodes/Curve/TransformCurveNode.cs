@@ -31,8 +31,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort isClosedPort;
         private GraphFrameworkPort resultCurvePort;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Transform Curve", NodeCategory.Curve);
             
             inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);

@@ -35,8 +35,7 @@ namespace GeometryGraph.Editor {
             }
         };
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Compare (Integer)", NodeCategory.Integer);
 
             (aPort, aField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("A", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateA(a));

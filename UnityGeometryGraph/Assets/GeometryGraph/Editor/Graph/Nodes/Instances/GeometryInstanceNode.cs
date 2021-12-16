@@ -20,8 +20,7 @@ namespace GeometryGraph.Editor {
         private int collectionSamplingSeed;
         private Mode mode = Mode.Geometry;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Geometry Instance", NodeCategory.Instances);
             
             pointsPort = GraphFrameworkPort.Create("Points", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);

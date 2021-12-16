@@ -19,8 +19,7 @@ namespace GeometryGraph.Editor {
         private int points = 32;
         private float radius = 1.0f;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Circle Primitive Curve", NodeCategory.Curve);
 
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));

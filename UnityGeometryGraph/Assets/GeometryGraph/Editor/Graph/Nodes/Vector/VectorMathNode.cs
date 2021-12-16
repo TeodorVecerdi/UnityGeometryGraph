@@ -96,8 +96,7 @@ namespace GeometryGraph.Editor {
             }
         };
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Math (Vector)", NodeCategory.Vector);
 
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("X", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateX(x));

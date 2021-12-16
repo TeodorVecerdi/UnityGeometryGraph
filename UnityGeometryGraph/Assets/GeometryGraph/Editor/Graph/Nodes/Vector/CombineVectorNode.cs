@@ -21,8 +21,7 @@ namespace GeometryGraph.Editor {
 
         private float3 vector;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Combine", NodeCategory.Vector);
 
             (xPort, xField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("X", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateX(vector.x));

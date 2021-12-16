@@ -9,8 +9,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort maxPort;
         private GraphFrameworkPort boundingBoxPort;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Bounding Box", NodeCategory.Geometry);
 
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);

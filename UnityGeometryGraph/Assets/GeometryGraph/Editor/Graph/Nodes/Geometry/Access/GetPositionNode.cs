@@ -7,8 +7,7 @@ namespace GeometryGraph.Editor.Access {
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort positionPort;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Get Position", NodeCategory.Geometry);
             
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);

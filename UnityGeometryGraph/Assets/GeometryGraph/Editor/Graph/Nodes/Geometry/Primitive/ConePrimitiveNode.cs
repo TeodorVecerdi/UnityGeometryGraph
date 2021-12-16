@@ -22,8 +22,7 @@ namespace GeometryGraph.Editor {
         private float height = 2.0f;
         private int points = 8;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Cone Primitive", NodeCategory.Geometry);
 
             (radiusPort, radiusField) = GraphFrameworkPort.CreateWithBackingField<ClampedFloatField, float>("Radius", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateRadius(radius));

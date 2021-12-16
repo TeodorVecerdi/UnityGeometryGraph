@@ -32,8 +32,7 @@ namespace GeometryGraph.Editor {
             }
         };
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Sample Collection", NodeCategory.Geometry);
 
             collectionPort = GraphFrameworkPort.Create("Collection", Direction.Input, Port.Capacity.Single, PortType.Collection, this);

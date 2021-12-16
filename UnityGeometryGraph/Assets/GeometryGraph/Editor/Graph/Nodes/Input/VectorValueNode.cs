@@ -14,8 +14,7 @@ namespace GeometryGraph.Editor {
         private Vector3Field valueField;
         private GraphFrameworkPort valuePort;
 
-        public override void InitializeNode(EdgeConnectorListener edgeConnectorListener) {
-            base.InitializeNode(edgeConnectorListener);
+        public override void CreateNode() {
             Initialize("Vector Value", NodeCategory.Input);
 
             valuePort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
