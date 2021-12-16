@@ -29,7 +29,7 @@ namespace GeometryGraph.Editor {
             EditorView = editorView;
             Node = (AbstractNode) Activator.CreateInstance(System.Type.GetType(Type));
             Node.Owner = this;
-            Node.GUID = GUID;
+            Node.Guid = GUID;
             Node.viewDataKey = GUID;
             Node.InitializeNode(edgeConnectorListener);
             if (edgeConnectorListener != null) 

@@ -12,7 +12,7 @@ namespace GeometryGraph.Editor {
         
         private string guid;
         
-        public string GUID {
+        public string Guid {
             get => guid;
             set {
                 guid = value;
@@ -79,9 +79,9 @@ namespace GeometryGraph.Editor {
             base.title = nodeTitle;
             base.SetPosition(EditorView.DefaultNodePosition);
 
-            if (GUID == null) {
-                string guid = Guid.NewGuid().ToString();
-                GUID = guid;
+            if (Guid == null) {
+                string guid = System.Guid.NewGuid().ToString();
+                Guid = guid;
                 viewDataKey = guid;
             }
 
@@ -90,8 +90,8 @@ namespace GeometryGraph.Editor {
             }
 
             if (EdgeConnectorListener != null) {
-                RuntimeNode alreadyExisting = Owner.EditorView.GraphObject.RuntimeGraph.RuntimeData.Nodes.Find(node => node.Guid == GUID);
-                RuntimeNode = (TRuntimeNode) alreadyExisting ?? (TRuntimeNode)Activator.CreateInstance(runtimeNodeType, GUID);
+                RuntimeNode alreadyExisting = Owner.EditorView.GraphObject.RuntimeGraph.RuntimeData.Nodes.Find(node => node.Guid == Guid);
+                RuntimeNode = (TRuntimeNode) alreadyExisting ?? (TRuntimeNode)Activator.CreateInstance(runtimeNodeType, Guid);
             }
             RuntimePortDictionary = new Dictionary<GraphFrameworkPort, RuntimePort>();
             
@@ -133,7 +133,7 @@ namespace GeometryGraph.Editor {
         }
 
         protected sealed override void OnNodeGuidChanged() {
-            if (RuntimeNode != null) RuntimeNode.Guid = GUID;
+            if (RuntimeNode != null) RuntimeNode.Guid = Guid;
         }
 
         // Only input ports
