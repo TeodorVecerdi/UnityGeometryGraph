@@ -248,8 +248,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["0"] = JsonConvert.SerializeObject(rotation, Formatting.None, float3Converter.Converter);
             root["1"] = JsonConvert.SerializeObject(axis, Formatting.None, float3Converter.Converter);
@@ -265,17 +265,17 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            rotation = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("0")!, float3Converter.Converter);
-            axis = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("1")!, float3Converter.Converter);
-            angle = jsonData.Value<float>("2");
-            rotationAttribute = jsonData.Value<string>("3");
-            axisAttribute = jsonData.Value<string>("4");
-            angleAttribute = jsonData.Value<string>("5");
-            rotationMode = (RotationMode) jsonData.Value<int>("6");
-            axisMode = (AxisMode) jsonData.Value<int>("7");
-            angleMode = (AngleMode) jsonData.Value<int>("8");
-            rotationType = (RotationType) jsonData.Value<int>("9");
+        protected internal override void Deserialize(JObject data) {
+            rotation = JsonConvert.DeserializeObject<float3>(data.Value<string>("0")!, float3Converter.Converter);
+            axis = JsonConvert.DeserializeObject<float3>(data.Value<string>("1")!, float3Converter.Converter);
+            angle = data.Value<float>("2");
+            rotationAttribute = data.Value<string>("3");
+            axisAttribute = data.Value<string>("4");
+            angleAttribute = data.Value<string>("5");
+            rotationMode = (RotationMode) data.Value<int>("6");
+            axisMode = (AxisMode) data.Value<int>("7");
+            angleMode = (AngleMode) data.Value<int>("8");
+            rotationType = (RotationType) data.Value<int>("9");
             
             rotationField.SetValueWithoutNotify(rotation);
             axisField.SetValueWithoutNotify(axis);
@@ -301,7 +301,7 @@ namespace GeometryGraph.Editor {
 
             OnModeChanged();
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

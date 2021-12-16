@@ -77,8 +77,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
             root["d"] = new JArray {
                 value,
                 Serializer.AnimationCurve(curve),
@@ -86,8 +86,8 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            JArray array = jsonData["d"] as JArray;
+        protected internal override void Deserialize(JObject data) {
+            JArray array = data["d"] as JArray;
             value = array.Value<float>(0);
             curve = Deserializer.AnimationCurve(array[1] as JObject);
             
@@ -97,7 +97,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateValue(value);
             RuntimeNode.UpdateCurve(curve);
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

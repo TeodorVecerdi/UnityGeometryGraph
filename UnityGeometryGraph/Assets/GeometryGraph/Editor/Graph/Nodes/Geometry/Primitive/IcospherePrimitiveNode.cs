@@ -67,8 +67,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["r"] = radius;
             root["s"] = subdivisions;
@@ -76,9 +76,9 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            radius = jsonData.Value<float>("r");
-            subdivisions = jsonData.Value<int>("s");
+        protected internal override void Deserialize(JObject data) {
+            radius = data.Value<float>("r");
+            subdivisions = data.Value<int>("s");
 
             radiusField.SetValueWithoutNotify(radius);
             subdivisionsField.SetValueWithoutNotify(subdivisions);
@@ -86,7 +86,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateRadius(radius);
             RuntimeNode.UpdateSubdivisions(subdivisions);
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

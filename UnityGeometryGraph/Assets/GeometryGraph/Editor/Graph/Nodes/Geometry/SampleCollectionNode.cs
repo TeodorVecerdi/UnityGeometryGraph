@@ -94,8 +94,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["i"] = index;
             root["s"] = seed;
@@ -104,10 +104,10 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            index = jsonData.Value<int>("i");
-            seed = jsonData.Value<int>("s");
-            sampleType = (SampleType) jsonData.Value<int>("m");
+        protected internal override void Deserialize(JObject data) {
+            index = data.Value<int>("i");
+            seed = data.Value<int>("s");
+            sampleType = (SampleType) data.Value<int>("m");
             
             indexField.SetValueWithoutNotify(index);
             seedField.SetValueWithoutNotify(seed);
@@ -119,7 +119,7 @@ namespace GeometryGraph.Editor {
             
             OnSampleTypeChanged();
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

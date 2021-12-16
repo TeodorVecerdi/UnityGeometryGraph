@@ -48,20 +48,20 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
             root["0"] = materialIndex;
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            materialIndex = jsonData.Value<int>("0");
+        protected internal override void Deserialize(JObject data) {
+            materialIndex = data.Value<int>("0");
             
             materialIndexField.SetValueWithoutNotify(materialIndex);
             
             RuntimeNode.UpdateMaterialIndex(materialIndex);
             
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

@@ -85,8 +85,8 @@ namespace GeometryGraph.Editor {
             BindPort(outputGeometryPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["t"] = JsonConvert.SerializeObject(translation, Formatting.None, float3Converter.Converter);
             root["r"] = JsonConvert.SerializeObject(eulerRotation, Formatting.None, float3Converter.Converter);
@@ -95,11 +95,11 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
+        protected internal override void Deserialize(JObject data) {
 
-            translation = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("t")!, float3Converter.Converter);
-            eulerRotation = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("r")!, float3Converter.Converter);
-            scale = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("s")!, float3Converter.Converter);
+            translation = JsonConvert.DeserializeObject<float3>(data.Value<string>("t")!, float3Converter.Converter);
+            eulerRotation = JsonConvert.DeserializeObject<float3>(data.Value<string>("r")!, float3Converter.Converter);
+            scale = JsonConvert.DeserializeObject<float3>(data.Value<string>("s")!, float3Converter.Converter);
             
             translationField.SetValueWithoutNotify(translation);
             eulerRotationField.SetValueWithoutNotify(eulerRotation);
@@ -109,7 +109,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateRotation(eulerRotation);
             RuntimeNode.UpdateScale(scale);
             
-            base.SetNodeData(jsonData); 
+            base.Deserialize(data); 
         }
     }
 }

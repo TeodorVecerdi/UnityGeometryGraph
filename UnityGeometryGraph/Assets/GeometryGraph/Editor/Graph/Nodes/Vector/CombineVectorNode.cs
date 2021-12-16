@@ -67,15 +67,15 @@ namespace GeometryGraph.Editor {
             BindPort(vectorPort, RuntimeNode.VectorPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
             root["v"] = JsonConvert.SerializeObject(vector, float3Converter.Converter);
             
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            vector = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v"), float3Converter.Converter);
+        protected internal override void Deserialize(JObject data) {
+            vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v"), float3Converter.Converter);
             
             xField.SetValueWithoutNotify(vector.x);
             yField.SetValueWithoutNotify(vector.y);
@@ -84,7 +84,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateY(vector.y);
             RuntimeNode.UpdateZ(vector.z);
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

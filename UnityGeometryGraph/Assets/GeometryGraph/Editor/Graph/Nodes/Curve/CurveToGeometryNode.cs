@@ -156,8 +156,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
             JArray array = new JArray {
                 rotationOffset,
                 incrementalRotationOffset,
@@ -171,8 +171,8 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            JArray array = jsonData["d"] as JArray;
+        protected internal override void Deserialize(JObject data) {
+            JArray array = data["d"] as JArray;
             
             rotationOffset = array!.Value<float>(0);
             incrementalRotationOffset = array.Value<float>(1);
@@ -198,7 +198,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateShadeSmoothCaps(shadeSmoothCaps);
             RuntimeNode.UpdateCapUVType(capUVType);
             
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

@@ -186,8 +186,8 @@ namespace GeometryGraph.Editor {
             BindPort(floatResultPort, RuntimeNode.FloatResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["o"] = (int)operation;
             root["x"] = JsonConvert.SerializeObject(x, float3Converter.Converter);
@@ -239,14 +239,14 @@ namespace GeometryGraph.Editor {
 
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            operation = (Operation)jsonData.Value<int>("o");
-            x = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("x")!, float3Converter.Converter);
-            y = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("y")!, float3Converter.Converter);
-            wrapMax = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("w")!, float3Converter.Converter);
-            ior = jsonData.Value<float>("i");
-            scale = jsonData.Value<float>("s");
-            distance = jsonData.Value<float>("d");
+        protected internal override void Deserialize(JObject data) {
+            operation = (Operation)data.Value<int>("o");
+            x = JsonConvert.DeserializeObject<float3>(data.Value<string>("x")!, float3Converter.Converter);
+            y = JsonConvert.DeserializeObject<float3>(data.Value<string>("y")!, float3Converter.Converter);
+            wrapMax = JsonConvert.DeserializeObject<float3>(data.Value<string>("w")!, float3Converter.Converter);
+            ior = data.Value<float>("i");
+            scale = data.Value<float>("s");
+            distance = data.Value<float>("d");
             
             operationDropdown.SetValueWithoutNotify(operation, 1);
             xField.SetValueWithoutNotify(x);
@@ -266,7 +266,7 @@ namespace GeometryGraph.Editor {
 
             OnOperationChanged();
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

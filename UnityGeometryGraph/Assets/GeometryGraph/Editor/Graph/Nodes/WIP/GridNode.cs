@@ -93,8 +93,8 @@ namespace GeometryGraph.Editor.WIP {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
         
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
             root["d"] = new JArray {
                 width,
                 height,
@@ -104,8 +104,8 @@ namespace GeometryGraph.Editor.WIP {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            JArray array = jsonData["d"] as JArray;
+        protected internal override void Deserialize(JObject data) {
+            JArray array = data["d"] as JArray;
             width = array.Value<float>(0);
             height = array.Value<float>(1);
             pointsX = array.Value<int>(2);
@@ -121,7 +121,7 @@ namespace GeometryGraph.Editor.WIP {
             RuntimeNode.UpdatePointsX(pointsX);
             RuntimeNode.UpdatePointsY(pointsY);
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

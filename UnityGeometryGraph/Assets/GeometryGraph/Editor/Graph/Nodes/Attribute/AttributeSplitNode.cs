@@ -171,8 +171,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
             JArray array = new() {
                 JsonConvert.SerializeObject(vector, Formatting.None, float3Converter.Converter),
                 attribute,
@@ -186,7 +186,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
         
-        protected internal override void SetNodeData(JObject data) {
+        protected internal override void Deserialize(JObject data) {
             JArray array = data["d"] as JArray;
             vector = JsonConvert.DeserializeObject<float3>(array!.Value<string>(0), float3Converter.Converter);
             attribute = array.Value<string>(1);
@@ -214,7 +214,7 @@ namespace GeometryGraph.Editor {
             
             OnTypeChanged();
             
-            base.SetNodeData(data);
+            base.Deserialize(data);
         }
     }
 }

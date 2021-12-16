@@ -68,8 +68,8 @@ namespace GeometryGraph.Editor {
         protected internal virtual void OnNodeDeserialized() { }
         
         // Serialization implementation
-        protected internal virtual void SetNodeData(JObject jsonData) { }
-        protected internal virtual JObject GetNodeData() => new JObject();
+        protected internal virtual JObject Serialize() => new();
+        protected internal virtual void Deserialize(JObject data) { }
 
         // Implemented and sealed by AbstractNode<TRuntimeNode>
         protected internal virtual void NotifyEdgeConnected(Edge edge, GraphFrameworkPort port) { }

@@ -69,8 +69,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["i"] = inputValue;
             root["m"] = minValue;
@@ -79,10 +79,10 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            inputValue = jsonData.Value<float>("i");
-            minValue = jsonData.Value<float>("m");
-            maxValue = jsonData.Value<float>("M");
+        protected internal override void Deserialize(JObject data) {
+            inputValue = data.Value<float>("i");
+            minValue = data.Value<float>("m");
+            maxValue = data.Value<float>("M");
             
             inputField.SetValueWithoutNotify(inputValue);
             minField.SetValueWithoutNotify(minValue);
@@ -92,7 +92,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateMin(minValue);
             RuntimeNode.UpdateMax(maxValue);
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

@@ -140,8 +140,8 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["t"] = (int)rotationMode;
             root["v"] = JsonConvert.SerializeObject(vector, float3Converter.Converter);
@@ -153,13 +153,13 @@ namespace GeometryGraph.Editor {
             return root;
         }
         
-        protected internal override void SetNodeData(JObject jsonData) {
-            rotationMode = (Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode)jsonData.Value<int>("t");
-            vector = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v")!, float3Converter.Converter);
-            center = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("c")!, float3Converter.Converter);
-            axis = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("x")!, float3Converter.Converter);
-            eulerAngles = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("e")!, float3Converter.Converter);
-            angle = jsonData.Value<float>("a");
+        protected internal override void Deserialize(JObject data) {
+            rotationMode = (Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode)data.Value<int>("t");
+            vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);
+            center = JsonConvert.DeserializeObject<float3>(data.Value<string>("c")!, float3Converter.Converter);
+            axis = JsonConvert.DeserializeObject<float3>(data.Value<string>("x")!, float3Converter.Converter);
+            eulerAngles = JsonConvert.DeserializeObject<float3>(data.Value<string>("e")!, float3Converter.Converter);
+            angle = data.Value<float>("a");
             
             rotationTypeDropdown.SetValueWithoutNotify(rotationMode, 1);
             vectorField.SetValueWithoutNotify(vector);
@@ -177,7 +177,7 @@ namespace GeometryGraph.Editor {
             
             OnRotationTypeChanged();
             
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

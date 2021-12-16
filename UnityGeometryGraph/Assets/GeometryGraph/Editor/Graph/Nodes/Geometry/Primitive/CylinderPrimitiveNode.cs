@@ -142,8 +142,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["r"] = bottomRadius;
             root["R"] = topRadius;
@@ -155,13 +155,13 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            bottomRadius = jsonData.Value<float>("r");
-            topRadius = jsonData.Value<float>("R");
-            height = jsonData.Value<float>("h");
-            points = jsonData.Value<int>("p");
-            horizontalUVRepetitions = jsonData.Value<int>("u");
-            verticalUVRepetitions = jsonData.Value<int>("v");
+        protected internal override void Deserialize(JObject data) {
+            bottomRadius = data.Value<float>("r");
+            topRadius = data.Value<float>("R");
+            height = data.Value<float>("h");
+            points = data.Value<int>("p");
+            horizontalUVRepetitions = data.Value<int>("u");
+            verticalUVRepetitions = data.Value<int>("v");
 
             bottomRadiusField.SetValueWithoutNotify(bottomRadius);
             topRadiusField.SetValueWithoutNotify(topRadius);
@@ -177,7 +177,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateHorizontalUVRepetitions(horizontalUVRepetitions);
             RuntimeNode.UpdateVerticalUVRepetitions(verticalUVRepetitions);
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

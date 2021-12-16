@@ -111,8 +111,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultCurvePort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
             JArray array = new JArray {
                 JsonConvert.SerializeObject(translation, float3Converter.Converter),
                 JsonConvert.SerializeObject(rotation, float3Converter.Converter),
@@ -124,8 +124,8 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            JArray array = jsonData["d"] as JArray;
+        protected internal override void Deserialize(JObject data) {
+            JArray array = data["d"] as JArray;
             
             translation = JsonConvert.DeserializeObject<float3>(array!.Value<string>(0), float3Converter.Converter);
             rotation = JsonConvert.DeserializeObject<float3>(array!.Value<string>(1), float3Converter.Converter);
@@ -146,7 +146,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateIsClosed(isClosed);
             RuntimeNode.UpdateChangeClosed(changeClosed);
            
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

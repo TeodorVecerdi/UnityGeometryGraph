@@ -94,8 +94,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["o"] = (int)operation;
             root["t"] = tolerance;
@@ -115,11 +115,11 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            operation = (CompareOperation) jsonData.Value<int>("o");
-            tolerance = jsonData.Value<float>("t");
-            a = jsonData.Value<float>("a");
-            b = jsonData.Value<float>("b");
+        protected internal override void Deserialize(JObject data) {
+            operation = (CompareOperation) data.Value<int>("o");
+            tolerance = data.Value<float>("t");
+            a = data.Value<float>("a");
+            b = data.Value<float>("b");
             
             operationDropdown.SetValueWithoutNotify(operation, 1);
             toleranceField.SetValueWithoutNotify(tolerance);
@@ -133,7 +133,7 @@ namespace GeometryGraph.Editor {
 
             OnOperationChanged();
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

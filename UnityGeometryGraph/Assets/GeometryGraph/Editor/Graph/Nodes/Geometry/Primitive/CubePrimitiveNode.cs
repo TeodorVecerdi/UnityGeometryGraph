@@ -44,8 +44,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["w"] = size.x;
             root["h"] = size.y;
@@ -54,15 +54,15 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            size.x = jsonData.Value<float>("w");
-            size.y = jsonData.Value<float>("h");
-            size.z = jsonData.Value<float>("d");
+        protected internal override void Deserialize(JObject data) {
+            size.x = data.Value<float>("w");
+            size.y = data.Value<float>("h");
+            size.z = data.Value<float>("d");
 
             sizeField.SetValueWithoutNotify(size);
             RuntimeNode.UpdateSize(size);
             
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

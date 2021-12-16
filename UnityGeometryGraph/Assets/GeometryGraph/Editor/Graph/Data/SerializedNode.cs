@@ -35,7 +35,7 @@ namespace GeometryGraph.Editor {
             Node.SetExpandedWithoutNotify(DrawState.Expanded);
             Node.SetPosition(DrawState.Position);
             if (!string.IsNullOrEmpty(NodeData))
-                Node.SetNodeData(JObject.Parse(NodeData));
+                Node.Deserialize(JObject.Parse(NodeData));
             Node.Refresh();
 
             if (buildPortData)
@@ -73,7 +73,7 @@ namespace GeometryGraph.Editor {
             if (Node == null)
                 return;
             Node.OnNodeSerialized();
-            NodeData = Node.GetNodeData().ToString(Formatting.None);
+            NodeData = Node.Serialize().ToString(Formatting.None);
         }
 
         public void OnAfterDeserialize() {
@@ -81,7 +81,7 @@ namespace GeometryGraph.Editor {
                 return;
             Node.OnNodeDeserialized();
             if (!string.IsNullOrEmpty(NodeData))
-                Node.SetNodeData(JObject.Parse(NodeData));
+                Node.Deserialize(JObject.Parse(NodeData));
         }
     }
 }

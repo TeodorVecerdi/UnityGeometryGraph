@@ -125,8 +125,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["o"] = (int)operation;
             root["x"] = x;
@@ -214,12 +214,12 @@ namespace GeometryGraph.Editor {
             extraPort.Label = extra;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            operation = (Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation) jsonData.Value<int>("o");
-            x = jsonData.Value<int>("x");
-            y = jsonData.Value<int>("y");
-            tolerance = jsonData.Value<float>("t");
-            extra = jsonData.Value<int>("v");
+        protected internal override void Deserialize(JObject data) {
+            operation = (Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation) data.Value<int>("o");
+            x = data.Value<int>("x");
+            y = data.Value<int>("y");
+            tolerance = data.Value<float>("t");
+            extra = data.Value<int>("v");
             
             operationDropdown.SetValueWithoutNotify(operation, 1);
             xField.SetValueWithoutNotify(x);
@@ -235,7 +235,7 @@ namespace GeometryGraph.Editor {
 
             OnOperationChanged();
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

@@ -52,22 +52,22 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["l"] = levels;
             
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            levels = jsonData.Value<int>("l");
+        protected internal override void Deserialize(JObject data) {
+            levels = data.Value<int>("l");
             
             levelsField.SetValueWithoutNotify(levels);
             
             RuntimeNode.UpdateLevels(levels);
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

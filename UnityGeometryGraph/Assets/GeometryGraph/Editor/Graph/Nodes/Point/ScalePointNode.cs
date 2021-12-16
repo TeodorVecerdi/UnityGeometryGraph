@@ -125,8 +125,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
 
             root["v"] = JsonConvert.SerializeObject(vector, Formatting.None, float3Converter.Converter);
             root["s"] = scalar;
@@ -136,11 +136,11 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            vector = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v"), float3Converter.Converter);
-            scalar = jsonData.Value<float>("s");
-            attributeName = jsonData.Value<string>("a");
-            mode = (Mode) jsonData.Value<int>("m");
+        protected internal override void Deserialize(JObject data) {
+            vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v"), float3Converter.Converter);
+            scalar = data.Value<float>("s");
+            attributeName = data.Value<string>("a");
+            mode = (Mode) data.Value<int>("m");
             
             vectorField.SetValueWithoutNotify(vector);
             scalarField.SetValueWithoutNotify(scalar);
@@ -154,7 +154,7 @@ namespace GeometryGraph.Editor {
 
             OnModeChanged();
 
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

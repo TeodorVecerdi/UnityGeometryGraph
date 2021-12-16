@@ -46,16 +46,16 @@ namespace GeometryGraph.Editor {
             BindPort(propertyPort, RuntimeNode.Port);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
             root["propertyGuid"] = propertyGuid;
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            if(jsonData == null) return;
-            base.SetNodeData(jsonData);
-            PropertyGuid = jsonData.Value<string>("propertyGuid");
+        protected internal override void Deserialize(JObject data) {
+            if(data == null) return;
+            base.Deserialize(data);
+            PropertyGuid = data.Value<string>("propertyGuid");
             Property = Owner.EditorView.GraphObject.GraphData.Properties.FirstOrGivenDefault(abstractProperty => abstractProperty.GUID == propertyGuid, null);
         }
         

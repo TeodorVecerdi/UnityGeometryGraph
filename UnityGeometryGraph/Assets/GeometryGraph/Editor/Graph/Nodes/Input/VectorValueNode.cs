@@ -35,18 +35,18 @@ namespace GeometryGraph.Editor {
             BindPort(valuePort, RuntimeNode.ValuePort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root =  base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root =  base.Serialize();
             root["v"] = JsonConvert.SerializeObject(value, Formatting.None, float3Converter.Converter);
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            value = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v")!, float3Converter.Converter);
+        protected internal override void Deserialize(JObject data) {
+            value = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);
             valueField.SetValueWithoutNotify(value);
             RuntimeNode.UpdateValue(value);
             
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

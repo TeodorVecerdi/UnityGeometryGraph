@@ -74,8 +74,8 @@ namespace GeometryGraph.Editor {
             BindPort(valuePort, RuntimeNode.ValuePort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root =  base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root =  base.Serialize();
             root["d"] = new JArray {
                 seed,
                 min,
@@ -84,8 +84,8 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        protected internal override void SetNodeData(JObject jsonData) {
-            JArray array = jsonData["d"] as JArray;
+        protected internal override void Deserialize(JObject data) {
+            JArray array = data["d"] as JArray;
             seed = array.Value<int>(0);
             min = array.Value<float>(1);
             max = array.Value<float>(2);
@@ -98,7 +98,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateMin(min);
             RuntimeNode.UpdateMax(max);
             
-            base.SetNodeData(jsonData);
+            base.Deserialize(data);
         }
     }
 }

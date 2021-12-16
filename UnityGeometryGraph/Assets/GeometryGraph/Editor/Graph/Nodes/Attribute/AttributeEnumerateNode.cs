@@ -140,8 +140,8 @@ namespace GeometryGraph.Editor {
             BindPort(booleanPort, RuntimeNode.BooleanPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root = base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root = base.Serialize();
             JArray array = new() {
                 attribute,
                 (int)domain,
@@ -151,7 +151,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
         
-        protected internal override void SetNodeData(JObject data) {
+        protected internal override void Deserialize(JObject data) {
             JArray array = data["d"] as JArray;
             attribute = array!.Value<string>(0);
             domain = (TargetDomain)array.Value<int>(1);
@@ -167,7 +167,7 @@ namespace GeometryGraph.Editor {
             
             OnTypeChanged();
             
-            base.SetNodeData(data);
+            base.Deserialize(data);
         }
     }
 }

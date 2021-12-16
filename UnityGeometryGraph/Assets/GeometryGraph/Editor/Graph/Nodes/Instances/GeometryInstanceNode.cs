@@ -78,8 +78,8 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        protected internal override JObject GetNodeData() {
-            JObject root =  base.GetNodeData();
+        protected internal override JObject Serialize() {
+            JObject root =  base.Serialize();
             JArray data = new() {
                 collectionSamplingSeed,
                 (int) mode
@@ -88,7 +88,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
         
-        protected internal override void SetNodeData(JObject data) {
+        protected internal override void Deserialize(JObject data) {
             JArray d = data["d"].Value<JArray>();
             collectionSamplingSeed = d.Value<int>(0);
             mode = (Mode) d.Value<int>(1);
@@ -101,7 +101,7 @@ namespace GeometryGraph.Editor {
             
             OnModeChanged();
             
-            base.SetNodeData(data);
+            base.Deserialize(data);
         }
     }
 }
