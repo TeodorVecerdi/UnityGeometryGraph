@@ -46,13 +46,26 @@ editor_value_blacklist = ['GeometryData', 'CurveData']
 
 def run(mode: Mode) -> None:
     properties: List[Property] = []
+    usings: List[str] = []
     while True:
         entry = input()
         if entry == '': break
         vars = entry.split(' ')
-        properties.append(Property((PropertyType.from_string(vars[0]), vars[1], vars[2], vars[3] if len(vars) > 3 else None)))
+
+        if vars[0] == 'u':
+            usings.append(f'using {vars[1]} = {vars[2]};')
+        elif vars[0] in ['i', 'o', 's']:
+            properties.append(Property((PropertyType.from_string(vars[0]), vars[1], vars[2], vars[3] if len(vars) > 3 else None)))
+
 
     properties.sort(key=lambda tup: tup[0])
+
+    if len(usings) > 0:
+        print('\n'.join(usings))
+
+    if len(properties) <= 0:
+        return
+
     if mode is Mode.EDITOR or mode is Mode.BOTH:
         print_props_editor(properties)
     if mode is Mode.RUNTIME or mode is Mode.BOTH:
