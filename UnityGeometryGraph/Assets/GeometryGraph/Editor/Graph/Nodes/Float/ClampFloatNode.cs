@@ -69,7 +69,7 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
 
             root["i"] = inputValue;
@@ -79,7 +79,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             inputValue = jsonData.Value<float>("i");
             minValue = jsonData.Value<float>("m");
             maxValue = jsonData.Value<float>("M");

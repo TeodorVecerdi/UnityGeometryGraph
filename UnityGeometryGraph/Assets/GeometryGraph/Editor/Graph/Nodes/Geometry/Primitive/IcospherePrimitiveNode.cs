@@ -67,7 +67,7 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
 
             root["r"] = radius;
@@ -76,7 +76,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             radius = jsonData.Value<float>("r");
             subdivisions = jsonData.Value<int>("s");
 

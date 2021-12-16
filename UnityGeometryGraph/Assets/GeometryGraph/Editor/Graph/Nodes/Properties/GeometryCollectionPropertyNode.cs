@@ -46,13 +46,13 @@ namespace GeometryGraph.Editor {
             BindPort(propertyPort, RuntimeNode.Port);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
             root["propertyGuid"] = propertyGuid;
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             if(jsonData == null) return;
             base.SetNodeData(jsonData);
             PropertyGuid = jsonData.Value<string>("propertyGuid");

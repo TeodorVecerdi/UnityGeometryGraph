@@ -35,13 +35,13 @@ namespace GeometryGraph.Editor {
             BindPort(valuePort, RuntimeNode.ValuePort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root =  base.GetNodeData();
             root["v"] = JsonConvert.SerializeObject(value, Formatting.None, float3Converter.Converter);
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             value = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v")!, float3Converter.Converter);
             valueField.SetValueWithoutNotify(value);
             RuntimeNode.UpdateValue(value);

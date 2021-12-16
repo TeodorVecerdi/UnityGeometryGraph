@@ -94,7 +94,7 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
 
             root["i"] = index;
@@ -104,7 +104,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             index = jsonData.Value<int>("i");
             seed = jsonData.Value<int>("s");
             sampleType = (SampleType) jsonData.Value<int>("m");

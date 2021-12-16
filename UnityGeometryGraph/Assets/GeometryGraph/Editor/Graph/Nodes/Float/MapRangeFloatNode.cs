@@ -104,7 +104,7 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
 
             root["c"] = clamp ? 1 : 0;
@@ -117,7 +117,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             clamp = jsonData.Value<int>("c") == 1;
             inputValue = jsonData.Value<float>("i");
             fromMin = jsonData.Value<float>("f");

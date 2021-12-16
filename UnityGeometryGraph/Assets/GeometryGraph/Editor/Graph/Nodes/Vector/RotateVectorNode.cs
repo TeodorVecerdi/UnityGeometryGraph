@@ -140,7 +140,7 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
 
             root["t"] = (int)rotationMode;
@@ -153,7 +153,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
         
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             rotationMode = (Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode)jsonData.Value<int>("t");
             vector = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v")!, float3Converter.Converter);
             center = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("c")!, float3Converter.Converter);

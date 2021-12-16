@@ -78,7 +78,7 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root =  base.GetNodeData();
             JArray data = new() {
                 collectionSamplingSeed,
@@ -88,7 +88,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
         
-        public override void SetNodeData(JObject data) {
+        protected internal override void SetNodeData(JObject data) {
             JArray d = data["d"].Value<JArray>();
             collectionSamplingSeed = d.Value<int>(0);
             mode = (Mode) d.Value<int>(1);

@@ -32,13 +32,13 @@ namespace GeometryGraph.Editor {
             BindPort(valuePort, RuntimeNode.ValuePort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root =  base.GetNodeData();
             root["v"] = value;
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             value = jsonData.Value<float>("v");
             valueField.SetValueWithoutNotify(value);
             RuntimeNode.UpdateValue(value);

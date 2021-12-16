@@ -94,7 +94,7 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
 
             root["o"] = (int)operation;
@@ -115,7 +115,7 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             operation = (CompareOperation) jsonData.Value<int>("o");
             tolerance = jsonData.Value<float>("t");
             a = jsonData.Value<float>("a");

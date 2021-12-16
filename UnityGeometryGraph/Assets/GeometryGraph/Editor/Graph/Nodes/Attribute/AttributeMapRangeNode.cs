@@ -368,7 +368,7 @@ namespace GeometryGraph.Editor {
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
             JArray array = new() {
                 attribute,
@@ -392,7 +392,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             JArray array = jsonData["d"] as JArray;
             attribute = array!.Value<string>(0);
             resultAttribute = array.Value<string>(1);

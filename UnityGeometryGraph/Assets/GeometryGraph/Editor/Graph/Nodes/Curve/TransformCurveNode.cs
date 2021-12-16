@@ -111,7 +111,7 @@ namespace GeometryGraph.Editor {
             BindPort(resultCurvePort, RuntimeNode.ResultPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
             JArray array = new JArray {
                 JsonConvert.SerializeObject(translation, float3Converter.Converter),
@@ -124,7 +124,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             JArray array = jsonData["d"] as JArray;
             
             translation = JsonConvert.DeserializeObject<float3>(array!.Value<string>(0), float3Converter.Converter);

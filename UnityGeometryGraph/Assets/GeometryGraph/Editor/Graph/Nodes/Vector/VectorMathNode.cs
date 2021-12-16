@@ -186,7 +186,7 @@ namespace GeometryGraph.Editor {
             BindPort(floatResultPort, RuntimeNode.FloatResultPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
 
             root["o"] = (int)operation;
@@ -239,7 +239,7 @@ namespace GeometryGraph.Editor {
 
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             operation = (Operation)jsonData.Value<int>("o");
             x = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("x")!, float3Converter.Converter);
             y = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("y")!, float3Converter.Converter);

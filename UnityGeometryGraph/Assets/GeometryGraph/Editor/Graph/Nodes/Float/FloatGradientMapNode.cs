@@ -83,7 +83,7 @@ namespace GeometryGraph.Editor {
             BindPort(resultAlphaPort, RuntimeNode.ResultAlphaPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
             root["d"] = new JArray {
                 value,
@@ -92,7 +92,7 @@ namespace GeometryGraph.Editor {
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             JArray array = jsonData["d"] as JArray;
             value = array.Value<float>(0);
             gradient = Deserializer.Gradient(array[1] as JObject);

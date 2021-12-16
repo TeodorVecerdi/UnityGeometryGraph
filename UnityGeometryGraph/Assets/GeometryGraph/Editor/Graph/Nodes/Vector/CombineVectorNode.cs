@@ -67,14 +67,14 @@ namespace GeometryGraph.Editor {
             BindPort(vectorPort, RuntimeNode.VectorPort);
         }
 
-        public override JObject GetNodeData() {
+        protected internal override JObject GetNodeData() {
             JObject root = base.GetNodeData();
             root["v"] = JsonConvert.SerializeObject(vector, float3Converter.Converter);
             
             return root;
         }
 
-        public override void SetNodeData(JObject jsonData) {
+        protected internal override void SetNodeData(JObject jsonData) {
             vector = JsonConvert.DeserializeObject<float3>(jsonData.Value<string>("v"), float3Converter.Converter);
             
             xField.SetValueWithoutNotify(vector.x);
