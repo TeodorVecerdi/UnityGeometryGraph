@@ -19,6 +19,10 @@
     }
 }
 
+#unity-text-input.unity-base-text-field__input {
+    border-radius: 0;
+}
+
 .node.collapsed {
     Toggle.unity-toggle, ClampedIntegerField, ClampedFloatField, EnumField,
     Vector3Field.port-backing-field, EnumSelectionDropdown.enum-selection-dropdown,
@@ -133,6 +137,40 @@ VisualElement.gradient-container {
         & > VisualElement.unity-gradient-field__input {
             min-height: 24px;
             min-width: 96px;
+        }
+    }
+}
+
+/* 
+    Region: Float Map Range Field
+*/
+
+FloatMapRangeField.map-range-field.map-range-field__float {
+    & > Label.map-range-field-label {
+        margin-left: 3px;
+    }
+    & > VisualElement.container {
+        flex-direction: row;
+        align-items: center;
+        flex-grow: 1;
+        
+        & > Label.from-label, & > Label.to-label {
+            margin-left: 3px;
+            width: 32px;
+            -unity-font-style: bold;
+        }
+        
+        & > FloatField {
+            margin-left: 0;
+            
+            & > Label {
+                padding-left: 0;
+                padding-right: 0;
+            }
+            
+            & > FloatInput#unity-text-input.unity-base-text-field__input {
+                min-width: 32px;
+            }
         }
     }
 }

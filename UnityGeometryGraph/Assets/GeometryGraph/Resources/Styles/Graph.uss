@@ -16,6 +16,10 @@ EditorView > #content > GraphFrameworkGraphView > GridBackground {
   --spacing: 20;
 }
 
+#unity-text-input.unity-base-text-field__input {
+  border-radius: 0;
+}
+
 .node.collapsed Toggle.unity-toggle, .node.collapsed ClampedIntegerField, .node.collapsed ClampedFloatField, .node.collapsed EnumField,
 .node.collapsed Vector3Field.port-backing-field, .node.collapsed EnumSelectionDropdown.enum-selection-dropdown,
 .node.collapsed EnumSelectionToggle.enum-selection-toggle, .node.collapsed CurveField.unity-curve-field,
@@ -112,6 +116,33 @@ VisualElement.gradient-container > GradientField.unity-gradient-field.gradient-f
 VisualElement.gradient-container > GradientField.unity-gradient-field > VisualElement.unity-gradient-field__input {
   min-height: 24px;
   min-width: 96px;
+}
+
+/* 
+    Region: Float Map Range Field
+*/
+FloatMapRangeField.map-range-field.map-range-field__float > Label.map-range-field-label {
+  margin-left: 3px;
+}
+FloatMapRangeField.map-range-field.map-range-field__float > VisualElement.container {
+  flex-direction: row;
+  align-items: center;
+  flex-grow: 1;
+}
+FloatMapRangeField.map-range-field.map-range-field__float > VisualElement.container > Label.from-label, FloatMapRangeField.map-range-field.map-range-field__float > VisualElement.container > Label.to-label {
+  margin-left: 3px;
+  width: 32px;
+  -unity-font-style: bold;
+}
+FloatMapRangeField.map-range-field.map-range-field__float > VisualElement.container > FloatField {
+  margin-left: 0;
+}
+FloatMapRangeField.map-range-field.map-range-field__float > VisualElement.container > FloatField > Label {
+  padding-left: 0;
+  padding-right: 0;
+}
+FloatMapRangeField.map-range-field.map-range-field__float > VisualElement.container > FloatField > FloatInput#unity-text-input.unity-base-text-field__input {
+  min-width: 32px;
 }
 
 /*# sourceMappingURL=Graph.uss.map */
