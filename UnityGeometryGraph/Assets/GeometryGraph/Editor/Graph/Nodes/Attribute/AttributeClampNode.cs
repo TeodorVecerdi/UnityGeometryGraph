@@ -52,14 +52,13 @@ namespace GeometryGraph.Editor {
         
         private static readonly SelectionTree domainTree = new (new List<object>(Enum.GetValues(typeof(TargetDomain)).Convert(o => o))) {
             new SelectionCategory("Domain", false) {
-                new ("Chooses the domain of the original attribute", 0, true),
-                new ("Store the attribute in the Vertex domain", 1, false),
-                new ("Store the attribute in the Edge domain", 2, false),
-                new ("Store the attribute in the Face domain", 3, false),
-                new ("Store the attribute in the Face Corner domain", 4, false)
+                new ("Uses the domain of the original attribute", 0, true),
+                new ("Uses the Vertex domain (performing domain conversion if necessary)", 1, false),
+                new ("Uses the Edge domain (performing domain conversion if necessary)", 2, false),
+                new ("Uses the Face domain (performing domain conversion if necessary)", 3, false),
+                new ("Uses the Face Corner domain (performing domain conversion if necessary)", 4, false)
             }
-        };
-        
+        };        
         private static readonly SelectionTree typeTree = new (new List<object>(Enum.GetValues(typeof(TargetType)).Convert(o => o))) {
             new SelectionCategory("Type", false) {
                 new ("Chooses the type of the original attribute", 0, true),

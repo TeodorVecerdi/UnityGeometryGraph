@@ -15,5 +15,11 @@ namespace GeometryGraph.Editor {
             }
             return element;
         }
+        
+        public static void AddClasses(this VisualElement element, params string[] classNames) {
+            foreach (string className in classNames) {
+                element.AddToClassList(className);
+            }
+        }
     }
 }
