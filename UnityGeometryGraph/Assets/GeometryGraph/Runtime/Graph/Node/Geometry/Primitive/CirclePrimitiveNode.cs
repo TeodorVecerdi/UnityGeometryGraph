@@ -1,5 +1,6 @@
 ﻿using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Geometry;
+using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     [AdditionalUsingStatements("UnityCommons")]
@@ -21,7 +22,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
-            Result = GeometryPrimitive.Circle(Radius, Points);
+            Result = GeometryPrimitive.Circle(Radius.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS), Points.Clamped(Constants.MIN_CIRCULAR_GEOMETRY_POINTS, Constants.MAX_CIRCULAR_GEOMETRY_POINTS));
         }
     }
 }
