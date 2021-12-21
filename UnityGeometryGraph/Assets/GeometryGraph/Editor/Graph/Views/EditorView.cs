@@ -58,17 +58,17 @@ namespace GeometryGraph.Editor {
                     EditorWindow.Events.SaveRequested?.Invoke();
                 }
 
-                GUILayout.Space(6);
                 if (GUILayout.Button("Save As...", EditorStyles.toolbarButton)) {
                     EditorWindow.Events.SaveAsRequested?.Invoke();
                 }
 
                 GUILayout.Space(6);
+                
                 if (GUILayout.Button("Show In Project", EditorStyles.toolbarButton)) {
                     EditorWindow.Events.ShowInProjectRequested?.Invoke();
                 }
                 
-                GUILayout.Space(6);
+                /*GUILayout.Space(6);
                 if (GUILayout.Button("Debug", EditorStyles.toolbarButton)) {
                     string current = JsonUtility.ToJson(GraphObject.GraphData);
                     string saved = GraphFrameworkUtility.ReadCompressed(AssetDatabase.GUIDToAssetPath(GraphObject.AssetGuid));
@@ -97,7 +97,7 @@ namespace GeometryGraph.Editor {
 
                 if (GUILayout.Button("Set scale to 1")) {
                     graphView.viewTransform.scale = Vector3.one;
-                }
+                }*/
 
                 GUILayout.FlexibleSpace();
                 AreCategoriesEnabled = GUILayout.Toggle(AreCategoriesEnabled, "Category Colors", EditorStyles.toolbarButton);
