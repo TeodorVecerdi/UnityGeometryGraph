@@ -77,6 +77,7 @@ namespace GeometryGraph.Editor {
             menu.AddItem(new GUIContent("Integer"), false, () => AddInputRow(new IntegerProperty(), true));
             menu.AddItem(new GUIContent("Float"), false, () => AddInputRow(new FloatProperty(), true));
             menu.AddItem(new GUIContent("Vector"), false, () => AddInputRow(new VectorProperty(), true));
+            menu.AddItem(new GUIContent("String"), false, () => AddInputRow(new StringProperty(), true));
             menu.ShowAsContext();
         }
 

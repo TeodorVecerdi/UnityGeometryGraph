@@ -60,6 +60,17 @@ namespace GeometryGraph.Editor {
                     break;
                 }
 
+                case StringProperty stringProperty: {
+                    defaultValueField = new TextField("Default Value") {value = stringProperty.Value};
+                    TextField textField = (TextField) defaultValueField;
+                    textField.RegisterValueChangedCallback(evt => {
+                        editorView.GraphObject.RegisterCompleteObjectUndo($"Change {property.DisplayName} default value");
+                        stringProperty.Value = evt.newValue;
+                        editorView.GraphObject.RuntimeGraph.OnPropertyDefaultValueChanged(stringProperty.GUID, evt.newValue);
+                    });
+                    break;
+                }
+
                 default: throw new ArgumentOutOfRangeException(nameof(property), property, null);
             }
 

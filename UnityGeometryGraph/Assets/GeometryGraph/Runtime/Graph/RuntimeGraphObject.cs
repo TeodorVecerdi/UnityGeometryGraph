@@ -156,6 +156,7 @@ namespace GeometryGraph.Runtime.Graph {
                 case IntegerPropertyNode propertyNode: propertyNode.Property = RuntimeData.Properties.FirstOrGivenDefault(property => property.Guid == propertyGuid, null); break;
                 case FloatPropertyNode propertyNode: propertyNode.Property = RuntimeData.Properties.FirstOrGivenDefault(property => property.Guid == propertyGuid, null); break;
                 case VectorPropertyNode propertyNode: propertyNode.Property = RuntimeData.Properties.FirstOrGivenDefault(property => property.Guid == propertyGuid, null); break;
+                case StringPropertyNode propertyNode: propertyNode.Property = RuntimeData.Properties.FirstOrGivenDefault(property => property.Guid == propertyGuid, null); break;
             }
         }
 
@@ -175,6 +176,7 @@ namespace GeometryGraph.Runtime.Graph {
                     case IntegerPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
                     case FloatPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
                     case VectorPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
+                    case StringPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
                     default: continue;
                 }
             }

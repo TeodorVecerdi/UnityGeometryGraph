@@ -120,6 +120,7 @@ namespace GeometryGraph.Runtime {
                     case IntegerPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
                     case FloatPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
                     case VectorPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
+                    case StringPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
                 }
             }
             
