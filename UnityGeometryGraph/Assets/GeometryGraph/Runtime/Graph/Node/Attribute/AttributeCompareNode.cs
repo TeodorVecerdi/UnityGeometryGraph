@@ -30,6 +30,7 @@ namespace GeometryGraph.Runtime.Graph {
             }
             return Result;
         }
+        
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             if (Geometry == null) {
