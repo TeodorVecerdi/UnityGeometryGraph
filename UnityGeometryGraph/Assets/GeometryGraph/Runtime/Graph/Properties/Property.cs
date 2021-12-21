@@ -21,12 +21,14 @@ namespace GeometryGraph.Runtime.Graph {
         public int IntValue;
         public float FloatValue;
         public float3 VectorValue;
+        public string StringValue;
 
         public T Value<T>() {
             Type tType = typeof(T);
             if (tType == typeof(int)) return (T)(object)IntValue;
             if (tType == typeof(float)) return (T)(object)FloatValue;
             if (tType == typeof(float3)) return (T)(object)VectorValue;
+            if (tType == typeof(string)) return (T)(object)StringValue;
             return (T)(object)null;
         }
 
@@ -39,12 +41,13 @@ namespace GeometryGraph.Runtime.Graph {
                 case PropertyType.Integer: IntValue = (int)value; break;
                 case PropertyType.Float: FloatValue = (float)value; break;
                 case PropertyType.Vector: VectorValue = (float3)value; break;
+                case PropertyType.String: StringValue = (string)value; break;
                 default: throw new ArgumentOutOfRangeException(nameof(propertyType), propertyType, null);
             }
         }
 
         public override string ToString() {
-            return $"Int: `{IntValue}` -- Float: `{FloatValue}` -- Vector: `{VectorValue}`";
+            return $"Int: `{IntValue}` -- Float: `{FloatValue}` -- Vector: `{VectorValue}` -- String: `{StringValue}`";
         }
     }
 }

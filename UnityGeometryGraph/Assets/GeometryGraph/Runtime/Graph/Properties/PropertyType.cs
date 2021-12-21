@@ -8,7 +8,8 @@ namespace GeometryGraph.Runtime.Graph {
         GeometryCollection,
         Integer,
         Float,
-        Vector
+        Vector,
+        String
     }
 
     public static class PropertyUtils {
@@ -19,6 +20,7 @@ namespace GeometryGraph.Runtime.Graph {
                 PropertyType.Integer => typeof(int),
                 PropertyType.Float => typeof(float),
                 PropertyType.Vector => typeof(float3),
+                PropertyType.String => typeof(string),
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
         }
@@ -31,6 +33,7 @@ namespace GeometryGraph.Runtime.Graph {
                 PropertyType.Integer => false,
                 PropertyType.Float => false,
                 PropertyType.Vector => false,
+                PropertyType.String => false,
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
         }

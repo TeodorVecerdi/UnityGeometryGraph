@@ -228,6 +228,7 @@ namespace GeometryGraph.Editor {
                     PropertyType.Integer => "IntValue",
                     PropertyType.Float => "FloatValue",
                     PropertyType.Vector => "VectorValue",
+                    PropertyType.String => "StringValue",
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -478,6 +479,10 @@ namespace GeometryGraph.Editor {
                 }
                 case PropertyType.Vector: {
                     targetProperty.vector3Value = defaultPropertyRelative.vector3Value;
+                    break;
+                }
+                case PropertyType.String: {
+                    targetProperty.stringValue = defaultPropertyRelative.stringValue;
                     break;
                 }
                 default: throw new ArgumentOutOfRangeException();

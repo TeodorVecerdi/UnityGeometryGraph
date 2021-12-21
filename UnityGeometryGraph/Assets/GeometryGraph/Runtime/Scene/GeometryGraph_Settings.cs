@@ -55,6 +55,9 @@ namespace GeometryGraph.Runtime {
                 case PropertyType.Vector:
                     propertyValue.VectorValue = (Vector3) value;
                     break;
+                case PropertyType.String:
+                    propertyValue.StringValue = (string) value;
+                    break;
                 default: throw new ArgumentOutOfRangeException(nameof(propertyValue.PropertyType), propertyValue.PropertyType, null);
             }
         }
@@ -123,12 +126,14 @@ namespace GeometryGraph.Runtime {
         [SerializeField] public int IntValue;
         [SerializeField] public float FloatValue;
         [SerializeField] public Vector3 VectorValue; 
+        [SerializeField] public string StringValue;
         
         [SerializeField] public GeometryObject DefaultObjectValue;
         [SerializeField] public GeometryCollection DefaultCollectionValue;
         [SerializeField] public int DefaultIntValue;
         [SerializeField] public float DefaultFloatValue;
         [SerializeField] public Vector3 DefaultVectorValue;
+        [SerializeField] public string DefaultStringValue;
         //!! Add more here as needed
 
         [SerializeField] public PropertyType PropertyType;
@@ -145,6 +150,7 @@ namespace GeometryGraph.Runtime {
                 PropertyType.Integer => IntValue != DefaultIntValue,
                 PropertyType.Float => Math.Abs(FloatValue - DefaultFloatValue) > Constants.FLOAT_TOLERANCE,
                 PropertyType.Vector => (VectorValue - DefaultVectorValue).sqrMagnitude > Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE,
+                PropertyType.String => StringValue != DefaultStringValue,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -171,6 +177,10 @@ namespace GeometryGraph.Runtime {
                     if (forceUpdate || !HasDefaultValue()) VectorValue = defaultPropertyValue.VectorValue;
                     DefaultVectorValue = defaultPropertyValue.VectorValue;
                     break;
+                case PropertyType.String:
+                    if (forceUpdate || !HasDefaultValue()) StringValue = defaultPropertyValue.StringValue;
+                    DefaultStringValue = defaultPropertyValue.StringValue;
+                    break;
                 default: throw new ArgumentOutOfRangeException(nameof(PropertyType), PropertyType, null);
             }
         }
@@ -182,6 +192,7 @@ namespace GeometryGraph.Runtime {
                 case PropertyType.Integer: return IntValue;
                 case PropertyType.Float: return FloatValue;
                 case PropertyType.Vector: return (float3)VectorValue;
+                case PropertyType.String: return StringValue;
 
                 default: throw new ArgumentOutOfRangeException(nameof(PropertyType), PropertyType, null);
             }
@@ -194,6 +205,7 @@ namespace GeometryGraph.Runtime {
                 PropertyType.Integer => $"{IntValue}",
                 PropertyType.Float => $"{FloatValue}",
                 PropertyType.Vector => $"{VectorValue}",
+                PropertyType.String => $"{StringValue}",
                 _ => throw new ArgumentOutOfRangeException()
             };
             
@@ -203,6 +215,7 @@ namespace GeometryGraph.Runtime {
                 PropertyType.Integer => $"{DefaultIntValue}",
                 PropertyType.Float => $"{DefaultFloatValue}",
                 PropertyType.Vector => $"{DefaultVectorValue}",
+                PropertyType.String => $"{DefaultStringValue}",
                 _ => throw new ArgumentOutOfRangeException()
             };
             
