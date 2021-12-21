@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using GeometryGraph.Runtime.Graph;
+using UnityCommons;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.Searcher;
@@ -35,6 +36,11 @@ namespace GeometryGraph.Editor {
                     graphView.RemoveFromClassList("categorized");
                 }
             }
+        }
+
+        public Vector3 GraphPosition {
+            get => graphView.contentViewContainer.transform.position;
+            set => graphView.contentViewContainer.transform.position = value;
         }
 
         public GraphFrameworkEditorWindow EditorWindow => editorWindow;
@@ -85,6 +91,14 @@ namespace GeometryGraph.Editor {
                     Debug.Log($"RGO: {GraphObject.RuntimeGraph == rgo} ;; {GraphObject.RuntimeGraph.GetInstanceID()} - {(rgo != null ? rgo.GetInstanceID() : -1)}");
                 }
 
+                if (GUILayout.Button("Print Position")) {
+                    Debug.Log($"ContentViewContainer.worldBound: {graphView.contentViewContainer.worldBound}\n.layout: {graphView.contentViewContainer.layout}\n.transform.position: {graphView.contentViewContainer.transform.position}");
+                }
+
+                if (GUILayout.Button("Set Position to 0")) {
+                    graphView.contentViewContainer.transform.position = Vector3.zero;
+                }
+
                 GUILayout.FlexibleSpace();
                 AreCategoriesEnabled = GUILayout.Toggle(AreCategoriesEnabled, "Category Colors", EditorStyles.toolbarButton);
                 IsBlackboardVisible = GUILayout.Toggle(IsBlackboardVisible, "Blackboard", EditorStyles.toolbarButton);
@@ -114,6 +128,8 @@ namespace GeometryGraph.Editor {
                 graphView.Add(blackboardProvider.Blackboard);
 
                 graphView.graphViewChanged += OnGraphViewChanged;
+
+                graphView.contentViewContainer.transform.position = GraphObject.GraphPosition;
             }
 
             searchWindowProvider = ScriptableObject.CreateInstance<SearchWindowProvider>();

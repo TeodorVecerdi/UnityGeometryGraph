@@ -14,6 +14,7 @@ namespace GeometryGraph.Editor {
         [SerializeField] public string AssetGuid;
         [SerializeField] public bool IsBlackboardVisible;
         [SerializeField] public bool AreCategoriesEnabled;
+        [SerializeField] public Vector3 GraphPosition;
         [SerializeField] public string GraphVersion;
         [SerializeReference] public RuntimeGraphObjectData RuntimeGraphData;
 
@@ -61,7 +62,8 @@ namespace GeometryGraph.Editor {
         public void OnBeforeSerialize() {
             if (Owner != null) {
                 IsBlackboardVisible = Owner.IsBlackboardVisible; 
-                AreCategoriesEnabled = Owner.AreCategoriesEnabled; 
+                AreCategoriesEnabled = Owner.AreCategoriesEnabled;
+                GraphPosition = Owner.GraphPosition;
             }
             
             serializedProperties.Clear();

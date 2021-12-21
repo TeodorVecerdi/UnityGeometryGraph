@@ -229,11 +229,10 @@ namespace GeometryGraph.Editor {
         #region Window Events
         private void SaveAsset() {
             graphObject.GraphData.GraphVersion = GraphFrameworkVersion.Version.GetValue();
+            graphObject.GraphPosition = editorView.GraphView.contentViewContainer.transform.position;
             GraphFrameworkUtility.SaveGraph(graphObject, false);
+            
             graphObject.OnAssetSaved();
-            // graphObject = GraphFrameworkUtility.FindGraphAtGuid(selectedAssetGuid);
-            // Refresh();
-            // graphObject.ResetVersion();
             UpdateTitle();
         }
 

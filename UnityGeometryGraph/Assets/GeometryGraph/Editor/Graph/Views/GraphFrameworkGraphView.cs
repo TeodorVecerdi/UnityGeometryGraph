@@ -55,7 +55,7 @@ namespace GeometryGraph.Editor {
             serializeGraphElements = SerializeGraphElementsImpl;
             unserializeAndPaste = UnserializeAndPasteImpl;
             deleteSelection = DeleteSelectionImpl;
-            
+
             GraphViewReflectionHelper.CreateDelegate(this);
         }
 

@@ -12,6 +12,7 @@ namespace GeometryGraph.Editor {
         [SerializeField] public string AssetGuid;
         [SerializeField] public bool IsBlackboardVisible;
         [SerializeField] public bool AreCategoriesEnabled;
+        [SerializeField] public Vector3 GraphPosition;
         [SerializeField] public RuntimeGraphObject RuntimeGraph;
         
         [SerializeField] private string serializedGraph;
@@ -36,6 +37,7 @@ namespace GeometryGraph.Editor {
 
             IsBlackboardVisible = GraphData.IsBlackboardVisible;
             AreCategoriesEnabled = GraphData.AreCategoriesEnabled;
+            GraphPosition = GraphData.GraphPosition;
         }
 
         public bool IsDirty {
