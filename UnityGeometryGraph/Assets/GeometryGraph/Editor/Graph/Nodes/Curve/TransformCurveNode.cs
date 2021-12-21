@@ -91,6 +91,7 @@ namespace GeometryGraph.Editor {
             
             inputContainer.Add(changeClosedToggle);
             isClosedPort.Add(isClosedToggle);
+            AddPort(inputCurvePort);
             AddPort(translationPort);
             inputContainer.Add(translationField);
             AddPort(rotationPort);
