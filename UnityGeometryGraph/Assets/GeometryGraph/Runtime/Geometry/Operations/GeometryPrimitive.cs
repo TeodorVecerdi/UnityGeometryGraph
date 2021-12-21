@@ -12,7 +12,6 @@ namespace GeometryGraph.Runtime.Geometry {
             if (Math.Abs(radius) < 0.001f) radius = 0.001f;
 
             int faceCount = points;
-            int edgeCount = 2 * points;
             List<float3> faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_ext.up).ToList();
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = new bool[faceCount].ToList();
@@ -81,8 +80,7 @@ namespace GeometryGraph.Runtime.Geometry {
             halfSize.y = 0;
 
             int faceCount = 2 * subdivisions * subdivisions;
-            int edgeCount = (subdivisions - 1) * (3 * subdivisions - 1);
-            
+
             List<float3> faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_ext.up).ToList();
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = new bool[faceCount].ToList();
@@ -193,8 +191,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
         public static GeometryData Cube(float3 size) {
             const int faceCount = 12;
-            const int edgeCount = 18;
-            
+
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = new bool[faceCount].ToList();
             
@@ -284,7 +281,6 @@ namespace GeometryGraph.Runtime.Geometry {
             if (Math.Abs(radius) < 0.0f) radius = 0.0f;
 
             int faceCount = 2 * points;
-            int edgeCount = 3 * points;
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = Enumerable.Repeat((false, true), points).SelectMany(pair => new[] { pair.Item1, pair.Item2 }).ToList();
             
@@ -373,7 +369,6 @@ namespace GeometryGraph.Runtime.Geometry {
             if (Math.Abs(height) < 0.0f) height = 0.0f;
 
             int faceCount = 4 * points;
-            int edgeCount = 9 * points;
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = Enumerable.Repeat(0, points).SelectMany(_ => new [] {false, false, true, true}).ToList();
             
@@ -494,7 +489,6 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public static GeometryData IcosahedronSphericalUV() {
-            const int edgeCount = 30;
             const int faceCount = 20;
             const float x = 0.525731112119133606f;
             const float z = 0.850650808352039932f;
@@ -613,7 +607,6 @@ namespace GeometryGraph.Runtime.Geometry {
         }
 
         public static GeometryData Icosahedron() {
-            const int edgeCount = 30;
             const int faceCount = 20;
             const float x = 0.525731112119133606f;
             const float z = 0.850650808352039932f;

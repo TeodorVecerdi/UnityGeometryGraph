@@ -106,9 +106,7 @@ namespace GeometryGraph.Runtime {
 
             for (int i = 0; i < Nodes.Count; i++) {
                 RuntimeNode node = Nodes[i];
-                if (!DeserializingFromJson) {
-                    node.Deserialize(serializedRuntimeNodes[i].CustomData);
-                }
+                node.Deserialize(serializedRuntimeNodes[i].CustomData);
                 
                 foreach (RuntimePort port in node.Ports) {
                     DebugUtility.Log($"Port on {node.GetType().Name} has {port.Connections.Count} connections");
@@ -124,8 +122,7 @@ namespace GeometryGraph.Runtime {
                 }
             }
             
-            for (int i = 0; i < Nodes.Count; i++) {
-                RuntimeNode node = Nodes[i];
+            foreach (RuntimeNode node in Nodes) {
                 if (!DeserializingFromJson) {
                     node.OnAfterDeserialize();
                 }
