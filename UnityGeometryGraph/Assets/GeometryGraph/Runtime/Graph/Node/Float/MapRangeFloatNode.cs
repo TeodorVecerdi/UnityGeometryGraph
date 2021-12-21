@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float ToMax { get; private set; } = 1.0f;
         [Out] public float Result { get; private set; }
 
-        private readonly List<float> results = new List<float>();
+        private readonly List<float> results = new();
         private bool resultsDirty = true;
 
         [GetterMethod(nameof(Result), Inline = true)]

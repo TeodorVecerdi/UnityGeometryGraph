@@ -29,14 +29,14 @@ namespace GeometryGraph.Editor {
         private float a;
         private float b;
 
-        private static readonly SelectionTree compareOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(CompareOperation)).Convert(o => o))) {
+        private static readonly SelectionTree compareOperationTree = new(new List<object>(Enum.GetValues(typeof(CompareOperation)).Convert(o => o))) {
             new SelectionCategory("Operation", false, SelectionCategory.CategorySize.Large) {
-                new SelectionEntry("a < b", 0, false),
-                new SelectionEntry("a ≤ b", 1, false),
-                new SelectionEntry("a > b", 2, false),
-                new SelectionEntry("a ≥ b", 3, true),
-                new SelectionEntry("a = b, within tolerance", 4, false),
-                new SelectionEntry("a ≠ b, within tolerance", 5, false),
+                new("a < b", 0, false),
+                new("a ≤ b", 1, false),
+                new("a > b", 2, false),
+                new("a ≥ b", 3, true),
+                new("a = b, within tolerance", 4, false),
+                new("a ≠ b, within tolerance", 5, false),
             }
         };
 

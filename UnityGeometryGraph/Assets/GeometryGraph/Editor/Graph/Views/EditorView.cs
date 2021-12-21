@@ -11,8 +11,8 @@ using Object = UnityEngine.Object;
 
 namespace GeometryGraph.Editor {
     public class EditorView : VisualElement, IDisposable {
-        public static readonly Vector2 DefaultNodeSize = new Vector2(200, 150);
-        public static readonly Rect DefaultNodePosition = new Rect(Vector2.zero, DefaultNodeSize);
+        public static readonly Vector2 DefaultNodeSize = new(200, 150);
+        public static readonly Rect DefaultNodePosition = new(Vector2.zero, DefaultNodeSize);
 
         private readonly GraphFrameworkGraphView graphView;
         private readonly GraphFrameworkEditorWindow editorWindow;
@@ -52,7 +52,7 @@ namespace GeometryGraph.Editor {
             this.editorWindow = editorWindow;
             this.AddStyleSheet("Styles/Graph");
 
-            IMGUIContainer toolbar = new IMGUIContainer(() => {
+            IMGUIContainer toolbar = new(() => {
                 GUILayout.BeginHorizontal(EditorStyles.toolbar);
                 if (GUILayout.Button("Save Graph", EditorStyles.toolbarButton)) {
                     EditorWindow.Events.SaveRequested?.Invoke();
@@ -109,7 +109,7 @@ namespace GeometryGraph.Editor {
             });
 
             Add(toolbar);
-            VisualElement content = new VisualElement { name = "content" };
+            VisualElement content = new() { name = "content" };
             {
                 graphView = new GraphFrameworkGraphView(this);
                 graphView.SetupZoom(0.05f, 8f);
@@ -120,7 +120,7 @@ namespace GeometryGraph.Editor {
                 graphView.RegisterCallback<KeyDownEvent>(OnKeyDown);
                 content.Add(graphView);
 
-                GridBackground grid = new GridBackground();
+                GridBackground grid = new();
                 graphView.Insert(0, grid);
                 grid.StretchToParentSize();
 
@@ -129,7 +129,7 @@ namespace GeometryGraph.Editor {
 
                 graphView.graphViewChanged += OnGraphViewChanged;
 
-                Vector3 graphPosition = new Vector3(GraphObject.GraphPosition.x, GraphObject.GraphPosition.y, 0.0f);
+                Vector3 graphPosition = new(GraphObject.GraphPosition.x, GraphObject.GraphPosition.y, 0.0f);
                 graphView.viewTransform.position = graphPosition;
                 float zoom = GraphObject.GraphPosition.z.Clamped(0.05f, 8.0f);
                 graphView.viewTransform.scale = new Vector3(zoom, zoom, 1f);
@@ -228,7 +228,7 @@ namespace GeometryGraph.Editor {
                 if (inputPort != null && outputPort != null) {
                     RuntimePort runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     RuntimePort runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    Connection connection = new Connection { Output = runtimeOutput, Input = runtimeInput };
+                    Connection connection = new() { Output = runtimeOutput, Input = runtimeInput };
                     runtimeOutput.Node.NotifyConnectionCreated(connection, runtimeOutput);
                     runtimeInput.Node.NotifyConnectionCreated(connection, runtimeInput);
                 } else {
@@ -292,7 +292,7 @@ namespace GeometryGraph.Editor {
                 if (inputPort != null && outputPort != null) {
                     RuntimePort runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
                     RuntimePort runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    Connection connection = new Connection { Output = runtimeOutput, OutputGuid = runtimeOutput.Guid, Input = runtimeInput, InputGuid = runtimeInput.Guid};
+                    Connection connection = new() { Output = runtimeOutput, OutputGuid = runtimeOutput.Guid, Input = runtimeInput, InputGuid = runtimeInput.Guid};
                     GraphObject.RuntimeGraph.OnConnectionAdded(connection);
                 }
             }

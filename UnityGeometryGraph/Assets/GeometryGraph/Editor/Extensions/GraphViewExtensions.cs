@@ -23,8 +23,8 @@ namespace GeometryGraph.Editor {
                 }
             }
             
-            List<SerializedNode> remappedNodes = new List<SerializedNode>();
-            List<SerializedEdge> remappedEdges = new List<SerializedEdge>();
+            List<SerializedNode> remappedNodes = new();
+            List<SerializedEdge> remappedEdges = new();
             graphFrameworkGraphView.GraphData.Paste(copyPasteData, remappedNodes, remappedEdges);
 
             // Compute the mean of the copied nodes.

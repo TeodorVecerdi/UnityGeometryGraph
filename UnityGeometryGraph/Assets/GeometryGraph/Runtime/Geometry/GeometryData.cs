@@ -70,7 +70,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return clone;
         }
         
-        public static GeometryData Empty => new GeometryData();
+        public static GeometryData Empty => new();
 
         private void FillBuiltinAttributes(
             List<float3> vertices, List<float2> uvs,

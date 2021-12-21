@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public static SerializedRuntimeNode FromRuntimeNode(RuntimeNode node) {
-            SerializedRuntimeNode serializedNode = new SerializedRuntimeNode {
+            SerializedRuntimeNode serializedNode = new() {
                 Guid = node.Guid,
                 Type = node.GetType().FullName,
                 CustomData = node.Serialize(),

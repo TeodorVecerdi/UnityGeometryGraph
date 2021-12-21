@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort maxPort;
         private GraphFrameworkPort resultPort;
 
-        private AnimationCurve curve = new AnimationCurve(UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f));
+        private AnimationCurve curve = new(UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f));
 
         protected override void CreateNode() {
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Value", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));

@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace GeometryGraph.Editor {
     public class GraphFrameworkAssetModificationProcessor : AssetModificationProcessor {
-        public static readonly HashSet<string> DuplicatedAssets = new HashSet<string>();
-        public static readonly HashSet<string> RenamedAssets = new HashSet<string>();
+        public static readonly HashSet<string> DuplicatedAssets = new();
+        public static readonly HashSet<string> RenamedAssets = new();
         private static void OnWillCreateAsset(string assetName) {
             if (!assetName.EndsWith(GraphFrameworkImporter.Extension) && !assetName.EndsWith($"{GraphFrameworkImporter.Extension}.meta")) return;
 

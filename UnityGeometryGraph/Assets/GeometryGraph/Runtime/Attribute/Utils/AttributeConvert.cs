@@ -100,7 +100,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             return geometry.Vertices.Select(vertex => Average(sourceAttribute.Type, vertex.Faces.Select(sourceAttribute.GetValue)));
         }
 
-        private static readonly List<int> edgeIndexList = new List<int>();
+        private static readonly List<int> edgeIndexList = new();
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceToEdge(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.Edges.Select(edge => {
@@ -331,7 +331,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         [MethodImpl(MethodImplOptions.AggressiveInlining)] private static object ConvertType_Vec3Vec2(float3 a) => a.xy;
 
 
-        private static readonly Dictionary<Type, AttributeType> typeConversionDictionary = new Dictionary<Type, AttributeType> {
+        private static readonly Dictionary<Type, AttributeType> typeConversionDictionary = new() {
             { typeof(bool), AttributeType.Boolean },
             { typeof(int), AttributeType.Integer },
             { typeof(float), AttributeType.Float },

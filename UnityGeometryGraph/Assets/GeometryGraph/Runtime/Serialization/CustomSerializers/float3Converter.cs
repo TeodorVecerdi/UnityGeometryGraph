@@ -7,7 +7,7 @@ namespace GeometryGraph.Runtime.Serialization {
     // ReSharper disable once InconsistentNaming
     [UsedImplicitly]
     public class float3Converter : PartialConverter<float3> {
-        public static float3Converter Converter = new float3Converter();
+        public static float3Converter Converter = new();
         
         protected override void ReadValue(ref float3 value, string name, JsonReader reader, JsonSerializer serializer) {
             switch (name) {

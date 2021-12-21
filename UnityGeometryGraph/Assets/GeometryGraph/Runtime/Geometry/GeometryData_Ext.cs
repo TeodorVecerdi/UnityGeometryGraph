@@ -18,7 +18,7 @@ namespace GeometryGraph.Runtime.Geometry {
     
     public partial class GeometryData {
         public static void Merge(GeometryData geometry, Mesh mesh) {
-            GeometryData rhs = new GeometryData(mesh, 179.99f);
+            GeometryData rhs = new(mesh, 179.99f);
             Merge(geometry, rhs);
         }
         
@@ -29,10 +29,10 @@ namespace GeometryGraph.Runtime.Geometry {
             int rhsFaceOffset = lhs.faces.Count;
             int rhsFaceCornerOffset = lhs.faceCorners.Count;
 
-            List<Vertex> rhsVertices = new List<Vertex>();
-            List<Edge> rhsEdges = new List<Edge>();
-            List<Face> rhsFaces = new List<Face>();
-            List<FaceCorner> rhsFaceCorners = new List<FaceCorner>();
+            List<Vertex> rhsVertices = new();
+            List<Edge> rhsEdges = new();
+            List<Face> rhsFaces = new();
+            List<FaceCorner> rhsFaceCorners = new();
             
             rhs.vertices.ForEach(v => {
                 Vertex vertex = (Vertex) v.Clone();

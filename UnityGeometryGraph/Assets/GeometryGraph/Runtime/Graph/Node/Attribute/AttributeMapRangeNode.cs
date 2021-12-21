@@ -91,10 +91,10 @@ namespace GeometryGraph.Runtime.Graph {
                     break;
                 }
                 case AttributeType.Vector2: {
-                    float2 fromMin = new float2(FromMinFloat, FromMinFloat);
-                    float2 fromMax = new float2(FromMaxFloat, FromMaxFloat);
-                    float2 toMin = new float2(ToMinFloat, ToMinFloat);
-                    float2 toMax = new float2(ToMaxFloat, ToMaxFloat);
+                    float2 fromMin = new(FromMinFloat, FromMinFloat);
+                    float2 fromMax = new(FromMaxFloat, FromMaxFloat);
+                    float2 toMin = new(ToMinFloat, ToMinFloat);
+                    float2 toMax = new(ToMaxFloat, ToMaxFloat);
                     
                     Vector2Attribute attribute = Result.GetAttribute<Vector2Attribute>(Attribute, targetDomain);
                     Result.StoreAttribute(attribute!.Yield(value => math.remap(value, fromMin, fromMax, toMin, toMax)).Into<Vector2Attribute>(ResultAttribute, targetDomain));

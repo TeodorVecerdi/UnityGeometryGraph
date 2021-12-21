@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     public class RuntimeGraphObject : ScriptableObject {
-        [SerializeField] public RuntimeGraphObjectData RuntimeData = new RuntimeGraphObjectData();
+        [SerializeField] public RuntimeGraphObjectData RuntimeData = new();
         public static bool DebugEnabled = false;
 
         internal GeometryGraphEvaluationResult Evaluate(GeometryGraphSceneData sceneData) {

@@ -8,7 +8,7 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     public class QuadraticBezierPrimitiveCurveNode : RuntimeNode {
-        private MinMaxInt points = new MinMaxInt(32, Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+        private MinMaxInt points = new(32, Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
         private bool isClosed;
         private float3 start = float3.zero;
         private float3 control = float3_ext.right;
@@ -84,7 +84,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override string Serialize() {
-            JArray array = new JArray {
+            JArray array = new() {
                 (int)points,
                 isClosed ? 1 : 0,
                 JsonConvert.SerializeObject(start, float3Converter.Converter),

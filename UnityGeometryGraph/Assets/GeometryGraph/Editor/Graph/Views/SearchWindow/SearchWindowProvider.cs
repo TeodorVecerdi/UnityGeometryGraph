@@ -36,7 +36,7 @@ namespace GeometryGraph.Editor {
 
         public void GenerateNodeEntries() {
             // First build up temporary data structure containing group & title as an array of strings (the last one is the actual title) and associated node type.
-            List<NodeEntry> nodeEntries = new List<NodeEntry>();
+            List<NodeEntry> nodeEntries = new();
             foreach (Type type in TypeCache.GetTypesDerivedFrom<AbstractNode>()) {
                 if (!type.IsClass || type.IsAbstract)
                     continue;
@@ -51,7 +51,7 @@ namespace GeometryGraph.Editor {
             }
 
             foreach (AbstractProperty property in editorView.GraphObject.GraphData.Properties) {
-                SerializedNode node = new SerializedNode(PropertyUtils.PropertyTypeToNodeType(property.Type), new Rect(Vector2.zero, EditorView.DefaultNodeSize));
+                SerializedNode node = new(PropertyUtils.PropertyTypeToNodeType(property.Type), new Rect(Vector2.zero, EditorView.DefaultNodeSize));
                 node.BuildNode(editorView, editorView.EdgeConnectorListener, false);
                 AbstractNode propertyNode = node.Node;
                 propertyNode.PropertyGuid = property.GUID;
@@ -90,7 +90,7 @@ namespace GeometryGraph.Editor {
                 return;
             }
 
-            List<int> portIndices = new List<int>();
+            List<int> portIndices = new();
             for (int i = 0; i < node.Node.Ports.Count; i++) {
                 if (ConnectedPort.IsCompatibleWith(node.Node.Ports[i]) && ConnectedPort.direction != node.Node.Ports[i].direction && node.Node.Ports[i].PortVisible) {
                     portIndices.Add(i);
@@ -118,7 +118,7 @@ namespace GeometryGraph.Editor {
 
             AbstractNode node = (AbstractNode) Activator.CreateInstance(nodeType);
             node.InitializeNode(null);
-            List<int> portIndices = new List<int>();
+            List<int> portIndices = new();
             for (int i = 0; i < node.Ports.Count; i++) {
                 if (ConnectedPort.IsCompatibleWith(node.Ports[i]) && ConnectedPort.direction != node.Ports[i].direction && node.Ports[i].PortVisible) {
                     portIndices.Add(i);
@@ -142,8 +142,8 @@ namespace GeometryGraph.Editor {
             }
 
             //create empty root for searcher tree 
-            List<SearcherItem> root = new List<SearcherItem>();
-            NodeEntry dummyEntry = new NodeEntry();
+            List<SearcherItem> root = new();
+            NodeEntry dummyEntry = new();
 
             foreach (NodeEntry nodeEntry in CurrentNodeEntries) {
                 SearcherItem parent = null;
@@ -176,7 +176,7 @@ namespace GeometryGraph.Editor {
             }
 
             SearcherDatabase nodeDatabase = SearcherDatabase.Create(root, string.Empty, false);
-            Searcher searcher = new Searcher(nodeDatabase, new SearchWindowAdapter("Create Node"));
+            Searcher searcher = new(nodeDatabase, new SearchWindowAdapter("Create Node"));
             return searcher;
         }
 
@@ -206,7 +206,7 @@ namespace GeometryGraph.Editor {
             if (ConnectedPort != null) {
                 if (nodeEntry.Node == null)
                     node.BuildNode(editorView, null);
-                SerializedEdge edge = new SerializedEdge {
+                SerializedEdge edge = new() {
                     Output = ConnectedPort.node.viewDataKey,
                     Input = node.GUID,
                     OutputPort = ConnectedPort.viewDataKey,

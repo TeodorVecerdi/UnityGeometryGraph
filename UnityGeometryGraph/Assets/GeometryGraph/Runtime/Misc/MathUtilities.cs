@@ -100,17 +100,17 @@ namespace GeometryGraph.Runtime {
 
     public static class float3_ext {
         public static readonly float3 zero = float3.zero;
-        public static readonly float3 one = new float3(1);
-        public static readonly float3 right = new float3(1, 0, 0);
-        public static readonly float3 up = new float3(0, 1, 0);
-        public static readonly float3 forward = new float3(0, 0, 1);
+        public static readonly float3 one = new(1);
+        public static readonly float3 right = new(1, 0, 0);
+        public static readonly float3 up = new(0, 1, 0);
+        public static readonly float3 forward = new(0, 0, 1);
     }
 
     public static class float2_ext {
         public static readonly float2 zero = float2.zero;
-        public static readonly float2 one = new float2(1);
-        public static readonly float2 right = new float2(1, 0);
-        public static readonly float2 up = new float2(0, 1);
+        public static readonly float2 one = new(1);
+        public static readonly float2 right = new(1, 0);
+        public static readonly float2 up = new(0, 1);
     }
 }
 // ReSharper restore InconsistentNaming

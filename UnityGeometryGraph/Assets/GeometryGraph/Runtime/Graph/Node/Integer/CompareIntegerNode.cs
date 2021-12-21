@@ -12,7 +12,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Out] public bool Result {get; private set; }
         [Setting] public CompareIntegerNode_CompareOperation Operation {get; private set; }
         
-        private readonly List<bool> results = new List<bool>();
+        private readonly List<bool> results = new();
         private bool resultsDirty = true;
 
         [GetterMethod(nameof(Result), Inline = true)]

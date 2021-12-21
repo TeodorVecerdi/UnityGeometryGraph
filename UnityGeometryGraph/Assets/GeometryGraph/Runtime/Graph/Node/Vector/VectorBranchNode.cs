@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In(GenerateEquality = false)] public float3 IfFalse { get; private set; }
         [Out] public float3 Result { get; private set; }
 
-        private readonly List<float3> results = new List<float3>();
+        private readonly List<float3> results = new();
         private bool resultsDirty = true;
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;

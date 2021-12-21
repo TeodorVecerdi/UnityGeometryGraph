@@ -28,11 +28,11 @@ namespace GeometryGraph.Editor {
         private Toggle shadeSmoothCapsToggle;
         private EnumSelectionDropdown<CurveToGeometrySettings.CapUVType> capUVTypeDropdown;
         
-        private static readonly SelectionTree capUVTypeTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(CurveToGeometrySettings.CapUVType)).Convert(o => o))) {
+        private static readonly SelectionTree capUVTypeTree = new(new List<object>(Enum.GetValues(typeof(CurveToGeometrySettings.CapUVType)).Convert(o => o))) {
             new SelectionCategory("Cap UV Type", false, SelectionCategory.CategorySize.Medium) {
-                new SelectionEntry("Generate cap UVs in local space (relative to the cap)", 0, false),
-                new SelectionEntry("Generate cap UVs in world space", 1, false),
-                new SelectionEntry("Same as World Space but offset to start at 0,0", 2, false),
+                new("Generate cap UVs in local space (relative to the cap)", 0, false),
+                new("Generate cap UVs in world space", 1, false),
+                new("Same as World Space but offset to start at 0,0", 2, false),
             }
         };
 
@@ -157,7 +157,7 @@ namespace GeometryGraph.Editor {
 
         protected internal override JObject Serialize() {
             JObject root = base.Serialize();
-            JArray array = new JArray {
+            JArray array = new() {
                 rotationOffset,
                 incrementalRotationOffset,
                 closeCaps ? 1 : 0,

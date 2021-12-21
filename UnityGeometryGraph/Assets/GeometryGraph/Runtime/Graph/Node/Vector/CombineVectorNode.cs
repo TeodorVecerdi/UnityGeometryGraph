@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float Z { get; private set; }
         [Out] public float3 Vector { get; private set; }
 
-        private readonly List<float3> results = new List<float3>();
+        private readonly List<float3> results = new();
         private bool resultsDirty = true;
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
@@ -37,7 +37,7 @@ namespace GeometryGraph.Runtime.Graph {
             results.Clear();
             
             for (int i = 0; i < count; i++) {
-                float3 result = new float3(xs[i], ys[i], zs[i]);
+                float3 result = new(xs[i], ys[i], zs[i]);
                 results.Add(result);
                 yield return result;
             }

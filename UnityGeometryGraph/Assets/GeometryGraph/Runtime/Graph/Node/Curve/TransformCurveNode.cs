@@ -50,10 +50,10 @@ namespace GeometryGraph.Runtime.Graph {
             float4x4 matrix = float4x4.TRS(Translation, rotationQuat, Scale);
             float4x4 matrixNormal = float4x4.TRS(float3.zero, rotationQuat, Scale);
 
-            List<float3> position = new List<float3>(Input.Points);
-            List<float3> tangent = new List<float3>(Input.Points);
-            List<float3> normal = new List<float3>(Input.Points);
-            List<float3> binormal = new List<float3>(Input.Points);
+            List<float3> position = new(Input.Points);
+            List<float3> tangent = new(Input.Points);
+            List<float3> normal = new(Input.Points);
+            List<float3> binormal = new(Input.Points);
 
             for (int i = 0; i < Input.Points; i++) {
                 position.Add(math.mul(matrix, Input.Position[i].float4(1.0f)).xyx);

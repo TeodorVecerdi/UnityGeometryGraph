@@ -10,7 +10,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public int IfFalse { get; private set; }
         [Out] public int Result { get; private set; }
         
-        private readonly List<int> results = new List<int>();
+        private readonly List<int> results = new();
         private bool resultsDirty = true;
 
         [GetterMethod(nameof(Result), Inline = true), ]

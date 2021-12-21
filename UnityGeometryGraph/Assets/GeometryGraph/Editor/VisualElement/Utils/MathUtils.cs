@@ -94,7 +94,7 @@ namespace GeometryGraph.Editor.Utils {
         }
 
         public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
-            Quaternion q = new Quaternion();
+            Quaternion q = new();
             q.w = Mathf.Sqrt(Mathf.Max(0.0f, 1f + m[0, 0] + m[1, 1] + m[2, 2])) / 2f;
             q.x = Mathf.Sqrt(Mathf.Max(0.0f, 1f + m[0, 0] - m[1, 1] - m[2, 2])) / 2f;
             q.y = Mathf.Sqrt(Mathf.Max(0.0f, 1f - m[0, 0] + m[1, 1] - m[2, 2])) / 2f;
@@ -154,8 +154,8 @@ namespace GeometryGraph.Editor.Utils {
             Quaternion quatConjugate = GetQuatConjugate(q1);
             Quaternion quatLog1 = GetQuatLog(quatConjugate * q0);
             Quaternion quatLog2 = GetQuatLog(quatConjugate * q2);
-            Quaternion q = new Quaternion((float)(-0.25 * (quatLog1.x + (double)quatLog2.x)), (float)(-0.25 * (quatLog1.y + (double)quatLog2.y)),
-                                          (float)(-0.25 * (quatLog1.z + (double)quatLog2.z)), (float)(-0.25 * (quatLog1.w + (double)quatLog2.w)));
+            Quaternion q = new((float)(-0.25 * (quatLog1.x + (double)quatLog2.x)), (float)(-0.25 * (quatLog1.y + (double)quatLog2.y)),
+                               (float)(-0.25 * (quatLog1.z + (double)quatLog2.z)), (float)(-0.25 * (quatLog1.w + (double)quatLog2.w)));
             return q1 * GetQuatExp(q);
         }
 

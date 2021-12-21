@@ -32,7 +32,7 @@ namespace GeometryGraph.Runtime.Graph {
         [CalculatesAllProperties]
         private void MarkResultsDirty() => resultsDirty = true;
 
-        private readonly List<RGBAlphaPair> results = new List<RGBAlphaPair>();
+        private readonly List<RGBAlphaPair> results = new();
         private bool resultsDirty = true;
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {

@@ -25,7 +25,7 @@ namespace GeometryGraph.Editor {
         /// </summary>
         /// <example><c>"someStringValue"</c> becomes <c>"Some String Value"</c></example>
         public static string DisplayNameString(string value) {
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new();
             int currentWordStart = 0;
             for (int i = 1; i < value.Length - 1; i++) {
                 if (value[i] == '_') {
@@ -50,7 +50,7 @@ namespace GeometryGraph.Editor {
         }
 
         private static Dictionary<Type, Dictionary<ulong, string>> CollectDisplayNameOverrides() {
-            Dictionary<Type, Dictionary<ulong, string>> dict = new Dictionary<Type, Dictionary<ulong, string>>();
+            Dictionary<Type, Dictionary<ulong, string>> dict = new();
             Type enumType = typeof(Enum);
             List<Type> allEnumTypes = typeof(RandomUtilities).Assembly.GetTypes().Where(type => type.IsSubclassOf(enumType))
                                                              .Union(typeof(RuntimeGraphObject).Assembly.GetTypes().Where(type => type.IsSubclassOf(enumType))).ToList();

@@ -107,7 +107,7 @@ namespace GeometryGraph.Editor {
         }
         
         public static Ref<T> MakeRef(T initialValue, Func<T> getValue, Action setValue) {
-            Ref<T> reference = new Ref<T>(initialValue);
+            Ref<T> reference = new(initialValue);
             reference.Bind(getValue, setValue);
             return reference;
         }

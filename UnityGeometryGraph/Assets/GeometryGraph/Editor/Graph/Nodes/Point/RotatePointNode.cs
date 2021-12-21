@@ -54,24 +54,24 @@ namespace GeometryGraph.Editor {
         private AngleMode angleMode;
         private RotationType rotationType = RotationType.Euler;
 
-        private static readonly SelectionTree rotationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(RotationMode)).Convert(o => o))) {
+        private static readonly SelectionTree rotationTree = new(new List<object>(Enum.GetValues(typeof(RotationMode)).Convert(o => o))) {
             new SelectionCategory("Rotation Type", false, SelectionCategory.CategorySize.Normal) {
-                new SelectionEntry("Rotate each point using a vector", 0, false),
-                new SelectionEntry("Rotate each point using an attribute", 1, false)
+                new("Rotate each point using a vector", 0, false),
+                new("Rotate each point using an attribute", 1, false)
             }
         };
         
-        private static readonly SelectionTree axisTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(AxisMode)).Convert(o => o))) {
+        private static readonly SelectionTree axisTree = new(new List<object>(Enum.GetValues(typeof(AxisMode)).Convert(o => o))) {
             new SelectionCategory("Axis Type", false, SelectionCategory.CategorySize.Normal) {
-                new SelectionEntry("Use a vector as the rotation axis", 0, false),
-                new SelectionEntry("Use an attribute as the rotation axis", 1, false)
+                new("Use a vector as the rotation axis", 0, false),
+                new("Use an attribute as the rotation axis", 1, false)
             }
         };
 
-        private static readonly SelectionTree angleTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(AngleMode)).Convert(o => o))) {
+        private static readonly SelectionTree angleTree = new(new List<object>(Enum.GetValues(typeof(AngleMode)).Convert(o => o))) {
             new SelectionCategory("Angle Type", false, SelectionCategory.CategorySize.Normal) {
-                new SelectionEntry("Rotate each point using a float value", 0, false),
-                new SelectionEntry("Rotate each point using an attribute", 1, false)
+                new("Rotate each point using a float value", 0, false),
+                new("Rotate each point using an attribute", 1, false)
             }
         };
 

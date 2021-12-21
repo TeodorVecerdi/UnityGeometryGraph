@@ -113,7 +113,7 @@ namespace GeometryGraph.Editor {
 
         protected internal override JObject Serialize() {
             JObject root = base.Serialize();
-            JArray array = new JArray {
+            JArray array = new() {
                 JsonConvert.SerializeObject(translation, float3Converter.Converter),
                 JsonConvert.SerializeObject(rotation, float3Converter.Converter),
                 JsonConvert.SerializeObject(scale, float3Converter.Converter),

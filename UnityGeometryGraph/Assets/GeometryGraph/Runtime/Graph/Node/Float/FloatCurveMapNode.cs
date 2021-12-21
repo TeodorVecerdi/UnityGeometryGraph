@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
         
         [Out] public float Result { get; private set; }
 
-        private readonly List<float> results = new List<float>();
+        private readonly List<float> results = new();
         private bool resultsDirty = true;
 
         [CalculatesProperty(nameof(Result))]

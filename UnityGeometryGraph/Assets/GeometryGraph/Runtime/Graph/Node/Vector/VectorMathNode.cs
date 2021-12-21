@@ -31,8 +31,8 @@ namespace GeometryGraph.Runtime.Graph {
         [Out] public float3 VectorResult { get; private set; }
         [Out] public float FloatResult { get; private set; }
 
-        private readonly List<float3> vectorResults = new List<float3>();
-        private readonly List<float> floatResults = new List<float>();
+        private readonly List<float3> vectorResults = new();
+        private readonly List<float> floatResults = new();
         private bool vectorResultDirty = true;
         private bool floatResultDirty = true;
         

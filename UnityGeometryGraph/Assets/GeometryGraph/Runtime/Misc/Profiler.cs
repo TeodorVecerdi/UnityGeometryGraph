@@ -8,11 +8,11 @@ using Debug = UnityEngine.Debug;
 
 namespace GeometryGraph.Runtime {
     public class Profiler {
-        private static Stack<ProfileSession> sessionStack = new Stack<ProfileSession>();
-        private static List<ProfileSession> finishedSessions = new List<ProfileSession>();
+        private static Stack<ProfileSession> sessionStack = new();
+        private static List<ProfileSession> finishedSessions = new();
         
         public static IDisposable BeginSession(string name, bool printWhenDone) {
-            ProfileSession session = new ProfileSession(name);
+            ProfileSession session = new(name);
             sessionStack.Push(session);
             return new ProfileSessionDisposable(printWhenDone);
         }
@@ -23,7 +23,7 @@ namespace GeometryGraph.Runtime {
                 return new DummyDisposable();
             }
             
-            StackTrace stack = new StackTrace(1);
+            StackTrace stack = new(1);
             MethodBase stackMethod = stack.GetFrame(0).GetMethod();
             string className = stackMethod.DeclaringType?.Name;
             string methodName = stackMethod.Name;
@@ -33,7 +33,7 @@ namespace GeometryGraph.Runtime {
             if (currentSession.MethodStack.Count > 0) {
                 currentMethod = currentSession.MethodStack.Peek();
             }
-            Method method = new Method($"{className}:{methodName}", currentMethod);
+            Method method = new($"{className}:{methodName}", currentMethod);
             if(currentMethod != null) currentMethod.Children.Add(method);
             currentSession.MethodStack.Push(method);
 
@@ -83,15 +83,15 @@ namespace GeometryGraph.Runtime {
 
     public class ProfileSession {
         public string Name;
-        public readonly Stack<Method> MethodStack = new Stack<Method>();
-        public List<Method> FinishedMethods = new List<Method>();
+        public readonly Stack<Method> MethodStack = new();
+        public List<Method> FinishedMethods = new();
 
         public ProfileSession(string name) {
             Name = name;
         }
 
         public void Print() {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.AppendLine($"PROFILING SESSION [{Name}]");
             foreach (Method finishedMethod in FinishedMethods) {
                 finishedMethod.Print(sb, 0);
@@ -107,7 +107,7 @@ namespace GeometryGraph.Runtime {
         
         public readonly string Name;
         public readonly Method Parent;
-        public readonly List<Method> Children = new List<Method>();
+        public readonly List<Method> Children = new();
         
         public TimeSpan Elapsed => elapsed;
 

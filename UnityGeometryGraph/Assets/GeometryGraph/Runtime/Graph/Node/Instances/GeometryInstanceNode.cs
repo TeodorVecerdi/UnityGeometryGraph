@@ -72,9 +72,9 @@ namespace GeometryGraph.Runtime.Graph {
                     Result = InstancedGeometryData.Empty;
                     return;
                 }
-                Dictionary<int, int> instanceIndices = new Dictionary<int, int>();
-                List<GeometryData> instances = new List<GeometryData>();
-                List<List<InstancedTransformData>> transforms = new List<List<InstancedTransformData>>();
+                Dictionary<int, int> instanceIndices = new();
+                List<GeometryData> instances = new();
+                List<List<InstancedTransformData>> transforms = new();
                 
                 Rand.PushState(CollectionSamplingSeed);
                 for (int i = 0; i < positionAttribute.Count; i++) {

@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 namespace GeometryGraph.Runtime.AttributeSystem {
     [Serializable]
     public class SerializedAttribute {
-        private static readonly JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.None };
+        private static readonly JsonSerializerSettings settings = new() { TypeNameHandling = TypeNameHandling.None };
         private static readonly Type listType = typeof(List<>);
         
         public string Type;
@@ -19,7 +19,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             Type valueType = attribute.ElementType;
             Type listValueType = listType.MakeGenericType(valueType);
 
-            JObject json = new JObject {
+            JObject json = new() {
                 ["n"] = attribute.Name,
                 ["d"] = (int)attribute.Domain,
                 ["v"] = JsonConvert.SerializeObject(attribute.Values, listValueType, Formatting.None, settings),

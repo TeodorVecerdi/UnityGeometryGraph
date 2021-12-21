@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GeometryGraph.Editor {
     [Serializable]
     public struct SemVer : IEquatable<SemVer>, IComparable<SemVer> {
-        public static readonly SemVer Invalid = new SemVer {MAJOR = -1, MINOR = -1, PATCH = -1};
+        public static readonly SemVer Invalid = new() {MAJOR = -1, MINOR = -1, PATCH = -1};
 
         // ReSharper disable once InconsistentNaming
         public int MAJOR;

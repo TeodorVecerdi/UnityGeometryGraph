@@ -83,7 +83,7 @@ namespace GeometryGraph.Editor {
             minField.SetValueWithoutNotify(min);
             maxField.SetValueWithoutNotify(max);
 
-            VisualElement gradientContainer = new VisualElement();
+            VisualElement gradientContainer = new();
             gradientContainer.AddToClassList("gradient-container");
             gradientContainer.Add(gradientField);
             gradientContainer.Add(colorOnlyField);

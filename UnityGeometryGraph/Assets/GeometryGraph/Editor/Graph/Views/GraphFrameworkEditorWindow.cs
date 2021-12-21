@@ -101,7 +101,7 @@ namespace GeometryGraph.Editor {
         }
 
         private bool DisplayDeletedFromDiskDialog() {
-            SaveAsResult saveResult = new SaveAsResult(false, null);
+            SaveAsResult saveResult = new(false, null);
             if (EditorUtility.DisplayDialog("Graph Missing", $"{AssetDatabase.GUIDToAssetPath(selectedAssetGuid)} has been deleted or moved outside of Unity.\n\nWould you like to save your Graph Asset?", "Save As", "Close Window")) {
                 saveResult = SaveAs();
             }

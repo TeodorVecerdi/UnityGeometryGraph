@@ -22,8 +22,8 @@ namespace GeometryGraph.Runtime.Geometry {
         private static GeometryData Subdivide_Impl(GeometryData geometry) {
             if (!geometry.HasAttribute("position", AttributeDomain.Vertex)) return GeometryData.Empty;
             
-            Dictionary<int, (int, int)> edgeDict = new Dictionary<int, (int, int)>();
-            Dictionary<int, int> midPointDict = new Dictionary<int, int>();
+            Dictionary<int, (int, int)> edgeDict = new();
+            Dictionary<int, int> midPointDict = new();
             List<float3> vertexPositions = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex)!.ToList();
             
             List<float2> uvsOriginal;
@@ -31,20 +31,20 @@ namespace GeometryGraph.Runtime.Geometry {
                 uvsOriginal = geometry.GetAttribute<Vector2Attribute>("uv", AttributeDomain.FaceCorner)!.ToList();
             else 
                 uvsOriginal = new float2[geometry.FaceCorners.Count].ToList();
-            List<float2> uvs = new List<float2>();
+            List<float2> uvs = new();
             
             Vector3Attribute faceNormalsOriginal = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face)!;
-            List<float3> faceNormals = new List<float3>();
+            List<float3> faceNormals = new();
             IntAttribute materialIndicesOriginal = geometry.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face)!;
-            List<int> materialIndices = new List<int>();
+            List<int> materialIndices = new();
             BoolAttribute shadeSmoothOriginal = geometry.GetAttribute<BoolAttribute>("shade_smooth", AttributeDomain.Face)!;
-            List<bool> shadeSmooth = new List<bool>();
+            List<bool> shadeSmooth = new();
 
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
-            List<GeometryData.Face> faces = new List<GeometryData.Face>();
-            List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
+            List<GeometryData.Edge> edges = new();
+            List<GeometryData.Face> faces = new();
+            List<GeometryData.FaceCorner> faceCorners = new();
 
-            HashSet<string> builtinFaceAttributeNames = new HashSet<string> { AttributeId.Normal, AttributeId.Material, AttributeId.ShadeSmooth };
+            HashSet<string> builtinFaceAttributeNames = new() { AttributeId.Normal, AttributeId.Material, AttributeId.ShadeSmooth };
             List<(string Name, AttributeType Type, List<object> Values)> allVertexAttributes = geometry.GetAttributes(AttributeDomain.Vertex)
                                                                                                        .Where(attribute => attribute.Name != AttributeId.Position)
                                                                                                        .Select(attribute => (attribute.Name, attribute.Type, attribute.Values)).ToList();
@@ -61,8 +61,8 @@ namespace GeometryGraph.Runtime.Geometry {
                 GeometryData.Edge edge = geometry.Edges[i];
                 
                 float3 midPoint = (vertexPositions[edge.VertA] + vertexPositions[edge.VertB]) * 0.5f;
-                GeometryData.Edge edgeA = new GeometryData.Edge(edge.VertA, vertexPositions.Count, edges.Count);
-                GeometryData.Edge edgeB = new GeometryData.Edge(vertexPositions.Count, edge.VertB, edges.Count + 1);
+                GeometryData.Edge edgeA = new(edge.VertA, vertexPositions.Count, edges.Count);
+                GeometryData.Edge edgeB = new(vertexPositions.Count, edge.VertB, edges.Count + 1);
                 foreach ((string Name, AttributeType Type, List<object> Values, List<object>) edgeAttribute in allEdgeAttributes) {
                     edgeAttribute.Item4.Add(edgeAttribute.Values[edge.SelfIndex]);
                     edgeAttribute.Item4.Add(edgeAttribute.Values[edge.SelfIndex]);
@@ -103,14 +103,14 @@ namespace GeometryGraph.Runtime.Geometry {
                 //!! middle edges
                 (int e_xmym, int e_ymzm, int e_xmzm) = (edges.Count, edges.Count + 1, edges.Count + 2); // will add them later
 
-                GeometryData.Face face0 = new GeometryData.Face(vXm, vYm, vZm, fcIdx++, fcIdx++, fcIdx++, e_xmym, e_ymzm, e_xmzm);
-                GeometryData.Face face1 = new GeometryData.Face(vX, vXm, vZm, fcIdx++, fcIdx++, fcIdx++, e_xxm, e_xmzm, e_xzm);
-                GeometryData.Face face2 = new GeometryData.Face(vXm, vY, vYm, fcIdx++, fcIdx++, fcIdx++, e_xmy, e_yym, e_xmym);
-                GeometryData.Face face3 = new GeometryData.Face(vYm, vZ, vZm, fcIdx++, fcIdx++, fcIdx++, e_ymz, e_zmz, e_ymzm);
+                GeometryData.Face face0 = new(vXm, vYm, vZm, fcIdx++, fcIdx++, fcIdx++, e_xmym, e_ymzm, e_xmzm);
+                GeometryData.Face face1 = new(vX, vXm, vZm, fcIdx++, fcIdx++, fcIdx++, e_xxm, e_xmzm, e_xzm);
+                GeometryData.Face face2 = new(vXm, vY, vYm, fcIdx++, fcIdx++, fcIdx++, e_xmy, e_yym, e_xmym);
+                GeometryData.Face face3 = new(vYm, vZ, vZm, fcIdx++, fcIdx++, fcIdx++, e_ymz, e_zmz, e_ymzm);
 
-                GeometryData.Edge edge_xy = new GeometryData.Edge(vXm, vYm, edges.Count + 0);
-                GeometryData.Edge edge_yz = new GeometryData.Edge(vYm, vZm, edges.Count + 1);
-                GeometryData.Edge edge_xz = new GeometryData.Edge(vXm, vZm, edges.Count + 2);
+                GeometryData.Edge edge_xy = new(vXm, vYm, edges.Count + 0);
+                GeometryData.Edge edge_yz = new(vYm, vZm, edges.Count + 1);
+                GeometryData.Edge edge_xz = new(vXm, vZm, edges.Count + 2);
                 
                 //!! Setup face corners and uvs
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count + 0) {Vert = vXm});
@@ -194,7 +194,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 }
             }
             
-            GeometryData subdivided = new GeometryData(edges, faces, faceCorners, geometry.SubmeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth, uvs);
+            GeometryData subdivided = new(edges, faces, faceCorners, geometry.SubmeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth, uvs);
             
             foreach ((string Name, AttributeType Type, List<object> Values) vertexAttribute in allVertexAttributes) {
                 subdivided.StoreAttribute(vertexAttribute.Values.Into(vertexAttribute.Name, vertexAttribute.Type, AttributeDomain.Vertex), AttributeDomain.Vertex);

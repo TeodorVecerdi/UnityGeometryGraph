@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public BooleanMathNode_Operation Operation { get; private set; }
         [Out] public bool Result { get; private set; }
         
-        private readonly List<bool> results = new List<bool>();
+        private readonly List<bool> results = new();
         private bool resultsDirty = true;
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;

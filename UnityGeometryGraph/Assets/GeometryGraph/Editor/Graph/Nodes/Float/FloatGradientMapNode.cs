@@ -56,7 +56,7 @@ namespace GeometryGraph.Editor {
             SetColorField(gradient.UnityGradient);
             valueField.SetValueWithoutNotify(0.0f);
 
-            VisualElement gradientContainer = new VisualElement();
+            VisualElement gradientContainer = new();
             gradientContainer.AddToClassList("gradient-container");
             gradientContainer.Add(gradientField);
             gradientContainer.Add(colorOnlyField);

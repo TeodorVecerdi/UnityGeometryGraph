@@ -27,9 +27,9 @@ namespace GeometryGraph.Editor {
         }
 
         public VisualElement CreateElement(List<object> valueProvider, Action<object> onSelect, EditorWindow window) {
-            VisualElement root = new VisualElement();
+            VisualElement root = new();
             root.AddToClassList("entry");
-            Button button = new Button(() => {
+            Button button = new(() => {
                 window.Close();
                 onSelect(valueProvider[index]);
             }) { 
@@ -44,7 +44,7 @@ namespace GeometryGraph.Editor {
 
             if (hasSeparator) {
                 root.AddToClassList("has-separator");
-                VisualElement separator = new VisualElement();
+                VisualElement separator = new();
                 separator.AddToClassList("entry-separator");
                 root.Add(separator);
             }

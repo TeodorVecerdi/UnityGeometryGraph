@@ -13,7 +13,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public IntegerMathNode_Operation Operation { get; private set; }
         [Out] public int Result { get; private set; }
 
-        private readonly List<int> results = new List<int>();
+        private readonly List<int> results = new();
         private bool resultsDirty = true;
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;

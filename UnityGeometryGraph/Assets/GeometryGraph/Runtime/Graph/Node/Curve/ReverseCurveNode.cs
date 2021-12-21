@@ -24,9 +24,9 @@ namespace GeometryGraph.Runtime.Graph {
                 return;
             }
 
-            List<float3> newPosition = new List<float3>();
-            List<float3> newTangent = new List<float3>();
-            List<float3> newNormal = new List<float3>();
+            List<float3> newPosition = new();
+            List<float3> newTangent = new();
+            List<float3> newNormal = new();
             
             for (int i = Input.Points - 1; i >= 0; --i) {
                 newPosition.Add(Input.Position[i]);

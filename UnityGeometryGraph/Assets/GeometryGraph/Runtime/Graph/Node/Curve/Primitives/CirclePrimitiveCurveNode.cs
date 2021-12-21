@@ -55,7 +55,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override string Serialize() {
-            JArray array = new JArray {
+            JArray array = new() {
                 (int)points,
                 (float)radius,
             };

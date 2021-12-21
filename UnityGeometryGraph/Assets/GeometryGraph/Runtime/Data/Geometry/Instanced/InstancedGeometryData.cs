@@ -46,7 +46,7 @@ namespace GeometryGraph.Runtime.Data {
             return transformData.Skip(transformStartIndex).Take(transformCount[geometryIndex]);
         }
 
-        public static InstancedGeometryData Empty => new InstancedGeometryData();
+        public static InstancedGeometryData Empty => new();
         
     }
 }

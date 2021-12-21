@@ -14,11 +14,11 @@ namespace GeometryGraph.Runtime {
         
         [SerializeField] public string Guid;
         
-        [NonSerialized, ShowInInspector] public List<RuntimeNode> Nodes = new List<RuntimeNode>();
+        [NonSerialized, ShowInInspector] public List<RuntimeNode> Nodes = new();
         [NonSerialized] public OutputNode OutputNode;
-        [SerializeField] public List<Connection> Connections = new List<Connection>();
-        [SerializeField] public List<Property> Properties = new List<Property>();
-        [SerializeField] private List<SerializedRuntimeNode> serializedRuntimeNodes = new List<SerializedRuntimeNode>();
+        [SerializeField] public List<Connection> Connections = new();
+        [SerializeField] public List<Property> Properties = new();
+        [SerializeField] private List<SerializedRuntimeNode> serializedRuntimeNodes = new();
 
         public int PropertyHashCode {
             get {

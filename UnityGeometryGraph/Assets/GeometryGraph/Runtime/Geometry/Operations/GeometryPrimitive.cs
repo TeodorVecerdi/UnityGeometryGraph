@@ -17,24 +17,24 @@ namespace GeometryGraph.Runtime.Geometry {
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = new bool[faceCount].ToList();
             
-            List<float3> vertexPositions = new List<float3> { float3.zero };
-            List<float2> vertexUvs = new List<float2> { float2_ext.one * 0.5f };
+            List<float3> vertexPositions = new() { float3.zero };
+            List<float2> vertexUvs = new() { float2_ext.one * 0.5f };
             
             for (int i = 0; i < points; i++) {
                 float t = i / (float)(points);
                 float angle = math_ext.TWO_PI * t;
-                float3 circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
+                float3 circlePosition = new(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(radius * circlePosition);
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
             }
 
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
-            List<GeometryData.Face> faces = new List<GeometryData.Face>();
-            List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
+            List<GeometryData.Edge> edges = new();
+            List<GeometryData.Face> faces = new();
+            List<GeometryData.FaceCorner> faceCorners = new();
             
             // Inner Edges
             for (int i = 0; i < points; i++) {
-                GeometryData.Edge edge = new GeometryData.Edge(0, i + 1, i) {
+                GeometryData.Edge edge = new(0, i + 1, i) {
                     FaceA = i,
                     FaceB = (i - 1).mod(points)
                 };
@@ -44,18 +44,18 @@ namespace GeometryGraph.Runtime.Geometry {
             for (int i = 0; i < points; i++) {
                 int v = (i + 2) % (points + 1);
                 if (v == 0) v = 1;
-                GeometryData.Edge edge = new GeometryData.Edge(i + 1, v, i + points) {
+                GeometryData.Edge edge = new(i + 1, v, i + points) {
                     FaceA = i
                 };
                 edges.Add(edge);
             }
 
-            List<float2> uvs = new List<float2>();
+            List<float2> uvs = new();
             // Faces and FCs
             for (int i = 0; i < points; i++) {
                 int v = (i + 2) % (points + 1);
                 if (v == 0) v = 1;
-                GeometryData.Face face = new GeometryData.Face(
+                GeometryData.Face face = new(
                     v, i + 1, 0,
                     i * 3, i * 3 + 1, i * 3 + 2,
                     i, (i + 1) % points, i + points
@@ -87,8 +87,8 @@ namespace GeometryGraph.Runtime.Geometry {
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = new bool[faceCount].ToList();
             
-            List<float3> vertexPositions = new List<float3>();
-            List<float2> vertexUVs = new List<float2>();
+            List<float3> vertexPositions = new();
+            List<float2> vertexUVs = new();
             
             for (int y = 0; y <= subdivisions; y++) {
                 for (int x = 0; x <= subdivisions; x++) {
@@ -97,24 +97,24 @@ namespace GeometryGraph.Runtime.Geometry {
                 }
             }
 
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
-            List<GeometryData.Face> faces = new List<GeometryData.Face>();
-            List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
-            List<float2> uvs = new List<float2>();
+            List<GeometryData.Edge> edges = new();
+            List<GeometryData.Face> faces = new();
+            List<GeometryData.FaceCorner> faceCorners = new();
+            List<float2> uvs = new();
 
             for (int y = 0; y < subdivisions; y++) {
                 for (int x = 0; x < subdivisions; x++) {
                     int vertexIndex = y * (subdivisions + 1) + x;
                     int faceIndex = (y * subdivisions + x) * 2;
-                    GeometryData.Edge edgeA = new GeometryData.Edge(vertexIndex, vertexIndex + 1, edges.Count) {
+                    GeometryData.Edge edgeA = new(vertexIndex, vertexIndex + 1, edges.Count) {
                         FaceA = faceIndex
                     };
 
-                    GeometryData.Edge edgeB = new GeometryData.Edge(vertexIndex, vertexIndex + subdivisions + 1, edges.Count + 1) {
+                    GeometryData.Edge edgeB = new(vertexIndex, vertexIndex + subdivisions + 1, edges.Count + 1) {
                         FaceA = faceIndex
                     };
 
-                    GeometryData.Edge edgeC = new GeometryData.Edge(vertexIndex + 1, vertexIndex + subdivisions + 1, edges.Count + 2) {
+                    GeometryData.Edge edgeC = new(vertexIndex + 1, vertexIndex + subdivisions + 1, edges.Count + 2) {
                         FaceA = faceIndex,
                         FaceB = faceIndex + 1
                     };
@@ -123,9 +123,9 @@ namespace GeometryGraph.Runtime.Geometry {
                     edges.Add(edgeA);
                     edges.Add(edgeC);
 
-                    GeometryData.Face faceA = new GeometryData.Face(vertexIndex + 1, vertexIndex, vertexIndex + subdivisions + 1,
-                                                                    faceCorners.Count, faceCorners.Count + 1, faceCorners.Count + 2, 
-                                                                    c, c + 1, c + 2
+                    GeometryData.Face faceA = new(vertexIndex + 1, vertexIndex, vertexIndex + subdivisions + 1,
+                                                  faceCorners.Count, faceCorners.Count + 1, faceCorners.Count + 2, 
+                                                  c, c + 1, c + 2
                     );
 
                     int eA, eC;
@@ -143,7 +143,7 @@ namespace GeometryGraph.Runtime.Geometry {
                         eC = c + (subdivisions - x) * 3 + x + 1;
                     }
 
-                    GeometryData.Face faceB = new GeometryData.Face(
+                    GeometryData.Face faceB = new(
                         vertexIndex + 1, vertexIndex + subdivisions + 1, vertexIndex + subdivisions + 2, 
                         faceCorners.Count + 3, faceCorners.Count + 4, faceCorners.Count + 5, 
                         eA, c, eC
@@ -167,7 +167,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
                     if (x == subdivisions - 1) {
                         // Right
-                        GeometryData.Edge edgeRight = new GeometryData.Edge(vertexIndex + 1, vertexIndex + subdivisions + 2, edges.Count) {
+                        GeometryData.Edge edgeRight = new(vertexIndex + 1, vertexIndex + subdivisions + 2, edges.Count) {
                             FaceA = faceIndex + 1
                         };
                         edges.Add(edgeRight);
@@ -180,7 +180,7 @@ namespace GeometryGraph.Runtime.Geometry {
                         int faceIndex = (y * subdivisions + x) * 2;
                         
                         // Top
-                        GeometryData.Edge edgeTop = new GeometryData.Edge(vertexIndex + subdivisions + 1, vertexIndex + subdivisions + 2, edges.Count) {
+                        GeometryData.Edge edgeTop = new(vertexIndex + subdivisions + 1, vertexIndex + subdivisions + 2, edges.Count) {
                             FaceA = faceIndex + 1
                         };
                         edges.Add(edgeTop);
@@ -215,7 +215,7 @@ namespace GeometryGraph.Runtime.Geometry {
             float3 down = -float3_ext.up;
             float3 left = -float3_ext.right;
             float3 back = -float3_ext.forward;
-            List<float3> faceNormals = new List<float3> {
+            List<float3> faceNormals = new() {
                 down, down,
                 back, back,
                 float3_ext.right, float3_ext.right, 
@@ -228,7 +228,7 @@ namespace GeometryGraph.Runtime.Geometry {
             float2 zero = float2.zero;
             float2 up = float2_ext.up;
             float2 one = float2_ext.one;
-            List<float2> uvs = new List<float2> {
+            List<float2> uvs = new() {
                 right, zero, one, up, one, zero,
                 zero, up, right, one, right, up, 
                 zero, up, right, one, right, up,
@@ -254,7 +254,7 @@ namespace GeometryGraph.Runtime.Geometry {
             };
 
             int eI = 0;
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge> {
+            List<GeometryData.Edge> edges = new() {
                 new GeometryData.Edge(0, 1, eI++) { FaceA = 1, FaceB = 2 },
                 new GeometryData.Edge(1, 2, eI++) { FaceA = 0, FaceB = 4 },
                 new GeometryData.Edge(2, 3, eI++) { FaceA = 0, FaceB = 6 },
@@ -288,28 +288,28 @@ namespace GeometryGraph.Runtime.Geometry {
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = Enumerable.Repeat((false, true), points).SelectMany(pair => new[] { pair.Item1, pair.Item2 }).ToList();
             
-            List<float3> vertexPositions = new List<float3> { float3.zero, float3_ext.up * height };
-            List<float2> vertexUvs = new List<float2> { float2_ext.one * 0.5f, float2_ext.one * 0.5f };
+            List<float3> vertexPositions = new() { float3.zero, float3_ext.up * height };
+            List<float2> vertexUvs = new() { float2_ext.one * 0.5f, float2_ext.one * 0.5f };
             
             for (int i = 0; i < points; i++) {
                 float t = i / (float)points;
                 float angle = math_ext.TWO_PI * t;
-                float3 circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
+                float3 circlePosition = new(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(radius * circlePosition);
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
             }
 
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
-            List<GeometryData.Face> faces = new List<GeometryData.Face>();
-            List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
+            List<GeometryData.Edge> edges = new();
+            List<GeometryData.Face> faces = new();
+            List<GeometryData.FaceCorner> faceCorners = new();
             
             // Inner and Vertical Edges
             for (int i = 0; i < points; i++) {
-                GeometryData.Edge edge = new GeometryData.Edge(0, i + 2, i) {
+                GeometryData.Edge edge = new(0, i + 2, i) {
                     FaceA = i * 2,
                     FaceB = (i - 1).mod(points) * 2
                 };
-                GeometryData.Edge edgeV = new GeometryData.Edge(1, i + 2, i) {
+                GeometryData.Edge edgeV = new(1, i + 2, i) {
                     FaceA = i * 2 + 1,
                     FaceB = (i - 1).mod(points) * 2 + 1
                 };
@@ -320,20 +320,20 @@ namespace GeometryGraph.Runtime.Geometry {
             for (int i = 0; i < points; i++) {
                 int v = (i + 3) % (points + 2);
                 if (v < 2) v = 2;
-                GeometryData.Edge edge = new GeometryData.Edge(i + 2, v, i + points) {
+                GeometryData.Edge edge = new(i + 2, v, i + points) {
                     FaceA = i * 2,
                     FaceB = i * 2 + 1
                 };
                 edges.Add(edge);
             }
 
-            List<float2> uvs = new List<float2>();
-            List<float3> faceNormals = new List<float3>();
+            List<float2> uvs = new();
+            List<float3> faceNormals = new();
             // Faces and FCs
             for (int i = 0; i < points; i++) {
                 int v = (i + 3) % (points + 2);
                 if (v < 2) v = 2;
-                GeometryData.Face face = new GeometryData.Face(
+                GeometryData.Face face = new(
                     v, 0, i + 2,
                     i * 6, i * 6 + 1, i * 6 + 2,
                     i * 2, i + 2 * points, ((i + 1) * 2) % (2 * points)
@@ -344,7 +344,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 faceNormals.Add(-float3_ext.up);
                 faces.Add(face);
                 
-                GeometryData.Face faceV = new GeometryData.Face(
+                GeometryData.Face faceV = new(
                     v, i + 2, 1,
                     i * 6 + 3, i * 6 + 4, i * 6 + 5,
                     i * 2 + 1, ((i + 1) * 2 + 1) % (2 * points), i + 2 * points
@@ -377,22 +377,22 @@ namespace GeometryGraph.Runtime.Geometry {
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = Enumerable.Repeat(0, points).SelectMany(_ => new [] {false, false, true, true}).ToList();
             
-            List<float3> vertexPositions = new List<float3> { float3.zero, float3_ext.up * height };
-            List<float2> vertexUvs = new List<float2> { float2_ext.one * 0.5f, float2_ext.one * 0.5f };
+            List<float3> vertexPositions = new() { float3.zero, float3_ext.up * height };
+            List<float2> vertexUvs = new() { float2_ext.one * 0.5f, float2_ext.one * 0.5f };
 
             for (int i = 0; i < points; i++) {
                 float t = i / (float)points;
                 float angle = math_ext.TWO_PI * t;
-                float3 circlePosition = new float3(math.cos(angle), 0.0f, math.sin(angle));
+                float3 circlePosition = new(math.cos(angle), 0.0f, math.sin(angle));
                 vertexPositions.Add(bottomRadius * circlePosition);
                 vertexPositions.Add(topRadius * circlePosition + float3_ext.up * height);
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
                 vertexUvs.Add(circlePosition.xz * 0.5f + new float2(0.5f));
             }
 
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
-            List<GeometryData.Face> faces = new List<GeometryData.Face>();
-            List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
+            List<GeometryData.Edge> edges = new();
+            List<GeometryData.Face> faces = new();
+            List<GeometryData.FaceCorner> faceCorners = new();
             
             for (int i = 0; i < points; i++) {
                 edges.Add(new GeometryData.Edge(0, (i + 1) * 2, i + 6 + 0));
@@ -403,8 +403,8 @@ namespace GeometryGraph.Runtime.Geometry {
                 edges.Add(new GeometryData.Edge((i+1) * 2 + 1, ((i + 1) % points + 1) * 2 + 1, i + 6 + 5));
             }
 
-            List<float2> uvs = new List<float2>();
-            List<float3> faceNormals = new List<float3>();
+            List<float2> uvs = new();
+            List<float3> faceNormals = new();
             int fcI = 0;
             
             float2 verticalUVOffset = float2_ext.up * (uvSettings.VerticalRepetitions - 1);
@@ -501,7 +501,7 @@ namespace GeometryGraph.Runtime.Geometry {
             
             List<int> materialIndices = Enumerable.Repeat(0, faceCount).ToList();
             List<bool> shadeSmooth = Enumerable.Repeat(false, faceCount).ToList();
-            List<float3> vertexPositions = new List<float3> {
+            List<float3> vertexPositions = new() {
                 new float3(-x, 0.0f, z),
                 new float3(x, 0.0f, z),
                 new float3(-x, 0.0f, -z),
@@ -517,7 +517,7 @@ namespace GeometryGraph.Runtime.Geometry {
             };
 
             
-            List<float2> vertexUvs = new List<float2>();
+            List<float2> vertexUvs = new();
             foreach(float3 pos in vertexPositions) {
                 float3 n = math.normalize(pos);
                 float u = 0.5f + math.atan2(n.z, n.x) / (math_ext.TWO_PI);
@@ -526,7 +526,7 @@ namespace GeometryGraph.Runtime.Geometry {
             }
 
             int eI = 0;
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge> {
+            List<GeometryData.Edge> edges = new() {
                 new GeometryData.Edge(0, 4, eI++) { FaceA = 0, FaceB = 1 },
                 new GeometryData.Edge(4, 1, eI++) { FaceA = 0, FaceB = 4 },
                 new GeometryData.Edge(1, 0, eI++) { FaceA = 0, FaceB = 14 },
@@ -560,7 +560,7 @@ namespace GeometryGraph.Runtime.Geometry {
             };
 
             int fcIdx = 0;
-            List<GeometryData.Face> faces = new List<GeometryData.Face> {
+            List<GeometryData.Face> faces = new() {
                 new GeometryData.Face(4, 0, 1, fcIdx++, fcIdx++, fcIdx++, 0, 1, 2),
                 new GeometryData.Face(9, 0, 4, fcIdx++, fcIdx++, fcIdx++, 3, 4, 0),
                 new GeometryData.Face(5, 9, 4, fcIdx++, fcIdx++, fcIdx++, 5, 6, 4),
@@ -583,9 +583,9 @@ namespace GeometryGraph.Runtime.Geometry {
                 new GeometryData.Face(2, 7, 11, fcIdx++, fcIdx++, fcIdx++, 17, 28, 22),
             };
 
-            List<float3> normals = new List<float3>();
-            List<float2> uvs = new List<float2>();
-            List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
+            List<float3> normals = new();
+            List<float2> uvs = new();
+            List<GeometryData.FaceCorner> faceCorners = new();
             for (int i = 0; i < faces.Count; i++) {
                 GeometryData.Face face = faces[i];
                 normals.Add(math.normalize(math.cross(vertexPositions[face.VertB] - vertexPositions[face.VertA], vertexPositions[face.VertC] - vertexPositions[face.VertA])));
@@ -597,7 +597,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 faceCorners.Add(new GeometryData.FaceCorner(i) {Vert = face.VertC});
             }
             
-            GeometryData geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, uvs);
+            GeometryData geometry = new(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, uvs);
 
             quaternion rotQuaternion = quaternion.Euler(math.radians(-30), 0, 0);
             float4x4 trs = float4x4.TRS(float3.zero, rotQuaternion, float3_ext.one);
@@ -620,7 +620,7 @@ namespace GeometryGraph.Runtime.Geometry {
             
             List<int> materialIndices = Enumerable.Repeat(0, faceCount).ToList();
             List<bool> shadeSmooth = Enumerable.Repeat(false, faceCount).ToList();
-            List<float3> vertexPositions = new List<float3> {
+            List<float3> vertexPositions = new() {
                 new float3(-x, 0.0f, z),
                 new float3(x, 0.0f, z),
                 new float3(-x, 0.0f, -z),
@@ -636,7 +636,7 @@ namespace GeometryGraph.Runtime.Geometry {
             };
             
             int eI = 0;
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge> {
+            List<GeometryData.Edge> edges = new() {
                 new GeometryData.Edge(0, 4, eI++) { FaceA = 0, FaceB = 1 },
                 new GeometryData.Edge(4, 1, eI++) { FaceA = 0, FaceB = 4 },
                 new GeometryData.Edge(1, 0, eI++) { FaceA = 0, FaceB = 14 },
@@ -670,7 +670,7 @@ namespace GeometryGraph.Runtime.Geometry {
             };
 
             int fcIdx = 0;
-            List<GeometryData.Face> faces = new List<GeometryData.Face> {
+            List<GeometryData.Face> faces = new() {
                 new GeometryData.Face(4, 0, 1, fcIdx++, fcIdx++, fcIdx++, 0, 1, 2),
                 new GeometryData.Face(4, 9, 0, fcIdx++, fcIdx++, fcIdx++, 3, 4, 0),
                 new GeometryData.Face(4, 5, 9, fcIdx++, fcIdx++, fcIdx++, 5, 6, 4),
@@ -695,8 +695,8 @@ namespace GeometryGraph.Runtime.Geometry {
                 new GeometryData.Face(7, 10, 6, fcIdx++, fcIdx++, fcIdx++, 20, 21, 19),
             };
 
-            List<float3> normals = new List<float3>();
-            List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
+            List<float3> normals = new();
+            List<GeometryData.FaceCorner> faceCorners = new();
             for (int i = 0; i < faces.Count; i++) {
                 GeometryData.Face face = faces[i];
                 normals.Add(math.normalize(math.cross(vertexPositions[face.VertB] - vertexPositions[face.VertA], vertexPositions[face.VertC] - vertexPositions[face.VertA])));
@@ -708,7 +708,7 @@ namespace GeometryGraph.Runtime.Geometry {
             // UV unwrapping
             const float sideLength = 0.1818182F; // 1 / 5.5
             const float height = 0.1574592F; // sqrt(3) / 11
-            List<float2> uvs = new List<float2>();
+            List<float2> uvs = new();
             
             // Bottom faces
             for (int i = 0; i <= 4; i++) {
@@ -737,7 +737,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 uvs.Add(new float2(sideLength * 0.5f + sideLength * (i + 1), 2.0f * height));
             }
             
-            GeometryData geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, uvs);
+            GeometryData geometry = new(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, uvs);
 
             quaternion rotQuaternion = quaternion.Euler(math.radians(-30), 0, 0);
             float4x4 trs = float4x4.TRS(float3.zero, rotQuaternion, float3_ext.one);
@@ -756,7 +756,7 @@ namespace GeometryGraph.Runtime.Geometry {
             const float x = 0.525731112119133606f;
             const float z = 0.850650808352039932f;
             
-            List<float3> vertexPositions = new List<float3> {
+            List<float3> vertexPositions = new() {
                 new float3(-x, 0.0f, z),
                 new float3(x, 0.0f, z),
                 new float3(-x, 0.0f, -z),
@@ -771,14 +771,14 @@ namespace GeometryGraph.Runtime.Geometry {
                 new float3(-z, -x, 0.0f)
             };
 
-            List<int> triangles = new List<int> {
+            List<int> triangles = new() {
                 0, 4, 1, 0, 9, 4, 9, 5, 4, 4, 5, 8, 4, 8, 1,
                 8, 10, 1, 8, 3, 10, 5, 3, 8, 5, 2, 3, 2, 7, 3,
                 7, 10, 3, 7, 6, 10, 7, 11, 6, 11, 0, 6, 0, 1, 6,
                 6, 1, 10, 9, 0, 11, 9, 11, 2, 9, 2, 5, 7, 2, 11
             };
 
-            Mesh mesh = new Mesh();
+            Mesh mesh = new();
             mesh.vertices = vertexPositions.Select(v => (Vector3)v).ToArray();
             mesh.triangles = triangles.ToArray();
             mesh.RecalculateNormals();
@@ -803,7 +803,7 @@ namespace GeometryGraph.Runtime.Geometry {
             positionAttribute.Yield(pos => math.normalize(pos) * radius).Into(positionAttribute);
                 
             // Recalculate normals
-            List<float3> newNormals = new List<float3>();
+            List<float3> newNormals = new();
             foreach (GeometryData.Face face in icosphere.Faces) {
                 newNormals.Add(math.normalize(math.cross(positionAttribute[face.VertB] - positionAttribute[face.VertA], positionAttribute[face.VertC] - positionAttribute[face.VertA])));
             }

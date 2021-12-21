@@ -34,11 +34,11 @@ namespace GeometryGraph.Editor {
         private string attributeName;
         private Mode mode;
 
-        private static readonly SelectionTree tree = new SelectionTree(new List<object>(Enum.GetValues(typeof(Mode)).Convert(o => o))) {
+        private static readonly SelectionTree tree = new(new List<object>(Enum.GetValues(typeof(Mode)).Convert(o => o))) {
             new SelectionCategory("Type", false, SelectionCategory.CategorySize.Normal) {
-                new SelectionEntry("Scale each point using a vector", 0, false),
-                new SelectionEntry("Scale each point using a float value", 1, false),
-                new SelectionEntry("Scale each point using an attribute", 2, false)
+                new("Scale each point using a vector", 0, false),
+                new("Scale each point using a float value", 1, false),
+                new("Scale each point using an attribute", 2, false)
             }
         };
 

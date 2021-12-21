@@ -6,13 +6,13 @@ using Gradient = GeometryGraph.Runtime.Data.Gradient;
 namespace GeometryGraph.Runtime.Serialization {
     public static class Serializer {
         public static JObject AnimationCurve(AnimationCurve curve) {
-            JObject data = new JObject {
+            JObject data = new() {
                 ["p"] = (int)curve.PreWrapMode,
                 ["P"] = (int)curve.PostWrapMode
             };
-            JArray keys = new JArray();
+            JArray keys = new();
             foreach (Keyframe key in curve.Keyframes) {
-                JObject keyData = new JObject {
+                JObject keyData = new() {
                     ["t"] = key.time,
                     ["v"] = key.value,
                     ["i"] = key.inTangent,
@@ -32,20 +32,20 @@ namespace GeometryGraph.Runtime.Serialization {
         }
 
         public static JObject Gradient(Gradient gradient) {
-            JObject data = new JObject {
+            JObject data = new() {
                 ["m"] = (int)gradient.Mode
             };
-            JArray colorKeys = new JArray();
+            JArray colorKeys = new();
             foreach (GradientColorKey colorKey in gradient.ColorKeys) {
-                JObject keyData = new JObject {
+                JObject keyData = new() {
                     ["t"] = colorKey.time,
                     ["c"] = Color(colorKey.color),
                 };
                 colorKeys.Add(keyData);
             }
-            JArray alphaKeys = new JArray();
+            JArray alphaKeys = new();
             foreach (GradientAlphaKey alphaKey in gradient.AlphaKeys) {
-                JObject keyData = new JObject {
+                JObject keyData = new() {
                     ["t"] = alphaKey.time,
                     ["a"] = alphaKey.alpha
                 };

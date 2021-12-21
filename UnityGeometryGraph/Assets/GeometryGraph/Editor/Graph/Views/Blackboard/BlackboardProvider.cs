@@ -15,7 +15,7 @@ namespace GeometryGraph.Editor {
         private readonly EditorView editorView;
         private readonly Dictionary<string, BlackboardRow> inputRows;
         private readonly BlackboardSection section;
-        private readonly List<Node> selectedNodes = new List<Node>();
+        private readonly List<Node> selectedNodes = new();
 
         public BlackboardProvider(EditorView editorView) {
             this.editorView = editorView;
@@ -71,7 +71,7 @@ namespace GeometryGraph.Editor {
         }
 
         private void AddItemRequested(Blackboard blackboard) {
-            GenericMenu menu = new GenericMenu();
+            GenericMenu menu = new();
             menu.AddItem(new GUIContent("Geometry Object"), false, () => AddInputRow(new GeometryObjectProperty(), true));
             menu.AddItem(new GUIContent("Geometry Collection"), false, () => AddInputRow(new GeometryCollectionProperty(), true));
             menu.AddItem(new GUIContent("Integer"), false, () => AddInputRow(new IntegerProperty(), true));
@@ -90,8 +90,8 @@ namespace GeometryGraph.Editor {
             }
 
             string propertyTypeName = property.Type.ToString();
-            BlackboardField field = new BlackboardField(exposedIcon, property.DisplayName, propertyTypeName) {userData = property};
-            BlackboardRow row = new BlackboardRow(field, new BlackboardPropertyView(field, editorView, property)) {userData = property};
+            BlackboardField field = new(exposedIcon, property.DisplayName, propertyTypeName) {userData = property};
+            BlackboardRow row = new(field, new BlackboardPropertyView(field, editorView, property)) {userData = property};
             row.AddToClassList($"property-{propertyTypeName}");
             if (index < 0)
                 index = inputRows.Count;
@@ -161,7 +161,7 @@ namespace GeometryGraph.Editor {
 
             foreach (AbstractProperty property in editorView.GraphObject.GraphData.AddedProperties) {
                 AddInputRow(property, index: editorView.GraphObject.GraphData.Properties.IndexOf(property));
-                Property runtimeProperty = new Property{Guid = property.GUID, DisplayName =  property.DisplayName, ReferenceName = property.ReferenceName, Type = property.Type, DefaultValue = new DefaultPropertyValue(property.Type, property.DefaultValue)};
+                Property runtimeProperty = new() {Guid = property.GUID, DisplayName =  property.DisplayName, ReferenceName = property.ReferenceName, Type = property.Type, DefaultValue = new DefaultPropertyValue(property.Type, property.DefaultValue)};
                 editorView.GraphObject.RuntimeGraph.OnPropertyAdded(runtimeProperty);
             }
 

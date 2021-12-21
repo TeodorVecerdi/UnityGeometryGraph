@@ -179,7 +179,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             }
         }
 
-        public new Enumerator GetEnumerator() => new Enumerator(base.GetEnumerator());
+        public new Enumerator GetEnumerator() => new(base.GetEnumerator());
         IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(base.GetEnumerator());
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(base.GetEnumerator());
 
@@ -257,7 +257,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         }
 
         public static void Print(this BaseAttribute attribute) {
-            StringBuilder sb = new StringBuilder($"\"{attribute.Name}\":\n");
+            StringBuilder sb = new($"\"{attribute.Name}\":\n");
             sb.AppendLine($"Config: [{attribute.Domain} ; {attribute.Type}]");
             sb.AppendLine($"Values: {attribute.Values.ToListString()}");
             Debug.Log(sb.ToString());

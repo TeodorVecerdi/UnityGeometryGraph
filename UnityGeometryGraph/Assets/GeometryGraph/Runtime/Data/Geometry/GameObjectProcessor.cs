@@ -20,7 +20,7 @@ namespace GeometryGraph.Runtime.Data {
         protected abstract TChild CollectChild(Transform childTransform);
 
         protected List<TChild> CollectChildren() {
-            List<TChild> list = new List<TChild>();
+            List<TChild> list = new();
             for (int i = 0; i < transform.childCount; i++) {
                 list.Add(CollectChild(transform.GetChild(i)));
             }

@@ -8,7 +8,7 @@ using UnityCommons;
 
 namespace GeometryGraph.Runtime.Graph {
     public class LinePrimitiveCurveNode : RuntimeNode {
-        private MinMaxInt points = new MinMaxInt(2, Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
+        private MinMaxInt points = new(2, Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
         private float3 start = float3.zero;
         private float3 end = float3_ext.right;
         private CurveData curve;
@@ -65,7 +65,7 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public override string Serialize() {
-            JArray array = new JArray {
+            JArray array = new() {
                 (int)points,
                 JsonConvert.SerializeObject(start, float3Converter.Converter),
                 JsonConvert.SerializeObject(end, float3Converter.Converter),

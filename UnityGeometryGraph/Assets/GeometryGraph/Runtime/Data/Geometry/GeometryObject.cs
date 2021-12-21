@@ -50,7 +50,7 @@ namespace GeometryGraph.Runtime.Data {
             );
             Mesh sourceMesh = filter.sharedMesh;
 
-            Mesh mesh = new Mesh();
+            Mesh mesh = new();
             List<Vector3> vertices = sourceMesh.vertices.Select(vertex => (Vector3)(filterLocalToRootLocalMatrix * new Vector4(vertex.x, vertex.y, vertex.z, 1.0f))).ToList();
             List<Vector3> normals = sourceMesh.normals.Select(normal => (rotation * normal).normalized).ToList();
             mesh.SetVertices(vertices);

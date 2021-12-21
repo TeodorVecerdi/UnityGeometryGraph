@@ -27,10 +27,10 @@ namespace GeometryGraph.Editor {
         private int seed;
         private SampleType sampleType;
 
-        private static readonly SelectionTree tree = new SelectionTree(new List<object>(Enum.GetValues(typeof(SampleType)).Convert(o => o))) {
+        private static readonly SelectionTree tree = new(new List<object>(Enum.GetValues(typeof(SampleType)).Convert(o => o))) {
             new SelectionCategory("Sample Type", false, SelectionCategory.CategorySize.Medium) {
-                new SelectionEntry("Get geometry at index", 0, false),
-                new SelectionEntry("Sample at random using seed", 1, false),
+                new("Get geometry at index", 0, false),
+                new("Sample at random using seed", 1, false),
             }
         };
 

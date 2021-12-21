@@ -83,7 +83,7 @@ namespace GeometryGraph.Editor {
             IEnumerable<string> propertyNodeGuids = this.nodes.Where(node => ((AbstractNode)node).IsProperty).Select(node => ((AbstractNode)node).PropertyGuid);
             IEnumerable<AbstractProperty> metaProperties = editorView.GraphObject.GraphData.Properties.Where(x => propertyNodeGuids.Contains(x.GUID));
 
-            CopyPasteData copyPasteData = new CopyPasteData(editorView, nodes, edges, properties, metaProperties);
+            CopyPasteData copyPasteData = new(editorView, nodes, edges, properties, metaProperties);
             return JsonUtility.ToJson(copyPasteData);
         }
 
@@ -119,7 +119,7 @@ namespace GeometryGraph.Editor {
         private void OnContextMenuNodeCreate(DropdownMenuAction a) => GraphViewReflectionHelper.RequestNodeCreation(null, -1, a.eventInfo.mousePosition);
         
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter) {
-            List<Port> compatiblePorts = new List<Port>();
+            List<Port> compatiblePorts = new();
             ports.ForEach(port => {
                 if (startPort != port /*&& startPort.node != port.node*/ && port.direction != startPort.direction &&
                     (startPort as GraphFrameworkPort).IsCompatibleWith(port as GraphFrameworkPort)) {
@@ -177,7 +177,7 @@ namespace GeometryGraph.Editor {
             if (obj is BlackboardField blackboardField) {
                 editorView.GraphObject.RegisterCompleteObjectUndo("Drag Blackboard Field");
                 AbstractProperty property = blackboardField.userData as AbstractProperty;
-                SerializedNode node = new SerializedNode(PropertyUtils.PropertyTypeToNodeType(property.Type), new Rect(nodePosition, EditorView.DefaultNodeSize));
+                SerializedNode node = new(PropertyUtils.PropertyTypeToNodeType(property.Type), new Rect(nodePosition, EditorView.DefaultNodeSize));
                 editorView.GraphObject.GraphData.AddNode(node);
                 node.BuildNode(editorView, editorView.EdgeConnectorListener, false);
 

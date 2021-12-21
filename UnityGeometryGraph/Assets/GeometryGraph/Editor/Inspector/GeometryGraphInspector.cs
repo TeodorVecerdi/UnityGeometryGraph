@@ -62,16 +62,16 @@ namespace GeometryGraph.Editor {
             root.AddStyleSheet("Inspector/gg_common");
             
 
-            VisualElement title = new VisualElement();
+            VisualElement title = new();
             title.AddToClassList("title");
-            Image icon = new Image();
+            Image icon = new();
             icon.AddToClassList("title-icon");
-            Label titleLabel = new Label("Geometry Graph");
+            Label titleLabel = new("Geometry Graph");
             titleLabel.AddToClassList("title-label");
             title.Add(icon);
             title.Add(titleLabel);
 
-            VisualElement content = new VisualElement();
+            VisualElement content = new();
             content.AddToClassList("content");
 
             PropertyField graphPropertyField = new(serializedObject.FindProperty("graph"), "Graph") {
@@ -94,7 +94,7 @@ namespace GeometryGraph.Editor {
             mainContent = new VisualElement();
             mainContent.AddToClassList("main-content");
             
-            Button evaluateButton = new Button(() => {
+            Button evaluateButton = new(() => {
                 targetGraph.Evaluate();
             }) {text = "Evaluate Graph"};
             evaluateButton.AddToClassList("evaluate-button");
@@ -118,23 +118,23 @@ namespace GeometryGraph.Editor {
             missingGraphNotice = new VisualElement { name = "MissingGraphNotice" };
             missingGraphNotice.AddToClassList("d-none");
             
-            Label missingGraphNoticeLabel = new Label("No graph selected");
+            Label missingGraphNoticeLabel = new("No graph selected");
             missingGraphNoticeLabel.AddToClassList("missing-graph-notice-main");
             missingGraphNotice.Add(missingGraphNoticeLabel);
             
-            VisualElement cta = new VisualElement();
+            VisualElement cta = new();
             cta.AddToClassList("missing-graph-notice-cta");
             missingGraphNotice.Add(cta);
             
-            Label missingGraphNoticeCta0 = new Label("Assign one or");
+            Label missingGraphNoticeCta0 = new("Assign one or");
             missingGraphNoticeCta0.AddToClassList("missing-graph-notice-cta-0");
             cta.Add(missingGraphNoticeCta0);
             
-            Button missingGraphNoticeCtaButton = new Button(CreateAndAssignGraph) {text = "create new graph"};
+            Button missingGraphNoticeCtaButton = new(CreateAndAssignGraph) {text = "create new graph"};
             missingGraphNoticeCtaButton.AddToClassList("missing-graph-notice-cta-button");
             cta.Add(missingGraphNoticeCtaButton);
             
-            Label missingGraphNoticeCta1 = new Label(".");
+            Label missingGraphNoticeCta1 = new(".");
             missingGraphNoticeCta1.AddToClassList("missing-graph-notice-cta-1");
             cta.Add(missingGraphNoticeCta1);
         }

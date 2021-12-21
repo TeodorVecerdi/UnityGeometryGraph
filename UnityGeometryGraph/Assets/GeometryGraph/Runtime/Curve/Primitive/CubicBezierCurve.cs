@@ -28,11 +28,11 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
 
         internal override void Generate() {
             int pointCount = PointCount();
-            NativeArray<float3> points = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            NativeArray<float3> tangents = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            NativeArray<float3> normals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            NativeArray<float3> binormals = new NativeArray<float3>(pointCount, Allocator.Persistent);
-            CubicBezierJob job = new CubicBezierJob(points, tangents, normals, binormals, Resolution, start, controlA, controlB, end);
+            NativeArray<float3> points = new(pointCount, Allocator.Persistent);
+            NativeArray<float3> tangents = new(pointCount, Allocator.Persistent);
+            NativeArray<float3> normals = new(pointCount, Allocator.Persistent);
+            NativeArray<float3> binormals = new(pointCount, Allocator.Persistent);
+            CubicBezierJob job = new(points, tangents, normals, binormals, Resolution, start, controlA, controlB, end);
             job.Schedule(pointCount, Environment.ProcessorCount).Complete();
 
             Points = new List<float3>(points);

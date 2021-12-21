@@ -15,7 +15,7 @@ namespace GeometryGraph.Editor {
         public static void CreateObject(string path) {
             RuntimeGraphObject runtimeGraphObject = CreateInstance<RuntimeGraphObject>();
 
-            GraphFrameworkData graphData = new GraphFrameworkData(runtimeGraphObject);
+            GraphFrameworkData graphData = new(runtimeGraphObject);
             GraphFrameworkObject graphObject = CreateInstance<GraphFrameworkObject>();
             
             graphObject.Initialize(graphData);
@@ -32,7 +32,7 @@ namespace GeometryGraph.Editor {
         public override void Action(int instanceId, string pathName, string resourceFile) {
             RuntimeGraphObject runtimeGraphObject = CreateInstance<RuntimeGraphObject>();
 
-            GraphFrameworkData graphData = new GraphFrameworkData(runtimeGraphObject);
+            GraphFrameworkData graphData = new(runtimeGraphObject);
             GraphFrameworkObject graphObject = CreateInstance<GraphFrameworkObject>();
             
             graphObject.Initialize(graphData);

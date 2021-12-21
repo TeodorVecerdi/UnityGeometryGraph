@@ -19,7 +19,7 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        public readonly List<GraphFrameworkPort> Ports = new List<GraphFrameworkPort>();
+        public readonly List<GraphFrameworkPort> Ports = new();
         internal EdgeConnectorListener EdgeConnectorListener;
 
         public override bool expanded {

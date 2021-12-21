@@ -9,10 +9,10 @@ namespace GeometryGraph.Runtime.Serialization {
         public static AnimationCurve AnimationCurve(JObject data) {
             WrapMode preWrapMode = (WrapMode)data["p"].Value<int>();
             WrapMode postWrapMode = (WrapMode)data["P"].Value<int>();
-            List<Keyframe> keyframes = new List<Keyframe>();
+            List<Keyframe> keyframes = new();
             foreach (JObject keyData in data["k"] as JArray) {
                 Debug.Assert(keyData != null);
-                Keyframe keyframe = new Keyframe {
+                Keyframe keyframe = new() {
                     time = keyData["t"].Value<float>(),
                     value = keyData["v"].Value<float>(),
                     inTangent = keyData["i"].Value<float>(),
@@ -32,8 +32,8 @@ namespace GeometryGraph.Runtime.Serialization {
         
         public static Gradient Gradient(JObject data) {
             GradientMode mode = (GradientMode)data["m"].Value<int>();
-            List<GradientColorKey> colorKeys = new List<GradientColorKey>();
-            List<GradientAlphaKey> alphaKeys = new List<GradientAlphaKey>();
+            List<GradientColorKey> colorKeys = new();
+            List<GradientAlphaKey> alphaKeys = new();
             
             foreach (JObject keyData in data["c"] as JArray) {
                 Debug.Assert(keyData != null);

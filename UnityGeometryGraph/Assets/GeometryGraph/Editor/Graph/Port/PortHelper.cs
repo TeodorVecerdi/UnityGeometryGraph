@@ -13,7 +13,7 @@ namespace GeometryGraph.Editor {
         }
         
         // !! Update Runtime.PortValueConverter.Convert when adding stuff to this!
-        private static readonly HashSet<(PortType, PortType)> compatiblePortTypes = new HashSet<(PortType, PortType)>(new PortTypeEqualityComparer()) {
+        private static readonly HashSet<(PortType, PortType)> compatiblePortTypes = new(new PortTypeEqualityComparer()) {
             (PortType.Float, PortType.Integer), 
             (PortType.Float, PortType.Boolean), 
             (PortType.Integer, PortType.Float),

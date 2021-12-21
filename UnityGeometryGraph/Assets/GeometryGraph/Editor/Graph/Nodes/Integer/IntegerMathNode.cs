@@ -31,33 +31,33 @@ namespace GeometryGraph.Editor {
         private float tolerance;
         private int extra;
 
-        private static readonly SelectionTree mathOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation)).Convert(o => o))) {
+        private static readonly SelectionTree mathOperationTree = new(new List<object>(Enum.GetValues(typeof(Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation)).Convert(o => o))) {
             new SelectionCategory("Operations", false, SelectionCategory.CategorySize.Large) {
-                new SelectionEntry("x + y", 0, false),
-                new SelectionEntry("x - y", 1, false),
-                new SelectionEntry("x * y", 2, false),
-                new SelectionEntry("x / y", 3, false),
-                new SelectionEntry("Floating division x/y", 7, true),
-                new SelectionEntry("Base raised to the power Exponent", 4, false),
-                new SelectionEntry("Logarithm of x in base Base", 5, false),
-                new SelectionEntry("Square root of x", 6, false),
-                new SelectionEntry("Absolute value of x", 8, false),
-                new SelectionEntry("e to the power of x", 9, false),
+                new("x + y", 0, false),
+                new("x - y", 1, false),
+                new("x * y", 2, false),
+                new("x / y", 3, false),
+                new("Floating division x/y", 7, true),
+                new("Base raised to the power Exponent", 4, false),
+                new("Logarithm of x in base Base", 5, false),
+                new("Square root of x", 6, false),
+                new("Absolute value of x", 8, false),
+                new("e to the power of x", 9, false),
             },
             new SelectionCategory("Rounding", true, SelectionCategory.CategorySize.Normal) {
-                new SelectionEntry("The remainder of x / y", 18, false),
-                new SelectionEntry("x wrapped between min and max", 19, false),
-                new SelectionEntry("x snapped to the nearest multiple of increment", 20, false),
+                new("The remainder of x / y", 18, false),
+                new("x wrapped between min and max", 19, false),
+                new("x snapped to the nearest multiple of increment", 20, false),
             },
             new SelectionCategory("Comparison", true, SelectionCategory.CategorySize.Medium) {
-                new SelectionEntry("The minimum between x and y", 10, false),
-                new SelectionEntry("The maximum between x and y", 11, false),
-                new SelectionEntry("1 if x < y; 0 otherwise", 12, false),
-                new SelectionEntry("1 if x > y; 0 otherwise", 13, false),
-                new SelectionEntry("Sign of x", 14, false),
-                new SelectionEntry("1 if x = y; 0 otherwise", 15, false),
-                new SelectionEntry("The minimum between x and y with smoothing", 16, false),
-                new SelectionEntry("The maximum between x and y with smoothing", 17, false),
+                new("The minimum between x and y", 10, false),
+                new("The maximum between x and y", 11, false),
+                new("1 if x < y; 0 otherwise", 12, false),
+                new("1 if x > y; 0 otherwise", 13, false),
+                new("Sign of x", 14, false),
+                new("1 if x = y; 0 otherwise", 15, false),
+                new("The minimum between x and y with smoothing", 16, false),
+                new("The maximum between x and y with smoothing", 17, false),
             },
         };
 

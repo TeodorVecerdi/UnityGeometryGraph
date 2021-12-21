@@ -74,7 +74,7 @@ namespace GeometryGraph.Editor {
                 default: throw new ArgumentOutOfRangeException(nameof(property), property, null);
             }
 
-            TextField referenceNameField = new TextField("Reference Name");
+            TextField referenceNameField = new("Reference Name");
             referenceNameField.SetValueWithoutNotify(property.ReferenceName);
             referenceNameField.RegisterValueChangedCallback(evt => {
                 string newValue = evt.newValue;
@@ -96,7 +96,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void AddRow(VisualElement control) {
-            VisualElement rowView = new VisualElement();
+            VisualElement rowView = new();
             rowView.AddToClassList("rowView");
             
             control.AddToClassList("rowViewControl");

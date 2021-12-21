@@ -38,13 +38,13 @@ namespace GeometryGraph.Editor {
         private float3 eulerAngles;
         private float angle;
 
-        private static readonly SelectionTree compareOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode)).Convert(o => o))) {
+        private static readonly SelectionTree compareOperationTree = new(new List<object>(Enum.GetValues(typeof(Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode)).Convert(o => o))) {
             new SelectionCategory("Rotation Type", false, SelectionCategory.CategorySize.Normal) {
-                new SelectionEntry("", 0, false),
-                new SelectionEntry("", 1, true),
-                new SelectionEntry("", 2, false),
-                new SelectionEntry("", 3, false),
-                new SelectionEntry("", 4, false),
+                new("", 0, false),
+                new("", 1, true),
+                new("", 2, false),
+                new("", 3, false),
+                new("", 4, false),
             }
         };
 

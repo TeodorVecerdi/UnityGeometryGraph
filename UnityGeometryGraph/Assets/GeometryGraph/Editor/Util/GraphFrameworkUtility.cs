@@ -16,7 +16,7 @@ namespace GeometryGraph.Editor {
     public static class GraphFrameworkUtility {
         #region IO Utilities
 
-        private static readonly LZ4EncoderSettings encoderSettings = new LZ4EncoderSettings { CompressionLevel = LZ4Level.L09_HC };
+        private static readonly LZ4EncoderSettings encoderSettings = new() { CompressionLevel = LZ4Level.L09_HC };
 
         public static bool CreateFile(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
             if (graphObject == null || string.IsNullOrEmpty(path)) return false;
@@ -125,14 +125,14 @@ namespace GeometryGraph.Editor {
 
         internal static void WriteCompressed(string value, string path) {
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(value);
-            using MemoryStream byteStream = new MemoryStream(bytes);
+            using MemoryStream byteStream = new(bytes);
             using LZ4EncoderStream lz4Stream = LZ4Stream.Encode(File.Create(path), encoderSettings);
             byteStream.CopyTo(lz4Stream);
         }
 
         internal static string ReadCompressed(string path) {
             using LZ4DecoderStream lz4Stream = LZ4Stream.Decode(File.OpenRead(path));
-            using MemoryStream memoryStream = new MemoryStream();
+            using MemoryStream memoryStream = new();
             lz4Stream.CopyTo(memoryStream);
 
             return System.Text.Encoding.UTF8.GetString(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
@@ -184,14 +184,14 @@ namespace GeometryGraph.Editor {
             escapedDuplicateFormat = escapedDuplicateFormat.Replace(@"\{0}", @"{0}");
             escapedDuplicateFormat = escapedDuplicateFormat.Replace(@"\{1}", @"{1}");
 
-            Regex baseRegex = new Regex(string.Format(escapedDuplicateFormat, @"^(.*)", @"(\d+)"));
+            Regex baseRegex = new(string.Format(escapedDuplicateFormat, @"^(.*)", @"(\d+)"));
 
             Match baseMatch = baseRegex.Match(name);
             if (baseMatch.Success)
                 name = baseMatch.Groups[1].Value;
 
             string baseNameExpression = $@"^{Regex.Escape(name)}";
-            Regex regex = new Regex(string.Format(escapedDuplicateFormat, baseNameExpression, @"(\d+)") + "$");
+            Regex regex = new(string.Format(escapedDuplicateFormat, baseNameExpression, @"(\d+)") + "$");
 
             List<int> existingDuplicateNumbers = existingNamesList.Select(existingName => regex.Match(existingName)).Where(m => m.Success).Select(m => int.Parse(m.Groups[1].Value)).Where(n => n > 0).Distinct().ToList();
 

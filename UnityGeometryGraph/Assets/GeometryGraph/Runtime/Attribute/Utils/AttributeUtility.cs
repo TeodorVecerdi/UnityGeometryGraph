@@ -12,7 +12,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             return systemTypeDictionary[type];
         }
 
-        private static readonly Dictionary<Type, AttributeType> attributeTypeDictionary = new Dictionary<Type, AttributeType> {
+        private static readonly Dictionary<Type, AttributeType> attributeTypeDictionary = new() {
             { typeof(BoolAttribute), AttributeType.Boolean },
             { typeof(IntAttribute), AttributeType.Integer },
             { typeof(FloatAttribute), AttributeType.Float },

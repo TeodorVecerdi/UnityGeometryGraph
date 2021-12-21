@@ -22,13 +22,13 @@ namespace GeometryGraph.Runtime.Curve {
         // Returns a `GeometryData` object composed of only vertices and edges, representing the curve
         internal static GeometryData WithoutProfile(CurveData curve) {
             if (curve.Points == 0) return GeometryData.Empty;
-            List<float3> vertexPositions = new List<float3>();
+            List<float3> vertexPositions = new();
 
             for (int i = 0; i < curve.Points; i++) {
                 vertexPositions.Add(curve.Position[i]);
             }
 
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
+            List<GeometryData.Edge> edges = new();
             for (int i = 0; i < curve.Points - 1; i++) {
                 edges.Add(new GeometryData.Edge(i, i + 1, i));
             }
@@ -37,8 +37,8 @@ namespace GeometryGraph.Runtime.Curve {
                 edges.Add(new GeometryData.Edge(curve.Points - 1, 0, edges.Count));
             }
 
-            GeometryData geometry = new GeometryData(edges, new List<GeometryData.Face>(), new List<GeometryData.FaceCorner>(), 1, vertexPositions,
-                                                     new List<float3>(), new List<int>(), new List<bool>(), new List<float2>());
+            GeometryData geometry = new(edges, new List<GeometryData.Face>(), new List<GeometryData.FaceCorner>(), 1, vertexPositions,
+                                        new List<float3>(), new List<int>(), new List<bool>(), new List<float2>());
 
             geometry.StoreAttribute(curve.Tangent.Into("tangent", AttributeType.Vector3, AttributeDomain.Vertex));
             geometry.StoreAttribute(curve.Normal.Into("normal", AttributeType.Vector3, AttributeDomain.Vertex));
@@ -104,13 +104,13 @@ namespace GeometryGraph.Runtime.Curve {
                 shadeSmooth = Enumerable.Repeat(settings.ShadeSmoothCurve, faceCount).ToList();
             }
             
-            List<float2> uvs = new List<float2>();
-            List<float3> vertexPositions = new List<float3>();
-            List<float3> faceNormals = new List<float3>();
+            List<float2> uvs = new();
+            List<float3> vertexPositions = new();
+            List<float3> faceNormals = new();
             
-            List<GeometryData.Edge> edges = new List<GeometryData.Edge>();
-            List<GeometryData.Face> faces = new List<GeometryData.Face>();
-            List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
+            List<GeometryData.Edge> edges = new();
+            List<GeometryData.Face> faces = new();
+            List<GeometryData.FaceCorner> faceCorners = new();
             
             float rotationOffset = settings.RotationOffset;
             float incrementalRotationOffset = settings.IncrementalRotationOffset;
@@ -416,20 +416,20 @@ namespace GeometryGraph.Runtime.Curve {
             int currentFaceOffset = faces.Count;
 
             for (int i = 2; i <= profile.Points - 2; i++) {
-                GeometryData.Edge edge = new GeometryData.Edge(0, i, edges.Count) {
+                GeometryData.Edge edge = new(0, i, edges.Count) {
                     FaceA = currentFaceOffset + i - 2,
                     FaceB = currentFaceOffset + i - 1,
                 };
                 edges.Add(edge);
             }
             
-            List<float2> vertexUVs = new List<float2>();
-            float2 minUV = new float2(float.MaxValue, float.MaxValue);
-            float2 maxUV = new float2(float.MinValue, float.MinValue);
+            List<float2> vertexUVs = new();
+            float2 minUV = new(float.MaxValue, float.MaxValue);
+            float2 maxUV = new(float.MinValue, float.MinValue);
             for (int i = 0; i < profile.Points; i++) {
                 float uvX = math.dot(profile.Position[i], curve.Normal[0]); // right vector
                 float uvY = math.dot(profile.Position[i], curve.Binormal[0]); // forward vector
-                float2 uv = new float2(uvX, uvY);
+                float2 uv = new(uvX, uvY);
                 vertexUVs.Add(uv);
                 
                 minUV = math.min(minUV, uv);
@@ -455,7 +455,7 @@ namespace GeometryGraph.Runtime.Curve {
             }
 
             // First face
-            GeometryData.Face firstFace = new GeometryData.Face(
+            GeometryData.Face firstFace = new(
                 0, 2, 1,
                 fcIdx++, fcIdx++, fcIdx++,
                 0, profile.Points == 3 ? 2 : currentEdgeOffset, 1 
@@ -483,7 +483,7 @@ namespace GeometryGraph.Runtime.Curve {
 
             int capFaceCount = profile.Points - 2;
             for (int i = 1; i < capFaceCount - 1; i++) {
-                GeometryData.Face face = new GeometryData.Face(
+                GeometryData.Face face = new(
                     0, i + 2, i + 1,
                     fcIdx++, fcIdx++, fcIdx++,
                     currentEdgeOffset + i - 1, currentEdgeOffset + i, i + 1
@@ -509,7 +509,7 @@ namespace GeometryGraph.Runtime.Curve {
 
             // last face
             if (profile.Points > 3) {
-                GeometryData.Face face = new GeometryData.Face(
+                GeometryData.Face face = new(
                     profile.Points - 2, 0, profile.Points - 1,
                     fcIdx++, fcIdx++, fcIdx++,
                     edges.Count - 1, profile.Points - 1, profile.Points - 2
@@ -546,13 +546,13 @@ namespace GeometryGraph.Runtime.Curve {
             int vertexStart = vertexPositions.Count - profile.Points;
             int edgeStart = edges.Count - profile.Points - profile.Points + 3;
             
-            List<float2> vertexUVs = new List<float2>();
-            float2 minUV = new float2(float.MaxValue, float.MaxValue);
-            float2 maxUV = new float2(float.MinValue, float.MinValue);
+            List<float2> vertexUVs = new();
+            float2 minUV = new(float.MaxValue, float.MaxValue);
+            float2 maxUV = new(float.MinValue, float.MinValue);
             for (int i = 0; i < profile.Points; i++) {
                 float uvX = math.dot(profile.Position[i], -curve.Normal[curve.Points - 1]); // right vector
                 float uvY = math.dot(profile.Position[i], curve.Binormal[curve.Points - 1]); // forward vector
-                float2 uv = new float2(uvX, uvY);
+                float2 uv = new(uvX, uvY);
                 vertexUVs.Add(uv);
                 
                 minUV = math.min(minUV, uv);
@@ -578,7 +578,7 @@ namespace GeometryGraph.Runtime.Curve {
             }
             
             for (int i = 2; i <= profile.Points - 2; i++) {
-                GeometryData.Edge edge = new GeometryData.Edge(vertexStart, vertexStart + i, edges.Count) {
+                GeometryData.Edge edge = new(vertexStart, vertexStart + i, edges.Count) {
                     FaceA = currentFaceOffset + i - 2,
                     FaceB = currentFaceOffset + i - 1,
                 };
@@ -586,7 +586,7 @@ namespace GeometryGraph.Runtime.Curve {
             }
             
             // First face
-            GeometryData.Face firstFace = new GeometryData.Face(
+            GeometryData.Face firstFace = new(
                 vertexStart + 2, vertexStart, vertexStart + 1,
                 fcIdx++, fcIdx++, fcIdx++,
                 profile.Points == 3 ? edgeStart + 2 : currentEdgeOffset, edgeStart + 0, edgeStart + 1
@@ -613,7 +613,7 @@ namespace GeometryGraph.Runtime.Curve {
             
             int capFaceCount = profile.Points - 2;
             for (int i = 1; i < capFaceCount - 1; i++) {
-                GeometryData.Face face = new GeometryData.Face(
+                GeometryData.Face face = new(
                     vertexStart + i + 2, vertexStart, vertexStart + i + 1,
                     fcIdx++, fcIdx++, fcIdx++,
                     currentEdgeOffset + i, currentEdgeOffset + i - 1, edgeStart + i + 1
@@ -638,7 +638,7 @@ namespace GeometryGraph.Runtime.Curve {
             
             // Last face
             if (profile.Points > 3) {
-                GeometryData.Face lastFace = new GeometryData.Face(
+                GeometryData.Face lastFace = new(
                     vertexStart + profile.Points - 1, vertexStart, vertexStart + profile.Points - 2,
                     fcIdx++, fcIdx++, fcIdx++,
                     edgeStart + profile.Points - 1, currentEdgeOffset + profile.Points - 4, edgeStart + profile.Points - 2
@@ -668,22 +668,22 @@ namespace GeometryGraph.Runtime.Curve {
             Assert.IsTrue(index.InRange(..alignOn.Points));
 
             float4x4 rotation = float4x4.RotateY(math.radians(rotationOffset));
-            float4x4 align = new float4x4(alignOn.Normal[index].float4(), alignOn.Tangent[index].float4(), alignOn.Binormal[index].float4(), alignOn.Position[index].float4(1.0f));
+            float4x4 align = new(alignOn.Normal[index].float4(), alignOn.Tangent[index].float4(), alignOn.Binormal[index].float4(), alignOn.Position[index].float4(1.0f));
             float4x4 matrix = math.mul(align, rotation);
 
             if (toAlign.Points > kBurstAlignPointsThreshold) {
-                AlignCurveJob job = new AlignCurveJob(burstAlign_positionDst, burstAlign_tangentDst, burstAlign_normalDst, burstAlign_binormalDst,
-                                                      burstAlign_positionSrc, burstAlign_tangentSrc, burstAlign_normalSrc, burstAlign_binormalSrc,
-                                                      matrix);
+                AlignCurveJob job = new(burstAlign_positionDst, burstAlign_tangentDst, burstAlign_normalDst, burstAlign_binormalDst,
+                                        burstAlign_positionSrc, burstAlign_tangentSrc, burstAlign_normalSrc, burstAlign_binormalSrc,
+                                        matrix);
                 job.Schedule(toAlign.Points, Environment.ProcessorCount).Complete();
                 return new CurveData(toAlign.Type, toAlign.Points, toAlign.IsClosed, burstAlign_positionDst.ToList(), burstAlign_tangentDst.ToList(),
                                      burstAlign_normalDst.ToList(), burstAlign_binormalDst.ToList());
             }
 
-            List<float3> position = new List<float3>();
-            List<float3> tangent = new List<float3>();
-            List<float3> normal = new List<float3>();
-            List<float3> binormal = new List<float3>();
+            List<float3> position = new();
+            List<float3> tangent = new();
+            List<float3> normal = new();
+            List<float3> binormal = new();
             for (int i = 0; i < toAlign.Points; i++) {
                 position.Add(math.mul(matrix, toAlign.Position[i].float4(1.0f)).xyz);
                 tangent.Add(math.mul(matrix, toAlign.Tangent[i].float4()).xyz);

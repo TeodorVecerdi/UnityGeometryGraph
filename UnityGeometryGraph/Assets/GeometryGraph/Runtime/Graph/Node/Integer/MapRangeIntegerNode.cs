@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public int ToMax { get; private set; } = 1;
         [Out] public int Result { get; private set; }
         
-        private readonly List<int> results = new List<int>();
+        private readonly List<int> results = new();
         private bool resultsDirty = true;
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;

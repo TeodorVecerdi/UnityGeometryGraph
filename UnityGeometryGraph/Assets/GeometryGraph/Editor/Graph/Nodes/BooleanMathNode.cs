@@ -25,12 +25,12 @@ namespace GeometryGraph.Editor {
         private bool x;
         private bool y;
 
-        private static readonly SelectionTree compareOperationTree = new SelectionTree(new List<object>(Enum.GetValues(typeof(Operation)).Convert(o => o))) {
+        private static readonly SelectionTree compareOperationTree = new(new List<object>(Enum.GetValues(typeof(Operation)).Convert(o => o))) {
             new SelectionCategory("Operation", false, SelectionCategory.CategorySize.Normal) {
-                new SelectionEntry("True if both x and y are true", 0, false),
-                new SelectionEntry("True if either x or y are true", 1, false),
-                new SelectionEntry("True if only one of x and y are true", 2, false),
-                new SelectionEntry("True if x is false", 3, false),
+                new("True if both x and y are true", 0, false),
+                new("True if either x or y are true", 1, false),
+                new("True if only one of x and y are true", 2, false),
+                new("True if x is false", 3, false),
             }
         };
 

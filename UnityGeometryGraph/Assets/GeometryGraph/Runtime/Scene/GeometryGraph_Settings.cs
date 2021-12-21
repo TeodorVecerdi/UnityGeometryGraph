@@ -11,9 +11,9 @@ using UnityEngine;
 namespace GeometryGraph.Runtime {
     [Serializable] 
     internal class GeometryGraphSceneData {
-        [SerializeField] private PropertyDataDictionary propertyData = new PropertyDataDictionary();
-        [SerializeField] private StringDictionary referenceToGuidDictionary = new StringDictionary();
-        [SerializeField] private StringDictionary guidToReferenceDictionary = new StringDictionary();
+        [SerializeField] private PropertyDataDictionary propertyData = new();
+        [SerializeField] private StringDictionary referenceToGuidDictionary = new();
+        [SerializeField] private StringDictionary guidToReferenceDictionary = new();
         [SerializeField] private int propertyHashCode;
 
         internal ReadOnlyDictionary<string, PropertyValue> PropertyData => new(propertyData);
@@ -251,6 +251,6 @@ namespace GeometryGraph.Runtime {
     internal class InstancedGeometrySettings {
         // TODO(#17): Provide a way to add per-instance per-submesh materials
         // Maybe using a List<List<Material>>?
-        public List<Material> Materials = new List<Material>();
+        public List<Material> Materials = new();
     }
 }

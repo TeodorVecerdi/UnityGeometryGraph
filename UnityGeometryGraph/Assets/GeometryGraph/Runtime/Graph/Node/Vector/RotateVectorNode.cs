@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public RotateVectorNode_Mode Mode { get; private set; }
         [Out] public float3 Result { get; private set; }
 
-        private readonly List<float3> results = new List<float3>();
+        private readonly List<float3> results = new();
         private bool resultsDirty = true;
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;

@@ -24,7 +24,7 @@ namespace GeometryGraph.Editor {
         public VisualElement CreateTab(string label) {
             int index = tabButtonsContainer.childCount;
             
-            VisualElement tabContent = new VisualElement();
+            VisualElement tabContent = new();
             tabContent.AddToClassList("tab-content");
             if (index == 0) {
                 tabContent.AddToClassList("tab-content__first");

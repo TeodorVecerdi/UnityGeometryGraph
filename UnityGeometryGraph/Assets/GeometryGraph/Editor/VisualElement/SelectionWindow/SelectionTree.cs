@@ -23,7 +23,7 @@ namespace GeometryGraph.Editor {
         }
 
         public float GetWidth() {
-            List<List<SelectionCategory>> columns = new List<List<SelectionCategory>>{new List<SelectionCategory>()};
+            List<List<SelectionCategory>> columns = new() {new List<SelectionCategory>()};
             int currentColumn = 0;
             foreach (SelectionCategory category in categories) {
                 if (!category.IsStacked) {
@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
         }
 
         public float GetHeight() {
-            List<List<SelectionCategory>> columns = new List<List<SelectionCategory>>{new List<SelectionCategory>()};
+            List<List<SelectionCategory>> columns = new() {new List<SelectionCategory>()};
             int currentColumn = 0;
             foreach (SelectionCategory category in categories) {
                 if (!category.IsStacked) {
@@ -57,7 +57,7 @@ namespace GeometryGraph.Editor {
         }
 
         public VisualElement CreateElement(EditorWindow window, Action<object> onSelect) {
-            VisualElement root = new VisualElement();
+            VisualElement root = new();
             root.AddToClassList("tree-root");
 
             List<int> actualSizes = CalculateActualSizes();
@@ -71,7 +71,7 @@ namespace GeometryGraph.Editor {
         }
 
         private List<int> CalculateActualSizes() {
-            List<int> actualSizes = new List<int>(categories.Select(_ => -1));
+            List<int> actualSizes = new(categories.Select(_ => -1));
             int currentSize = (int)categories[0].Size;
             for (int i = 0; i < categories.Count; i++) {
                 SelectionCategory category = categories[i];

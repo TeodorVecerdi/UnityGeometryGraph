@@ -72,7 +72,7 @@ namespace GeometryGraph.Editor {
 
         protected internal override JObject Serialize() {
             JObject root = base.Serialize();
-            JArray array = new JArray {
+            JArray array = new() {
                 condition ? 1 : 0,
                 ifTrue,
                 ifFalse,

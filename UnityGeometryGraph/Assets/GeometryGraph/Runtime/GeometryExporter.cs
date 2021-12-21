@@ -14,11 +14,11 @@ namespace GeometryGraph.Runtime.Geometry {
         private IntAttribute submeshAttr;
         private BoolAttribute shadeSmoothAttr;
 
-        private List<Vector3> vertices = new List<Vector3>();
-        private List<Vector3> normals = new List<Vector3>();
-        private List<Vector2> uvs = new List<Vector2>();
-        private List<List<int>> triangles = new List<List<int>>();
-        private HashSet<int> exportedFaces = new HashSet<int>();
+        private List<Vector3> vertices = new();
+        private List<Vector3> normals = new();
+        private List<Vector2> uvs = new();
+        private List<List<int>> triangles = new();
+        private HashSet<int> exportedFaces = new();
         private GeometryData geometry;
 
         public void Export(GeometryData geometry, Mesh mesh) {

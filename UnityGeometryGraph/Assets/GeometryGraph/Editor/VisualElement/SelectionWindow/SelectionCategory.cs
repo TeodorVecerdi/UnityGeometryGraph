@@ -29,18 +29,18 @@ namespace GeometryGraph.Editor {
         }
 
         public VisualElement CreateElement(List<object> valueProvider, CategorySize realSize, Action<object> onSelect, EditorWindow window) {
-            VisualElement selectionCategory = new VisualElement();
+            VisualElement selectionCategory = new();
             selectionCategory.AddToClassList("category");
             switch (realSize) {
                 case CategorySize.Medium: selectionCategory.AddToClassList("md"); break;
                 case CategorySize.Large: selectionCategory.AddToClassList("lg"); break;
                 case CategorySize.ExtraLarge: selectionCategory.AddToClassList("xl"); break;
             }
-            Label titleLabel = new Label(title);
+            Label titleLabel = new(title);
             titleLabel.AddToClassList("category-title");
             selectionCategory.Add(titleLabel);
 
-            VisualElement entriesContainer = new VisualElement();
+            VisualElement entriesContainer = new();
             entriesContainer.AddToClassList("entries-container");
             selectionCategory.Add(entriesContainer);
 

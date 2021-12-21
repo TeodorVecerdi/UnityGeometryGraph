@@ -5,8 +5,8 @@ using UnityEngine;
 namespace GeometryGraph.Runtime.Serialization {
     [Serializable]
     public class SerializedDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver {
-        [SerializeField] private List<TKey> keys = new List<TKey>();
-        [SerializeField] private List<TValue> values = new List<TValue>();
+        [SerializeField] private List<TKey> keys = new();
+        [SerializeField] private List<TValue> values = new();
 
         public void OnBeforeSerialize() {
             keys.Clear();

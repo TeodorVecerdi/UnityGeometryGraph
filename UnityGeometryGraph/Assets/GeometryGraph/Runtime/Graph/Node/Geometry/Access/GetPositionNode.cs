@@ -10,7 +10,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public GeometryData Geometry { get; private set; }
         [Out] public float3 Position { get; private set; }
         
-        private readonly List<float3> results = new List<float3>();
+        private readonly List<float3> results = new();
         private bool resultsDirty = true;
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;

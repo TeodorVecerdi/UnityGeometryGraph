@@ -12,12 +12,12 @@ namespace GeometryGraph.Editor {
             AddToClassList("enum-selection-dropdown");
             button = new Button();
             button.AddToClassList("enum-dropdown-button");
-            VisualElement arrow = new VisualElement();
+            VisualElement arrow = new();
             arrow.AddToClassList("arrow-down");
             button.Add(arrow);
 
             if (label != null) {
-                Label labelElement = new Label(label);
+                Label labelElement = new(label);
                 Add(labelElement);
                 AddToClassList("with-label");
             }
