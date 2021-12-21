@@ -17,6 +17,7 @@ namespace GeometryGraph.Runtime.Graph {
             }
 
             LoadScenePropertyValues(sceneData.PropertyData);
+            NotifyPorts();
             GeometryData geometry = RuntimeData.OutputNode.GetGeometryData();
             CurveData curve = RuntimeData.OutputNode.GetCurveData();
             InstancedGeometryData instancedGeometry = RuntimeData.OutputNode.GetInstancedGeometryData();
@@ -166,9 +167,11 @@ namespace GeometryGraph.Runtime.Graph {
                 property.Value = propertyData[property.Guid].GetValue();
                 DebugUtility.Log($"Set Property {property.DisplayName}/{property.Type} value to [{property.Value}]");
             }
+        }
 
-            DebugUtility.Log("Announcing port value changes on property nodes");
-            // Call NotifyPortValueChanged on all property nodes
+        private void NotifyPorts() {
+            DebugUtility.Log("Announcing port value changes on property nodes and Time nodes");
+            
             foreach (RuntimeNode runtimeNode in RuntimeData.Nodes) {
                 switch (runtimeNode) {
                     case GeometryObjectPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
@@ -177,6 +180,7 @@ namespace GeometryGraph.Runtime.Graph {
                     case FloatPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
                     case VectorPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
                     case StringPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;
+                    case TimeNode timeNode: timeNode.NotifyAllPorts(); break;
                     default: continue;
                 }
             }
