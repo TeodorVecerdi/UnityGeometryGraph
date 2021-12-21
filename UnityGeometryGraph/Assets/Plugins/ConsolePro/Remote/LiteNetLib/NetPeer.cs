@@ -336,6 +336,7 @@ namespace FlyingWormConsole3.LiteNetLib
         private void SendPacket(NetPacket packet)
         {
             NetUtils.DebugWrite("[RS]Packet: " + packet.Property);
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (packet.Property)
             {
                 case PacketProperty.Reliable:
@@ -534,6 +535,7 @@ namespace FlyingWormConsole3.LiteNetLib
             _timeSinceLastPacket = 0;
 
             NetUtils.DebugWrite("[RR]PacketProperty: {0}", packet.Property);
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (packet.Property)
             {
                 case PacketProperty.ConnectRequest:
@@ -636,6 +638,7 @@ namespace FlyingWormConsole3.LiteNetLib
 
         private static bool CanMerge(PacketProperty property)
         {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (property)
             {
                 case PacketProperty.ConnectAccept:

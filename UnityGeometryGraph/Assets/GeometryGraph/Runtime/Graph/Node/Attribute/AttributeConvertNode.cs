@@ -52,6 +52,7 @@ namespace GeometryGraph.Runtime.Graph {
                     AttributeConvertNode_Domain.Edge => AttributeDomain.Edge,
                     AttributeConvertNode_Domain.Face => AttributeDomain.Face,
                     AttributeConvertNode_Domain.FaceCorner => AttributeDomain.FaceCorner,
+                    AttributeConvertNode_Domain.Auto => throw new Exception("Unreachable"),
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }
@@ -71,6 +72,7 @@ namespace GeometryGraph.Runtime.Graph {
                     AttributeConvertNode_Type.Integer => AttributeType.Integer,
                     AttributeConvertNode_Type.Vector => AttributeType.Vector3,
                     AttributeConvertNode_Type.Boolean => AttributeType.Boolean,
+                    AttributeConvertNode_Type.Auto => throw new Exception("Unreachable"),
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }

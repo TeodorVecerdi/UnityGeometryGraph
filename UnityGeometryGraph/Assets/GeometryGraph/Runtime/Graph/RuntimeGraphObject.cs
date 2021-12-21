@@ -76,6 +76,7 @@ namespace GeometryGraph.Runtime.Graph {
                 case PropertyType.Integer:
                 case PropertyType.Float:
                 case PropertyType.Vector:
+                case PropertyType.String:
                     property.DefaultValue = new DefaultPropertyValue(property.Type, newValue);
                     break;
                 default: throw new ArgumentOutOfRangeException(nameof(property.Type), property.Type, null);

@@ -351,6 +351,7 @@ namespace FlyingWormConsole3.LiteNetLib
 
         private void ProcessEvent(NetEvent evt)
         {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (evt.Type)
             {
                 case NetEventType.Connect:

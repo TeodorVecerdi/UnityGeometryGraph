@@ -76,6 +76,7 @@ namespace GeometryGraph.Editor {
         
         private static ulong ToUInt64(object value)
         {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (Convert.GetTypeCode(value))
             {
                 case TypeCode.SByte:

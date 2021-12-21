@@ -22,24 +22,28 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     AttributeDomain.Edge => ConvertDomain_VertexToEdge(geometry, sourceAttribute),
                     AttributeDomain.Face => ConvertDomain_VertexToFace(geometry, sourceAttribute),
                     AttributeDomain.FaceCorner => ConvertDomain_VertexToFaceCorner(geometry, sourceAttribute),
+                    AttributeDomain.Vertex => throw new Exception("Unreachable"),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeDomain.Edge => to switch {
                     AttributeDomain.Vertex => ConvertDomain_EdgeToVertex(geometry, sourceAttribute),
                     AttributeDomain.Face => ConvertDomain_EdgeToFace(geometry, sourceAttribute),
                     AttributeDomain.FaceCorner => ConvertDomain_EdgeToFaceCorner(geometry, sourceAttribute),
+                    AttributeDomain.Edge => throw new Exception("Unreachable"),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeDomain.Face => to switch {
                     AttributeDomain.Vertex => ConvertDomain_FaceToVertex(geometry, sourceAttribute),
                     AttributeDomain.Edge => ConvertDomain_FaceToEdge(geometry, sourceAttribute),
                     AttributeDomain.FaceCorner => ConvertDomain_FaceToFaceCorner(geometry, sourceAttribute),
+                    AttributeDomain.Face => throw new Exception("Unreachable"),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeDomain.FaceCorner => to switch {
                     AttributeDomain.Vertex => ConvertDomain_FaceCornerToVertex(geometry, sourceAttribute),
                     AttributeDomain.Edge => ConvertDomain_FaceCornerToEdge(geometry, sourceAttribute),
                     AttributeDomain.Face => ConvertDomain_FaceCornerToFace(geometry, sourceAttribute),
+                    AttributeDomain.FaceCorner => throw new Exception("Unreachable"),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(sourceAttribute.Domain), sourceAttribute.Domain, null)
@@ -162,6 +166,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                 AttributeType.ClampedFloat => Average(values.Convert(o => (float)o)).Clamped01(),
                 AttributeType.Vector2 => Average(values.Convert(o => (float2)o)),
                 AttributeType.Vector3 => Average(values.Convert(o => (float3)o)),
+                AttributeType.Invalid => MiscUtilities.CallThenReturn(() => Debug.LogError("Invalid attribute type."), 0.0f),
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
         }
@@ -225,6 +230,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     AttributeType.ClampedFloat => (T)ConvertType_BoolClampedFloat((bool)value),
                     AttributeType.Vector2 => (T)ConvertType_BoolVec2((bool)value),
                     AttributeType.Vector3 => (T)ConvertType_BoolVec3((bool)value),
+                    AttributeType.Invalid => throw new ArgumentOutOfRangeException(nameof(to), to, null),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeType.Integer => to switch {
@@ -234,6 +240,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     AttributeType.ClampedFloat => (T)ConvertType_IntClampedFloat((int)value),
                     AttributeType.Vector2 => (T)ConvertType_IntVec2((int)value),
                     AttributeType.Vector3 => (T)ConvertType_IntVec3((int)value),
+                    AttributeType.Invalid => throw new ArgumentOutOfRangeException(nameof(to), to, null),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeType.Float => to switch {
@@ -243,6 +250,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     AttributeType.ClampedFloat => (T)ConvertType_FloatClampedFloat((float)value),
                     AttributeType.Vector2 => (T)ConvertType_FloatVec2((float)value),
                     AttributeType.Vector3 => (T)ConvertType_FloatVec3((float)value),
+                    AttributeType.Invalid => throw new ArgumentOutOfRangeException(nameof(to), to, null),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeType.ClampedFloat => to switch {
@@ -252,6 +260,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     AttributeType.ClampedFloat => (T)value,
                     AttributeType.Vector2 => (T)ConvertType_ClampedFloatVec2((float)value),
                     AttributeType.Vector3 => (T)ConvertType_ClampedFloatVec3((float)value),
+                    AttributeType.Invalid => throw new ArgumentOutOfRangeException(nameof(to), to, null),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeType.Vector2 => to switch {
@@ -261,6 +270,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     AttributeType.ClampedFloat => (T)ConvertType_Vec2ClampedFloat((float2)value),
                     AttributeType.Vector2 => (T)value,
                     AttributeType.Vector3 => (T)ConvertType_Vec2Vec3((float2)value),
+                    AttributeType.Invalid => throw new ArgumentOutOfRangeException(nameof(to), to, null),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
                 AttributeType.Vector3 => to switch {
@@ -270,8 +280,10 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     AttributeType.ClampedFloat => (T)ConvertType_Vec3ClampedFloat((float3)value),
                     AttributeType.Vector2 => (T)ConvertType_Vec3Vec2((float3)value),
                     AttributeType.Vector3 => (T)value,
+                    AttributeType.Invalid => throw new ArgumentOutOfRangeException(nameof(to), to, null),
                     _ => throw new ArgumentOutOfRangeException(nameof(to), to, null)
                 },
+                AttributeType.Invalid => throw new ArgumentOutOfRangeException(nameof(to), to, null),
                 _ => throw new ArgumentOutOfRangeException(nameof(from), from, null)
             };
         }

@@ -41,6 +41,8 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
                 CurveType.QuadraticBezier => CurvePrimitive.QuadraticBezier(Resolution, false, Start, ControlA, End),
                 CurveType.CubicBezier => CurvePrimitive.CubicBezier(Resolution, false, Start, ControlA, ControlB, End),
                 CurveType.Helix => CurvePrimitive.Helix(Resolution, Rotations, Pitch, TopRadius, Radius),
+                CurveType.None => throw new ArgumentOutOfRangeException(),
+                CurveType.Unknown => throw new ArgumentOutOfRangeException(),
                 _ => throw new ArgumentOutOfRangeException()
             };
             if (visualizer != null) visualizer.Load(CurveData);
