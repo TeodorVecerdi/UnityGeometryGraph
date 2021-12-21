@@ -229,7 +229,7 @@ namespace GeometryGraph.Editor {
         #region Window Events
         private void SaveAsset() {
             graphObject.GraphData.GraphVersion = GraphFrameworkVersion.Version.GetValue();
-            graphObject.GraphPosition = editorView.GraphView.contentViewContainer.transform.position;
+            graphObject.GraphPosition = new Vector3(editorView.GraphView.viewTransform.position.x, editorView.GraphView.viewTransform.position.y, editorView.GraphView.viewTransform.scale.x);
             GraphFrameworkUtility.SaveGraph(graphObject, false);
             
             graphObject.OnAssetSaved();

@@ -39,8 +39,8 @@ namespace GeometryGraph.Editor {
         }
 
         public Vector3 GraphPosition {
-            get => graphView.contentViewContainer.transform.position;
-            set => graphView.contentViewContainer.transform.position = value;
+            get => graphView.viewTransform.position;
+            set => graphView.viewTransform.position = value;
         }
 
         public GraphFrameworkEditorWindow EditorWindow => editorWindow;
@@ -91,12 +91,12 @@ namespace GeometryGraph.Editor {
                     Debug.Log($"RGO: {GraphObject.RuntimeGraph == rgo} ;; {GraphObject.RuntimeGraph.GetInstanceID()} - {(rgo != null ? rgo.GetInstanceID() : -1)}");
                 }
 
-                if (GUILayout.Button("Print Position")) {
-                    Debug.Log($"ContentViewContainer.worldBound: {graphView.contentViewContainer.worldBound}\n.layout: {graphView.contentViewContainer.layout}\n.transform.position: {graphView.contentViewContainer.transform.position}");
+                if (GUILayout.Button("Print scale")) {
+                    Debug.Log(graphView.viewTransform.scale);
                 }
 
-                if (GUILayout.Button("Set Position to 0")) {
-                    graphView.contentViewContainer.transform.position = Vector3.zero;
+                if (GUILayout.Button("Set scale to 1")) {
+                    graphView.viewTransform.scale = Vector3.one;
                 }
 
                 GUILayout.FlexibleSpace();
@@ -129,7 +129,10 @@ namespace GeometryGraph.Editor {
 
                 graphView.graphViewChanged += OnGraphViewChanged;
 
-                graphView.contentViewContainer.transform.position = GraphObject.GraphPosition;
+                Vector3 graphPosition = new Vector3(GraphObject.GraphPosition.x, GraphObject.GraphPosition.y, 0.0f);
+                graphView.viewTransform.position = graphPosition;
+                float zoom = GraphObject.GraphPosition.z.Clamped(0.05f, 8.0f);
+                graphView.viewTransform.scale = new Vector3(zoom, zoom, 1f);
             }
 
             searchWindowProvider = ScriptableObject.CreateInstance<SearchWindowProvider>();
