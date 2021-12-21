@@ -16,7 +16,7 @@ namespace GeometryGraph.Runtime.Graph {
         private readonly List<bool> results = new List<bool>();
         private bool resultsDirty = true;
 
-        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly]
+        [GetterMethod(nameof(Result), Inline = true)]
         private bool GetResult() {
             return CalculateResult(A, B);
         }

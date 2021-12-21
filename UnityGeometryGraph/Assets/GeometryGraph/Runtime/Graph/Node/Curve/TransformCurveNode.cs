@@ -32,7 +32,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         [Out] public CurveData Result { get; private set; }
         
-        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly] 
+        [GetterMethod(nameof(Result), Inline = true)] 
         private CurveData GetResult() => Result ?? CurveData.Empty;
 
         protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {

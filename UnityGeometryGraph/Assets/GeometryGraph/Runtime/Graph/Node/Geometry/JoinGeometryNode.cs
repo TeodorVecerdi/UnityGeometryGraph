@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime.Graph {
             PortName = "InputPort",
             UpdateValueCode = "",
             GetValueCode = ""
-        ), UsedImplicitly]
+        )]
         public GeometryData Input { get; private set; }
 
         [Out] public GeometryData Result { get; private set; }

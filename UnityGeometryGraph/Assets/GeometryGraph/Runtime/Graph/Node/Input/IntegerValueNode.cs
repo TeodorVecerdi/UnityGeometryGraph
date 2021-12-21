@@ -6,6 +6,6 @@ namespace GeometryGraph.Runtime.Graph {
     public partial class IntegerValueNode {
         [Setting] public int Value { get; private set; }
         [Out(PortName = "ValuePort")] public int Result { get; private set; }
-        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly] private int GetResult() => Value;
+        [GetterMethod(nameof(Result), Inline = true)] private int GetResult() => Value;
     }
 }

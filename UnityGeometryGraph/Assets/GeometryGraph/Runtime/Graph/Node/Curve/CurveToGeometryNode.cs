@@ -30,7 +30,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         [Out] public GeometryData Result { get; private set; }
 
-        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly]
+        [GetterMethod(nameof(Result), Inline = true)]
         private GeometryData GetResult() {
             if (Result == null) CalculateResult();
             return Result;

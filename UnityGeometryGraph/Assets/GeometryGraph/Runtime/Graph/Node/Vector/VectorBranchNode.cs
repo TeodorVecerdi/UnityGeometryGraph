@@ -17,7 +17,7 @@ namespace GeometryGraph.Runtime.Graph {
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
-        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly]
+        [GetterMethod(nameof(Result), Inline = true)]
         private float3 GetResult() => Condition ? IfTrue : IfFalse;
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {

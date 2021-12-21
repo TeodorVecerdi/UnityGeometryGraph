@@ -16,9 +16,9 @@ namespace GeometryGraph.Runtime.Graph {
 
         [CalculatesAllProperties] private void MarkVectorsDirty() => vectorsDirty = true;
 
-        [GetterMethod(nameof(X), Inline = true), UsedImplicitly] private float GetX() => Vector.x;
-        [GetterMethod(nameof(Y), Inline = true), UsedImplicitly] private float GetY() => Vector.y;
-        [GetterMethod(nameof(Z), Inline = true), UsedImplicitly] private float GetZ() => Vector.z;
+        [GetterMethod(nameof(X), Inline = true)] private float GetX() => Vector.x;
+        [GetterMethod(nameof(Y), Inline = true)] private float GetY() => Vector.y;
+        [GetterMethod(nameof(Z), Inline = true)] private float GetZ() => Vector.z;
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
             if (count <= 0) yield break;

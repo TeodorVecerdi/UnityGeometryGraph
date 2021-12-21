@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
         private readonly List<float> results = new List<float>();
         private bool resultsDirty = true;
 
-        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly]
+        [GetterMethod(nameof(Result), Inline = true)]
         private float GetResult() => Condition ? IfTrue : IfFalse;
         
         [CalculatesProperty(nameof(Result))]

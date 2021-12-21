@@ -21,7 +21,7 @@ namespace GeometryGraph.Runtime.Graph {
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
-        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly]
+        [GetterMethod(nameof(Result), Inline = true)]
         private float3 GetResult() {
             return CalculateResult(Vector, Center, Axis, EulerAngles, Angle);
         }

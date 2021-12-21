@@ -16,10 +16,10 @@ namespace GeometryGraph.Runtime.Graph {
         [Out] public int Points { get; private set; }
         [Out] public bool IsClosed { get; private set; }
 
-        [GetterMethod(nameof(Points), Inline = true), UsedImplicitly] 
+        [GetterMethod(nameof(Points), Inline = true)] 
         private int GetPoints() => Curve?.Points ?? 0;
         
-        [GetterMethod(nameof(IsClosed), Inline = true), UsedImplicitly] 
+        [GetterMethod(nameof(IsClosed), Inline = true)] 
         private bool GetIsClosed() => Curve?.IsClosed ?? false;
     }
 }

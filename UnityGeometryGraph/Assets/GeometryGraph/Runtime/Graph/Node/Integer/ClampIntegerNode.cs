@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
         private readonly List<int> results = new List<int>();
         private bool resultsDirty = true;
 
-        [GetterMethod(nameof(Result), Inline = true), UsedImplicitly]
+        [GetterMethod(nameof(Result), Inline = true)]
         private int GetResult() => Input.Clamped(Min, Max);
         
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
