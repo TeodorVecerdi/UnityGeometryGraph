@@ -85,6 +85,9 @@ namespace GeometryGraph.Editor {
                 name = "meshFilter-field"
             };
             meshFilterPropertyField.Bind(serializedObject);
+            meshFilterPropertyField.RegisterValueChangeCallback(evt => {
+                serializedObject.FindProperty("initializedMeshFilter").boolValue = false;
+            });
             content.Add(meshFilterPropertyField);
             
 
