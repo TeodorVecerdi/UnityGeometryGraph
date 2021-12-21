@@ -72,14 +72,13 @@ namespace GeometryGraph.Editor {
         public void OnBeforeSerialize() {
             if (Node == null)
                 return;
-            Node.OnNodeSerialized();
             NodeData = Node.Serialize().ToString(Formatting.None);
+            Node.OnNodeSerialized();
         }
 
         public void OnAfterDeserialize() {
             if (Node == null)
                 return;
-            Node.OnNodeDeserialized();
             if (!string.IsNullOrEmpty(NodeData)) {
                 try {
                     Node.Deserialize(JObject.Parse(NodeData));
@@ -89,6 +88,7 @@ namespace GeometryGraph.Editor {
                     Node.Deserialize(Node.Serialize());
                 }
             }
+            Node.OnNodeDeserialized();
         }
     }
 }
