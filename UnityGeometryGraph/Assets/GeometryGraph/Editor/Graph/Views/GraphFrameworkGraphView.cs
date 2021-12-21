@@ -1,11 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GeometryGraph.Editor {
+    internal static class GraphViewReflectionHelper {
+        private static readonly MethodInfo requestNodeCreationMethodInfo = typeof(GraphView).GetMethod("RequestNodeCreation", BindingFlags.Instance | BindingFlags.NonPublic);
+        public static Action<VisualElement, int, Vector2> RequestNodeCreation { get; private set; }
+        
+        public static void CreateDelegate(GraphView instance) {
+            RequestNodeCreation = (Action<VisualElement, int, Vector2>)requestNodeCreationMethodInfo.CreateDelegate(typeof(Action<VisualElement, int, Vector2>), instance);
+        }
+        
+    }
+    
     public class GraphFrameworkGraphView : GraphView {
         private EditorView editorView;
         public EditorView EditorView => editorView;
@@ -15,23 +27,23 @@ namespace GeometryGraph.Editor {
 
         protected override bool canCutSelection {
             get {
-                bool onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
+                bool onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new[] { GraphOutputNode });
                 return !onlyOutputNode && base.canCutSelection;
             }
         }
 
         protected override bool canDuplicateSelection {
             get {
-                bool onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
-                return !onlyOutputNode && base.canCutSelection;
+                bool onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new[] { GraphOutputNode });
+                return !onlyOutputNode && base.canDuplicateSelection;
             }
         }
 
         protected override bool canCopySelection {
             get {
-                bool onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new [] {GraphOutputNode});
+                bool onlyOutputNode = selection.OfType<AbstractNode>().SequenceEqual(new[] { GraphOutputNode });
                 if (onlyOutputNode) return false;
-                
+
                 return selection.OfType<AbstractNode>().Any() || selection.OfType<Group>().Any() || selection.OfType<BlackboardField>().Any();
             }
         }
@@ -43,6 +55,8 @@ namespace GeometryGraph.Editor {
             serializeGraphElements = SerializeGraphElementsImpl;
             unserializeAndPaste = UnserializeAndPasteImpl;
             deleteSelection = DeleteSelectionImpl;
+            
+            GraphViewReflectionHelper.CreateDelegate(this);
         }
 
         private void UnserializeAndPasteImpl(string operation, string data) {
@@ -53,16 +67,16 @@ namespace GeometryGraph.Editor {
 
         private string SerializeGraphElementsImpl(IEnumerable<GraphElement> elements) {
             List<GraphElement> elementsList = elements.ToList();
-            IEnumerable<SerializedNode> nodes = 
+            IEnumerable<SerializedNode> nodes =
                 elementsList
-                        .OfType<AbstractNode>()
-                        .Where(node => !(node is OutputNode))
-                        .Select(x => x.Owner);
+                    .OfType<AbstractNode>()
+                    .Where(node => !(node is OutputNode))
+                    .Select(x => x.Owner);
             IEnumerable<SerializedEdge> edges =
                 elementsList
-                        .OfType<Edge>()
-                        .Where(edge => !(edge.output.node is OutputNode || edge.input.node is OutputNode))
-                        .Select(x => x.userData).OfType<SerializedEdge>();
+                    .OfType<Edge>()
+                    .Where(edge => !(edge.output.node is OutputNode || edge.input.node is OutputNode))
+                    .Select(x => x.userData).OfType<SerializedEdge>();
             IEnumerable<AbstractProperty> properties = selection.OfType<BlackboardField>().Select(x => x.userData as AbstractProperty);
 
             // Collect the property nodes and get the corresponding properties
@@ -74,25 +88,41 @@ namespace GeometryGraph.Editor {
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt) {
-            base.BuildContextualMenu(evt);
+            if (evt.target is GraphView && nodeCreationRequest != null) {
+                evt.menu.AppendAction("Create Node _Space", new Action<DropdownMenuAction>(this.OnContextMenuNodeCreate), DropdownMenuAction.AlwaysEnabled);
+                evt.menu.AppendSeparator();
+            }
+
+            if (evt.target is GraphView or Node or Group or BlackboardField)
+                evt.menu.AppendAction("Cut %x", _ => CutSelectionCallback(),
+                                      _ => canCutSelection ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            if (evt.target is GraphView or Node or Group or BlackboardField)
+                evt.menu.AppendAction("Copy %c", _ => CopySelectionCallback(),
+                                      _ => canCopySelection ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            if (evt.target is GraphView)
+                evt.menu.AppendAction("Paste %v", _ => PasteCallback(),
+                                      _ =>
+                                          canPaste ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            if (evt.target is GraphView or Node or Group or Edge or BlackboardField) {
+                evt.menu.AppendSeparator();
+                evt.menu.AppendAction("Delete _Delete", _ => DeleteSelectionCallback(AskUser.DontAskUser),
+                                      _ => canDeleteSelection ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            }
+
+            if (evt.target is not GraphView && evt.target is not Node && evt.target is not Group && evt.target is not BlackboardField)
+                return;
             evt.menu.AppendSeparator();
-            if (evt.target is Node || evt.target is StickyNote) {
-                // TODO/NOTE: GROUP
-                evt.menu.AppendAction("Group Selection %g", _ => { }, actionStatusCallback => DropdownMenuAction.Status.Disabled);
-
-                // TODO/NOTE: UNGROUP
-                evt.menu.AppendAction("Ungroup Selection %u", _ => { }, actionStatusCallback => DropdownMenuAction.Status.Disabled);
-            }
-
-            if (evt.target is BlackboardField) {
-                evt.menu.AppendAction("Delete", _ => { DeleteSelectionImpl("Delete", AskUser.DontAskUser); }, actionStatusCallback => canDeleteSelection ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
-            }
+            evt.menu.AppendAction("Duplicate %d", _ => DuplicateSelectionCallback(),
+                                  _ => canDuplicateSelection ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
         }
 
+        private void OnContextMenuNodeCreate(DropdownMenuAction a) => GraphViewReflectionHelper.RequestNodeCreation(null, -1, a.eventInfo.mousePosition);
+        
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter) {
             List<Port> compatiblePorts = new List<Port>();
             ports.ForEach(port => {
-                if (startPort != port /*&& startPort.node != port.node*/ && port.direction != startPort.direction && (startPort as GraphFrameworkPort).IsCompatibleWith(port as GraphFrameworkPort)) {
+                if (startPort != port /*&& startPort.node != port.node*/ && port.direction != startPort.direction &&
+                    (startPort as GraphFrameworkPort).IsCompatibleWith(port as GraphFrameworkPort)) {
                     compatiblePorts.Add(port);
                 }
             });
@@ -103,19 +133,19 @@ namespace GeometryGraph.Editor {
             IEnumerable<SerializedNode> nodesToDelete = selection.OfType<AbstractNode>().Select(node => node.Owner);
             editorView.GraphObject.RegisterCompleteObjectUndo(operation);
             editorView.GraphObject.GraphData.RemoveElements(nodesToDelete.ToList(),
-                selection.OfType<Edge>().Select(e => e.userData).OfType<SerializedEdge>().ToList());
-            
-            
+                                                            selection.OfType<Edge>().Select(e => e.userData).OfType<SerializedEdge>().ToList());
+
             foreach (ISelectable selectable in selection) {
                 if (!(selectable is BlackboardField field) || field.userData == null) continue;
-                AbstractProperty property = (AbstractProperty) field.userData;
+                AbstractProperty property = (AbstractProperty)field.userData;
                 editorView.GraphObject.GraphData.RemoveProperty(property);
             }
-            
+
             selection.Clear();
         }
-        
+
         #region Drag & Drop
+
         private void OnDragUpdated(DragUpdatedEvent evt) {
             List<ISelectable> selection = DragAndDrop.GetGenericData("DragSelection") as List<ISelectable>;
             bool dragging = false;
@@ -129,7 +159,7 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnDragPerformed(DragPerformEvent evt) {
-            Vector2 localPos = (evt.currentTarget as VisualElement).ChangeCoordinatesTo(this.contentViewContainer, evt.localMousePosition);
+            Vector2 localPos = (evt.currentTarget as VisualElement).ChangeCoordinatesTo(contentViewContainer, evt.localMousePosition);
 
             List<ISelectable> selection = DragAndDrop.GetGenericData("DragSelection") as List<ISelectable>;
             if (selection != null) {
@@ -150,13 +180,14 @@ namespace GeometryGraph.Editor {
                 SerializedNode node = new SerializedNode(PropertyUtils.PropertyTypeToNodeType(property.Type), new Rect(nodePosition, EditorView.DefaultNodeSize));
                 editorView.GraphObject.GraphData.AddNode(node);
                 node.BuildNode(editorView, editorView.EdgeConnectorListener, false);
-                
+
                 AbstractNode propertyNode = node.Node;
                 propertyNode.PropertyGuid = property.GUID;
                 propertyNode.Property = property;
                 node.BuildPortData();
             }
         }
+
         #endregion
     }
 }
