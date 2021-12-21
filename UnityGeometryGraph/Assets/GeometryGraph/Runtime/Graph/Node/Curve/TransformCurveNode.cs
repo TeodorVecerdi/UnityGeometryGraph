@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Curve;
 using Unity.Mathematics;
@@ -45,10 +46,10 @@ namespace GeometryGraph.Runtime.Graph {
                 Result = null;
                 return;
             }
-
-            quaternion rotationQuat = quaternion.Euler(math.radians(Rotation));
-            float4x4 matrix = float4x4.TRS(Translation, rotationQuat, Scale);
-            float4x4 matrixNormal = float4x4.TRS(float3.zero, rotationQuat, Scale);
+            
+            List<float3> translation = GetValues(TranslationPort, Input.Points, Translation).ToList();
+            List<float3> rotation = GetValues(RotationPort, Input.Points, Rotation).ToList();
+            List<float3> scale = GetValues(ScalePort, Input.Points, Scale).ToList();
 
             List<float3> position = new(Input.Points);
             List<float3> tangent = new(Input.Points);
@@ -56,10 +57,14 @@ namespace GeometryGraph.Runtime.Graph {
             List<float3> binormal = new(Input.Points);
 
             for (int i = 0; i < Input.Points; i++) {
-                position.Add(math.mul(matrix, Input.Position[i].float4(1.0f)).xyx);
-                tangent.Add(math.mul(matrixNormal, Input.Tangent[i].float4(1.0f)).xyx);
-                normal.Add(math.mul(matrixNormal, Input.Normal[i].float4(1.0f)).xyx);
-                binormal.Add(math.mul(matrixNormal, Input.Binormal[i].float4(1.0f)).xyx);
+                quaternion rotationQuat = quaternion.Euler(math.radians(rotation[i]));
+                float4x4 matrix = float4x4.TRS(translation[i], rotationQuat, scale[i]);
+                float4x4 matrixNormal = float4x4.TRS(float3.zero, rotationQuat, scale[i]);
+                
+                position.Add(math.mul(matrix, Input.Position[i].float4(1.0f)).xyz);
+                tangent.Add(math.mul(matrixNormal, Input.Tangent[i].float4(1.0f)).xyz);
+                normal.Add(math.mul(matrixNormal, Input.Normal[i].float4(1.0f)).xyz);
+                binormal.Add(math.mul(matrixNormal, Input.Binormal[i].float4(1.0f)).xyz);
             }
 
             Result = new CurveData(Input.Type, Input.Points, ChangeClosed ? IsClosed : Input.IsClosed, position, tangent, normal, binormal);
