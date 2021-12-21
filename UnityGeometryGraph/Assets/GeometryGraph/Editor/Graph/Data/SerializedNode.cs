@@ -80,8 +80,15 @@ namespace GeometryGraph.Editor {
             if (Node == null)
                 return;
             Node.OnNodeDeserialized();
-            if (!string.IsNullOrEmpty(NodeData))
-                Node.Deserialize(JObject.Parse(NodeData));
+            if (!string.IsNullOrEmpty(NodeData)) {
+                try {
+                    Node.Deserialize(JObject.Parse(NodeData));
+                } catch (Exception e) {
+                    // TODO: Change temporary fix for deserialization after a change in the serialization format with a proper way to handle it
+                    Debug.LogError($"Error deserializing node data: {e.Message}.\nReverting to default values.");
+                    Node.Deserialize(Node.Serialize());
+                }
+            }
         }
     }
 }
