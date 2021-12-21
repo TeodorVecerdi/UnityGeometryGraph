@@ -1,149 +1,36 @@
-﻿using GeometryGraph.Runtime.Curve;
-using GeometryGraph.Runtime.Data;
-using GeometryGraph.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using GeometryGraph.Runtime.Attributes;
+using GeometryGraph.Runtime.Curve;
 using Unity.Mathematics;
 using UnityCommons;
+using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
-    public class QuadraticBezierPrimitiveCurveNode : RuntimeNode {
-        private MinMaxInt points = new(32, Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
-        private bool isClosed;
-        private float3 start = float3.zero;
-        private float3 control = float3_ext.right;
-        private float3 end = float3_ext.forward;
-
-        private CurveData curve;
-
-        public RuntimePort PointsPort { get; private set; }
-        public RuntimePort ClosedPort { get; private set; }
-        public RuntimePort StartPort { get; private set; }
-        public RuntimePort ControlPort { get; private set; }
-        public RuntimePort EndPort { get; private set; }
-        public RuntimePort ResultPort { get; private set; }
-
-        public QuadraticBezierPrimitiveCurveNode(string guid) : base(guid) {
-            PointsPort = RuntimePort.Create(PortType.Integer, PortDirection.Input, this);
-            ClosedPort = RuntimePort.Create(PortType.Boolean, PortDirection.Input, this);
-            StartPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
-            ControlPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
-            EndPort = RuntimePort.Create(PortType.Vector, PortDirection.Input, this);
-            ResultPort = RuntimePort.Create(PortType.Curve, PortDirection.Output, this);
+    [GenerateRuntimeNode]
+    [GeneratorSettings(CalculateDuringDeserialization = false)]
+    public partial class QuadraticBezierPrimitiveCurveNode {
+        [AdditionalValueChangedCode("{other} = {other}.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1)", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
+        [In] public int Points { get; private set; } = 32;
+        [In] public bool IsClosed { get; private set; }
+        [In] public float3 Start { get; private set; } = float3.zero;
+        [In] public float3 Control { get; private set; } = float3_ext.right;
+        [In] public float3 End { get; private set; } = float3_ext.forward;
+        [Out] public CurveData Curve { get; private set; }
+        
+        [GetterMethod(nameof(Curve), Inline = true)]
+        private CurveData GetCurve() {
+            if (Curve == null) CalculateResult();
+            return Curve ?? CurveData.Empty;
         }
 
+        [CalculatesProperty(nameof(Curve))]
         private void CalculateResult() {
             if (RuntimeGraphObjectData.IsDuringSerialization) {
-                DebugUtility.Log("Attempting to generate curve during serialization. Aborting.");
-                curve = null;
+                Debug.LogWarning("Attempting to generate curve during serialization. Aborting.");
+                Curve = CurveData.Empty;
                 return;
             }
 
-            curve = CurvePrimitive.QuadraticBezier(points - 1, isClosed, start, control, end);
-        }
-
-        protected override void OnPortValueChanged(Connection connection, RuntimePort port) {
-            if (port == ResultPort) return;
-            if (port == PointsPort) {
-                int newValue = GetValue(connection, (int)points);
-                if (newValue == points) return;
-                points.Value = newValue;
-                CalculateResult();
-                NotifyPortValueChanged(ResultPort);
-            } else if (port == ClosedPort) {
-                bool newValue = GetValue(connection, isClosed);
-                if (newValue == isClosed) return;
-                isClosed = newValue;
-                CalculateResult();
-                NotifyPortValueChanged(ResultPort);
-            } else if (port == StartPort) {
-                float3 newValue = GetValue(connection, start);
-                if (newValue.Equals(start)) return;
-                start = newValue;
-                CalculateResult();
-                NotifyPortValueChanged(ResultPort);
-            } else if (port == ControlPort) {
-                float3 newValue = GetValue(connection, control);
-                if (newValue.Equals(control)) return;
-                control = newValue;
-                CalculateResult();
-                NotifyPortValueChanged(ResultPort);
-            } else if (port == EndPort) {
-                float3 newValue = GetValue(connection, end);
-                if (newValue.Equals(end)) return;
-                end = newValue;
-                CalculateResult();
-                NotifyPortValueChanged(ResultPort);
-            }
-        }
-
-        protected override object GetValueForPort(RuntimePort port) {
-            if (port != ResultPort) return null;
-            if (curve == null) CalculateResult();
-            return curve == null ? CurveData.Empty : curve.Clone();
-        }
-
-        public override string Serialize() {
-            JArray array = new() {
-                (int)points,
-                isClosed ? 1 : 0,
-                JsonConvert.SerializeObject(start, float3Converter.Converter),
-                JsonConvert.SerializeObject(control, float3Converter.Converter),
-                JsonConvert.SerializeObject(end, float3Converter.Converter),
-            };
-            return array.ToString(Formatting.None);
-        }
-
-        public override void Deserialize(string json) {
-            if (string.IsNullOrEmpty(json)) return;
-
-            JArray data = JArray.Parse(json);
-            points = new MinMaxInt(data.Value<int>(0), Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
-            isClosed = data.Value<int>(1) == 1;
-            start = JsonConvert.DeserializeObject<float3>(data.Value<string>(2)!, float3Converter.Converter);
-            control = JsonConvert.DeserializeObject<float3>(data.Value<string>(3)!, float3Converter.Converter);
-            end = JsonConvert.DeserializeObject<float3>(data.Value<string>(4)!, float3Converter.Converter);
-        }
-
-        public override void OnAfterDeserialize() {
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        public void UpdatePoints(int newValue) {
-            newValue = newValue.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1);
-            if (newValue == points) return;
-
-            points.Value = newValue;
-            CalculateResult();
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        public void UpdateClosed(bool newValue) {
-            if (newValue == isClosed) return;
-            isClosed = newValue;
-            CalculateResult();
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        public void UpdateStart(float3 newValue) {
-            if (start.Equals(newValue)) return;
-            start = newValue;
-            CalculateResult();
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        public void UpdateControl(float3 newValue) {
-            if (control.Equals(newValue)) return;
-            control = newValue;
-            CalculateResult();
-            NotifyPortValueChanged(ResultPort);
-        }
-
-        public void UpdateEnd(float3 newValue) {
-            if (end.Equals(newValue)) return;
-            end = newValue;
-            CalculateResult();
-            NotifyPortValueChanged(ResultPort);
+            Curve = CurvePrimitive.QuadraticBezier(Points.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1) - 1, IsClosed, Start, Control, End);
         }
     }
 }

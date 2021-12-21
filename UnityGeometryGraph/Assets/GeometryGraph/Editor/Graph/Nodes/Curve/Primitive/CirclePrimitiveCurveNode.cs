@@ -63,7 +63,7 @@ namespace GeometryGraph.Editor {
         protected override void BindPorts() {
             BindPort(pointsPort, RuntimeNode.PointsPort);
             BindPort(radiusPort, RuntimeNode.RadiusPort);
-            BindPort(resultPort, RuntimeNode.ResultPort);
+            BindPort(resultPort, RuntimeNode.CurvePort);
         }
 
         protected internal override JObject Serialize() {

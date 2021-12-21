@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
 
         protected override void CreateNode() {
             (pointsPort, pointsField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePoints(points));
-            (closedPort, closedToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Closed", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateClosed(closed));
+            (closedPort, closedToggle) = GraphFrameworkPort.CreateWithBackingField<Toggle, bool>("Closed", PortType.Boolean, this, onDisconnect: (_, _) => RuntimeNode.UpdateIsClosed(closed));
             (startPort, startField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Start", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateStart(start));
             (controlAPort, controlAField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Control A", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateControlA(controlA));
             (controlBPort, controlBField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Control B", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateControlB(controlB));
@@ -61,7 +61,7 @@ namespace GeometryGraph.Editor {
                 if (evt.newValue == closed) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cubic bezier curve closed");
                 closed = evt.newValue;
-                RuntimeNode.UpdateClosed(closed);
+                RuntimeNode.UpdateIsClosed(closed);
             });
 
             startField.RegisterValueChangedCallback(evt => {
@@ -121,12 +121,12 @@ namespace GeometryGraph.Editor {
 
         protected override void BindPorts() {
             BindPort(pointsPort, RuntimeNode.PointsPort);
-            BindPort(closedPort, RuntimeNode.ClosedPort);
+            BindPort(closedPort, RuntimeNode.IsClosedPort);
             BindPort(startPort, RuntimeNode.StartPort);
             BindPort(controlAPort, RuntimeNode.ControlAPort);
             BindPort(controlBPort, RuntimeNode.ControlBPort);
             BindPort(endPort, RuntimeNode.EndPort);
-            BindPort(resultPort, RuntimeNode.ResultPort);
+            BindPort(resultPort, RuntimeNode.CurvePort);
         }
 
         protected internal override JObject Serialize() {
@@ -161,7 +161,7 @@ namespace GeometryGraph.Editor {
             endField.SetValueWithoutNotify(end);
             
             RuntimeNode.UpdatePoints(points);
-            RuntimeNode.UpdateClosed(closed);
+            RuntimeNode.UpdateIsClosed(closed);
             RuntimeNode.UpdateStart(start);
             RuntimeNode.UpdateControlA(controlA);
             RuntimeNode.UpdateControlB(controlB);

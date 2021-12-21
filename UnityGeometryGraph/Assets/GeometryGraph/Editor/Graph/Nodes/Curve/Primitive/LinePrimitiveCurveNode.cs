@@ -80,7 +80,7 @@ namespace GeometryGraph.Editor {
             BindPort(pointsPort, RuntimeNode.PointsPort);
             BindPort(startPort, RuntimeNode.StartPort);
             BindPort(endPort, RuntimeNode.EndPort);
-            BindPort(resultPort, RuntimeNode.ResultPort);
+            BindPort(resultPort, RuntimeNode.CurvePort);
         }
 
         protected internal override JObject Serialize() {

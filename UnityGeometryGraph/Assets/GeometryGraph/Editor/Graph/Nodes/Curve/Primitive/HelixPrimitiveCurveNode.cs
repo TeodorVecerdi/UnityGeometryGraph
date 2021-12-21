@@ -114,7 +114,7 @@ namespace GeometryGraph.Editor {
             BindPort(pitchPort, RuntimeNode.PitchPort);
             BindPort(topRadiusPort, RuntimeNode.TopRadiusPort);
             BindPort(bottomRadiusPort, RuntimeNode.BottomRadiusPort);
-            BindPort(resultPort, RuntimeNode.ResultPort);
+            BindPort(resultPort, RuntimeNode.CurvePort);
         }
 
         protected internal override JObject Serialize() {
