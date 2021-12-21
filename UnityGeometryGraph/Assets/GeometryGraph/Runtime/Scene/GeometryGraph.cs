@@ -110,8 +110,8 @@ namespace GeometryGraph.Runtime {
 
             if (meshFilter.sharedMesh != null) {
                 DestroyImmediate(meshFilter.sharedMesh);
-                meshFilter.sharedMesh = meshFilterMesh;
             }
+            meshFilter.sharedMesh = meshFilterMesh;
 
             initializedMeshFilter = true;
         }
