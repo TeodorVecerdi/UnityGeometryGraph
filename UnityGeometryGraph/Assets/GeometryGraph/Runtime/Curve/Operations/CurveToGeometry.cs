@@ -23,7 +23,6 @@ namespace GeometryGraph.Runtime.Curve {
         internal static GeometryData WithoutProfile(CurveData curve) {
             if (curve.Points == 0) return GeometryData.Empty;
             List<float3> vertexPositions = new List<float3>();
-            List<float> crease = new float[curve.Points - 1].ToList();
 
             for (int i = 0; i < curve.Points; i++) {
                 vertexPositions.Add(curve.Position[i]);
@@ -39,7 +38,7 @@ namespace GeometryGraph.Runtime.Curve {
             }
 
             GeometryData geometry = new GeometryData(edges, new List<GeometryData.Face>(), new List<GeometryData.FaceCorner>(), 1, vertexPositions,
-                                                     new List<float3>(), new List<int>(), new List<bool>(), crease, new List<float2>());
+                                                     new List<float3>(), new List<int>(), new List<bool>(), new List<float2>());
 
             geometry.StoreAttribute(curve.Tangent.Into("tangent", AttributeType.Vector3, AttributeDomain.Vertex));
             geometry.StoreAttribute(curve.Normal.Into("normal", AttributeType.Vector3, AttributeDomain.Vertex));
@@ -105,7 +104,6 @@ namespace GeometryGraph.Runtime.Curve {
                 shadeSmooth = Enumerable.Repeat(settings.ShadeSmoothCurve, faceCount).ToList();
             }
             
-            List<float> creases = new float[edgeCount].ToList();
             List<float2> uvs = new List<float2>();
             List<float3> vertexPositions = new List<float3>();
             List<float3> faceNormals = new List<float3>();
@@ -405,7 +403,7 @@ namespace GeometryGraph.Runtime.Curve {
                 burstAlign_binormalDst.Dispose();
             }
 
-            return new GeometryData(edges, faces, faceCorners, submeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth, creases, uvs);
+            return new GeometryData(edges, faces, faceCorners, submeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth, uvs);
         }
 
         private static void CloseCapsStart(

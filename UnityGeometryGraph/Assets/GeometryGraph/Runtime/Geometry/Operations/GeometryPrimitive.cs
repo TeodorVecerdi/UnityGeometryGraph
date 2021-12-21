@@ -16,7 +16,6 @@ namespace GeometryGraph.Runtime.Geometry {
             List<float3> faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_ext.up).ToList();
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = new bool[faceCount].ToList();
-            List<float> creases = new float[edgeCount].ToList();
             
             List<float3> vertexPositions = new List<float3> { float3.zero };
             List<float2> vertexUvs = new List<float2> { float2_ext.one * 0.5f };
@@ -70,7 +69,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 faceCorners.Add(new GeometryData.FaceCorner(i));
             }
 
-            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
+            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, uvs);
         }
 
         public static GeometryData Plane(float2 size, int subdivisions) {
@@ -87,7 +86,6 @@ namespace GeometryGraph.Runtime.Geometry {
             List<float3> faceNormals = Enumerable.Range(0, faceCount).Select(_ => float3_ext.up).ToList();
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = new bool[faceCount].ToList();
-            List<float> creases = new float[edgeCount].ToList();
             
             List<float3> vertexPositions = new List<float3>();
             List<float2> vertexUVs = new List<float2>();
@@ -190,7 +188,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 }
             }
             
-            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
+            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, uvs);
         }
 
         public static GeometryData Cube(float3 size) {
@@ -199,7 +197,6 @@ namespace GeometryGraph.Runtime.Geometry {
             
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = new bool[faceCount].ToList();
-            List<float> creases = new float[edgeCount].ToList();
             
             List<float3> vertexPositions = new [] {
                                                // Bottom
@@ -279,7 +276,7 @@ namespace GeometryGraph.Runtime.Geometry {
             };
             List<GeometryData.FaceCorner> faceCorners = Enumerable.Range(0, faceCount).SelectMany(i => new []{ new GeometryData.FaceCorner(i), new GeometryData.FaceCorner(i), new GeometryData.FaceCorner(i) }).ToList();
 
-            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
+            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, uvs);
         }
         
         public static GeometryData Cone(float radius, float height, int points) {
@@ -290,7 +287,6 @@ namespace GeometryGraph.Runtime.Geometry {
             int edgeCount = 3 * points;
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = Enumerable.Repeat((false, true), points).SelectMany(pair => new[] { pair.Item1, pair.Item2 }).ToList();
-            List<float> creases = new float[edgeCount].ToList();
             
             List<float3> vertexPositions = new List<float3> { float3.zero, float3_ext.up * height };
             List<float2> vertexUvs = new List<float2> { float2_ext.one * 0.5f, float2_ext.one * 0.5f };
@@ -367,7 +363,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 faceCorners.Add(new GeometryData.FaceCorner(i * 2 + 1));
             }
 
-            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
+            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, uvs);
         }
 
         public static GeometryData Cylinder(float bottomRadius, float topRadius, float height, int points, CylinderUVSettings uvSettings) {
@@ -380,7 +376,6 @@ namespace GeometryGraph.Runtime.Geometry {
             int edgeCount = 9 * points;
             List<int> materialIndices = new int[faceCount].ToList();
             List<bool> smoothShaded = Enumerable.Repeat(0, points).SelectMany(_ => new [] {false, false, true, true}).ToList();
-            List<float> creases = new float[edgeCount].ToList();
             
             List<float3> vertexPositions = new List<float3> { float3.zero, float3_ext.up * height };
             List<float2> vertexUvs = new List<float2> { float2_ext.one * 0.5f, float2_ext.one * 0.5f };
@@ -495,7 +490,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 horizontalUVOffset += horizontalUVOffsetStep;
             }
 
-            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, creases, uvs);
+            return new GeometryData(edges, faces, faceCorners, 1, vertexPositions, faceNormals, materialIndices, smoothShaded, uvs);
         }
 
         public static GeometryData IcosahedronSphericalUV() {
@@ -506,7 +501,6 @@ namespace GeometryGraph.Runtime.Geometry {
             
             List<int> materialIndices = Enumerable.Repeat(0, faceCount).ToList();
             List<bool> shadeSmooth = Enumerable.Repeat(false, faceCount).ToList();
-            List<float> crease = Enumerable.Repeat(0.0f, edgeCount).ToList();
             List<float3> vertexPositions = new List<float3> {
                 new float3(-x, 0.0f, z),
                 new float3(x, 0.0f, z),
@@ -603,7 +597,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 faceCorners.Add(new GeometryData.FaceCorner(i) {Vert = face.VertC});
             }
             
-            GeometryData geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, crease, uvs);
+            GeometryData geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, uvs);
 
             quaternion rotQuaternion = quaternion.Euler(math.radians(-30), 0, 0);
             float4x4 trs = float4x4.TRS(float3.zero, rotQuaternion, float3_ext.one);
@@ -626,7 +620,6 @@ namespace GeometryGraph.Runtime.Geometry {
             
             List<int> materialIndices = Enumerable.Repeat(0, faceCount).ToList();
             List<bool> shadeSmooth = Enumerable.Repeat(false, faceCount).ToList();
-            List<float> crease = Enumerable.Repeat(0.0f, edgeCount).ToList();
             List<float3> vertexPositions = new List<float3> {
                 new float3(-x, 0.0f, z),
                 new float3(x, 0.0f, z),
@@ -744,7 +737,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 uvs.Add(new float2(sideLength * 0.5f + sideLength * (i + 1), 2.0f * height));
             }
             
-            GeometryData geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, crease, uvs);
+            GeometryData geometry = new GeometryData(edges, faces, faceCorners, 1, vertexPositions, normals, materialIndices, shadeSmooth, uvs);
 
             quaternion rotQuaternion = quaternion.Euler(math.radians(-30), 0, 0);
             float4x4 trs = float4x4.TRS(float3.zero, rotQuaternion, float3_ext.one);

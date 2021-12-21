@@ -33,8 +33,6 @@ namespace GeometryGraph.Runtime.Geometry {
                 uvsOriginal = new float2[geometry.FaceCorners.Count].ToList();
             List<float2> uvs = new List<float2>();
             
-            ClampedFloatAttribute creaseOriginal = geometry.GetAttribute<ClampedFloatAttribute>("crease", AttributeDomain.Edge)!;
-            List<float> crease = new List<float>();
             Vector3Attribute faceNormalsOriginal = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face)!;
             List<float3> faceNormals = new List<float3>();
             IntAttribute materialIndicesOriginal = geometry.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face)!;
@@ -46,18 +44,17 @@ namespace GeometryGraph.Runtime.Geometry {
             List<GeometryData.Face> faces = new List<GeometryData.Face>();
             List<GeometryData.FaceCorner> faceCorners = new List<GeometryData.FaceCorner>();
 
-            HashSet<string> builtinFaceAttributeNames = new HashSet<string> { "normal", "material_index", "shade_smooth" };
+            HashSet<string> builtinFaceAttributeNames = new HashSet<string> { AttributeId.Normal, AttributeId.Material, AttributeId.ShadeSmooth };
             List<(string Name, AttributeType Type, List<object> Values)> allVertexAttributes = geometry.GetAttributes(AttributeDomain.Vertex)
-                                                                                                       .Where(attribute => attribute.Name != "position")
+                                                                                                       .Where(attribute => attribute.Name != AttributeId.Position)
                                                                                                        .Select(attribute => (attribute.Name, attribute.Type, attribute.Values)).ToList();
             List<(string Name, AttributeType Type, List<object> Values, List<object>)> allEdgeAttributes = geometry.GetAttributes(AttributeDomain.Edge)
-                                                                                                                   .Where(attribute => attribute.Name != "crease")
                                                                                                                    .Select(attribute => (attribute.Name, attribute.Type, attribute.Values, new List<object>())).ToList();
             List<(string Name, AttributeType Type, List<object> Values, List<object>)> allFaceAttributes = geometry.GetAttributes(AttributeDomain.Face)
                                                                                                                    .Where(attribute => !builtinFaceAttributeNames.Contains(attribute.Name))
                                                                                                                    .Select(attribute => (attribute.Name, attribute.Type, attribute.Values, new List<object>())).ToList();
             List<(string Name, AttributeType Type, List<object> Values, List<object>)> allFaceCornerAttributes = geometry.GetAttributes(AttributeDomain.FaceCorner)
-                                                                                                                         .Where(attribute => attribute.Name != "uv")
+                                                                                                                         .Where(attribute => attribute.Name != AttributeId.UV)
                                                                                                                          .Select(attribute => (attribute.Name, attribute.Type, attribute.Values, new List<object>())).ToList();
 
             for (int i = 0; i < geometry.Edges.Count; i++) {
@@ -77,8 +74,6 @@ namespace GeometryGraph.Runtime.Geometry {
                 
                 edgeDict.Add(i, (edges.Count, edges.Count + 1));
                 midPointDict.Add(i, vertexPositions.Count);
-                crease.Add(creaseOriginal![i]);
-                crease.Add(creaseOriginal[i]);
                 vertexPositions.Add(midPoint);
                 edges.Add(edgeA);
                 edges.Add(edgeB);
@@ -191,9 +186,6 @@ namespace GeometryGraph.Runtime.Geometry {
                 edges.Add(edge_xy);
                 edges.Add(edge_yz);
                 edges.Add(edge_xz);
-                crease.Add(0.0f);
-                crease.Add(0.0f);
-                crease.Add(0.0f);
                 
                 foreach ((string Name, AttributeType Type, List<object> Values, List<object>) edgeAttribute in allEdgeAttributes) {
                     edgeAttribute.Item4.Add(edgeAttribute.Values[e_xy]);
@@ -202,7 +194,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 }
             }
             
-            GeometryData subdivided = new GeometryData(edges, faces, faceCorners, geometry.SubmeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth,  crease, uvs);
+            GeometryData subdivided = new GeometryData(edges, faces, faceCorners, geometry.SubmeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth, uvs);
             
             foreach ((string Name, AttributeType Type, List<object> Values) vertexAttribute in allVertexAttributes) {
                 subdivided.StoreAttribute(vertexAttribute.Values.Into(vertexAttribute.Name, vertexAttribute.Type, AttributeDomain.Vertex), AttributeDomain.Vertex);

@@ -16,7 +16,7 @@ namespace GeometryGraph.Runtime.Geometry {
             return new GeometryData(
                     Enumerable.Empty<GeometryData.Edge>(), Enumerable.Empty<GeometryData.Face>(), Enumerable.Empty<GeometryData.FaceCorner>(),
                     1, position, Enumerable.Empty<float3>(), Enumerable.Empty<int>(),
-                    Enumerable.Empty<bool>(), Enumerable.Empty<float>(), Enumerable.Empty<float2>())
+                    Enumerable.Empty<bool>(), Enumerable.Empty<float2>())
                 ;
         }
     }

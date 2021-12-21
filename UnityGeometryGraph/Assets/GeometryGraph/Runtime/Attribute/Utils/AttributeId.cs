@@ -6,7 +6,6 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         public const string Normal = "normal";
         public const string Material = "material_index";
         public const string ShadeSmooth = "shade_smooth";
-        public const string Crease = "crease";
         public const string UV = "uv";
         
         public static readonly HashSet<string> BuiltinIds = new() {
@@ -14,7 +13,6 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             Normal,
             Material,
             ShadeSmooth,
-            Crease,
             UV
         };
     }
