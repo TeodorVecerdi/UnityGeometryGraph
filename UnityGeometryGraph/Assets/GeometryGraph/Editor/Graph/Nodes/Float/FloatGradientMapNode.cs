@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using GeometryGraph.Runtime;
 using GeometryGraph.Runtime.Graph;
 using GeometryGraph.Runtime.Serialization;
@@ -8,7 +7,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using AnimationCurve = GeometryGraph.Runtime.Data.AnimationCurve;
 using Gradient = GeometryGraph.Runtime.Data.Gradient;
 
 namespace GeometryGraph.Editor {

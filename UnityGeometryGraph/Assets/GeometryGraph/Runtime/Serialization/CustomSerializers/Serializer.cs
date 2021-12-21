@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using UnityEngine;
 using AnimationCurve = GeometryGraph.Runtime.Data.AnimationCurve;
 using Gradient = GeometryGraph.Runtime.Data.Gradient;

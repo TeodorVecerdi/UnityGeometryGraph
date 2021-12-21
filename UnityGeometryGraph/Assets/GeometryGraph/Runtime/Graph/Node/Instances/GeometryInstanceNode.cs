@@ -6,7 +6,6 @@ using GeometryGraph.Runtime.Data;
 using GeometryGraph.Runtime.Geometry;
 using Unity.Mathematics;
 using UnityCommons;
-using UnityEngine;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]

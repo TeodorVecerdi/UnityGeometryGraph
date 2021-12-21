@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using GeometryGraph.Runtime.Attributes;
-using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]

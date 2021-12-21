@@ -7,8 +7,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
-using UnityCommons;
-using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace GeometryGraph.Runtime.Curve {

@@ -1,7 +1,6 @@
 ﻿using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Geometry;
-using JetBrains.Annotations;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {

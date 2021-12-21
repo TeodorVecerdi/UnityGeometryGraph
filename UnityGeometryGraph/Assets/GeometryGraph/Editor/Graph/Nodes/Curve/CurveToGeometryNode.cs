@@ -6,7 +6,6 @@ using GeometryGraph.Runtime.Graph;
 using Newtonsoft.Json.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GeometryGraph.Editor {

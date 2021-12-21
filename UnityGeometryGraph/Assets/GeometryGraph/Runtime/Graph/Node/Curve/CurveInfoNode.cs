@@ -1,6 +1,5 @@
 ﻿using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Curve;
-using JetBrains.Annotations;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]

@@ -1,5 +1,4 @@
 ﻿using GeometryGraph.Runtime.Attributes;
-using JetBrains.Annotations;
 using Unity.Mathematics;
 
 namespace GeometryGraph.Runtime.Graph {
