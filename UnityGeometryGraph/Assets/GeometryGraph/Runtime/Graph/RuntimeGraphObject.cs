@@ -119,10 +119,10 @@ namespace GeometryGraph.Runtime.Graph {
                 return;
             }
             
-            connection.Output.Node.NotifyConnectionRemoved(connection, connection.Output);
-            connection.Input.Node.NotifyConnectionRemoved(connection, connection.Input);
-            connection.Output.Connections.Remove(connection);
-            connection.Input.Connections.Remove(connection);
+            connection.Output?.Node?.NotifyConnectionRemoved(connection, connection.Output);
+            connection.Input?.Node?.NotifyConnectionRemoved(connection, connection.Input);
+            connection.Output?.Connections?.Remove(connection);
+            connection.Input?.Connections?.Remove(connection);
             RuntimeData.Connections.Remove(connection);
 
             int removed = RuntimeData.Connections.RemoveAll(connection => connection.OutputGuid == outputGuid && connection.InputGuid == inputGuid);
