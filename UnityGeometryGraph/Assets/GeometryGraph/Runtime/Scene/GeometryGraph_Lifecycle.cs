@@ -27,7 +27,7 @@ namespace GeometryGraph.Runtime {
             meshPool?.Cleanup();
         }
 
-        private void RenderInstances() {
+        internal void RenderInstances() {
             if (instancedGeometryData is not { GeometryCount: not 0 }) {
                 return;
             }
