@@ -10,13 +10,13 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public int PointsX { get; private set; } = 4;
         [In] public int PointsY { get; private set; } = 4;
         [Out] public GeometryData Result { get; private set; }
-        
+
         [GetterMethod(nameof(Result), Inline = true)]
         private GeometryData GetResult() {
             if (Result == null) CalculateResult();
             return Result;
         }
-        
+
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             Result = GeometryGrid.Make(new float2(Width, Height), PointsX, PointsY);

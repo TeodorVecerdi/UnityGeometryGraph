@@ -6,7 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
 namespace GeometryGraph.Editor.WIP {
-    [Title("WIP", "Grid Node")]
+    [Title("Geometry", "Grid Node")]
     public class GridNode : AbstractNode<GeometryGraph.Runtime.Graph.GridNode> {
         protected override string Title => "Grid";
         protected override NodeCategory Category => NodeCategory.Geometry;
@@ -16,7 +16,7 @@ namespace GeometryGraph.Editor.WIP {
         private GraphFrameworkPort pointsXPort;
         private GraphFrameworkPort pointsYPort;
         private GraphFrameworkPort resultPort;
-        
+
         private ClampedFloatField widthField;
         private ClampedFloatField heightField;
         private ClampedIntegerField pointsXField;
@@ -33,12 +33,12 @@ namespace GeometryGraph.Editor.WIP {
             (pointsXPort, pointsXField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points X", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePointsX(pointsX));
             (pointsYPort, pointsYField) = GraphFrameworkPort.CreateWithBackingField<ClampedIntegerField, int>("Points Y", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdatePointsY(pointsY));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
-            
-            
+
+
             widthField.Min = 0.01f;
             heightField.Min = 0.01f;
-            pointsXField.Min = 1;
-            pointsYField.Min = 1;
+            pointsXField.Min = 2;
+            pointsYField.Min = 2;
 
             widthField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - width) < Constants.FLOAT_TOLERANCE) return;
@@ -46,38 +46,38 @@ namespace GeometryGraph.Editor.WIP {
                 width = evt.newValue;
                 RuntimeNode.UpdateWidth(width);
             });
-            
+
             heightField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - height) < Constants.FLOAT_TOLERANCE) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change grid height");
                 height = evt.newValue;
                 RuntimeNode.UpdateHeight(height);
             });
-            
+
             pointsXField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == pointsX) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change grid X points");
                 pointsX = evt.newValue;
                 RuntimeNode.UpdatePointsX(pointsX);
             });
-            
+
             pointsYField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == pointsY) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change grid Y points");
                 pointsY = evt.newValue;
                 RuntimeNode.UpdatePointsY(pointsY);
             });
-            
+
             widthField.SetValueWithoutNotify(width);
             heightField.SetValueWithoutNotify(height);
             pointsXField.SetValueWithoutNotify(pointsX);
             pointsYField.SetValueWithoutNotify(pointsY);
-            
+
             widthPort.Add(widthField);
             heightPort.Add(heightField);
             pointsXPort.Add(pointsXField);
             pointsYPort.Add(pointsYField);
-            
+
             AddPort(widthPort);
             AddPort(heightPort);
             AddPort(pointsXPort);
@@ -92,7 +92,7 @@ namespace GeometryGraph.Editor.WIP {
             BindPort(pointsYPort, RuntimeNode.PointsYPort);
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
-        
+
         protected internal override JObject Serialize() {
             JObject root = base.Serialize();
             root["d"] = new JArray {
@@ -106,16 +106,16 @@ namespace GeometryGraph.Editor.WIP {
 
         protected internal override void Deserialize(JObject data) {
             JArray array = data["d"] as JArray;
-            width = array.Value<float>(0);
+            width = array!.Value<float>(0);
             height = array.Value<float>(1);
             pointsX = array.Value<int>(2);
             pointsY = array.Value<int>(3);
-            
+
             widthField.SetValueWithoutNotify(width);
             heightField.SetValueWithoutNotify(height);
             pointsXField.SetValueWithoutNotify(pointsX);
             pointsYField.SetValueWithoutNotify(pointsY);
-            
+
             RuntimeNode.UpdateWidth(width);
             RuntimeNode.UpdateHeight(height);
             RuntimeNode.UpdatePointsX(pointsX);
