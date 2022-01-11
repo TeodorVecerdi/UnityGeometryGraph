@@ -6,10 +6,14 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
     public class TestRealtimeGenerator : MonoBehaviour {
         [Required] public GeometryGraph GeometryGraph;
         public bool Enabled;
+        public bool UpdateGraph;
+        public bool DrawInstances;
 
         private void Update() {
             if (!Enabled || GeometryGraph == null) return;
-            GeometryGraph.Evaluate();
+
+            if (UpdateGraph) GeometryGraph.Evaluate();
+            if (DrawInstances) GeometryGraph.RenderInstances();
         }
     }
 }
