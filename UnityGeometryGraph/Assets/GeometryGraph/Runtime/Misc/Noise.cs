@@ -15,9 +15,11 @@ namespace GeometryGraph.Runtime {
         {
             Hint.Assume(octaves > 0);
             Hint.Assume(octaves <= Constants.MAX_NOISE_OCTAVES);
+            Hint.Assume(lacunarity > 0.0f);
+            Hint.Assume(persistence > 0.0f);
+
             Hint.Unlikely(scale <= 0.0f);
             Hint.Unlikely(lacunarity <= 1.0f);
-            Hint.Unlikely(persistence <= 0.0f);
             Hint.Unlikely(persistence >= 1.0f);
 
             if (octaves == 1) return noise.snoise(position * scale);
@@ -53,9 +55,11 @@ namespace GeometryGraph.Runtime {
         {
             Hint.Assume(octaves > 0);
             Hint.Assume(octaves <= Constants.MAX_NOISE_OCTAVES);
+            Hint.Assume(lacunarity > 0.0f);
+            Hint.Assume(persistence > 0.0f);
+
             Hint.Unlikely(scale <= 0.0f);
             Hint.Unlikely(lacunarity <= 1.0f);
-            Hint.Unlikely(persistence <= 0.0f);
             Hint.Unlikely(persistence >= 1.0f);
 
             float3 pX = position + new float3(offset_3d_x, 0, 0);
