@@ -118,8 +118,12 @@ namespace GeometryGraph.Runtime.Graph {
             
             IEnumerable<object> values = outputPort.Node.GetValuesForPort(outputPort, count);
             foreach (object value in values) {
-                if (PortTypeUtility.IsUnmanagedType(outputPort.Type) && value is T tValueUnmanaged) {
-                    yield return tValueUnmanaged;
+                if (PortTypeUtility.IsUnmanagedType(outputPort.Type)) {
+                    if (value is T tValueUnmanaged)
+                        yield return tValueUnmanaged;
+                    else {
+                        yield return (T)PortValueConverter.Convert(value, outputPort.Type, firstConnection.Input.Type);
+                    }
                     continue;
                 }
 
