@@ -47,6 +47,13 @@ namespace GeometryGraph.Runtime.Data {
         }
 
         public static InstancedGeometryData Empty => new();
-        
+
+        public int CalculateHashCode(GeometryData.HashCodeDepth depth = GeometryData.HashCodeDepth.ElementCount) {
+            int hash = HashCode.Combine(geometryData.Count, transformData.Count);
+            foreach (GeometryData geometry in geometryData) {
+                hash = HashHelpers.Combine(hash, geometry.CalculateHashCode(depth));
+            }
+            return hash;
+        }
     }
 }

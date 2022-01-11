@@ -169,5 +169,24 @@ namespace GeometryGraph.Runtime.Geometry {
         }
         
         #endregion
+
+        #region Misc API methods
+
+        /// <summary>
+        /// // TODO: Document
+        /// </summary>
+        /// <param name="depth"></param>
+        /// <returns></returns>
+        public int CalculateHashCode(HashCodeDepth depth = HashCodeDepth.ElementCount) {
+            return depth switch {
+                HashCodeDepth.ElementCount => CalculateHashCodeElementCount(),
+                HashCodeDepth.AttributeCount => CalculateHashCodeAttributeCount(),
+                HashCodeDepth.AttributeValues => CalculateHashCodeAttributeValues(),
+                HashCodeDepth.Full => CalculateHashCodeFull(),
+                _ => throw new ArgumentOutOfRangeException(nameof(depth), depth, null)
+            };
+        } 
+
+        #endregion
     }
 }

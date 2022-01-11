@@ -90,5 +90,12 @@ namespace GeometryGraph.Runtime.Geometry {
                 return new FaceCorner(Face) { Vert = Vert };
             }
         }
+
+        public enum HashCodeDepth {
+            ElementCount = 0,
+            AttributeCount = 1,
+            AttributeValues = 2,
+            Full = 3
+        }
     }
 }

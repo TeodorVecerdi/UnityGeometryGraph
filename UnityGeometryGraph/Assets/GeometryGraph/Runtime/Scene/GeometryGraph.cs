@@ -26,6 +26,7 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private CurveData curveData;
         [SerializeField] private GeometryData geometryData;
         [SerializeField] private InstancedGeometryData instancedGeometryData;
+        [SerializeField] private int instancedGeometryHashCode;
 
         [SerializeField] private bool realtimeEvaluation;
         [SerializeField] private bool realtimeEvaluationAsync;
@@ -90,6 +91,9 @@ namespace GeometryGraph.Runtime {
 
             if (instancedGeometryData != null) {
                 BakeInstancedGeometry();
+                instancedGeometryHashCode = instancedGeometryData.CalculateHashCode(GeometryData.HashCodeDepth.AttributeCount);
+            } else {
+                instancedGeometryHashCode = 0;
             }
         }
 
@@ -117,6 +121,10 @@ namespace GeometryGraph.Runtime {
         }
 
         private void BakeInstancedGeometry() {
+            if (instancedGeometryHashCode == instancedGeometryData.CalculateHashCode(GeometryData.HashCodeDepth.AttributeCount)) {
+                return;
+            }
+            
             // TODO(#16): Implement GetHashCode() in GeometryData and check if the baked geometry is the same as the new geometry before re-baking
             foreach (Mesh mesh in bakedInstancedGeometry.Meshes) {
                 meshPool.Return(mesh);
