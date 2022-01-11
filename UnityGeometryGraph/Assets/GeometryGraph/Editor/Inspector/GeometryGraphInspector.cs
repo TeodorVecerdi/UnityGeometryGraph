@@ -432,6 +432,34 @@ namespace GeometryGraph.Editor {
             materialsListField.AddToClassList("materials-list");
             materialsListField.Bind(serializedObject);
             contentContainer.Add(materialsListField);
+
+            /*UnityEditor.SerializedProperty materialsListProperty = settingsProperty.FindPropertyRelative("MaterialsDoubleList");
+            IEnumerator materialsListEnumerator = materialsListProperty.GetEnumerator();
+            while (materialsListEnumerator.MoveNext()) {
+                UnityEditor.SerializedProperty current = materialsListEnumerator.Current as UnityEditor.SerializedProperty;
+                string label = current.propertyPath;
+
+                PropertyField materialField = new(current, label);
+                materialField.Bind(serializedObject);
+                contentContainer.Add(materialField);
+            }
+
+            Button addNewList = new Button(() => {
+                serializedObject.Update();
+                targetGraph.InstancedGeometrySettings.MaterialsDoubleList.Add(new MaterialList());
+                BuildInstancesTab();
+            }) {text = "+"};
+
+            Button removeList = new Button(() => {
+                if (targetGraph.InstancedGeometrySettings.MaterialsDoubleList.Count > 0) {
+                    serializedObject.Update();
+                    targetGraph.InstancedGeometrySettings.MaterialsDoubleList.RemoveAt(materialsListProperty.arraySize - 1);
+                    BuildInstancesTab();
+                }
+            }) {text = "-"};
+
+            contentContainer.Add(addNewList);
+            contentContainer.Add(removeList);*/
         }
 
         private (PropertyField field, Button button) MakeCurveVisualizerToggle(string onLabel, string offLabel, string propertyName, UnityEditor.SerializedProperty settingsProperty) {

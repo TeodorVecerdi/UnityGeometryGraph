@@ -252,5 +252,11 @@ namespace GeometryGraph.Runtime {
         // TODO(#17): Provide a way to add per-instance per-submesh materials
         // Maybe using a List<List<Material>>?
         public List<Material> Materials = new();
+        public List<MaterialList> MaterialsDoubleList = new();
+    }
+
+    [Serializable]
+    public class MaterialList {
+        public List<Material> Materials = new();
     }
 }

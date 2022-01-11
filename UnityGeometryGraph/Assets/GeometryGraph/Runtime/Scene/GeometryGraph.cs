@@ -43,7 +43,8 @@ namespace GeometryGraph.Runtime {
         
         internal RuntimeGraphObject Graph => graph;
         internal GeometryGraphSceneData SceneData => sceneData;
-        
+        internal InstancedGeometrySettings InstancedGeometrySettings => instancedGeometrySettings;
+
         internal string GraphGuid {
             get => graphGuid;
             set => graphGuid = value;
