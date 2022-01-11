@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Unity.Mathematics;
+using UnityCommons;
 
 namespace GeometryGraph.Runtime {
     //* Utilities for Unity.Mathematics
@@ -46,6 +47,16 @@ namespace GeometryGraph.Runtime {
 
         public static float4 float4(this float3 float3, float w = 0.0f) {
             return new float4(float3, w);
+        }
+
+        public static float inverse_lerp(float3 a, float3 b, float3 x) {
+            float3 d = b - a;
+            return math.dot(x - a, d) / math.dot(d, d);
+        }
+
+        public static float inverse_lerp_clamped(float3 a, float3 b, float3 x) {
+            float inv = inverse_lerp(a, b, x);
+            return inv.Clamped01();
         }
     }
 
