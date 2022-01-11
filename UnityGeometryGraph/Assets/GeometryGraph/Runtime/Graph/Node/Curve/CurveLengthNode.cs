@@ -14,12 +14,8 @@ namespace GeometryGraph.Runtime.Graph {
                 Length = 0;
                 return;
             }
-            
-            float length = 0f;
-            for (int i = 0; i < Curve.Points - 1; i++) {
-                length += math.distance(Curve.Position[i], Curve.Position[i + 1]);
-            }
-            Length = length;
+
+            Length = CurveLength.Calculate(Curve);
         }
     }
 }
