@@ -7,13 +7,16 @@ namespace GeometryGraph.Runtime.Data {
     public abstract class ObjectPool<T> {
         [SerializeField] private float growthFactor;
 
-        private readonly Queue<T> pool = new();
+        private Queue<T> pool = new();
         private int size;
+
+        private int initialPoolSize;
     
         public int PooledCount => pool.Count;
         public int FreeCount => size - pool.Count;
 
         protected ObjectPool(int initialPoolSize, float growthFactor) {
+            this.initialPoolSize = initialPoolSize;
             this.growthFactor = growthFactor;
             
             size = 0;
@@ -30,6 +33,12 @@ namespace GeometryGraph.Runtime.Data {
         }
 
         public T Get() {
+            if (pool == null) {
+                pool = new Queue<T>();
+                size = 0;
+                Allocate(initialPoolSize);
+            }
+
             if (pool.Count == 0) {
                 Grow();
             }
