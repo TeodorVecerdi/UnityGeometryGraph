@@ -23,5 +23,8 @@
         public const float MIN_CIRCULAR_CURVE_RADIUS = 0.01f;
 
         public const int MAX_NOISE_OCTAVES = 16;
+
+        public const float MAX_POINT_DISTRIBUTION_RATIO = 1024.0f;
+        public const int MAX_POINT_DISTRIBUTION_POINTS = 1024;
     }
 }
