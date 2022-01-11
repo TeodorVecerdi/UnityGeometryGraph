@@ -132,7 +132,7 @@ namespace GeometryGraph.Runtime {
                 bakedInstancedGeometry.Meshes.Add(mesh);
                 Matrix4x4[] matrices = instancedGeometryData
                                        .TransformData(i)
-                                       .Select(t => transform.localToWorldMatrix * Matrix4x4.TRS(t.Translation, Quaternion.Euler(t.EulerRotation), t.Scale))
+                                       .Select(t => transform.localToWorldMatrix * (Matrix4x4) t.Matrix)
                                        .ToArray();
                 if (matrices.Length <= 1023) {
                     bakedInstancedGeometry.Matrices.Add(new[] { matrices });

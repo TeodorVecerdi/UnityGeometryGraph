@@ -5,18 +5,11 @@ using UnityEngine;
 namespace GeometryGraph.Runtime.Data {
     [Serializable]
     public struct InstancedTransformData {
-        [SerializeField] private float3 translation;
-        [SerializeField] private float3 eulerRotation;
-        [SerializeField] private float3 scale;
-        
-        public float3 Translation => translation;
-        public float3 EulerRotation => eulerRotation;
-        public float3 Scale => scale;
+        [SerializeField] private float4x4 matrix;
+        public float4x4 Matrix => matrix;
 
         public InstancedTransformData(float3 translation, float3 eulerRotation, float3 scale) {
-            this.translation = translation;
-            this.eulerRotation = eulerRotation;
-            this.scale = scale;
+            matrix = float4x4.TRS(translation, quaternion.Euler(eulerRotation), scale);
         }
     }
 }
