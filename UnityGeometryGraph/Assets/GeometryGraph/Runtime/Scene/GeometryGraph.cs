@@ -125,8 +125,7 @@ namespace GeometryGraph.Runtime {
             if (instancedGeometryHashCode == instancedGeometryData.CalculateHashCode(GeometryData.HashCodeDepth.AttributeCount)) {
                 return;
             }
-            
-            // TODO(#16): Implement GetHashCode() in GeometryData and check if the baked geometry is the same as the new geometry before re-baking
+
             foreach (Mesh mesh in bakedInstancedGeometry.Meshes) {
                 meshPool.Return(mesh);
             }
