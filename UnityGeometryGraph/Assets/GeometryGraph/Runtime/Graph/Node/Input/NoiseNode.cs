@@ -2,6 +2,7 @@
 using GeometryGraph.Runtime.Attributes;
 using Unity.Mathematics;
 using UnityCommons;
+using UnityEngine;
 using NoiseType = GeometryGraph.Runtime.Graph.NoiseNode.NoiseNode_Type;
 
 namespace GeometryGraph.Runtime.Graph {
@@ -36,6 +37,11 @@ namespace GeometryGraph.Runtime.Graph {
 
         [GetterMethod(nameof(Result), Inline = true)]
         private float GetResult() {
+            if (RuntimeGraphObjectData.IsDuringSerialization) {
+                Debug.LogWarning("Attempting to calculate noise during serialization. Aborting.");
+                return 0.0f;
+            }
+
             float3 position = Position;
             return Noise.Simplex3(
                 ref position,
@@ -48,6 +54,11 @@ namespace GeometryGraph.Runtime.Graph {
 
         [GetterMethod(nameof(ResultVector), Inline = true)]
         private float3 GetResultVector() {
+            if (RuntimeGraphObjectData.IsDuringSerialization) {
+                Debug.LogWarning("Attempting to calculate noise during serialization. Aborting.");
+                return float3.zero;
+            }
+
             float3 position = Position;
             Noise.Simplex3X3(
                 ref position,
@@ -62,6 +73,21 @@ namespace GeometryGraph.Runtime.Graph {
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
             if (count <= 0) yield break;
+            if (RuntimeGraphObjectData.IsDuringSerialization) {
+                Debug.LogWarning("Attempting to calculate noise during serialization. Aborting.");
+
+                if (port == ResultPort) {
+                    for (int i = 0; i < count; i++) {
+                        yield return 0.0f;
+                    }
+                } else {
+                    for (int i = 0; i < count; i++) {
+                        yield return float3.zero;
+                    }
+                }
+
+                yield break;
+            }
 
             if (port == ResultPort) {
                 if (!floatResultDirty && floatResults.Count == count) {
