@@ -123,14 +123,35 @@ namespace GeometryGraph.Runtime {
             }
             bakedInstancedGeometry.Meshes.Clear();
             bakedInstancedGeometry.Matrices.Clear();
-            
+
             for (int i = 0; i < instancedGeometryData.GeometryCount; i++) {
                 GeometryData geometry = instancedGeometryData.Geometry(i);
-                
+
                 Mesh mesh = meshPool.Get();
                 exporter.Export(geometry, mesh);
                 bakedInstancedGeometry.Meshes.Add(mesh);
-                bakedInstancedGeometry.Matrices.Add(instancedGeometryData.TransformData(i).Select(t => transform.localToWorldMatrix * Matrix4x4.TRS(t.Translation, Quaternion.Euler(t.EulerRotation), t.Scale)).ToArray());
+                Matrix4x4[] matrices = instancedGeometryData
+                                       .TransformData(i)
+                                       .Select(t => transform.localToWorldMatrix * Matrix4x4.TRS(t.Translation, Quaternion.Euler(t.EulerRotation), t.Scale))
+                                       .ToArray();
+                if (matrices.Length <= 1023) {
+                    bakedInstancedGeometry.Matrices.Add(new[] { matrices });
+                    continue;
+                }
+
+                int drawCallCount = matrices.Length / 1023;
+                if (matrices.Length % 1023 != 0) {
+                    drawCallCount++;
+                }
+
+                Matrix4x4[][] arrays = new Matrix4x4[drawCallCount][];
+                for (int j = 0; j < drawCallCount; j++) {
+                    int start = j * 1023;
+                    int end = Math.Min(start + 1023, matrices.Length);
+                    arrays[j] = matrices.Skip(start).Take(end - start).ToArray();
+                }
+
+                bakedInstancedGeometry.Matrices.Add(arrays);
             }
         }
 
