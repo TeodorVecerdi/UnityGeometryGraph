@@ -188,7 +188,7 @@ namespace GeometryGraph.Runtime.Geometry {
         }
             
         private int CalculateHashCodeFull() {
-            // TODO: Implement CalculateHashCodeFull
+            // TODO(#20): Implement CalculateHashCodeFull
             // Located in `GeometryData.cs`
             return 0;
         }
