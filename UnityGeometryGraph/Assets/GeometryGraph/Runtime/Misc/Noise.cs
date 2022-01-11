@@ -15,8 +15,8 @@ namespace GeometryGraph.Runtime {
         {
             Hint.Assume(octaves > 0);
             Hint.Assume(octaves <= Constants.MAX_NOISE_OCTAVES);
-            Hint.Assume(lacunarity > 0.0f);
-            Hint.Assume(persistence > 0.0f);
+            Hint.Assume(lacunarity >= 0.001f);
+            Hint.Assume(persistence >= 0.001f);
 
             Hint.Unlikely(scale <= 0.0f);
             Hint.Unlikely(lacunarity <= 1.0f);
@@ -49,14 +49,14 @@ namespace GeometryGraph.Runtime {
             ref float3 position,
             out float3 noise,
             float scale = 1.0f,
-            [Unity.Burst.CompilerServices.AssumeRange(1, Constants.MAX_NOISE_OCTAVES)] int octaves = 1,
+            [AssumeRange(1, Constants.MAX_NOISE_OCTAVES)] int octaves = 1,
             float lacunarity = 2.0f,
             float persistence = 0.5f)
         {
             Hint.Assume(octaves > 0);
             Hint.Assume(octaves <= Constants.MAX_NOISE_OCTAVES);
-            Hint.Assume(lacunarity > 0.0f);
-            Hint.Assume(persistence > 0.0f);
+            Hint.Assume(lacunarity >= 0.001f);
+            Hint.Assume(persistence >= 0.001f);
 
             Hint.Unlikely(scale <= 0.0f);
             Hint.Unlikely(lacunarity <= 1.0f);
