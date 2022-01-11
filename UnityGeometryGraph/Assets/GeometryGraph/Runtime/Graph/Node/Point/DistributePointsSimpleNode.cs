@@ -58,7 +58,7 @@ namespace GeometryGraph.Runtime.Graph {
 
                 int pointCount = Points.Clamped(1, Constants.MAX_POINT_DISTRIBUTION_POINTS);
                 if (Mode == GenerationMode.Ratio) {
-                    pointCount = Mathf.CeilToInt(PointsRatio.Clamped(0.01f, Constants.MAX_POINT_DISTRIBUTION_RATIO) * CalculateArea(v1, v2));
+                    pointCount = Mathf.CeilToInt(PointsRatio.Clamped(0.01f, Constants.MAX_POINT_DISTRIBUTION_RATIO) * CalculateArea(v1, v2)).Clamped(1, Constants.MAX_POINT_DISTRIBUTION_POINTS);
                 }
 
                 for (int i = 0; i < pointCount; i++) {
