@@ -162,6 +162,38 @@ namespace GeometryGraph.Runtime.Geometry {
                 fcC.Vert = face.VertC;
             }
         }
+        
+        #region HashCode Implementations
+
+        private int CalculateHashCodeElementCount() {
+            return HashCode.Combine(vertices.Count, edges.Count, faces.Count, faceCorners.Count);
+        }
+
+        private int CalculateHashCodeAttributeCount() {
+            return HashHelpers.Combine(
+                CalculateHashCodeElementCount(),
+                HashCode.Combine(
+                    attributeManager.VertexAttributes.Count,
+                    attributeManager.EdgeAttributes.Count,
+                    attributeManager.FaceAttributes.Count,
+                    attributeManager.FaceCornerAttributes.Count
+                )
+            );
+        }
+
+        private int CalculateHashCodeAttributeValues() {
+            // TODO(#19): Implement CalculateHashCodeAttributeValues
+            // Located in `GeometryData.cs`
+            return 0;
+        }
+            
+        private int CalculateHashCodeFull() {
+            // TODO: Implement CalculateHashCodeFull
+            // Located in `GeometryData.cs`
+            return 0;
+        }
+
+        #endregion
 
         public void OnBeforeSerialize() {
         }
