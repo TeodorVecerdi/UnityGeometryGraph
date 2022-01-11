@@ -122,22 +122,25 @@ namespace GeometryGraph.Runtime {
         }
 
         private void BakeInstancedGeometry() {
-            if (instancedGeometryHashCode == instancedGeometryData.CalculateHashCode(GeometryData.HashCodeDepth.AttributeCount)) {
-                return;
-            }
+            bool sameGeometry = instancedGeometryHashCode == instancedGeometryData.CalculateHashCode(GeometryData.HashCodeDepth.AttributeCount);
 
-            foreach (Mesh mesh in bakedInstancedGeometry.Meshes) {
-                meshPool.Return(mesh);
+            if (!sameGeometry) {
+                foreach (Mesh mesh in bakedInstancedGeometry.Meshes) {
+                    meshPool.Return(mesh);
+                }
+                bakedInstancedGeometry.Meshes.Clear();
             }
-            bakedInstancedGeometry.Meshes.Clear();
             bakedInstancedGeometry.Matrices.Clear();
 
             for (int i = 0; i < instancedGeometryData.GeometryCount; i++) {
                 GeometryData geometry = instancedGeometryData.Geometry(i);
 
-                Mesh mesh = meshPool.Get();
-                exporter.Export(geometry, mesh);
-                bakedInstancedGeometry.Meshes.Add(mesh);
+                if (!sameGeometry) {
+                    Mesh mesh = meshPool.Get();
+                    exporter.Export(geometry, mesh);
+                    bakedInstancedGeometry.Meshes.Add(mesh);
+                }
+
                 Matrix4x4[] matrices = instancedGeometryData
                                        .TransformData(i)
                                        .Select(t => transform.localToWorldMatrix * (Matrix4x4) t.Matrix)
