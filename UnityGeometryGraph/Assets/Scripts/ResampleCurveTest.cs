@@ -12,9 +12,13 @@ namespace GeometryGraph.Runtime.Testing {
         [Title("Curve Settings")]
         [OnValueChanged(nameof(GenerateCurve)), SerializeField, MinValue(Constants.MIN_CIRCLE_CURVE_RESOLUTION), MaxValue(Constants.MAX_CURVE_RESOLUTION)]
         private int points = 32;
-        [OnValueChanged(nameof(GenerateCurve)), SerializeField, MinValue(0.01f)] private float radius = 1.0f;
         [Space]
-        [SerializeField] private bool generateLine = false;
+        [SerializeField, OnValueChanged(nameof(GenerateCurve))]
+        private bool generateLine = false;
+        [OnValueChanged(nameof(GenerateCurve)), SerializeField, MinValue(0.01f), HideIf(nameof(generateLine))]
+        private float radius = 1.0f;
+        [OnValueChanged(nameof(GenerateCurve)), SerializeField, HideIf(nameof(generateLine))]
+        private bool closeCircle = true;
         [SerializeField, ShowIf(nameof(generateLine)), OnValueChanged(nameof(GenerateCurve))]
         private float3 start;
         [SerializeField, ShowIf(nameof(generateLine)), OnValueChanged(nameof(GenerateCurve))]
@@ -29,7 +33,7 @@ namespace GeometryGraph.Runtime.Testing {
         [OnValueChanged(nameof(GenerateCurve)), SerializeField] private float noiseAmount = 0.5f;
 
         [Title("Resample Settings")]
-        [SerializeField, Button] private bool autoResample = true;
+        [SerializeField, OnValueChanged(nameof(Resample))] private bool autoResample = true;
         [SerializeField, OnValueChanged(nameof(Resample))] private bool resampleUsingPointCount = false;
 
         // Resample by Point Count
@@ -45,15 +49,16 @@ namespace GeometryGraph.Runtime.Testing {
 
         [Title("Stats", bold: false)]
         [SerializeField, DisplayAsString] private float curveLength;
-        [ShowInInspector] private int ResampledPointsByDistance => Mathf.FloorToInt(curveLength / resampleDistance);
+        [ShowInInspector] private int ResampledPointsByDistance => Mathf.FloorToInt(curveLength / resampleDistance) - (curve.IsClosed ? 0 : 1);
         [ShowInInspector] private float ActualResampleDistance => curveLength / ResampledPointsByDistance;
+        [ShowInInspector] private float ResampleDistanceForPoints => curveLength / (resamplePointCount - (curve.IsClosed ? 0 : 1));
 
         [SerializeField, HideInInspector] private CurveData curve;
         [SerializeField, HideInInspector] private CurveData resampled;
 
         [Button]
         private void GenerateCurve() {
-            CurveData tempCurve = generateLine ? CurvePrimitive.Line(points, start, end) : CurvePrimitive.Circle(points, radius);
+            CurveData tempCurve = generateLine ? CurvePrimitive.Line(points - 1, start, end) : CurvePrimitive.Circle(points, radius);
             List<float3> positions = new();
             for (int i = 0; i < tempCurve.Points; i++) {
                 float3 position = tempCurve.Position[i];
@@ -63,7 +68,7 @@ namespace GeometryGraph.Runtime.Testing {
                 positions.Add(position);
             }
 
-            curve = new CurveData(tempCurve.Type, tempCurve.Points, tempCurve.IsClosed, positions, tempCurve.Tangent.ToList(), tempCurve.Normal.ToList(), tempCurve.Binormal.ToList());
+            curve = new CurveData(tempCurve.Type, tempCurve.Points, closeCircle, positions, tempCurve.Tangent.ToList(), tempCurve.Normal.ToList(), tempCurve.Binormal.ToList());
             curveLength = CurveLength.Calculate(curve);
 
             if (autoResample) {
@@ -96,27 +101,99 @@ namespace GeometryGraph.Runtime.Testing {
             }
 
             List<float3> positions = resampled.Position.ToList();
-            float firstDistance = math.distance(positions[0], positions[1]);
-            for (int i = 1; i < positions.Count - 1; i++) {
-                float distance = math.distance(positions[i], positions[i + 1]);
+            int mismatchCount = 0;
+            double deltaSum = 0.0;
+            float targetDistance = resampleUsingPointCount ? ResampleDistanceForPoints : ActualResampleDistance;
 
-                if (Math.Abs(firstDistance - distance) > Constants.FLOAT_TOLERANCE) {
-                    Debug.Log($"Distance mismatch at index {i} [{firstDistance} (ref) != {distance}]");
+            for (int i = 0; i < positions.Count - 1; i++) {
+                float3 a = positions[i];
+                float3 b = positions[i + 1];
+                double distance = math.distance((double3)a, b);
+
+                double delta = math.abs(distance - targetDistance);
+                if (delta > Constants.FLOAT_TOLERANCE) {
+                    mismatchCount++;
+                    deltaSum += delta;
                 }
             }
 
             if (resampled.IsClosed) {
-                float distance = math.distance(positions[0], positions[^1]);
-
-                if (Math.Abs(firstDistance - distance) > Constants.FLOAT_TOLERANCE) {
-                    Debug.Log($"Distance mismatch at index {positions.Count - 1} [{firstDistance} (ref) != {distance}]");
+                double distance = math.distance((double3)positions[0], positions[^1]);
+                double delta = math.abs(distance - targetDistance);
+                if (delta > Constants.FLOAT_TOLERANCE) {
+                    mismatchCount++;
+                    deltaSum += delta;
                 }
             }
 
+            double averageDelta = mismatchCount == 0 ? 0.0 : deltaSum / mismatchCount;
+            Debug.Log($"Distance mismatch count: {mismatchCount}/{positions.Count} ({(double)mismatchCount / positions.Count:P2}) // Average delta: {averageDelta:F8}");
         }
 
         private void ResampleUsingPoints() {
-            // not implemented yet
+            List<float> distances = new() { 0 };
+
+            float d = 0.0f;
+            for (int i = 1; i < curve.Points; i++) {
+                d += math.distance(curve.Position[i - 1], curve.Position[i]);
+                distances.Add(d);
+            }
+
+            if (curve.IsClosed) {
+                d += math.distance(curve.Position[^1], curve.Position[0]);
+                distances.Add(d);
+            }
+
+            float resampleDistance = ResampleDistanceForPoints;
+            float currentDistance = 0.0f;
+
+            List<float3> positions = new();
+            List<float3> tangents = new();
+            List<float3> normals = new();
+            List<float3> binormals = new();
+
+            for (int i = 0; i < resamplePointCount; i++) {
+                int closestPointIndex = ClosestIndexByDistance(currentDistance, distances);
+                if (i == resamplePointCount - 1) {
+                    Debug.Log($"Last index: Closest: {closestPointIndex}, current distance: {currentDistance}");
+                }
+
+                if (closestPointIndex + 1 >= curve.Points) {
+                    float distance = math.distance(curve.Position[^1], curve.Position[0]);
+                    float totalDistanceWithoutLast = distances[^1] - distance;
+                    float newCurrentDistance = currentDistance - totalDistanceWithoutLast;
+
+                    float3 position = curve.Position[^1] + (newCurrentDistance / distance) * (curve.Position[0] - curve.Position[^1]);
+                    float t = math_ext.inverse_lerp_clamped(curve.Position[^1], curve.Position[0], position);
+
+                    float3 tangent = math.lerp(curve.Tangent[^1], curve.Tangent[0], t);
+                    float3 normal = math.lerp(curve.Normal[^1], curve.Normal[0], t);
+                    float3 binormal = math.cross(tangent, normal);
+
+                    positions.Add(position);
+                    tangents.Add(tangent);
+                    normals.Add(normal);
+                    binormals.Add(binormal);
+                } else {
+                    float3 start = curve.Position[closestPointIndex];
+                    float3 end = curve.Position[closestPointIndex + 1];
+
+                    float3 position = start + (currentDistance - distances[closestPointIndex]) / (distances[closestPointIndex + 1] - distances[closestPointIndex]) * (end - start);
+                    float t = math_ext.inverse_lerp_clamped(start, end, position);
+
+                    float3 tangent = math.lerp(curve.Tangent[closestPointIndex], curve.Tangent[closestPointIndex + 1], t);
+                    float3 normal = math.lerp(curve.Normal[closestPointIndex], curve.Normal[closestPointIndex + 1], t);
+                    float3 binormal = math.lerp(curve.Binormal[closestPointIndex], curve.Binormal[closestPointIndex + 1], t);
+
+                    positions.Add(position);
+                    tangents.Add(tangent);
+                    normals.Add(normal);
+                    binormals.Add(binormal);
+                }
+                currentDistance += resampleDistance;
+            }
+
+            resampled = new CurveData(curve.Type, positions.Count, curve.IsClosed, positions, tangents, normals, binormals);
         }
 
         private void ResampleUsingDistance() {
@@ -184,15 +261,17 @@ namespace GeometryGraph.Runtime.Testing {
 
         private int ClosestIndexByDistance(float distance, List<float> sortedDistances) {
             int index = 0;
-            float closestDistance = sortedDistances[0];
 
             for (int i = 0; i < sortedDistances.Count; i++) {
                 if (sortedDistances[i] > distance) {
                     break;
                 }
 
-                closestDistance = sortedDistances[i];
                 index = i;
+            }
+
+            if (index == sortedDistances.Count - 1 && Math.Abs(sortedDistances[^1] - distance) < Constants.FLOAT_TOLERANCE) {
+                return index - 1;
             }
 
             return index;
