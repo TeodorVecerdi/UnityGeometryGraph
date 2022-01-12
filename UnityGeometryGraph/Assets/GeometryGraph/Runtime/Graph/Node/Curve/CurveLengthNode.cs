@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
                 return;
             }
 
-            Length = CurveLength.Calculate(Curve);
+            Length = CurveOperations.CalculateLength(Curve);
         }
     }
 }

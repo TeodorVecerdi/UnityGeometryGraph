@@ -69,7 +69,7 @@ namespace GeometryGraph.Runtime.Testing {
             }
 
             curve = new CurveData(tempCurve.Type, tempCurve.Points, closeCircle, positions, tempCurve.Tangent.ToList(), tempCurve.Normal.ToList(), tempCurve.Binormal.ToList());
-            curveLength = CurveLength.Calculate(curve);
+            curveLength = CurveOperations.CalculateLength(curve);
 
             if (autoResample) {
                 Resample();
