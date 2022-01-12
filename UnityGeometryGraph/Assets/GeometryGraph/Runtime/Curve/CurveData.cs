@@ -34,7 +34,7 @@ namespace GeometryGraph.Runtime.Curve {
             this.tangent = tangent;
             this.normal = normal;
             this.binormal = binormal;
-            
+
             Assert.AreEqual(points, position.Count);
             Assert.AreEqual(points, tangent.Count);
             Assert.AreEqual(points, normal.Count);

@@ -38,12 +38,12 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             Tangents = new List<float3>(tangents);
             Normals = new List<float3>(normals);
             Binormals = new List<float3>(binormals);
-            
+
             points.Dispose();
             tangents.Dispose();
             normals.Dispose();
             binormals.Dispose();
-            
+
             IsInitialized = true;
         }
 
@@ -86,7 +86,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
                 float t1 = t * t;
                 float3 p0 = start - control;
                 float3 p1 = end - control;
-            
+
                 return control + t0 * p0 + t1 * p1;
             }
 

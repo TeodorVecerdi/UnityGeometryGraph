@@ -19,7 +19,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             b = pitch / math_ext.TWO_PI;
             this.topRadius = topRadius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             this.bottomRadius = bottomRadius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
-            
+
             IsClosed = false;
         }
 
@@ -40,12 +40,12 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             Tangents = new List<float3>(tangents);
             Normals = new List<float3>(normals);
             Binormals = new List<float3>(binormals);
-            
+
             points.Dispose();
             tangents.Dispose();
             normals.Dispose();
             binormals.Dispose();
-            
+
             IsInitialized = true;
         }
 
@@ -76,7 +76,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
 
             public void Execute(int index) {
                 float t = index / (float)resolution;
-                
+
                 points[index] = Position(t * time);
                 tangents[index] = Tangent(t * time);
                 normals[index] = Normal(t * time);

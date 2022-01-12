@@ -33,12 +33,12 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             Tangents = new List<float3>(tangents);
             Normals = new List<float3>(normals);
             Binormals = new List<float3>(binormals);
-            
+
             points.Dispose();
             tangents.Dispose();
             normals.Dispose();
             binormals.Dispose();
-            
+
             IsInitialized = true;
         }
 

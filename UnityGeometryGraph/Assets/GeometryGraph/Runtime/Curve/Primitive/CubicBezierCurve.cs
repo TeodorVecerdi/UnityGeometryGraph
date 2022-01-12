@@ -77,7 +77,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
                 float t = index / (float)resolution;
                 float3 tangent = Tangent(t);
                 float3 binormal = Binormal(t);
-                
+
                 points[index] = Position(t);
                 tangents[index] = tangent;
                 normals[index] = binormal;
