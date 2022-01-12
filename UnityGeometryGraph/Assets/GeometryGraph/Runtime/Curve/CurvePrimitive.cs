@@ -28,7 +28,7 @@ namespace GeometryGraph.Runtime.Curve {
             quadraticBezierCurve.Generate();
             return quadraticBezierCurve.ToCurveData();
         }
-        
+
         public static CurveData CubicBezier(int resolution, bool isClosed, float3 start, float3 controlA, float3 controlB, float3 end) {
             resolution = resolution.Clamped(Constants.MIN_BEZIER_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
 
@@ -36,7 +36,7 @@ namespace GeometryGraph.Runtime.Curve {
             cubicBezierCurve.Generate();
             return cubicBezierCurve.ToCurveData();
         }
-        
+
         public static CurveData Helix(int resolution, float rotations, float pitch, float topRadius, float bottomRadius) {
             resolution = resolution.Clamped(Constants.MIN_BEZIER_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
 

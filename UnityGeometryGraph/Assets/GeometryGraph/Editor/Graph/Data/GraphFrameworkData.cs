@@ -54,14 +54,14 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkData() {
             
         }
-        
+
         public GraphFrameworkData(RuntimeGraphObject runtimeGraph) {
             RuntimeGraphData = runtimeGraph.RuntimeData;
         }
 
         public void OnBeforeSerialize() {
             if (Owner != null) {
-                IsBlackboardVisible = Owner.IsBlackboardVisible; 
+                IsBlackboardVisible = Owner.IsBlackboardVisible;
                 AreCategoriesEnabled = Owner.AreCategoriesEnabled;
                 GraphPosition = Owner.GraphPosition;
             }
@@ -90,7 +90,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void ReplaceWith(GraphFrameworkData otherGraphData) {
-            // Remove everything 
+            // Remove everything
             List<string> removedNodesGuid = new();
             removedNodesGuid.AddRange(nodes.Select(node => node.GUID));
             foreach (string node in removedNodesGuid) {
@@ -270,7 +270,7 @@ namespace GeometryGraph.Editor {
 
                     node.PortData[i] = newPortGuid;
                 }
-                
+
                 // offset the pasted node slightly so it's not on top of the original one
                 NodeDrawState drawState = node.DrawState;
                 Rect position = drawState.Position;

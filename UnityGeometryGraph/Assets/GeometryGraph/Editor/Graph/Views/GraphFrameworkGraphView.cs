@@ -11,13 +11,13 @@ namespace GeometryGraph.Editor {
     internal static class GraphViewReflectionHelper {
         private static readonly MethodInfo requestNodeCreationMethodInfo = typeof(GraphView).GetMethod("RequestNodeCreation", BindingFlags.Instance | BindingFlags.NonPublic);
         public static Action<VisualElement, int, Vector2> RequestNodeCreation { get; private set; }
-        
+
         public static void CreateDelegate(GraphView instance) {
             RequestNodeCreation = (Action<VisualElement, int, Vector2>)requestNodeCreationMethodInfo.CreateDelegate(typeof(Action<VisualElement, int, Vector2>), instance);
         }
-        
+
     }
-    
+
     public class GraphFrameworkGraphView : GraphView {
         private EditorView editorView;
         public EditorView EditorView => editorView;
@@ -117,7 +117,7 @@ namespace GeometryGraph.Editor {
         }
 
         private void OnContextMenuNodeCreate(DropdownMenuAction a) => GraphViewReflectionHelper.RequestNodeCreation(null, -1, a.eventInfo.mousePosition);
-        
+
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter) {
             List<Port> compatiblePorts = new();
             ports.ForEach(port => {

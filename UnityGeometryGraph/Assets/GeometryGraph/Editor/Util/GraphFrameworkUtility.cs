@@ -60,12 +60,12 @@ namespace GeometryGraph.Editor {
                 GraphFrameworkObject graphObject = ScriptableObject.CreateInstance<GraphFrameworkObject>();
                 graphObject.Initialize(graphData);
                 graphObject.AssetGuid = graphData.AssetGuid;
-                
+
                 if (string.IsNullOrEmpty(graphObject.AssetGuid)) {
                     graphObject.RecalculateAssetGuid(assetPath);
                     SaveGraph(graphObject, false);
                 }
-                
+
                 return graphObject;
             } catch (ArgumentNullException exception) {
                 Debug.LogException(exception);
@@ -111,7 +111,7 @@ namespace GeometryGraph.Editor {
                 } else {
                     Debug.LogWarning($"RuntimeGraphObject not found while loading Graph at path: `{assetPath}`");
                 }
-                
+
                 graphFrameworkObject.RecalculateAssetGuid(assetPath);
                 return graphFrameworkObject;
             }

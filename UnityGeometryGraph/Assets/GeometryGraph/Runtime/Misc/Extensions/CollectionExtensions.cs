@@ -36,7 +36,7 @@ namespace GeometryGraph.Runtime {
             if (length == 1) return list.Select(t => new[] { t });
             return SubSetsN(list, length - 1).SelectMany(t => list.Where(e => t.All(g => g.CompareTo(e) == -1)), (t1, t2) => t1.Concat(new T[] { t2 }));
         }
-        
+
         public static List<T> Flatten<T>(this IEnumerable<IEnumerable<T>> list) {
             return list.SelectMany(t => t).ToList();
         }

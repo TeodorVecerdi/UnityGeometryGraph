@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
             Object[] allAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(selection));
             foreach (Object asset in allAssets) {
                 Debug.LogWarning($"{asset.name}:{asset.GetType().Name}:{asset.GetInstanceID()}");
-                
+
             }
         }
 

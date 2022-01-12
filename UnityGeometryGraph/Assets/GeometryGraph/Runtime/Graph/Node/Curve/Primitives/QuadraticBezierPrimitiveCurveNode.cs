@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float3 Control { get; private set; } = float3_ext.right;
         [In] public float3 End { get; private set; } = float3_ext.forward;
         [Out] public CurveData Curve { get; private set; }
-        
+
         [GetterMethod(nameof(Curve), Inline = true)]
         private CurveData GetCurve() {
             if (Curve == null) CalculateResult();

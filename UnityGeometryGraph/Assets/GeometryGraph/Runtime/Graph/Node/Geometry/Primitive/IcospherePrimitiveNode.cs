@@ -9,17 +9,17 @@ namespace GeometryGraph.Runtime.Graph {
     public partial class IcospherePrimitiveNode {
         [AdditionalValueChangedCode("{other} = {other}.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
         [In] public float Radius { get; private set; } = 1.0f;
-        
+
         [AdditionalValueChangedCode("GeometryDirty = true", Where = AdditionalValueChangedCodeAttribute.Location.AfterUpdate)]
         [AdditionalValueChangedCode("{other} = {other}.Clamped(0, Constants.MAX_ICOSPHERE_SUBDIVISIONS);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
-        [In] 
+        [In]
         public int Subdivisions { get; private set; } = 2;
 
         [CustomSerialization("{self} ? 1 : 0", "{self} = {storage}.Value<int>({index}) == 1 || Result == null")]
-        [Setting(UpdatedFromEditorNode = false)] 
+        [Setting(UpdatedFromEditorNode = false)]
         public bool GeometryDirty { get; private set; } = true;
-        
-        [Out] 
+
+        [Out]
         public GeometryData Result { get; private set; }
 
         [GetterMethod(nameof(Result), Inline = true)]

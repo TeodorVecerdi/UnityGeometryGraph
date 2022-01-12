@@ -18,7 +18,7 @@ namespace GeometryGraph.Runtime.Graph {
         [CustomSerialization("Serializer.Gradient({self})", "{self} = Deserializer.Gradient({storage}[{index}] as JObject)")]
         [Setting(GenerateEquality = false)]
         public Gradient Gradient { get; private set; } = (Gradient)Default;
-        
+
         [Out] public float3 ResultRGB { get; private set; }
         [Out] public float ResultAlpha { get; private set; }
 
@@ -51,7 +51,7 @@ namespace GeometryGraph.Runtime.Graph {
                         yield return results[i].Alpha;
                     }
                 }
-                
+
                 yield break;
             }
             

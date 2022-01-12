@@ -8,11 +8,11 @@ namespace GeometryGraph.Runtime.Graph {
     [AdditionalUsingStatements("GeometryGraph.Runtime.Serialization")]
     public partial class FloatCurveMapNode {
         [In] public float Value { get; private set; }
-        
+
         [CustomSerialization("Serializer.AnimationCurve({self})", "{self} = Deserializer.AnimationCurve({storage}[{index}] as JObject)")]
-        [Setting(GenerateEquality = false)] 
+        [Setting(GenerateEquality = false)]
         public AnimationCurve Curve { get; private set; } = (AnimationCurve) UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
-        
+
         [Out] public float Result { get; private set; }
 
         private readonly List<float> results = new();
@@ -30,7 +30,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 

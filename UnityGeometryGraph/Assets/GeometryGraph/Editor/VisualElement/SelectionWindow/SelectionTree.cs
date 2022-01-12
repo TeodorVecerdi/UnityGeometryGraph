@@ -32,7 +32,7 @@ namespace GeometryGraph.Editor {
                     currentColumn++;
                     continue;
                 }
-                
+
                 columns[currentColumn].Add(category);
             }
 
@@ -49,7 +49,7 @@ namespace GeometryGraph.Editor {
                     currentColumn++;
                     continue;
                 }
-                
+
                 columns[currentColumn].Add(category);
             }
             
@@ -75,7 +75,7 @@ namespace GeometryGraph.Editor {
             int currentSize = (int)categories[0].Size;
             for (int i = 0; i < categories.Count; i++) {
                 SelectionCategory category = categories[i];
-                
+
                 if (!category.IsStacked) {
                     for (int i1 = i - 1; i1 >= 0; i1--) {
                         if (actualSizes[i1] != -1) break;

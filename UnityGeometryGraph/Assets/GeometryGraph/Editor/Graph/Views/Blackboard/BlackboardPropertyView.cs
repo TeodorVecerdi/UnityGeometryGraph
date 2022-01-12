@@ -11,7 +11,7 @@ namespace GeometryGraph.Editor {
         private readonly EditorView editorView;
         private readonly AbstractProperty property;
         private readonly List<VisualElement> rows;
-        
+
         public BlackboardPropertyView(BlackboardField field, EditorView editorView, AbstractProperty property) {
             this.field = field;
             this.editorView = editorView;
@@ -79,12 +79,12 @@ namespace GeometryGraph.Editor {
             referenceNameField.RegisterValueChangedCallback(evt => {
                 string newValue = evt.newValue;
                 if (newValue == property.ReferenceName) return;
-                
+
                 if (string.IsNullOrEmpty(newValue)) {
                     newValue = property.GetDefaultReferenceName();
                     referenceNameField.SetValueWithoutNotify(newValue);
                 }
-                
+
                 editorView.GraphObject.RegisterCompleteObjectUndo("Edit Property Reference Name");
                 editorView.GraphObject.GraphData.SanitizePropertyReference(property, evt.newValue);
                 referenceNameField.SetValueWithoutNotify(newValue);

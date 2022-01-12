@@ -14,18 +14,18 @@ namespace GeometryGraph.Editor {
     [CustomEditor(typeof(GGraph))]
     public class GeometryGraphInspector : UnityEditor.Editor {
         private GGraph targetGraph;
-        
+
         private VisualElement root;
 
         private VisualElement mainContent;
         private TabContainer tabContainer;
         private VisualElement missingGraphNotice;
         private VisualElement noPropertiesNotice;
-        
+
         private VisualElement propertiesTab;
         private VisualElement curveVisualizerTab;
         private VisualElement instancesTab;
-        
+
         private int activeTab;
 
         private void OnEnable() {
@@ -209,7 +209,7 @@ namespace GeometryGraph.Editor {
             contentContainer.Clear();
 
             int propIndex = 0;
-            Dictionary<string, (Property property, int index)> propertyDictionary = 
+            Dictionary<string, (Property property, int index)> propertyDictionary =
                 graphObject.RuntimeData.Properties.ToDictionary(property => property.Guid, property => (property, propIndex++));
             
             UnityEditor.SerializedProperty keysProperty = serializedObject.FindProperty("sceneData.propertyData.keys");
@@ -245,21 +245,21 @@ namespace GeometryGraph.Editor {
                     propertyField.RegisterCallback((ContextualMenuPopulateEvent evt) => {
                         evt.menu.AppendAction("Reset to Default", _ => { ResetPropertyToDefault(property, relativePropertyName, relativeProperty, valueProperty); }, DropdownMenuAction.AlwaysEnabled);
                     });
-                    
+
                     if (propertyField.childCount <= 0) return;
-                    
+
                     if (propertyField[0] is ObjectField objectField) {
                         objectField[1][0].AddManipulator(new ContextualMenuManipulator(evt => {
                             evt.menu.AppendAction("Reset to Default", _ => { ResetPropertyToDefault(property, relativePropertyName, relativeProperty, valueProperty); }, DropdownMenuAction.AlwaysEnabled);
                         }));
                     }
-                    
+
                     VisualElement propertyFieldInput = propertyField[0][0];
                     propertyFieldInput.AddManipulator(new ContextualMenuManipulator(evt => {
                         evt.menu.AppendAction("Reset to Default", _ => { ResetPropertyToDefault(property, relativePropertyName, relativeProperty, valueProperty); }, DropdownMenuAction.AlwaysEnabled);
                     }));
                 });
-                
+
                 propertyField.Bind(serializedObject);
                 properties.Add(propertyField);
             }
@@ -298,24 +298,24 @@ namespace GeometryGraph.Editor {
             VisualElement splineSettingsContainer = new VisualElement().WithClasses("spline-settings-container", "curve-settings-container");
             mainContainer.Add(splineSettingsContainer);
             {
-                
+
                 VisualElement header = new VisualElement().WithClasses("curve-settings-category-header");
                 Label splineSettingsLabel = new Label("Spline Settings").WithClasses("curve-settings-category-title", "spline-settings-label");
                 header.Add(splineSettingsLabel);
-                
+
                 (PropertyField showSplineField, Button showSplineButton) = MakeCurveVisualizerToggle("Hide", "Show", "ShowSpline", settingsProperty);
                 header.Add(showSplineField);
                 header.Add(showSplineButton);
                 splineSettingsContainer.Add(header);
-                
+
                 PropertyField splineWidthField = new (settingsProperty.FindPropertyRelative("SplineWidth"), "Width");
                 splineWidthField.Bind(serializedObject);
                 splineSettingsContainer.Add(splineWidthField);
-                
+
                 PropertyField splineColorField = new(settingsProperty.FindPropertyRelative("SplineColor"), "Color");
                 splineColorField.Bind(serializedObject);
                 splineSettingsContainer.Add(splineColorField);
-                
+
                 showSplineField.RegisterValueChangeCallback(evt => {
                     bool newValue = evt.changedProperty.boolValue && settingsProperty.FindPropertyRelative("Enabled").boolValue;
                     splineSettingsLabel.SetEnabled(newValue);
@@ -335,26 +335,26 @@ namespace GeometryGraph.Editor {
                 VisualElement header = new VisualElement().WithClasses("curve-settings-category-header");;
                 Label pointSettingsLabel = new Label("Point Settings").WithClasses("curve-settings-category-title", "point-settings-label");
                 header.Add(pointSettingsLabel);
-                
+
                 (PropertyField showPointsField, Button showPointsButton) = MakeCurveVisualizerToggle("Hide", "Show", "ShowPoints", settingsProperty);
                 header.Add(showPointsField);
                 header.Add(showPointsButton);
                 pointSettingsContainer.Add(header);
-                
+
                 PropertyField pointSizeField = new(settingsProperty.FindPropertyRelative("PointSize"), "Size");
                 pointSizeField.Bind(serializedObject);
                 pointSettingsContainer.Add(pointSizeField);
                 PropertyField pointColorField = new(settingsProperty.FindPropertyRelative("PointColor"), "Color");
                 pointColorField.Bind(serializedObject);
                 pointSettingsContainer.Add(pointColorField);
-                
+
                 showPointsField.RegisterValueChangeCallback(evt => {
                     bool newValue = evt.changedProperty.boolValue && settingsProperty.FindPropertyRelative("Enabled").boolValue;
                     pointSettingsLabel.SetEnabled(newValue);
                     pointSizeField.SetEnabled(newValue);
                     pointColorField.SetEnabled(newValue);
                 });
-                
+
                 List<(string, VisualElement)> fields = enabledField.userData as List<(string, VisualElement)>;
                 fields.Add((string.Empty, showPointsButton));
                 fields.Add(("ShowPoints", pointSettingsLabel));
@@ -368,35 +368,35 @@ namespace GeometryGraph.Editor {
                 VisualElement header = new VisualElement().WithClasses("curve-settings-category-header");
                 Label directionVectorSettingsLabel = new Label("Direction Vector Settings").WithClasses("curve-settings-category-title", "direction-vector-settings-label");
                 header.Add(directionVectorSettingsLabel);
-                
+
                 (PropertyField showDirectionVectorsField, Button showDirectionVectorsButton) = MakeCurveVisualizerToggle("Hide", "Show", "ShowDirectionVectors", settingsProperty);
                 header.Add(showDirectionVectorsField);
                 header.Add(showDirectionVectorsButton);
                 directionVectorSettingsContainer.Add(header);
-                
+
                 PropertyField directionVectorLengthField = new(settingsProperty.FindPropertyRelative("DirectionVectorLength"), "Length");
                 directionVectorLengthField.Bind(serializedObject);
                 directionVectorSettingsContainer.Add(directionVectorLengthField);
-                
+
                 PropertyField directionVectorWidthField = new(settingsProperty.FindPropertyRelative("DirectionVectorWidth"), "Width");
                 directionVectorWidthField.Bind(serializedObject);
                 directionVectorSettingsContainer.Add(directionVectorWidthField);
-                
+
                 PropertyField directionTangentColorField = new(settingsProperty.FindPropertyRelative("DirectionTangentColor"), "Tangent Color");
                 directionTangentColorField.Bind(serializedObject);
                 directionVectorSettingsContainer.Add(directionTangentColorField);
-                
+
                 PropertyField directionNormalColorField = new(settingsProperty.FindPropertyRelative("DirectionNormalColor"), "Normal Color");
                 directionNormalColorField.Bind(serializedObject);
                 directionVectorSettingsContainer.Add(directionNormalColorField);
-                
+
                 PropertyField directionBinormalColorField = new(settingsProperty.FindPropertyRelative("DirectionBinormalColor"), "Binormal Color");
                 directionBinormalColorField.Bind(serializedObject);
                 directionVectorSettingsContainer.Add(directionBinormalColorField);
-                
+
                 showDirectionVectorsField.RegisterValueChangeCallback(evt => {
                     bool newValue = evt.changedProperty.boolValue && settingsProperty.FindPropertyRelative("Enabled").boolValue;
-                    
+
                     directionVectorSettingsLabel.SetEnabled(newValue);
                     directionVectorLengthField.SetEnabled(newValue);
                     directionVectorWidthField.SetEnabled(newValue);
@@ -404,7 +404,7 @@ namespace GeometryGraph.Editor {
                     directionNormalColorField.SetEnabled(newValue);
                     directionBinormalColorField.SetEnabled(newValue);
                 });
-                
+
                 List<(string, VisualElement)> fields = enabledField.userData as List<(string, VisualElement)>;
                 fields.Add((string.Empty, showDirectionVectorsButton));
                 fields.Add(("ShowDirectionVectors", directionVectorSettingsLabel));

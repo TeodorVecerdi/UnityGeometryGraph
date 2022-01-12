@@ -13,7 +13,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         private readonly List<float3> results = new();
         private bool resultsDirty = true;
-        
+
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
         [CalculatesProperty(nameof(Vector))]
@@ -27,7 +27,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 

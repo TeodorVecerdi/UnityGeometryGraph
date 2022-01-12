@@ -13,7 +13,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (Result == null) CalculateResult();
             return Result;
         }
-        
+
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             Result = GeometryPrimitive.Cube(Size);

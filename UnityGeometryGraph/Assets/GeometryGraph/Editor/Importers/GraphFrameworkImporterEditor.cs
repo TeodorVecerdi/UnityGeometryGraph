@@ -50,7 +50,7 @@ namespace GeometryGraph.Editor {
                 if (activeWindow.IsDirty && !activeWindow.ShowReplaceGraphWindow()) {
                     return true;
                 }
-                
+
                 activeWindow.SetGraphObject(graphObject);
                 activeWindow.BuildWindow();
                 activeWindow.Focus();

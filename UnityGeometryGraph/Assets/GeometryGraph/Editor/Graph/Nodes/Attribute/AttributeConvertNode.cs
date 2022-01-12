@@ -13,7 +13,7 @@ namespace GeometryGraph.Editor {
     public class AttributeConvertNode : AbstractNode<GeometryGraph.Runtime.Graph.AttributeConvertNode> {
         protected override string Title => "Attribute Convert";
         protected override NodeCategory Category => NodeCategory.Attribute;
-        
+
         private GraphFrameworkPort geometryPort;
         private GraphFrameworkPort attributePort;
         private GraphFrameworkPort resultAttributePort;
@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
         private string resultAttribute;
         private TargetDomain domain = TargetDomain.Auto;
         private TargetType type = TargetType.Auto;
-        
+
         private static readonly SelectionTree domainTree = new (new List<object>(Enum.GetValues(typeof(TargetDomain)).Convert(o => o))) {
             new SelectionCategory("Domain", false) {
                 new ("Chooses the domain of the result attribute if it already exists, otherwise uses the domain of the source attribute if it exists, otherwise it uses the Vertex domain", 0, true),
@@ -38,7 +38,7 @@ namespace GeometryGraph.Editor {
                 new ("Store the attribute in the Face Corner domain", 4, false)
             }
         };
-        
+
         private static readonly SelectionTree typeTree = new (new List<object>(Enum.GetValues(typeof(TargetType)).Convert(o => o))) {
             new SelectionCategory("Type", false) {
                 new ("Chooses the type of the result attribute if it already exists, otherwise uses the type of the source attribute if it exists, otherwise it uses the Float type", 0, true),
@@ -60,7 +60,7 @@ namespace GeometryGraph.Editor {
 
             domainDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == domain) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change domain");
                 domain = evt.newValue;
                 RuntimeNode.UpdateDomain(domain);
@@ -68,7 +68,7 @@ namespace GeometryGraph.Editor {
             
             typeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == type) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change type");
                 type = evt.newValue;
                 RuntimeNode.UpdateType(type);
@@ -76,7 +76,7 @@ namespace GeometryGraph.Editor {
             
             attributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change attribute");
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
@@ -84,7 +84,7 @@ namespace GeometryGraph.Editor {
             
             resultAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == resultAttribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change result attribute");
                 resultAttribute = evt.newValue;
                 RuntimeNode.UpdateResultAttribute(resultAttribute);

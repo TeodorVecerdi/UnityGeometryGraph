@@ -73,7 +73,7 @@ namespace GeometryGraph.Editor {
         public static ulong ToUInt64<T>(this T value) where T : Enum {
             return ToUInt64((object)value);
         }
-        
+
         private static ulong ToUInt64(object value)
         {
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault

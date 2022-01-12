@@ -5,7 +5,7 @@ namespace GeometryGraph.Runtime.Curve {
         public bool CloseCaps { get; }
         public CapUVType CapUvType { get; }
         public bool SeparateMaterialForCaps { get; }
-        
+
         public bool ShadeSmoothCurve { get; }
         public bool ShadeSmoothCaps { get; }
 
@@ -21,15 +21,15 @@ namespace GeometryGraph.Runtime.Curve {
             IncrementalRotationOffset = incrementalRotationOffset;
             CapUvType = capUVType;
         }
-        
+
         public enum CapUVType {
             /// <summary>Generate cap UVs in local space (relative to the cap)</summary>
             LocalSpace = 0,
-            
+
             /// <summary>Generate cap UVs in world space</summary>
             WorldSpace = 1,
-            
-            /// <summary>Same as <see cref="WorldSpace"/> but offset to start at 0,0</summary> 
+
+            /// <summary>Same as <see cref="WorldSpace"/> but offset to start at 0,0</summary>
             [DisplayName("Aligned")] WorldSpaceAligned = 2,
         }
     }

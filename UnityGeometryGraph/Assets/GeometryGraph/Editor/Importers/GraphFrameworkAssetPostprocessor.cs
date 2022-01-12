@@ -35,12 +35,12 @@ namespace GeometryGraph.Editor {
             return AssetMoveResult.DidNotMove;
         }
     }
-    
+
     public class GraphFrameworkAssetPostprocessor : AssetPostprocessor {
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) {
             if (GraphFrameworkAssetModificationProcessor.RenamedAssets.Count > 0) {
                 UpdateRenamedAssetsTitle(GraphFrameworkAssetModificationProcessor.RenamedAssets);
-                GraphFrameworkAssetModificationProcessor.RenamedAssets.Clear();    
+                GraphFrameworkAssetModificationProcessor.RenamedAssets.Clear();
             }
             
             

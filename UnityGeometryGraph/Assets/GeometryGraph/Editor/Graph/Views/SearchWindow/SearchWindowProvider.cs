@@ -14,7 +14,7 @@ namespace GeometryGraph.Editor {
         public List<NodeEntry> CurrentNodeEntries;
         public GraphFrameworkPort ConnectedPort;
         public bool RegenerateEntries { get; set; }
-        
+
         private static readonly Type outputNodeType = typeof(OutputNode);
 
         public void Initialize(GraphFrameworkEditorWindow editorWindow, EditorView editorView) {
@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
             foreach (Type type in TypeCache.GetTypesDerivedFrom<AbstractNode>()) {
                 if (!type.IsClass || type.IsAbstract)
                     continue;
-                
+
                 if(type == outputNodeType && editorView.GraphView.GraphOutputNode != null) continue;
 
                 if (type.GetCustomAttributes(typeof(TitleAttribute), false) is TitleAttribute[] attrs && attrs.Length > 0) {
@@ -69,7 +69,7 @@ namespace GeometryGraph.Editor {
 
                     // Make sure that leaves go before nodes
                     if (entry1.Title.Length != entry2.Title.Length && (i == entry1.Title.Length - 1 || i == entry2.Title.Length - 1)) {
-                        //once nodes are sorted, sort slot entries by slot order instead of alphebetically 
+                        //once nodes are sorted, sort slot entries by slot order instead of alphebetically
                         int alphaOrder = entry1.Title.Length < entry2.Title.Length ? -1 : 1;
                         int slotOrder = entry1.CompatiblePortIndex.CompareTo(entry2.CompatiblePortIndex);
                         return alphaOrder.CompareTo(slotOrder);
@@ -141,7 +141,7 @@ namespace GeometryGraph.Editor {
                 RegenerateEntries = false;
             }
 
-            //create empty root for searcher tree 
+            //create empty root for searcher tree
             List<SearcherItem> root = new();
             NodeEntry dummyEntry = new();
 

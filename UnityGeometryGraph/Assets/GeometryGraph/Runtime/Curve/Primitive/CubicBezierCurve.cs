@@ -104,7 +104,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             }
 
             public float3 Normal(float t) {
-                float3 normal = 6.0f * (1.0f - t) * (controlB - 2.0f * controlA + start) + 
+                float3 normal = 6.0f * (1.0f - t) * (controlB - 2.0f * controlA + start) +
                                 6.0f * t * (end - 2.0f * controlB + controlA);
                 return math.normalizesafe(normal, float3_ext.right);
             }

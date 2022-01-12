@@ -8,10 +8,10 @@ namespace GeometryGraph.Runtime.Graph {
     [AdditionalUsingStatements("UnityCommons")]
     public partial class SetMaterialNode {
         [In] public GeometryData Input { get; private set; }
-        
+
         [AdditionalValueChangedCode("{other} = {other}.MinClamped(0);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
         [In] public int MaterialIndex { get; private set; }
-        
+
         [Out] public GeometryData Result { get; private set; }
 
         protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {

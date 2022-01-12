@@ -8,7 +8,7 @@ namespace GeometryGraph.Editor {
 
         private Action<object> onSelect;
         private SelectionTree tree;
-        
+
         internal static void ShowWindow(Vector2 position, float buttonHeight, SelectionTree tree, Action<object> onSelect) {
             SelectionWindow window = CreateInstance<SelectionWindow>();
             window.onSelect = onSelect;

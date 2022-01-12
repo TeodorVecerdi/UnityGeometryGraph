@@ -35,7 +35,7 @@ namespace GeometryGraph.Runtime.Geometry {
             dirty = true;
             this.owner = owner;
         }
-        
+
         public void SetOwner(GeometryData owner) {
             this.owner = owner;
         }
@@ -125,7 +125,7 @@ namespace GeometryGraph.Runtime.Geometry {
             if (faceCornerAttributes.ContainsKey(name)) return faceCornerAttributes.Remove(name);
             return false;
         }
-        
+
         internal bool Remove(string name, AttributeDomain domain) {
             AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
@@ -161,7 +161,7 @@ namespace GeometryGraph.Runtime.Geometry {
             if (faceCornerAttributes.ContainsKey(name)) return faceCornerAttributes[name];
             return null;
         }
-        
+
         internal BaseAttribute Request(string name, AttributeType type) {
             if (vertexAttributes.ContainsKey(name) && vertexAttributes[name].Type == type) return vertexAttributes[name];
             if (edgeAttributes.ContainsKey(name) && edgeAttributes[name].Type == type) return edgeAttributes[name];
@@ -170,7 +170,7 @@ namespace GeometryGraph.Runtime.Geometry {
             // NOTE: Maybe I should do `else find any attribute with name and convert to type`
             return null;
         }
-        
+
         internal BaseAttribute Request(string name, AttributeDomain domain) {
             AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,
@@ -183,7 +183,7 @@ namespace GeometryGraph.Runtime.Geometry {
             // NOTE: Maybe I should do `else find any attribute with name and convert to domain`
             return null;
         }
-        
+
         internal BaseAttribute Request(string name, AttributeType type, AttributeDomain domain) {
             AttributeDictionary searchDict = domain switch {
                 AttributeDomain.Vertex => vertexAttributes,

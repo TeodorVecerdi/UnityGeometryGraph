@@ -39,13 +39,13 @@ namespace GeometryGraph.Runtime.Graph {
                 Result = GeometryData.Empty;
                 return;
             }
-            
+
             Result = Geometry.Clone();
-            
+
             if (string.IsNullOrWhiteSpace(Attribute) || string.IsNullOrWhiteSpace(ResultAttribute) || !Geometry.HasAttribute(Attribute)) {
                 return;
             }
-            
+
             AttributeDomain targetDomain = Domain switch {
                 TargetDomain.Auto => Result.GetAttribute(Attribute)!.Domain,
                 TargetDomain.Vertex => AttributeDomain.Vertex,
@@ -54,7 +54,7 @@ namespace GeometryGraph.Runtime.Graph {
                 TargetDomain.FaceCorner => AttributeDomain.FaceCorner,
                 _ => throw new ArgumentOutOfRangeException()
             };
-            
+
             AttributeType targetType = Type switch {
                 TargetType.Auto => Result.GetAttribute(Attribute)!.Type,
                 TargetType.Float => AttributeType.Float,
@@ -62,7 +62,7 @@ namespace GeometryGraph.Runtime.Graph {
                 TargetType.Vector => AttributeType.Vector3,
                 _ => throw new ArgumentOutOfRangeException()
             };
-            
+
             switch (targetType) {
                 case AttributeType.Float: {
                     FloatAttribute attribute = Result.GetAttribute<FloatAttribute>(Attribute, targetDomain);
@@ -99,7 +99,7 @@ namespace GeometryGraph.Runtime.Graph {
                     Result.StoreAttribute(((IEnumerable<bool>)attribute!).Into<BoolAttribute>(ResultAttribute, targetDomain));
                     break;
                 }
-                    
+
                 case AttributeType.Invalid: break;
                 default: throw new ArgumentOutOfRangeException();
             }

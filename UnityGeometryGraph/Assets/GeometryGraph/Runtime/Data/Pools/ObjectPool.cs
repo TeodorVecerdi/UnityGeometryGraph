@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime.Data {
         private int size;
 
         private int initialPoolSize;
-    
+
         public int PooledCount => pool.Count;
         public int FreeCount => size - pool.Count;
 
@@ -52,7 +52,7 @@ namespace GeometryGraph.Runtime.Data {
             OnReturn(item);
             pool.Enqueue(item);
         }
-        
+
         public void Cleanup() {
             while (pool?.Count > 0) {
                 DestroyPooled(pool.Dequeue());

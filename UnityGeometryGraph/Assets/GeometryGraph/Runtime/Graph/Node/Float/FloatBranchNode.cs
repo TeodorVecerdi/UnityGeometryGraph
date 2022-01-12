@@ -9,13 +9,13 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float IfTrue { get; private set; }
         [In] public float IfFalse { get; private set; }
         [Out] public float Result { get; private set; }
-        
+
         private readonly List<float> results = new();
         private bool resultsDirty = true;
 
         [GetterMethod(nameof(Result), Inline = true)]
         private float GetResult() => Condition ? IfTrue : IfFalse;
-        
+
         [CalculatesProperty(nameof(Result))]
         private void MarkResultsDirty() => resultsDirty = true;
 
@@ -25,7 +25,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-             
+
                 yield break;
             }
 

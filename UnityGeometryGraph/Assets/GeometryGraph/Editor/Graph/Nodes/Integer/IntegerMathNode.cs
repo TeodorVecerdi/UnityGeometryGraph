@@ -177,29 +177,29 @@ namespace GeometryGraph.Editor {
                 case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.GreaterThan:
                 case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Modulo:
                     SetPortNames("X", "Y", "", ""); break;
-                
-                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Power: 
+
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Power:
                     SetPortNames("Base", "Exponent", "", ""); break;
-                
-                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Logarithm: 
+
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Logarithm:
                     SetPortNames("X", "Base", "", ""); break;
-                
+
                 case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SquareRoot:
                 case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Absolute:
                 case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Exponent:
                 case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Sign:
                     SetPortNames("X", "", "", ""); break;
-                
-                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Compare: 
+
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Compare:
                     SetPortNames("X", "Y", "Tolerance", ""); break;
-                
+
                 case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMinimum:
-                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMaximum: 
+                case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SmoothMaximum:
                     SetPortNames("X", "Y", "Distance", ""); break;
-                
+
                 case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Wrap:
                     SetPortNames("X", "Min", "", "Max"); break;
-                
+
                 case GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Snap:
                     SetPortNames("X", "Increment", "", ""); break;
 

@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         private readonly List<bool> results = new();
         private bool resultsDirty = true;
-        
+
         [GetterMethod(nameof(Result), Inline = true)]
         public bool GetResult() {
             return CalculateResult(A, B, Tolerance);
@@ -29,7 +29,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 

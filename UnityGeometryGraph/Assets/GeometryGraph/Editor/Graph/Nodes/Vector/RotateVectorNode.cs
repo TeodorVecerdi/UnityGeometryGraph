@@ -152,7 +152,7 @@ namespace GeometryGraph.Editor {
             
             return root;
         }
-        
+
         protected internal override void Deserialize(JObject data) {
             rotationMode = (Runtime.Graph.RotateVectorNode.RotateVectorNode_Mode)data.Value<int>("t");
             vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);

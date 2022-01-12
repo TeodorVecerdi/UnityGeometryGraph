@@ -205,9 +205,9 @@ namespace GeometryGraph.Editor {
             bool showWrapMax = operation == Operation.Wrap;
             bool showDistance = operation is Operation.SmoothMinimum or Operation.SmoothMaximum or Operation.Lerp;
             bool showScale = operation == Operation.Scale;
-            bool showY = operation is not 
-                (Operation.Length or Operation.LengthSquared or Operation.Scale or Operation.Sine or Operation.Cosine or Operation.Tangent 
-                or Operation.Arcsine or Operation.Arccosine or Operation.Arctangent or Operation.Fraction or Operation.Ceil 
+            bool showY = operation is not
+                (Operation.Length or Operation.LengthSquared or Operation.Scale or Operation.Sine or Operation.Cosine or Operation.Tangent
+                or Operation.Arcsine or Operation.Arccosine or Operation.Arctangent or Operation.Fraction or Operation.Ceil
                 or Operation.Floor or Operation.Absolute or Operation.Normalize);
 
             bool showFloatOutput = operation is Operation.Length or Operation.LengthSquared or Operation.Distance or Operation.DistanceSquared or Operation.DotProduct;

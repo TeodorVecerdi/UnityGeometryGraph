@@ -9,7 +9,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime {
-    [Serializable] 
+    [Serializable]
     internal class GeometryGraphSceneData {
         [SerializeField] private PropertyDataDictionary propertyData = new();
         [SerializeField] private StringDictionary referenceToGuidDictionary = new();
@@ -80,9 +80,9 @@ namespace GeometryGraph.Runtime {
             if(guidToReferenceDictionary.ContainsKey(guid)) {
                 string oldReference = guidToReferenceDictionary[guid];
                 if (oldReference == referenceName) return;
-                
+
                 Debug.Log($"Reference name changed from {oldReference} to {referenceName}");
-                
+
                 guidToReferenceDictionary[guid] = referenceName;
                 referenceToGuidDictionary[referenceName] = guid;
                 referenceToGuidDictionary.Remove(oldReference);
@@ -99,7 +99,7 @@ namespace GeometryGraph.Runtime {
             // Remove all that don't exist anymore
             foreach (string guid in guidToReferenceDictionary.Keys.ToList()) {
                 if (allGuids.Contains(guid)) continue;
-                
+
                 string reference = guidToReferenceDictionary[guid];
                 guidToReferenceDictionary.Remove(guid);
                 referenceToGuidDictionary.Remove(reference);
@@ -108,7 +108,7 @@ namespace GeometryGraph.Runtime {
             
             foreach (string reference in referenceToGuidDictionary.Keys.ToList()) {
                 if (allReferences.Contains(reference)) continue;
-                
+
                 string guid = referenceToGuidDictionary[reference];
                 referenceToGuidDictionary.Remove(reference);
                 guidToReferenceDictionary.Remove(guid);
@@ -125,9 +125,9 @@ namespace GeometryGraph.Runtime {
         [SerializeField] public GeometryCollection CollectionValue;
         [SerializeField] public int IntValue;
         [SerializeField] public float FloatValue;
-        [SerializeField] public Vector3 VectorValue; 
+        [SerializeField] public Vector3 VectorValue;
         [SerializeField] public string StringValue;
-        
+
         [SerializeField] public GeometryObject DefaultObjectValue;
         [SerializeField] public GeometryCollection DefaultCollectionValue;
         [SerializeField] public int DefaultIntValue;
@@ -230,15 +230,15 @@ namespace GeometryGraph.Runtime {
         public bool ShowSpline = true;
         public bool ShowPoints = false;
         public bool ShowDirectionVectors = false;
-        
+
         // Spline settings
         public float SplineWidth = 2.0f;
         public Color SplineColor = Color.white;
-        
+
         // Point settings
         public float PointSize = 0.01f;
         public Color PointColor = Color.white;
-        
+
         // Direction vector settings
         public float DirectionVectorLength = 0.1f;
         public float DirectionVectorWidth = 2.0f;

@@ -6,12 +6,12 @@ namespace GeometryGraph.Editor {
     public class EdgeConnectorListener : IEdgeConnectorListener {
         private readonly EditorView editorView;
         private readonly SearchWindowProvider searchWindowProvider;
-        
+
         public EdgeConnectorListener(EditorView editorView, SearchWindowProvider searchWindowProvider) {
             this.editorView = editorView;
             this.searchWindowProvider = searchWindowProvider;
         }
-        
+
         public void OnDropOutsidePort(Edge edge, Vector2 position) {
             Port port = edge.output?.edgeConnector.edgeDragHelper.draggedPort ?? edge.input?.edgeConnector.edgeDragHelper.draggedPort;
             searchWindowProvider.ConnectedPort = port as GraphFrameworkPort;

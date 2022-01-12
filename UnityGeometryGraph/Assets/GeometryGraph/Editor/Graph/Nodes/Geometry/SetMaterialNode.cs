@@ -11,9 +11,9 @@ namespace GeometryGraph.Editor {
         protected override NodeCategory Category => NodeCategory.Geometry;
 
         private int materialIndex;
-        
+
         private ClampedIntegerField materialIndexField;
-        
+
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort materialIndexPort;
         private GraphFrameworkPort resultPort;
@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
             materialIndexField.RegisterValueChangedCallback(evt => {
                 int newValue = evt.newValue.MinClamped(0);
                 if (newValue == materialIndex) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Material Index");
                 materialIndex = newValue;
                 RuntimeNode.UpdateMaterialIndex(materialIndex);

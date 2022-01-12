@@ -16,10 +16,10 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort collectionPort;
         private GraphFrameworkPort collectionSamplingSeedPort;
         private GraphFrameworkPort resultPort;
-        
+
         private IntegerField collectionSamplingSeedField;
         private EnumSelectionToggle<Mode> modeToggle;
-        
+
         private int collectionSamplingSeed;
         private Mode mode = Mode.Geometry;
 
@@ -87,7 +87,7 @@ namespace GeometryGraph.Editor {
             root["d"] = data;
             return root;
         }
-        
+
         protected internal override void Deserialize(JObject data) {
             JArray d = data["d"].Value<JArray>();
             collectionSamplingSeed = d.Value<int>(0);

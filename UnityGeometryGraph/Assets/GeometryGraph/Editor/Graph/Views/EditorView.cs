@@ -63,11 +63,11 @@ namespace GeometryGraph.Editor {
                 }
 
                 GUILayout.Space(6);
-                
+
                 if (GUILayout.Button("Show In Project", EditorStyles.toolbarButton)) {
                     EditorWindow.Events.ShowInProjectRequested?.Invoke();
                 }
-                
+
                 /*GUILayout.Space(6);
                 if (GUILayout.Button("Debug", EditorStyles.toolbarButton)) {
                     string current = JsonUtility.ToJson(GraphObject.GraphData);
@@ -208,13 +208,13 @@ namespace GeometryGraph.Editor {
             // graphView.graphElements.ToList().OfType<StickyNote>().ToList().ForEach(graphView.RemoveElement);
             // graphView.graphElements.ToList().OfType<BlackboardRow>().ToList().ForEach(graphView.RemoveElement);
 
-            // Create & add graph elements 
+            // Create & add graph elements
             GraphObject.GraphData.Nodes.ForEach(node => {
                 AddNode(node);
-                
+
                 node.Node.SetExpandedWithoutNotify(true);
                 node.Node.RefreshPorts();
-                
+
                 if (node.Node is OutputNode outputNode) {
                     graphView.GraphOutputNode = outputNode;
                 }
@@ -237,7 +237,7 @@ namespace GeometryGraph.Editor {
 
                 AddEdge(edge);
             });
-            
+
             // Refresh expanded state
             GraphObject.GraphData.Nodes.ForEach(node => {
                 node.Node.SetExpandedWithoutNotify(node.DrawState.Expanded);

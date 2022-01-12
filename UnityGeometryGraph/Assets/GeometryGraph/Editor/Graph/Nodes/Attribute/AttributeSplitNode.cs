@@ -26,7 +26,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort yResultPort;
         private GraphFrameworkPort zResultPort;
         private GraphFrameworkPort resultPort;
-        
+
         private EnumSelectionDropdown<AttributeDomain> domainDropdown;
         private EnumSelectionDropdown<InputType> typeDropdown;
         private Vector3Field vectorField;
@@ -42,14 +42,14 @@ namespace GeometryGraph.Editor {
         private string zResult;
         private AttributeDomain domain = AttributeDomain.Vertex;
         private InputType type = InputType.Attribute;
-        
+
         private static readonly SelectionTree typeTree = new (new List<object>(Enum.GetValues(typeof(InputType)).Convert(o => o))) {
             new SelectionCategory("Type", false) {
                 new ("Vector", 0, false),
                 new ("Attribute", 1, false)
             }
         };
-        
+
         private static readonly SelectionTree domainTree = new (new List<object>(Enum.GetValues(typeof(AttributeDomain)).Convert(o => o))) {
             new SelectionCategory("Domain", false) {
                 new ("Vertex", 0, false),
@@ -73,7 +73,7 @@ namespace GeometryGraph.Editor {
             
             domainDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == domain) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change domain");
                 domain = evt.newValue;
                 RuntimeNode.UpdateTargetDomain(domain);
@@ -81,7 +81,7 @@ namespace GeometryGraph.Editor {
             
             typeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == type) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change type");
                 type = evt.newValue;
                 RuntimeNode.UpdateInputType(type);
@@ -90,7 +90,7 @@ namespace GeometryGraph.Editor {
             
             vectorField.RegisterValueChangedCallback(evt => {
                 if (math.distancesq(vector, evt.newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector");
                 vector = evt.newValue;
                 RuntimeNode.UpdateVector(vector);
@@ -98,7 +98,7 @@ namespace GeometryGraph.Editor {
             
             attributeField.RegisterValueChangedCallback(evt => {
                 if (attribute == evt.newValue) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change source attribute name");
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
@@ -106,7 +106,7 @@ namespace GeometryGraph.Editor {
             
             xResultField.RegisterValueChangedCallback(evt => {
                 if (xResult == evt.newValue) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change X result attribute name");
                 xResult = evt.newValue;
                 RuntimeNode.UpdateXResult(xResult);
@@ -114,7 +114,7 @@ namespace GeometryGraph.Editor {
             
             yResultField.RegisterValueChangedCallback(evt => {
                 if (yResult == evt.newValue) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Y result attribute name");
                 yResult = evt.newValue;
                 RuntimeNode.UpdateYResult(yResult);
@@ -122,7 +122,7 @@ namespace GeometryGraph.Editor {
             
             zResultField.RegisterValueChangedCallback(evt => {
                 if (zResult == evt.newValue) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Z result attribute name");
                 zResult = evt.newValue;
                 RuntimeNode.UpdateZResult(zResult);
@@ -160,7 +160,7 @@ namespace GeometryGraph.Editor {
                 attributePort.Show();
             }
         }
-        
+
         protected override void BindPorts() {
             BindPort(geometryPort, RuntimeNode.GeometryPort);
             BindPort(vectorPort, RuntimeNode.VectorPort);
@@ -185,7 +185,7 @@ namespace GeometryGraph.Editor {
             root["d"] = array;
             return root;
         }
-        
+
         protected internal override void Deserialize(JObject data) {
             JArray array = data["d"] as JArray;
             vector = JsonConvert.DeserializeObject<float3>(array!.Value<string>(0), float3Converter.Converter);

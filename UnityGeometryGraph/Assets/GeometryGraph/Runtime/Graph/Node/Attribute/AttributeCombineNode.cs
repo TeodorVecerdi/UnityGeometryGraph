@@ -31,19 +31,19 @@ namespace GeometryGraph.Runtime.Graph {
             }
             return Result;
         }
-        
+
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             if (Geometry == null || string.IsNullOrWhiteSpace(ResultAttribute)) {
                 Result = GeometryData.Empty;
                 return;
             }
-            
+
             IEnumerable<float> xValues = null;
             IEnumerable<float> yValues = null;
             IEnumerable<float> zValues = null;
             AttributeDomain? domain = null;
-            
+
             if (XType is AttributeCombineNode_ComponentType.Attribute && !string.IsNullOrWhiteSpace(XAttribute)) {
                 FloatAttribute xAttr = Geometry.GetAttribute<FloatAttribute>(XAttribute);
                 if (xAttr != null) {
@@ -51,7 +51,7 @@ namespace GeometryGraph.Runtime.Graph {
                     xValues = xAttr;
                 }
             }
-            
+
             if (YType is AttributeCombineNode_ComponentType.Attribute && !string.IsNullOrWhiteSpace(YAttribute)) {
                 FloatAttribute yAttr = Geometry.GetAttribute<FloatAttribute>(YAttribute);
                 if (yAttr != null) {
@@ -59,7 +59,7 @@ namespace GeometryGraph.Runtime.Graph {
                     yValues = yAttr;
                 }
             }
-            
+
             if (ZType is AttributeCombineNode_ComponentType.Attribute && !string.IsNullOrWhiteSpace(ZAttribute)) {
                 FloatAttribute zAttr = Geometry.GetAttribute<FloatAttribute>(ZAttribute);
                 if (zAttr != null) {
@@ -67,9 +67,9 @@ namespace GeometryGraph.Runtime.Graph {
                     zValues = zAttr;
                 }
             }
-            
+
             domain ??= TargetDomain;
-            
+
             int count = domain switch {
                 AttributeDomain.Vertex => Geometry.Vertices.Count,
                 AttributeDomain.Edge => Geometry.Edges.Count,

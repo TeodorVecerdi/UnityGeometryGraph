@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime {
         // References
         [SerializeField] private RuntimeGraphObject graph;
         [SerializeField] private MeshFilter meshFilter;
-        
+
         // Scene data
         [SerializeField] private string graphGuid;
         [SerializeField] private GeometryGraphSceneData sceneData = new();
@@ -30,7 +30,7 @@ namespace GeometryGraph.Runtime {
 
         [SerializeField] private bool realtimeEvaluation;
         [SerializeField] private bool realtimeEvaluationAsync;
-        
+
         // Exporter fields
         private bool initializedExporter;
         private MeshPool meshPool;
@@ -40,7 +40,7 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private Mesh meshFilterMesh;
 
         private bool isAsyncEvaluationComplete = true;
-        
+
         internal RuntimeGraphObject Graph => graph;
         internal GeometryGraphSceneData SceneData => sceneData;
         internal InstancedGeometrySettings InstancedGeometrySettings => instancedGeometrySettings;

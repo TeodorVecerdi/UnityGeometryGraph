@@ -36,7 +36,7 @@ namespace GeometryGraph.Editor {
         private TextField yAttributeField;
         private TextField zAttributeField;
         private TextField resultAttributeField;
-        
+
         private float xFloat = 0.0f;
         private float yFloat = 0.0f;
         private float zFloat = 0.0f;
@@ -44,7 +44,7 @@ namespace GeometryGraph.Editor {
         private string yAttribute;
         private string zAttribute;
         private string resultAttribute;
-        
+
         private AttributeDomain domain = AttributeDomain.Vertex;
         private ComponentType xType = ComponentType.Attribute;
         private ComponentType yType = ComponentType.Attribute;
@@ -56,7 +56,7 @@ namespace GeometryGraph.Editor {
                 new ("Attribute", 1, false)
             }
         };
-        
+
         private static readonly SelectionTree domainTree = new (new List<object>(Enum.GetValues(typeof(AttributeDomain)).Convert(o => o))) {
             new SelectionCategory("Domain", false) {
                 new ("Vertex", 0, false),
@@ -84,7 +84,7 @@ namespace GeometryGraph.Editor {
 
             domainDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == domain) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change domain");
                 domain = evt.newValue;
                 RuntimeNode.UpdateTargetDomain(domain);
@@ -92,7 +92,7 @@ namespace GeometryGraph.Editor {
             
             xTypeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == xType) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change X Type");
                 xType = evt.newValue;
                 RuntimeNode.UpdateXType(xType);
@@ -101,7 +101,7 @@ namespace GeometryGraph.Editor {
             
             yTypeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == yType) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Y Type");
                 yType = evt.newValue;
                 RuntimeNode.UpdateYType(yType);
@@ -110,7 +110,7 @@ namespace GeometryGraph.Editor {
             
             zTypeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == zType) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Z Type");
                 zType = evt.newValue;
                 RuntimeNode.UpdateZType(zType);
@@ -119,7 +119,7 @@ namespace GeometryGraph.Editor {
             
             xFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - xFloat) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change X float value");
                 xFloat = evt.newValue;
                 RuntimeNode.UpdateXFloat(xFloat);
@@ -127,7 +127,7 @@ namespace GeometryGraph.Editor {
             
             yFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - yFloat) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Y float value");
                 yFloat = evt.newValue;
                 RuntimeNode.UpdateYFloat(yFloat);
@@ -135,7 +135,7 @@ namespace GeometryGraph.Editor {
             
             zFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - zFloat) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Z float value");
                 zFloat = evt.newValue;
                 RuntimeNode.UpdateZFloat(zFloat);
@@ -143,7 +143,7 @@ namespace GeometryGraph.Editor {
             
             xAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == xAttribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change X attribute name");
                 xAttribute = evt.newValue;
                 RuntimeNode.UpdateXAttribute(xAttribute);
@@ -151,7 +151,7 @@ namespace GeometryGraph.Editor {
             
             yAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == yAttribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Y attribute name");
                 yAttribute = evt.newValue;
                 RuntimeNode.UpdateYAttribute(yAttribute);
@@ -159,7 +159,7 @@ namespace GeometryGraph.Editor {
             
             zAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == zAttribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Z attribute name");
                 zAttribute = evt.newValue;
                 RuntimeNode.UpdateZAttribute(zAttribute);
@@ -167,7 +167,7 @@ namespace GeometryGraph.Editor {
             
             resultAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == resultAttribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change result attribute name");
                 resultAttribute = evt.newValue;
                 RuntimeNode.UpdateResultAttribute(resultAttribute);

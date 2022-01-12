@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
         private bool fieldVisible;
         private Label fieldLabel;
         private VisualElement field;
-        
+
         public string Label {
             get => label;
             set {
@@ -146,7 +146,7 @@ namespace GeometryGraph.Editor {
             
             return (port, field);
         }
-        
+
         private static void SetFieldVisible(GraphFrameworkPort port, bool visible) {
             port.field.SetEnabled(visible);
             port.fieldVisible = visible;

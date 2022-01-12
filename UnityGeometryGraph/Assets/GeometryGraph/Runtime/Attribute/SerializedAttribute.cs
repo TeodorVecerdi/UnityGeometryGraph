@@ -9,7 +9,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
     public class SerializedAttribute {
         private static readonly JsonSerializerSettings settings = new() { TypeNameHandling = TypeNameHandling.None };
         private static readonly Type listType = typeof(List<>);
-        
+
         public string Type;
         public string ValueType;
         public string Data;
@@ -50,6 +50,6 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             }
             
             return attribute;
-        } 
+        }
     }
 }

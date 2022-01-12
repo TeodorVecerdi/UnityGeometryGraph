@@ -12,22 +12,22 @@ namespace GeometryGraph.Runtime.Geometry {
         /// Returns true if the geometry has any attribute with name <paramref name="name"/>
         /// </summary>
         [Pure] public bool HasAttribute(string name) => attributeManager.HasAttribute(name);
-        
+
         /// <summary>
         /// Returns true if the geometry has an attribute of type <paramref name="type"/> with name <paramref name="name"/>
         /// </summary>
         [Pure] public bool HasAttribute(string name, AttributeType type) => attributeManager.HasAttribute(name, type);
-        
+
         /// <summary>
         /// Returns true if the geometry has an attribute with name <paramref name="name"/> in the <paramref name="domain"/> domain
         /// </summary>
         [Pure] public bool HasAttribute(string name, AttributeDomain domain) => attributeManager.HasAttribute(name, domain);
-        
+
         /// <summary>
         /// Returns true if the geometry has an attribute of type <paramref name="type"/> with name <paramref name="name"/> in the <paramref name="domain"/> domain
         /// </summary>
         [Pure] public bool HasAttribute(string name, AttributeType type, AttributeDomain domain) => attributeManager.HasAttribute(name, type, domain);
-        
+
         /// <summary>
         /// Returns an attribute with name <paramref name="name"/>, or null if one can't be found
         /// </summary>
@@ -43,7 +43,7 @@ namespace GeometryGraph.Runtime.Geometry {
         public BaseAttribute GetAttribute(string name, AttributeDomain domain) {
             return attributeManager.Request(name, domain);
         }
-        
+
         /// <summary>
         /// Searches for an attribute with name <paramref name="name"/>, type <paramref name="type"/>, and domain <paramref name="domain"/>.<br/>
         /// If an attribute with a matching name, type and domain cannot be found, but an attribute of a different type or domain is found,
@@ -80,10 +80,10 @@ namespace GeometryGraph.Runtime.Geometry {
         public TAttribute GetAttribute<TAttribute>(string name, AttributeDomain domain) where TAttribute : BaseAttribute {
             return (TAttribute)attributeManager.Request(name, AttributeUtility.SystemTypeToAttributeType(typeof(TAttribute)), domain);
         }
-        
+
         /// <summary>
         /// Returns an attribute with name <paramref name="name"/>, type (inferred from <typeparamref name="TAttribute"/>) and domain <paramref name="domain"/>.<br/>
-        /// If an attribute cannot be found, then it creates an attribute filled with default value <typeparamref name="T"/> and returns it. 
+        /// If an attribute cannot be found, then it creates an attribute filled with default value <typeparamref name="T"/> and returns it.
         /// </summary>
         /// <param name="name">Attribute name</param>
         /// <param name="domain">Attribute domain</param>
@@ -125,7 +125,7 @@ namespace GeometryGraph.Runtime.Geometry {
         public bool StoreAttribute(BaseAttribute attribute) {
             return attributeManager.Store(attribute);
         }
-        
+
         /// <summary>
         /// Saves attribute <paramref name="attribute"/> in domain <paramref name="targetDomain"/> in the geometry.<br/>
         /// If attribute domain and the target domain don't match, then the attribute will be converted to the target domain.
@@ -146,7 +146,7 @@ namespace GeometryGraph.Runtime.Geometry {
         public bool RemoveAttribute(string name) {
             return attributeManager.Remove(name);
         }
-        
+
         /// <summary>
         /// Removes an attribute with name <paramref name="name"/> from domain <paramref name="domain"/> if it exists.<br/>
         /// Returns true if an attribute was removed, and false otherwise.
@@ -167,7 +167,7 @@ namespace GeometryGraph.Runtime.Geometry {
         public bool RemoveAttribute(BaseAttribute attribute) {
             return attributeManager.Remove(attribute);
         }
-        
+
         #endregion
 
         #region Misc API methods
@@ -185,7 +185,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 HashCodeDepth.Full => CalculateHashCodeFull(),
                 _ => throw new ArgumentOutOfRangeException(nameof(depth), depth, null)
             };
-        } 
+        }
 
         #endregion
     }

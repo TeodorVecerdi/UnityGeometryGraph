@@ -208,7 +208,7 @@ namespace GeometryGraph.Runtime.Attributes {
         ///     Default: <c>true</c>
         /// </summary>
         public bool GenerateEquality { get; set; } = true;
-        
+
         /// <summary>
         ///     <para>
         ///         Overrides the default value used when getting a new value.<br />
@@ -293,7 +293,7 @@ namespace GeometryGraph.Runtime.Attributes {
         public CustomSerializationAttribute(string serializationCode, string deserializationCode) {
         }
     }
-    
+
     /// <summary>
     ///     <para>
     ///         Specifies custom equality check code for the property.<br />

@@ -155,7 +155,7 @@ namespace GeometryGraph.Runtime.Graph {
                     yield return tValue;
                     continue;
                 }
-                
+
                 yield return (T)PortValueConverter.Convert(value, connection.Output.Type, connection.Input.Type);
             }
         }

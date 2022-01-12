@@ -47,11 +47,11 @@ namespace GeometryGraph.Runtime.Data {
             }
             return (RGBAlphaPair)unityGradient.Evaluate(time);
         }
-        
+
         public static explicit operator Gradient (UnityEngine.Gradient unityGradient) {
             return new Gradient(unityGradient);
         }
-        
+
         public static explicit operator UnityEngine.Gradient (Gradient gradient) {
             return gradient.unityGradient;
         }

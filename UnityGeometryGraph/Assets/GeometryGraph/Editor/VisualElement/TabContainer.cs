@@ -20,7 +20,7 @@ namespace GeometryGraph.Editor {
             Add(tabButtonsContainer);
             Add(tabContentContainer);
         }
-        
+
         public VisualElement CreateTab(string label) {
             int index = tabButtonsContainer.childCount;
             

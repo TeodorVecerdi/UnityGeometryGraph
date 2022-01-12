@@ -9,11 +9,11 @@ namespace GeometryGraph.Editor {
         protected override NodeCategory Category => NodeCategory.Properties;
 
         public override bool IsProperty => true;
-        
+
         private string propertyGuid;
         private AbstractProperty property;
         private GraphFrameworkPort propertyPort;
-        
+
         public override AbstractProperty Property {
             get => property;
             set {
@@ -58,7 +58,7 @@ namespace GeometryGraph.Editor {
             PropertyGuid = data.Value<string>("propertyGuid");
             Property = Owner.EditorView.GraphObject.GraphData.Properties.FirstOrGivenDefault(abstractProperty => abstractProperty.GUID == propertyGuid, null);
         }
-        
+
 
         public override void OnPropertyUpdated(AbstractProperty property) {
             if(property != null && property.GUID != propertyGuid) return;

@@ -18,8 +18,8 @@ namespace GeometryGraph.Runtime.Graph {
         public AnimationCurve Curve { get; private set; } = (AnimationCurve)UnityEngine.AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
 
         [Out] public int Result { get; private set; }
-        
-        
+
+
         private readonly List<int> results = new();
         private bool resultsDirty = true;
 
@@ -44,7 +44,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 

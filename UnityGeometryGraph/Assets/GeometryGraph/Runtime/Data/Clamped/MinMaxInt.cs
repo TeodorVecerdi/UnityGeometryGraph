@@ -5,7 +5,7 @@ namespace GeometryGraph.Runtime.Data {
         private int value;
         private int? min;
         private int? max;
-        
+
         public int Value {
             get => Clamped();
             set => this.value = value;
@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Data {
             get => min;
             set => min = value;
         }
-        
+
         public int? Max {
             get => max;
             set => max = value;
@@ -26,7 +26,7 @@ namespace GeometryGraph.Runtime.Data {
             this.min = min;
             this.max = max;
         }
-        
+
         private int Clamped() {
             int val = value;
             if (min != null) val = val.MinClamped((int)min);

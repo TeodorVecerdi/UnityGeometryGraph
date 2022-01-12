@@ -8,7 +8,7 @@ namespace GeometryGraph.Editor {
         private Button[] buttons;
         private int active;
         private T rawValue;
-        
+
         private readonly T[] values;
         private readonly string[] names;
 

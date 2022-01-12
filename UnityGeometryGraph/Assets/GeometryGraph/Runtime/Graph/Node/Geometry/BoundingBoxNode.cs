@@ -18,7 +18,7 @@ namespace GeometryGraph.Runtime.Graph {
             Max = float3.zero;
             BoundingBox = GeometryData.Empty;
         }
-        
+
         [CalculatesAllProperties]
         private void CalculateResult() {
             Input ??= GeometryData.Empty;

@@ -29,7 +29,7 @@ namespace GeometryGraph.Runtime.Geometry {
             List<float2> uvsOriginal;
             if (geometry.HasAttribute("uv", AttributeDomain.FaceCorner))
                 uvsOriginal = geometry.GetAttribute<Vector2Attribute>("uv", AttributeDomain.FaceCorner)!.ToList();
-            else 
+            else
                 uvsOriginal = new float2[geometry.FaceCorners.Count].ToList();
             List<float2> uvs = new();
             
@@ -59,7 +59,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             for (int i = 0; i < geometry.Edges.Count; i++) {
                 GeometryData.Edge edge = geometry.Edges[i];
-                
+
                 float3 midPoint = (vertexPositions[edge.VertA] + vertexPositions[edge.VertB]) * 0.5f;
                 GeometryData.Edge edgeA = new(edge.VertA, vertexPositions.Count, edges.Count);
                 GeometryData.Edge edgeB = new(vertexPositions.Count, edge.VertB, edges.Count + 1);
@@ -67,11 +67,11 @@ namespace GeometryGraph.Runtime.Geometry {
                     edgeAttribute.Item4.Add(edgeAttribute.Values[edge.SelfIndex]);
                     edgeAttribute.Item4.Add(edgeAttribute.Values[edge.SelfIndex]);
                 }
-                
+
                 foreach ((string Name, AttributeType Type, List<object> Values) vertexAttribute in allVertexAttributes) {
                     vertexAttribute.Values.Add(AttributeConvert.Average(vertexAttribute.Type, vertexAttribute.Values[edge.VertA], vertexAttribute.Values[edge.VertB]));
                 }
-                
+
                 edgeDict.Add(i, (edges.Count, edges.Count + 1));
                 midPointDict.Add(i, vertexPositions.Count);
                 vertexPositions.Add(midPoint);
@@ -91,7 +91,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 float2 uXm = math.lerp(uvsOriginal[face.FaceCornerA], uvsOriginal[face.FaceCornerB], 0.5f);
                 float2 uYm = math.lerp(uvsOriginal[face.FaceCornerB], uvsOriginal[face.FaceCornerC], 0.5f);
                 float2 uZm = math.lerp(uvsOriginal[face.FaceCornerA], uvsOriginal[face.FaceCornerC], 0.5f);
-                
+
                 //!! edges in order x->y, y->z, x->z
                 (int e_xy, int e_yz, int e_xz) = SortEdges(vX, vY, vZ, geometry.Edges[face.EdgeA], geometry.Edges[face.EdgeB], geometry.Edges[face.EdgeC]);
                 //!! midpoint vertex idx
@@ -111,7 +111,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 GeometryData.Edge edge_xy = new(vXm, vYm, edges.Count + 0);
                 GeometryData.Edge edge_yz = new(vYm, vZm, edges.Count + 1);
                 GeometryData.Edge edge_xz = new(vXm, vZm, edges.Count + 2);
-                
+
                 //!! Setup face corners and uvs
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count + 0) {Vert = vXm});
                 faceCorners.Add(new GeometryData.FaceCorner(faces.Count + 0) {Vert = vYm});
@@ -137,7 +137,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 uvs.Add(uYm);
                 uvs.Add(uZ);
                 uvs.Add(uZm);
-                
+
                 foreach ((string Name, AttributeType Type, List<object> Values, List<object>) faceCornerAttribute in allFaceCornerAttributes) {
                     object attr_X = faceCornerAttribute.Values[face.FaceCornerA];
                     object attr_Y = faceCornerAttribute.Values[face.FaceCornerB];
@@ -158,7 +158,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     faceCornerAttribute.Item4.Add(attr_Z);
                     faceCornerAttribute.Item4.Add(attr_Zm);
                 }
-                
+
                 faces.Add(face0);
                 faces.Add(face1);
                 faces.Add(face2);
@@ -175,18 +175,18 @@ namespace GeometryGraph.Runtime.Geometry {
                 shadeSmooth.Add(shadeSmoothOriginal[i]);
                 shadeSmooth.Add(shadeSmoothOriginal[i]);
                 shadeSmooth.Add(shadeSmoothOriginal[i]);
-                
+
                 foreach ((string Name, AttributeType Type, List<object> Values, List<object>) faceAttribute in allFaceAttributes) {
                     faceAttribute.Item4.Add(faceAttribute.Values[i]);
                     faceAttribute.Item4.Add(faceAttribute.Values[i]);
                     faceAttribute.Item4.Add(faceAttribute.Values[i]);
                     faceAttribute.Item4.Add(faceAttribute.Values[i]);
                 }
-                
+
                 edges.Add(edge_xy);
                 edges.Add(edge_yz);
                 edges.Add(edge_xz);
-                
+
                 foreach ((string Name, AttributeType Type, List<object> Values, List<object>) edgeAttribute in allEdgeAttributes) {
                     edgeAttribute.Item4.Add(edgeAttribute.Values[e_xy]);
                     edgeAttribute.Item4.Add(edgeAttribute.Values[e_yz]);

@@ -18,7 +18,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public RotatePointNode_AngleMode AngleMode { get; private set; }
         [Setting] public RotatePointNode_RotationType RotationType { get; private set; } = RotatePointNode_RotationType.Euler;
         [Out] public GeometryData Result { get; private set; }
-        
+
         protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
             if (port != InputPort) return;
             Input = GeometryData.Empty;
@@ -31,14 +31,14 @@ namespace GeometryGraph.Runtime.Graph {
             Result = Input.Clone();
             Vector3Attribute rotAttribute = Result.GetAttributeOrDefault<Vector3Attribute, float3>("rotation", AttributeDomain.Vertex, float3.zero);
             if (RotationType == RotatePointNode_RotationType.Euler) {
-                Vector3Attribute tmpAttribute = RotationMode == RotatePointNode_RotationMode.Vector 
-                    ? GetValues(RotationPort, rotAttribute.Count, Rotation).Into<Vector3Attribute>("rotAttribute", AttributeDomain.Vertex) 
+                Vector3Attribute tmpAttribute = RotationMode == RotatePointNode_RotationMode.Vector
+                    ? GetValues(RotationPort, rotAttribute.Count, Rotation).Into<Vector3Attribute>("rotAttribute", AttributeDomain.Vertex)
                     : Result.GetAttributeOrDefault<Vector3Attribute, float3>(RotationAttribute, AttributeDomain.Vertex, float3.zero);
-                
+
                 rotAttribute.YieldWithAttribute(tmpAttribute, (rot, euler) => math_ext.wrap(euler + rot, -180.0f, 180.0f)).Into(rotAttribute);
             } else {
-                Vector3Attribute axisAttribute = AxisMode == RotatePointNode_AxisMode.Vector 
-                    ? GetValues(AxisPort, rotAttribute.Count, Axis).Into<Vector3Attribute>("axisAttribute", AttributeDomain.Vertex) 
+                Vector3Attribute axisAttribute = AxisMode == RotatePointNode_AxisMode.Vector
+                    ? GetValues(AxisPort, rotAttribute.Count, Axis).Into<Vector3Attribute>("axisAttribute", AttributeDomain.Vertex)
                     : Result.GetAttributeOrDefault<Vector3Attribute, float3>(AxisAttribute, AttributeDomain.Vertex, float3_ext.up);
                 FloatAttribute angleAttribute = AngleMode == RotatePointNode_AngleMode.Float
                     ? GetValues(AnglePort, rotAttribute.Count, Angle).Into<FloatAttribute>("angleAttribute", AttributeDomain.Vertex)

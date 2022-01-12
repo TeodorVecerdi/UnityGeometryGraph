@@ -43,13 +43,13 @@ namespace GeometryGraph.Runtime.Graph {
                     Debug.LogWarning($"Couldn't find attribute [{AttributeName}]");
                     return;
                 }
-                
+
                 Vector3Attribute otherAttribute = Result.GetAttribute<Vector3Attribute>(AttributeName, AttributeDomain.Vertex);
                 scaleAttr.YieldWithAttribute(otherAttribute, (scale, multiplier) => scale * multiplier).Into(scaleAttr);
                 Result.StoreAttribute(scaleAttr);
             }
         }
-        
+
         public enum ScalePointNode_Mode {Vector = 0, Float = 1, Attribute = 2}
     }
 }

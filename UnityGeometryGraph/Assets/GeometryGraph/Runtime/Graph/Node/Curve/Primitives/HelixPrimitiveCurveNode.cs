@@ -16,7 +16,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float Rotations { get; private set; } = 2.0f;
         [In] public float Pitch { get; private set; } = 1.0f;
         [Out] public CurveData Curve { get; private set; }
-        
+
         [GetterMethod(nameof(Curve), Inline = true)]
         private CurveData GetCurve() {
             if (Curve == null) CalculateResult();

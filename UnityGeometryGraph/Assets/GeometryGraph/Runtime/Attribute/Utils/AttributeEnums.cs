@@ -5,7 +5,7 @@
         Face,
         FaceCorner,
     }
-    
+
     public enum AttributeType {
         Boolean,
         Integer,
@@ -13,7 +13,7 @@
         ClampedFloat, // Float, but in range 0-1
         Vector2,
         Vector3,
-        
+
         Invalid = int.MaxValue,
     }
 }

@@ -35,7 +35,7 @@ namespace GeometryGraph.Editor {
             EdgeConnectorListener = edgeConnectorListener;
             Initialize();
             CreateNode();
-            if (edgeConnectorListener != null) 
+            if (edgeConnectorListener != null)
                 BindPorts();
         }
 
@@ -80,7 +80,7 @@ namespace GeometryGraph.Editor {
         protected internal abstract void NotifyRuntimeNodeRemoved();
         protected internal abstract RuntimeNode Runtime { get; }
     }
-    
+
     public abstract class AbstractNode<TRuntimeNode> : AbstractNode where TRuntimeNode : RuntimeNode {
         protected internal sealed override RuntimeNode Runtime => RuntimeNode;
         protected TRuntimeNode RuntimeNode;

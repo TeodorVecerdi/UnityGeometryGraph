@@ -26,7 +26,7 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort vectorPort;
         private GraphFrameworkPort booleanPort;
         private GraphFrameworkPort resultPort;
-        
+
         private EnumSelectionDropdown<TargetDomain> domainDropdown;
         private EnumSelectionDropdown<FillType> typeDropdown;
         private TextField attributeField;
@@ -34,7 +34,7 @@ namespace GeometryGraph.Editor {
         private IntegerField integerField;
         private Vector3Field vectorField;
         private Toggle booleanField;
-        
+
         private TargetDomain domain = TargetDomain.Auto;
         private FillType type = FillType.Float;
         private string attribute;
@@ -42,7 +42,7 @@ namespace GeometryGraph.Editor {
         private int integerValue;
         private float3 vectorValue;
         private bool booleanValue;
-        
+
         private static readonly SelectionTree domainTree = new (new List<object>(Enum.GetValues(typeof(TargetDomain)).Convert(o => o))) {
             new SelectionCategory("Domain", false) {
                 new ("Chooses the domain of the attribute if it already exists, otherwise it uses the Vertex domain", 0, true),
@@ -52,7 +52,7 @@ namespace GeometryGraph.Editor {
                 new ("Store the attribute in the Face Corner domain", 4, false)
             }
         };
-        
+
         private static readonly SelectionTree typeTree = new (new List<object>(Enum.GetValues(typeof(FillType)).Convert(o => o))) {
             new SelectionCategory("Type", false) {
                 new ("Fills the attribute with a float value", 0, false),
@@ -76,7 +76,7 @@ namespace GeometryGraph.Editor {
             
             domainDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == domain) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change domain");
                 domain = evt.newValue;
                 RuntimeNode.UpdateDomain(domain);
@@ -84,7 +84,7 @@ namespace GeometryGraph.Editor {
             
             typeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == type) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change type");
                 type = evt.newValue;
                 RuntimeNode.UpdateType(type);
@@ -93,7 +93,7 @@ namespace GeometryGraph.Editor {
             
             attributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change attribute");
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
@@ -101,7 +101,7 @@ namespace GeometryGraph.Editor {
             
             floatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - floatValue) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change float value");
                 floatValue = evt.newValue;
                 RuntimeNode.UpdateFloat(floatValue);
@@ -109,7 +109,7 @@ namespace GeometryGraph.Editor {
             
             integerField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == integerValue) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change integer value");
                 integerValue = evt.newValue;
                 RuntimeNode.UpdateInteger(integerValue);
@@ -117,7 +117,7 @@ namespace GeometryGraph.Editor {
             
             vectorField.RegisterValueChangedCallback(evt => {
                 if (math.distancesq(vectorValue, evt.newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector value");
                 vectorValue = evt.newValue;
                 RuntimeNode.UpdateVector(vectorValue);
@@ -125,7 +125,7 @@ namespace GeometryGraph.Editor {
             
             booleanField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == booleanValue) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change boolean value");
                 booleanValue = evt.newValue;
                 RuntimeNode.UpdateBoolean(booleanValue);

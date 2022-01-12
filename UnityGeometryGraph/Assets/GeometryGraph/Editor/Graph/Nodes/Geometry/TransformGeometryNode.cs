@@ -22,12 +22,12 @@ namespace GeometryGraph.Editor {
         private Vector3Field translationField;
         private Vector3Field eulerRotationField;
         private Vector3Field scaleField;
-        
+
         private GraphFrameworkPort inputGeometryPort;
         private GraphFrameworkPort translationPort;
         private GraphFrameworkPort rotationPort;
         private GraphFrameworkPort scalePort;
-        
+
         private GraphFrameworkPort outputGeometryPort;
 
         protected override void CreateNode() {
@@ -35,7 +35,7 @@ namespace GeometryGraph.Editor {
             outputGeometryPort = GraphFrameworkPort.Create("Geometry", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
 
             (translationPort, translationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Translation", PortType.Vector, this, showLabelOnField: false, 
+                "Translation", PortType.Vector, this, showLabelOnField: false,
                 onDisconnect: (_, _) => RuntimeNode.UpdateTranslation(translation)
             );
             translationField.RegisterValueChangedCallback(evt => {
@@ -44,7 +44,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateTranslation(translation);
             });
             (rotationPort, eulerRotationField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Rotation", PortType.Vector, this, showLabelOnField: false, 
+                "Rotation", PortType.Vector, this, showLabelOnField: false,
                 onDisconnect: (_, _) => RuntimeNode.UpdateRotation(eulerRotation)
             );
             eulerRotationField.RegisterValueChangedCallback(evt => {
@@ -54,7 +54,7 @@ namespace GeometryGraph.Editor {
             });
             
             (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
-                "Scale", PortType.Vector, this, showLabelOnField: false, 
+                "Scale", PortType.Vector, this, showLabelOnField: false,
                 onDisconnect: (_, _) => RuntimeNode.UpdateScale(scale)
             );
             scaleField.SetValueWithoutNotify(float3_ext.one);
@@ -76,7 +76,7 @@ namespace GeometryGraph.Editor {
             
             Refresh();
         }
-        
+
         protected override void BindPorts() {
             BindPort(inputGeometryPort, RuntimeNode.InputPort);
             BindPort(translationPort, RuntimeNode.TranslationPort);

@@ -7,7 +7,7 @@ namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
     [GeneratorSettingsAttribute(CalculateDuringDeserialization = false)]
     public partial class CirclePrimitiveCurveNode {
-        [In, AdditionalValueChangedCode("{other} = {other}.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)] 
+        [In, AdditionalValueChangedCode("{other} = {other}.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
         public int Points { get; private set; } = 32;
         [In, AdditionalValueChangedCode("{other} = {other}.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
         public float Radius { get; private set; } = 1.0f;

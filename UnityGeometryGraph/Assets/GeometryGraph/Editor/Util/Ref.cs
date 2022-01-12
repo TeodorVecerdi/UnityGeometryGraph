@@ -80,7 +80,7 @@ namespace GeometryGraph.Editor {
             // ReSharper disable once NonReadonlyMemberInGetHashCode
             return value.GetHashCode();
         }
-        
+
         public static bool operator ==(Ref<T> left, Ref<T> right) {
             return Equals(left, right);
         }
@@ -88,7 +88,7 @@ namespace GeometryGraph.Editor {
         public static bool operator !=(Ref<T> left, Ref<T> right) {
             return !Equals(left, right);
         }
-        
+
         public static bool operator ==(Ref<T> left, T right) {
             if (ReferenceEquals(null, left))
                 return false;
@@ -105,7 +105,7 @@ namespace GeometryGraph.Editor {
         public override string ToString() {
             return $"Ref<{typeof(T).Name}>[{value}]";
         }
-        
+
         public static Ref<T> MakeRef(T initialValue, Func<T> getValue, Action setValue) {
             Ref<T> reference = new(initialValue);
             reference.Bind(getValue, setValue);
@@ -115,7 +115,7 @@ namespace GeometryGraph.Editor {
         public static Ref<T> MakeRef(T initialValue) {
             return new Ref<T>(initialValue);
         }
-        
+
         public static Ref<T> MakeRef() {
             return new Ref<T>();
         }

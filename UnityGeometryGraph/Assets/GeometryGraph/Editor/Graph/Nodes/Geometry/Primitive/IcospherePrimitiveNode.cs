@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
             radiusField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if (MathF.Abs(newValue - radius) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change radius");
                 radius = newValue;
                 RuntimeNode.UpdateRadius(radius);
@@ -42,7 +42,7 @@ namespace GeometryGraph.Editor {
             subdivisionsField.RegisterValueChangedCallback(evt => {
                 int newValue = evt.newValue.Clamped(0, Constants.MAX_ICOSPHERE_SUBDIVISIONS);
                 if (newValue == subdivisions) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivisions");
                 subdivisions = newValue;
                 RuntimeNode.UpdateSubdivisions(subdivisions);

@@ -12,7 +12,7 @@ namespace GeometryGraph.Editor {
         [NonSerialized] private HashSet<AbstractProperty> properties = new();
         // these are the properties that don't get copied but are required by property nodes that get copied
         [NonSerialized] private HashSet<AbstractProperty> metaProperties = new();
-        
+
         [SerializeField] private List<SerializedNode> serializedNodes = new();
         [SerializeField] private List<SerializedEdge> serializedEdges = new();
         [SerializeField] private List<SerializedProperty> serializedProperties = new();
@@ -26,7 +26,7 @@ namespace GeometryGraph.Editor {
         public IEnumerable<SerializedProperty> SerializedMetaProperties => serializedMetaProperties;
         public IEnumerable<AbstractProperty> Properties => properties;
         public IEnumerable<AbstractProperty> MetaProperties => metaProperties;
-        
+
         private EditorView editorView;
 
         public CopyPasteData(EditorView editorView, IEnumerable<SerializedNode> nodes, IEnumerable<SerializedEdge> edges, IEnumerable<AbstractProperty> properties, IEnumerable<AbstractProperty> metaProperties) {
@@ -55,7 +55,7 @@ namespace GeometryGraph.Editor {
         private void AddNode(SerializedNode node) {
             nodes.Add(node);
         }
-        
+
         private void AddEdge(SerializedEdge edge) {
             edges.Add(edge);
         }
@@ -106,7 +106,7 @@ namespace GeometryGraph.Editor {
                 metaProperties.Add(prop.Deserialize());
             }
         }
-        
+
         private IEnumerable<SerializedEdge> GetAllEdgesForNode(SerializedNode node) {
             List<SerializedEdge> edges = new();
             foreach (IEnumerable<Edge> portConnections in node.GuidPortDictionary.Values.Select(port => port.connections)) {

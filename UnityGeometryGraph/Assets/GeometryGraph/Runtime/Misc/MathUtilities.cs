@@ -12,7 +12,7 @@ namespace GeometryGraph.Runtime {
             double num = math.sqrt(math.lengthsq(from) * (double)math.lengthsq(to));
             return num < 1.00000000362749E-15 ? 0.0f : (float)math.acos(math.clamp(math.dot(from, to) / num, -1f, 1f)) * 57.29578f;
         }
-        
+
         public static float smooth_max(float x, float y, float distance) {
             return smooth_min(x, y, -distance);
         }
@@ -21,7 +21,7 @@ namespace GeometryGraph.Runtime {
             float h = math.clamp(0.5f + 0.5f * (y - x) / distance, 0.0f, 1.0f);
             return math.lerp(y, x, h) - distance * h * (1.0f - h);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float wrap(float x, float min, float max) {
             return fmod(x - min, max - min) + min;

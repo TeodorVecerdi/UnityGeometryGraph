@@ -15,11 +15,11 @@ namespace GeometryGraph.Editor {
         private int seed;
         private float min = 0.0f;
         private float max = 1.0f;
-        
+
         private IntegerField seedField;
         private FloatField minField;
         private FloatField maxField;
-        
+
         private GraphFrameworkPort seedPort;
         private GraphFrameworkPort minPort;
         private GraphFrameworkPort maxPort;
@@ -66,7 +66,7 @@ namespace GeometryGraph.Editor {
             
             Refresh();
         }
-        
+
         protected override void BindPorts() {
             BindPort(seedPort, RuntimeNode.SeedPort);
             BindPort(minPort, RuntimeNode.MinPort);

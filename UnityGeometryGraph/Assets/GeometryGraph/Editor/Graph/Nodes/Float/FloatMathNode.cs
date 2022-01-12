@@ -194,38 +194,38 @@ namespace GeometryGraph.Editor {
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Modulo:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Atan2:
                     SetPortNames("X", "Y", "", ""); break;
-                
-                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Power: 
+
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Power:
                     SetPortNames("Base", "Exponent", "", ""); break;
-                
-                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Logarithm: 
+
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Logarithm:
                     SetPortNames("X", "Base", "", ""); break;
-                
+
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SquareRoot:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.InverseSquareRoot:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Absolute:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Exponent:
-                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sign: 
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sign:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Round:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Floor:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Ceil:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Truncate:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Fraction:
                     SetPortNames("X", "", "", ""); break;
-                
-                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Compare: 
+
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Compare:
                     SetPortNames("X", "Y", "Tolerance", ""); break;
-                
+
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMinimum:
-                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMaximum: 
+                case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMaximum:
                     SetPortNames("X", "Y", "Distance", ""); break;
-                
+
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Wrap:
                     SetPortNames("X", "Min", "", "Max"); break;
-                
+
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Snap:
                     SetPortNames("X", "Increment", "", ""); break;
-                
+
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sine:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Cosine:
                 case GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Tangent:

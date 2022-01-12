@@ -7,16 +7,16 @@ using UnityEngine;
 namespace GeometryGraph.Runtime.Graph {
     public class GeometryObjectPropertyNode : RuntimeNode {
         private static readonly GeometryData defaultValue = GeometryData.Empty;
-        
+
         [SerializeReference] public Property Property;
-       
+
         public RuntimePort Port { get; private set; }
         public string PropertyGuid { get; private set; }
-        
+
         public GeometryObjectPropertyNode(string guid) : base(guid) {
             Port = RuntimePort.Create(PortType.Geometry, PortDirection.Output, this);
         }
-        
+
         protected override object GetValueForPort(RuntimePort port) {
             GeometryObject objectValue = null;
             object value = Property?.Value;

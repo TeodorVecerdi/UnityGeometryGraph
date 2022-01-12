@@ -12,17 +12,17 @@ namespace GeometryGraph.Runtime.Graph {
         [Out] public float TimeSinceLevelLoad { get; private set; }
         [Out] public float Time { get; private set; }
         [Out] public float DeltaTime { get; private set; }
-        
-        [GetterMethod(nameof(SmoothDeltaTime), Inline = true)] 
+
+        [GetterMethod(nameof(SmoothDeltaTime), Inline = true)]
         private float GetSmoothDeltaTime() => UTime.smoothDeltaTime;
-        
-        [GetterMethod(nameof(TimeScale), Inline = true)] 
+
+        [GetterMethod(nameof(TimeScale), Inline = true)]
         private float GetTimeScale() => UTime.timeScale;
-        
-        [GetterMethod(nameof(RealtimeSinceStartup), Inline = true)] 
+
+        [GetterMethod(nameof(RealtimeSinceStartup), Inline = true)]
         private float GetRealtimeSinceStartup() => UTime.realtimeSinceStartup;
-        
-        [GetterMethod(nameof(TimeSinceLevelLoad), Inline = true)] 
+
+        [GetterMethod(nameof(TimeSinceLevelLoad), Inline = true)]
         private float GetTimeSinceLevelLoad() => UTime.timeSinceLevelLoad;
 
         [GetterMethod(nameof(Time), Inline = true)]

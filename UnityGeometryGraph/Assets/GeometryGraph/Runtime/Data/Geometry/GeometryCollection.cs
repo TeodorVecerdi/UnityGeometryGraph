@@ -10,7 +10,7 @@ namespace GeometryGraph.Runtime.Data {
         [InlineButton("@__ChangeIndex(1)", "+")]
         [InlineButton("@__ChangeIndex(-1)", "-")]
         private int index;
-        
+
         [SerializeField] private List<GeometryData> objects;
         [SerializeField, HideInInspector] private List<Transform> children = new();
         protected override List<GeometryData> Processed { get => objects; set => objects = value; }
@@ -43,7 +43,7 @@ namespace GeometryGraph.Runtime.Data {
 
             return data;
         }
-        
+
         private Mesh TransformMeshToRootLocal(MeshFilter filter, Transform parentTransform) {
             Matrix4x4 filterLocalToRootLocalMatrix = parentTransform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
             Quaternion rotation = Quaternion.LookRotation(
@@ -71,7 +71,7 @@ namespace GeometryGraph.Runtime.Data {
 
         private GeometryData selectedGeometry => objects == null || objects.Count == 0 ? null : objects[index];
         private Transform selectedChild => children == null || children.Count == 0 ? null : children[index];
-        
+
         public GeometryData Geometry => selectedGeometry;
         public Matrix4x4 LocalToWorldMatrix => selectedChild.localToWorldMatrix;
 

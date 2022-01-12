@@ -52,7 +52,7 @@ namespace GeometryGraph.Editor {
             
             rotationsField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - rotations) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change helix curve rotations");
                 rotations = evt.newValue;
                 RuntimeNode.UpdateRotations(rotations);
@@ -60,7 +60,7 @@ namespace GeometryGraph.Editor {
             
             pitchField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - pitch) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change helix curve pitch");
                 pitch = evt.newValue;
                 RuntimeNode.UpdatePitch(pitch);
@@ -70,7 +70,7 @@ namespace GeometryGraph.Editor {
             topRadiusField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
                 if (Math.Abs(newValue - topRadius) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change helix curve top radius");
                 topRadius = newValue;
                 RuntimeNode.UpdateTopRadius(topRadius);
@@ -80,7 +80,7 @@ namespace GeometryGraph.Editor {
             bottomRadiusField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
                 if (Math.Abs(newValue - bottomRadius) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change helix curve bottom radius");
                 bottomRadius = newValue;
                 RuntimeNode.UpdateBottomRadius(bottomRadius);

@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
         private Toggle shadeSmoothCurveToggle;
         private Toggle shadeSmoothCapsToggle;
         private EnumSelectionDropdown<CurveToGeometrySettings.CapUVType> capUVTypeDropdown;
-        
+
         private static readonly SelectionTree capUVTypeTree = new(new List<object>(Enum.GetValues(typeof(CurveToGeometrySettings.CapUVType)).Convert(o => o))) {
             new SelectionCategory("Cap UV Type", false, SelectionCategory.CategorySize.Medium) {
                 new("Generate cap UVs in local space (relative to the cap)", 0, false),
@@ -101,7 +101,7 @@ namespace GeometryGraph.Editor {
             
             capUVTypeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == capUVType) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cap UV type");
                 capUVType = evt.newValue;
                 RuntimeNode.UpdateCapUVType(capUVType);

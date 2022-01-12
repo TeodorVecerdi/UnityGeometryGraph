@@ -41,7 +41,7 @@ namespace GeometryGraph.Editor {
             radiusField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
                 if (Math.Abs(newValue - radius) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change circle curve radius");
                 radius = newValue;
                 RuntimeNode.UpdateRadius(radius);

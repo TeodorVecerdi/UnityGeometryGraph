@@ -23,9 +23,9 @@ namespace GeometryGraph.Runtime.Geometry {
             attributeManager = new AttributeManager(this);
             FillBuiltinAttributes(vertexPositions, uvs, faceNormals, faceMaterialIndices, faceSmoothShaded);
         }
-        
+
         private void BuildGeometry(
-            Mesh mesh, List<float3> vertexPositions, List<float2> uvs, 
+            Mesh mesh, List<float3> vertexPositions, List<float2> uvs,
             /*out*/ List<float3> faceNormals, List<float2> correctUvs, List<int> faceMaterialIndices, List<bool> smoothShaded, float duplicateNormalAngleThreshold
         ) {
             using IDisposable method = Profiler.ProfileMethod();
@@ -44,10 +44,10 @@ namespace GeometryGraph.Runtime.Geometry {
 
             Cleanup();
         }
-        
-        
+
+
         private void BuildElements(
-            Mesh mesh, List<float3> vertexPositions, List<float2> uvs, 
+            Mesh mesh, List<float3> vertexPositions, List<float2> uvs,
             List<float3> faceNormals, List<float2> correctUvs, List<int> materialIndices, List<bool> smoothShaded
         ) {
             using IDisposable method = Profiler.ProfileMethod();
@@ -55,7 +55,7 @@ namespace GeometryGraph.Runtime.Geometry {
             for (int submesh = 0; submesh < mesh.subMeshCount; submesh++) {
                 int[] triangles = mesh.GetTriangles(submesh);
                 int length = triangles.Length;
-            
+
                 for (int i = 0; i < length; i += 3) {
                     int idxA = triangles[i];
                     int idxB = triangles[i + 1];
@@ -72,7 +72,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     faceNormals.Add(computedNormal);
                     materialIndices.Add(submesh);
 
-                    smoothShaded.Add(math.lengthsq(computedNormal - meshNormal) > 0.0001f); 
+                    smoothShaded.Add(math.lengthsq(computedNormal - meshNormal) > 0.0001f);
 
                     Face face = new(
                         idxA, idxB, idxC,
@@ -107,25 +107,25 @@ namespace GeometryGraph.Runtime.Geometry {
 
         private void RemoveDuplicates(List<float3> vertexPositions, List<float3> faceNormals, float duplicateNormalAngleThreshold) {
             using IDisposable method = Profiler.ProfileMethod();
-            
-            // Find out which edges are duplicates of each other based on vertex position 
+
+            // Find out which edges are duplicates of each other based on vertex position
             List<(int, int, bool)> duplicates = GetDuplicateEdges(vertexPositions, faceNormals, duplicateNormalAngleThreshold);
-            
+
             // unique vertex => [duplicate vertices...] (Dict<int, List<int>>)
             Dictionary<int, List<int>> duplicateVerticesMap = GetDuplicateVerticesMap(duplicates);
-            
+
             // duplicate vertex => unique vertex (Dict<int, int>)
             Dictionary<int, int> reverseDuplicatesMap = RemoveInvalidDuplicates(duplicateVerticesMap);
-            
+
             // Remap indices from old/duplicate index to unique index
             RemapDuplicateElements(vertexPositions, duplicates, reverseDuplicatesMap);
-            
+
             // Remove all duplicates from geometry
             RemoveDuplicateElements(vertexPositions, duplicates, reverseDuplicatesMap);
-            
+
             CheckForErrors(vertexPositions.Count);
         }
-        
+
         private List<(int, int, bool)> GetDuplicateEdges(List<float3> vertexPositions, List<float3> faceNormals, float duplicateNormalAngleThreshold) {
             using IDisposable method = Profiler.ProfileMethod();
             EdgeEqualityComparer equalityComparer = new(vertexPositions);
@@ -134,7 +134,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             IEnumerable<(int EdgeA, int EdgeB)> potentialDuplicates = equalityComparer.Duplicates
                                                       // Convert (Key => [values]) to [Key, ...values]
-                                                      .Select(pair => pair.Value.Prepend(pair.Key).ToList()) 
+                                                      .Select(pair => pair.Value.Prepend(pair.Key).ToList())
                                                       // Get all subsets of length 2, so [1,2,3] becomes [(1,2), (1,3), (2,3)]
                                                       .SelectMany(values => values.SubSets2());
 
@@ -143,7 +143,7 @@ namespace GeometryGraph.Runtime.Geometry {
             List<(int, int, bool)> actualDuplicates = new();
             foreach ((int edgeAIndex, int edgeBIndex) in potentialDuplicates) {
                 if (excluded.Contains(edgeAIndex) || excluded.Contains(edgeBIndex)) continue;
-                
+
                 Edge edgeA = edges[edgeAIndex];
                 Edge edgeB = edges[edgeBIndex];
                 float normalAngle = math_ext.angle(faceNormals[edgeA.FaceA], faceNormals[edgeB.FaceA]);
@@ -152,7 +152,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
                 excluded.Add(edgeAIndex);
                 excluded.Add(edgeBIndex);
-                
+
                 float3 edgeAVertA = vertexPositions[edgeA.VertA];
                 float3 edgeAVertB = vertexPositions[edgeA.VertB];
                 float3 edgeBVertA = vertexPositions[edgeB.VertA];
@@ -206,7 +206,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             return duplicateVerticesMap;
         }
-        
+
         private Dictionary<int, int> RemoveInvalidDuplicates(Dictionary<int, List<int>> duplicateVerticesMap) {
             using IDisposable method = Profiler.ProfileMethod();
             // Remove trivial invalid entries
@@ -233,10 +233,10 @@ namespace GeometryGraph.Runtime.Geometry {
                         continue;
                     }
                 }
-                
+
                 int valueExists = duplicateVerticesMap[sortedKey].FirstOrGivenDefault(i => existsMap.ContainsKey(i), -1);
                 if (valueExists != -1) {
-                    int target = existsMap[valueExists]; 
+                    int target = existsMap[valueExists];
                     actualMap[target].Add(sortedKey);
                     actualMap[target].AddRange(duplicateVerticesMap[sortedKey]);
                     existsMap[sortedKey] = target;
@@ -244,7 +244,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 } else {
                     actualMap[sortedKey] = new HashSet<int>(duplicateVerticesMap[sortedKey]);
                     existsMap[sortedKey] = sortedKey;
-                    duplicateVerticesMap[sortedKey].ForEach(i => existsMap[i] = sortedKey);    
+                    duplicateVerticesMap[sortedKey].ForEach(i => existsMap[i] = sortedKey);
                 }
             }
             
@@ -257,7 +257,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             return existsMap;
         }
-        
+
         private void RemapDuplicateElements(List<float3> vertices, List<(int, int, bool)> duplicates, Dictionary<int, int> reverseDuplicatesMap) {
             using IDisposable method = Profiler.ProfileMethod();
             // Remap the vertex indices for faces and edges

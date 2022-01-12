@@ -19,7 +19,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Out] public float ResultAlpha { get; private set; }
 
         private RGBAlphaPair result;
-        
+
         [GetterMethod(nameof(ResultRGB), Inline = true)]
         private float3 GetResultRGB() => result.RGB;
 
@@ -45,7 +45,7 @@ namespace GeometryGraph.Runtime.Graph {
                         yield return results[i].Alpha;
                     }
                 }
-                
+
                 yield break;
             }
             

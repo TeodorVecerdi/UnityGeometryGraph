@@ -161,7 +161,7 @@ namespace GeometryGraph.Runtime.Geometry {
             bool eqNegZ = Math.Abs(faceNormal.z) > Constants.FLOAT_TOLERANCE && Math.Abs(faceNormal.z + calculatedNormal.z) < Constants.FLOAT_TOLERANCE;
 
             if (eqNegX || eqNegY || eqNegZ) {
-                Debug.Log("flipped face"); 
+                Debug.Log("flipped face");
                 triangles[submesh].Add(t1);
                 triangles[submesh].Add(t0);
                 triangles[submesh].Add(t2);
@@ -204,7 +204,7 @@ namespace GeometryGraph.Runtime.Geometry {
             
             float3 otherVertex = positionAttr[otherVertexIndex];
             float2 otherUV = uvAttr != null ? uvAttr[otherFaceCornerIndex] : float2.zero;
-            float3 normal = !shadeSmoothAttr[sharedA] 
+            float3 normal = !shadeSmoothAttr[sharedA]
                 ? normalAttr[sharedA]
                 : math.normalize(geometry.Vertices[otherVertexIndex].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
 
@@ -230,7 +230,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 triangles[submesh].Add(triangle2);
             }
         }
-        
+
         private (int triA0, int triA1, int triB0, int triB1, int triC0, int triC1) GetActualSharedTriangles(GeometryData.Face face, int t0, int t1, int t2) {
             int triA0 = -1, triA1 = -1, triB0 = -1, triB1 = -1, triC0 = -1, triC1 = -1;
             if (geometry.Edges[face.EdgeA].VertA == face.VertA) triA0 = t0;

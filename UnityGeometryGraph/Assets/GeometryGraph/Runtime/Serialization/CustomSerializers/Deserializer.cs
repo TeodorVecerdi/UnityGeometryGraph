@@ -29,7 +29,7 @@ namespace GeometryGraph.Runtime.Serialization {
         public static Color Color(JArray data) {
             return new Color(data.Value<float>(0), data.Value<float>(1), data.Value<float>(2), data.Value<float>(3));
         }
-        
+
         public static Gradient Gradient(JObject data) {
             GradientMode mode = (GradientMode)data["m"].Value<int>();
             List<GradientColorKey> colorKeys = new();

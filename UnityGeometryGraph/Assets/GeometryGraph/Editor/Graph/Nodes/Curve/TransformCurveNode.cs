@@ -20,13 +20,13 @@ namespace GeometryGraph.Editor {
         private float3 scale = float3_ext.one;
         private bool isClosed;
         private bool changeClosed;
-        
+
         private Vector3Field translationField;
         private Vector3Field rotationField;
         private Vector3Field scaleField;
         private Toggle isClosedToggle;
         private Toggle changeClosedToggle;
-        
+
         private GraphFrameworkPort inputCurvePort;
         private GraphFrameworkPort translationPort;
         private GraphFrameworkPort rotationPort;
@@ -73,7 +73,7 @@ namespace GeometryGraph.Editor {
             });
             isClosedToggle.RegisterValueChangedCallback(evt => {
                 if (isClosed == evt.newValue) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Toggle isClosed");
                 isClosed = evt.newValue;
                 RuntimeNode.UpdateIsClosed(isClosed);

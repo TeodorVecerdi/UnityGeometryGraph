@@ -52,7 +52,7 @@ namespace GeometryGraph.Editor {
             modeDropdown = new EnumSelectionDropdown<Mode>(mode, tree);
             modeDropdown.RegisterCallback<ChangeEvent<Mode>>(evt => {
                 if (evt.newValue == mode) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change scale type");
                 mode = evt.newValue;
                 RuntimeNode.UpdateMode(mode);
@@ -73,7 +73,7 @@ namespace GeometryGraph.Editor {
             
             attributeNameField.RegisterValueChangedCallback(evt => {
                 if (string.Equals(evt.newValue, attributeName, StringComparison.InvariantCulture)) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change attribute name");
                 attributeName = evt.newValue;
                 RuntimeNode.UpdateAttributeName(attributeName);
@@ -116,7 +116,7 @@ namespace GeometryGraph.Editor {
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
         }
-        
+
         protected override void BindPorts() {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(vectorPort, RuntimeNode.VectorPort);

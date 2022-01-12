@@ -13,6 +13,6 @@ namespace GeometryGraph.Editor {
                 PropertyType.String => typeof(StringPropertyNode),
                 _ => throw new ArgumentOutOfRangeException(nameof(propertyType), propertyType, null)
             };
-        } 
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public CompareType TypeX { get; private set; } = CompareType.Attribute;
         [Setting] public CompareType TypeY { get; private set; } = CompareType.Attribute;
         [Out] public GeometryData Result { get; private set; }
-        
+
         [GetterMethod(nameof(Result), Inline = true)]
         private GeometryData GetResult() {
             if (Result == null) {
@@ -30,14 +30,14 @@ namespace GeometryGraph.Runtime.Graph {
             }
             return Result;
         }
-        
+
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             if (Geometry == null) {
                 Result = GeometryData.Empty;
                 return;
             }
-            
+
             Result = Geometry.Clone();
 
             if (string.IsNullOrWhiteSpace(ResultAttribute)) {
@@ -56,7 +56,7 @@ namespace GeometryGraph.Runtime.Graph {
                 attributeDomain = baseAttributeY.Domain;
                 count = baseAttributeY.Count;
             }
-            
+
             if (count == -1) {
                 return;
             }
@@ -72,7 +72,7 @@ namespace GeometryGraph.Runtime.Graph {
                     AttributeCompareNode_Type.Float => GetValues(FloatYPort, count, FloatY).Into<Vector3Attribute>("tmpY", attributeDomain),
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
+
                 List<bool> result = new();
                 float sqrTolerance = Tolerance * Tolerance;
                 for (int i = 0; i < count; i++) {
@@ -93,12 +93,12 @@ namespace GeometryGraph.Runtime.Graph {
                     AttributeCompareNode_Type.Float => GetValues(FloatYPort, count, FloatY).Into<FloatAttribute>("tmpY", attributeDomain),
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
+
                 List<bool> result = new();
                 for (int i = 0; i < count; i++) {
                     result.Add(AttributeCompareNode_Burst.CompareFloat(attributeX![i], attributeY![i], Tolerance, Operation));
                 }
-                
+
                 Result.StoreAttribute(result.Into<BoolAttribute>(ResultAttribute, attributeDomain));
             }
         }
@@ -132,7 +132,7 @@ namespace GeometryGraph.Runtime.Graph {
                 _ => throw new ArgumentOutOfRangeException(nameof(operation), operation, null)
             };
         }
-        
+
         [BurstCompile(CompileSynchronously = true)]
         internal static bool CompareVector(ref float3 a, ref float3 b, float tolerance, CompareOperation operation) {
             return operation switch {

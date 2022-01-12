@@ -9,7 +9,7 @@
         String,
         Curve,
         Instances,
-        
+
         Any = int.MaxValue
     }
 }

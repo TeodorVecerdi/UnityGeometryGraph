@@ -7,7 +7,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         public static AttributeType SystemTypeToAttributeType(Type type) {
             return attributeTypeDictionary[type];
         }
-        
+
         public static Type AttributeTypeToSystemType(AttributeType type) {
             return systemTypeDictionary[type];
         }

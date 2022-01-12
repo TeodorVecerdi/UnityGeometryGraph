@@ -94,7 +94,7 @@ namespace GeometryGraph.Editor {
             
             Refresh();
         }
-        
+
         protected override void BindPorts() {
             BindPort(inputPort, RuntimeNode.ValuePort);
             BindPort(fromMinPort, RuntimeNode.FromMinPort);

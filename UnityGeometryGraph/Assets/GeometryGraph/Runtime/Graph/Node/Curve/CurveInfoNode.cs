@@ -11,14 +11,14 @@ namespace GeometryGraph.Runtime.Graph {
             UpdateValueCode = ""
         )]
         public CurveData Curve { get; private set; }
-        
+
         [Out] public int Points { get; private set; }
         [Out] public bool IsClosed { get; private set; }
 
-        [GetterMethod(nameof(Points), Inline = true)] 
+        [GetterMethod(nameof(Points), Inline = true)]
         private int GetPoints() => Curve?.Points ?? 0;
-        
-        [GetterMethod(nameof(IsClosed), Inline = true)] 
+
+        [GetterMethod(nameof(IsClosed), Inline = true)]
         private bool GetIsClosed() => Curve?.IsClosed ?? false;
     }
 }

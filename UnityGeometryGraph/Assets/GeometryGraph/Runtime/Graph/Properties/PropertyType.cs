@@ -29,7 +29,7 @@ namespace GeometryGraph.Runtime.Graph {
             return type switch {
                 PropertyType.GeometryObject => true,
                 PropertyType.GeometryCollection => true,
-                
+
                 PropertyType.Integer => false,
                 PropertyType.Float => false,
                 PropertyType.Vector => false,

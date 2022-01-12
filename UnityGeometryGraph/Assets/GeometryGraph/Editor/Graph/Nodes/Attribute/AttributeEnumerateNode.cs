@@ -61,49 +61,49 @@ namespace GeometryGraph.Editor {
 
             domainDropdown = new EnumSelectionDropdown<TargetDomain>(domain, domainTree, "Domain");
             typeDropdown = new EnumSelectionDropdown<TargetType>(type, typeTree);
-            
+
             domainDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == domain) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change domain");
                 domain = evt.newValue;
                 RuntimeNode.UpdateDomain(domain);
             });
-            
+
             typeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == type) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change type");
                 type = evt.newValue;
                 RuntimeNode.UpdateType(type);
                 OnTypeChanged();
             });
-            
+
             attributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change attribute");
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
             });
-            
+
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
-            
+
             attributePort.Add(attributeField);
-            
+
             inputContainer.Add(domainDropdown);
             inputContainer.Add(typeDropdown);
-            
+
             AddPort(geometryPort);
             AddPort(attributePort);
-            AddPort(floatPort); 
+            AddPort(floatPort);
             AddPort(integerPort);
             AddPort(vectorPort);
             AddPort(booleanPort);
             AddPort(indexPort);
             AddPort(countPort);
-            
+
             OnTypeChanged();
         }
 
@@ -136,7 +136,7 @@ namespace GeometryGraph.Editor {
                 default: throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         protected override void BindPorts() {
             BindPort(geometryPort, RuntimeNode.GeometryPort);
             BindPort(attributePort, RuntimeNode.AttributePort);
@@ -158,23 +158,23 @@ namespace GeometryGraph.Editor {
             root["d"] = array;
             return root;
         }
-        
+
         protected internal override void Deserialize(JObject data) {
             JArray array = data["d"] as JArray;
             attribute = array!.Value<string>(0);
             domain = (TargetDomain)array.Value<int>(1);
             type = (TargetType)array.Value<int>(2);
-            
+
             attributeField.SetValueWithoutNotify(attribute);
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
-            
+
             RuntimeNode.UpdateAttribute(attribute);
             RuntimeNode.UpdateType(type);
             RuntimeNode.UpdateDomain(domain);
-            
+
             OnTypeChanged();
-            
+
             base.Deserialize(data);
         }
     }

@@ -7,27 +7,27 @@ using Unity.Mathematics;
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
     public partial class VectorMathNode {
-        [Setting] 
+        [Setting]
         public VectorMathNode_Operation Operation { get; private set; }
-        
-        [In(GenerateEquality = false)] 
+
+        [In(GenerateEquality = false)]
         public float3 X { get; private set; }
-        
-        [In(GenerateEquality = false)] 
+
+        [In(GenerateEquality = false)]
         public float3 Y { get; private set; }
-        
-        [In(GenerateEquality = false)] 
+
+        [In(GenerateEquality = false)]
         public float3 WrapMax { get; private set; }
-        
-        [In, UpdatesProperties(nameof(VectorResult))] 
+
+        [In, UpdatesProperties(nameof(VectorResult))]
         public float IOR { get; private set; }
-        
-        [In, UpdatesProperties(nameof(VectorResult))] 
+
+        [In, UpdatesProperties(nameof(VectorResult))]
         public float Scale { get; private set; }
-        
-        [In, UpdatesProperties(nameof(VectorResult))] 
+
+        [In, UpdatesProperties(nameof(VectorResult))]
         public float Distance { get; private set; }
-        
+
         [Out] public float3 VectorResult { get; private set; }
         [Out] public float FloatResult { get; private set; }
 
@@ -35,7 +35,7 @@ namespace GeometryGraph.Runtime.Graph {
         private readonly List<float> floatResults = new();
         private bool vectorResultDirty = true;
         private bool floatResultDirty = true;
-        
+
         [CalculatesProperty(nameof(VectorResult))] private void MarkVectorResultDirty() => vectorResultDirty = true;
         [CalculatesProperty(nameof(FloatResult))] private void MarkFloatResultDirty() => floatResultDirty = true;
 
@@ -54,7 +54,7 @@ namespace GeometryGraph.Runtime.Graph {
                     }
                     yield break;
                 }
-                
+
                 vectorResultDirty = false;
                 vectorResults.Clear();
                 List<float3> x = GetValues(XPort, count, X).ToList();
@@ -63,7 +63,7 @@ namespace GeometryGraph.Runtime.Graph {
                 List<float> ior = GetValues(IORPort, count, IOR).ToList();
                 List<float> scale = GetValues(ScalePort, count, Scale).ToList();
                 List<float> distance = GetValues(DistancePort, count, Distance).ToList();
-                
+
                 for (int i = 0; i < count; i++) {
                     float3 result = CalculateVector(x[i], y[i], wrapMax[i], ior[i], scale[i], distance[i]);
                     vectorResults.Add(result);
@@ -76,7 +76,7 @@ namespace GeometryGraph.Runtime.Graph {
                     }
                     yield break;
                 }
-                
+
                 floatResultDirty = false;
                 floatResults.Clear();
                 List<float3> x = GetValues(XPort, count, X).ToList();
@@ -118,14 +118,14 @@ namespace GeometryGraph.Runtime.Graph {
                 VectorMathNode_Operation.LessThan => new float3(x.x < y.x ? 1.0f : 0.0f, x.y < y.y ? 1.0f : 0.0f, x.z < y.z ? 1.0f : 0.0f),
                 VectorMathNode_Operation.GreaterThan => new float3(x.x > y.x ? 1.0f : 0.0f, x.y > y.y ? 1.0f : 0.0f, x.z > y.z ? 1.0f : 0.0f),
                 VectorMathNode_Operation.Sign => math.sign(x),
-                VectorMathNode_Operation.Compare => new float3(MathF.Abs(x.x - y.x) < distance ? 1.0f : 0.0f, 
-                                                               MathF.Abs(x.y - y.y) < distance ? 1.0f : 0.0f, 
+                VectorMathNode_Operation.Compare => new float3(MathF.Abs(x.x - y.x) < distance ? 1.0f : 0.0f,
+                                                               MathF.Abs(x.y - y.y) < distance ? 1.0f : 0.0f,
                                                                MathF.Abs(x.z - y.z) < distance ? 1.0f : 0.0f),
-                VectorMathNode_Operation.SmoothMinimum => new float3(math_ext.smooth_min(x.x, y.x, distance), 
-                                                                     math_ext.smooth_min(x.y, y.y, distance), 
+                VectorMathNode_Operation.SmoothMinimum => new float3(math_ext.smooth_min(x.x, y.x, distance),
+                                                                     math_ext.smooth_min(x.y, y.y, distance),
                                                                      math_ext.smooth_min(x.z, y.z, distance)),
-                VectorMathNode_Operation.SmoothMaximum => new float3(math_ext.smooth_max(x.x, y.x, distance), 
-                                                                     math_ext.smooth_max(x.y, y.y, distance), 
+                VectorMathNode_Operation.SmoothMaximum => new float3(math_ext.smooth_max(x.x, y.x, distance),
+                                                                     math_ext.smooth_max(x.y, y.y, distance),
                                                                      math_ext.smooth_max(x.z, y.z, distance)),
                 VectorMathNode_Operation.Round => math.round(x),
                 VectorMathNode_Operation.Floor => math.floor(x),
@@ -154,14 +154,14 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         public enum VectorMathNode_Operation {
-            
+
             // Operations
             Add = 0, Subtract = 1, Multiply = 2, Divide = 3,
             // -
             Scale = 4, Length = 5, LengthSquared = 6, Distance = 7, DistanceSquared = 8, Normalize = 9,
             // -
             DotProduct = 10, CrossProduct = 11, Project = 12, Reflect = 13, Refract = 14,
-            
+
             // Per-Component Comparison
             Absolute = 15, Minimum = 16, Maximum = 17, LessThan = 18, GreaterThan = 19,
             Sign = 20, Compare = 21, SmoothMinimum = 22, SmoothMaximum = 23,
@@ -173,10 +173,10 @@ namespace GeometryGraph.Runtime.Graph {
             // Trig
             Sine = 32, Cosine = 33, Tangent = 34,
             Arcsine = 35, Arccosine = 36, Arctangent = 37, [DisplayName("Atan2")] Atan2 = 38,
-            
+
             // Conversion
             ToRadians = 39, ToDegrees = 40,
-            
+
             // Added later, was too lazy to redo numbers
             Lerp = 41,
         }

@@ -10,7 +10,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
     public sealed class CircleCurve : Curve {
         protected internal override CurveType Type => CurveType.Circle;
         private readonly float radius;
-        
+
         public CircleCurve(int resolution, float radius) : base(resolution.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION)) {
             this.radius = radius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
             IsClosed = true;

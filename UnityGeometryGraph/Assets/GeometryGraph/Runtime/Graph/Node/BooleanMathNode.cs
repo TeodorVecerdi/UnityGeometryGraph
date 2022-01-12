@@ -10,10 +10,10 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public bool B { get; private set; }
         [Setting] public BooleanMathNode_Operation Operation { get; private set; }
         [Out] public bool Result { get; private set; }
-        
+
         private readonly List<bool> results = new();
         private bool resultsDirty = true;
-        
+
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
         [GetterMethod(nameof(Result), Inline = true)]
@@ -50,7 +50,7 @@ namespace GeometryGraph.Runtime.Graph {
                 _ => throw new ArgumentOutOfRangeException(nameof(Operation), Operation, null)
             };
         }
-        
+
         public enum BooleanMathNode_Operation {AND = 0, OR = 1, XOR = 2, NOT = 3}
     }
 }

@@ -11,7 +11,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public int B {get; private set; }
         [Out] public bool Result {get; private set; }
         [Setting] public CompareIntegerNode_CompareOperation Operation {get; private set; }
-        
+
         private readonly List<bool> results = new();
         private bool resultsDirty = true;
 
@@ -19,7 +19,7 @@ namespace GeometryGraph.Runtime.Graph {
         private bool GetResult() {
             return CalculateResult(A, B);
         }
-        
+
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
@@ -28,7 +28,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 

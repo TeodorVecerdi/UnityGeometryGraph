@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Geometry {
             this.vertices = vertices;
             duplicates = new Dictionary<int, List<int>>();
         }
-        
+
         public override bool Equals(Edge first, Edge second) {
             if (first == null && second == null) return true;
             if (first == null || second == null) return false;
@@ -29,7 +29,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             if (!checkA && !checkB) return false;
             
-            if (!duplicates.ContainsKey(first.SelfIndex)) 
+            if (!duplicates.ContainsKey(first.SelfIndex))
                 duplicates[first.SelfIndex] = new List<int>();
             duplicates[first.SelfIndex].Add(second.SelfIndex);
 

@@ -13,7 +13,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float Extra { get; private set; }
         [Setting] public FloatMathNode_Operation Operation { get; private set; }
         [Out] public float Result { get; private set; }
-        
+
         private readonly List<float> results = new();
         private bool resultsDirty = true;
 
@@ -31,7 +31,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 
@@ -94,7 +94,7 @@ namespace GeometryGraph.Runtime.Graph {
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
-        
+
         public enum FloatMathNode_Operation {
             // Operations
             Add = 0, Subtract = 1, Multiply = 2, Divide = 3, Power = 4,
@@ -114,7 +114,7 @@ namespace GeometryGraph.Runtime.Graph {
 
             // Conversion
             ToRadians = 33, ToDegrees = 34,
-            
+
             // Added later, was too lazy to redo numbers
             Lerp = 35,
         }

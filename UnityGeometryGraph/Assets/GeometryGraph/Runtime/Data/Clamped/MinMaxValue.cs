@@ -16,7 +16,7 @@ namespace GeometryGraph.Runtime.Data {
             get => min;
             set => min = value;
         }
-        
+
         public T? Max {
             get => max;
             set => max = value;
@@ -34,7 +34,7 @@ namespace GeometryGraph.Runtime.Data {
             if (max != null) val = val.MaxClamped((T)max);
             return val;
         }
-        
+
         public static implicit operator T(MinMaxValue<T> minMax) {
             return minMax.Value;
         }

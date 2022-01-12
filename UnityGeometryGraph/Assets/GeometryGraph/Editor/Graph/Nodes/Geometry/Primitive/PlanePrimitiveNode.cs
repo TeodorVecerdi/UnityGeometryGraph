@@ -35,7 +35,7 @@ namespace GeometryGraph.Editor {
             widthField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(0.0f);
                 if (MathF.Abs(newValue - size.x) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change width");
                 size.x = newValue;
                 RuntimeNode.UpdateWidth(size.x);
@@ -45,7 +45,7 @@ namespace GeometryGraph.Editor {
             heightField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(0.0f);
                 if (MathF.Abs(newValue - size.y) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change height");
                 size.y = newValue;
                 RuntimeNode.UpdateHeight(size.y);
@@ -55,7 +55,7 @@ namespace GeometryGraph.Editor {
             subdivisionsField.RegisterValueChangedCallback(evt => {
                 int newValue = evt.newValue.MinClamped(0);
                 if (newValue == subdivisions) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivisions");
                 subdivisions = newValue;
                 RuntimeNode.UpdateSubdivisions(subdivisions);

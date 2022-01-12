@@ -8,9 +8,9 @@ namespace GeometryGraph.Runtime.Data {
     public class GeometryObject : GameObjectProcessor<GeometryData, GeometryData>, IGeometryProvider {
         [SerializeField] private GeometryData geometry;
         protected override GeometryData Processed { get => geometry; set => geometry = value; }
-        
+
         [ShowInInspector] public int Hash => ChildrenHashCode;
-        
+
         [Button]
         private void ProcessData() {
             Process();

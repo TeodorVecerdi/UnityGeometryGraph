@@ -7,7 +7,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         public const string Material = "material_index";
         public const string ShadeSmooth = "shade_smooth";
         public const string UV = "uv";
-        
+
         public static readonly HashSet<string> BuiltinIds = new() {
             Position,
             Normal,

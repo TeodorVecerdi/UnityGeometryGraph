@@ -53,7 +53,7 @@ namespace GeometryGraph.Editor {
                 upgradeMethodCache[version](graphObject);
             else Debug.LogWarning($"Upgrade conversion with [target={version}] is not supported.");
         }
-        
+
 
         private static void BuildMethodCache() {
             Debug.Log("Building cache");
@@ -65,7 +65,7 @@ namespace GeometryGraph.Editor {
                 List<ConvertMethodAttribute> attributes = method.GetCustomAttributes<ConvertMethodAttribute>(false).ToList();
                 if (attributes.Count <= 0) continue;
                 ConvertMethodAttribute attribute = attributes[0];
-                
+
                 Action<GraphFrameworkObject> methodCall = method.CreateDelegate(typeof(Action<GraphFrameworkObject>)) as Action<GraphFrameworkObject>;
                 upgradeMethodCache.Add(attribute.TargetVersion, methodCall);
             }

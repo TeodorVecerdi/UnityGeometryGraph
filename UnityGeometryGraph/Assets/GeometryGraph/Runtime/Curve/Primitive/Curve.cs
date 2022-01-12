@@ -4,7 +4,7 @@ using Unity.Mathematics;
 namespace GeometryGraph.Runtime.Curve.Primitive {
     public abstract class Curve {
         protected internal abstract CurveType Type { get; }
-        
+
         protected int Resolution;
         protected internal bool IsClosed;
         protected internal List<float3> Points;

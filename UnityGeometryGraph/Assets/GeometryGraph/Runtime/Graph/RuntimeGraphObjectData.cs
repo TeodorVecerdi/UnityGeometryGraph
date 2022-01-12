@@ -11,9 +11,9 @@ namespace GeometryGraph.Runtime {
     public class RuntimeGraphObjectData : ISerializationCallbackReceiver {
         public static bool DeserializingFromJson;
         public static bool IsDuringSerialization;
-        
+
         [SerializeField] public string Guid;
-        
+
         [NonSerialized, ShowInInspector] public List<RuntimeNode> Nodes = new();
         [NonSerialized] public OutputNode OutputNode;
         [SerializeField] public List<Connection> Connections = new();
@@ -97,7 +97,7 @@ namespace GeometryGraph.Runtime {
                 RuntimePort inputPort = allPorts.Find(port => port.Guid == connection.InputGuid);
                 connection.Output = outputPort;
                 connection.Input = inputPort;
-                
+
                 if (outputPort == null || inputPort == null) return;
 
                 outputPort.Connections.Add(connection);
@@ -107,7 +107,7 @@ namespace GeometryGraph.Runtime {
             for (int i = 0; i < Nodes.Count; i++) {
                 RuntimeNode node = Nodes[i];
                 node.Deserialize(serializedRuntimeNodes[i].CustomData);
-                
+
                 foreach (RuntimePort port in node.Ports) {
                     DebugUtility.Log($"Port on {node.GetType().Name} has {port.Connections.Count} connections");
                 }

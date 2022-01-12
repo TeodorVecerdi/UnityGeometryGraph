@@ -10,13 +10,13 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float Min { get; private set; } = 0.0f;
         [In] public float Max { get; private set; } = 1.0f;
         [Out] public float Result { get; private set; }
-        
+
         private readonly List<float> results = new();
         private bool resultsDirty = true;
 
         [GetterMethod(nameof(Result), Inline = true)]
         private float GetResult() => Input.Clamped(Min, Max);
-        
+
         [CalculatesProperty(nameof(Result))]
         private void MarkResultsDirty() => resultsDirty = true;
 
@@ -26,7 +26,7 @@ namespace GeometryGraph.Runtime.Graph {
                 foreach (float result in results) {
                     yield return result;
                 }
-                
+
                 yield break;
             }
             

@@ -21,7 +21,7 @@ namespace GeometryGraph.Runtime.Graph {
         private float GetResult() {
             return CalculateResult(Value, FromMin, FromMax, ToMin, ToMax, Clamp);
         }
-        
+
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
@@ -30,7 +30,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 

@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 namespace GeometryGraph.Editor {
     public class BlackboardProvider {
         private static readonly Texture2D exposedIcon = Resources.Load<Texture2D>("GraphView/Nodes/BlackboardFieldExposed");
-        
+
         public Blackboard Blackboard { get; private set; }
         private readonly EditorView editorView;
         private readonly Dictionary<string, BlackboardRow> inputRows;
@@ -34,7 +34,7 @@ namespace GeometryGraph.Editor {
                     foreach (BlackboardRow child in section!.Children().OfType<BlackboardRow>()) {
                         BlackboardField field = child.Q<BlackboardField>();
                         if (field is not { selected: true }) continue;
-                        
+
                         field.OpenTextEditor();
                         break;
                     }

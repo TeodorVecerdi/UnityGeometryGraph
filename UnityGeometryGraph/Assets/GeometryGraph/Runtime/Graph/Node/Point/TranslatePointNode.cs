@@ -12,7 +12,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public string AttributeName { get; private set; }
         [Setting] public TranslatePointNode_Mode Mode { get; private set; }
         [Out] public GeometryData Result { get; private set; }
-        
+
 
         protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
             if (port != InputPort) return;
@@ -46,7 +46,7 @@ namespace GeometryGraph.Runtime.Graph {
                     Debug.LogWarning($"Couldn't find attribute [{AttributeName}]");
                     return;
                 }
-                
+
                 Vector3Attribute otherAttribute = Result.GetAttribute<Vector3Attribute>(AttributeName, AttributeDomain.Vertex);
                 positionAttr.YieldWithAttribute(otherAttribute, (position, translation) => position + translation).Into(positionAttr);
                 Result.StoreAttribute(positionAttr);

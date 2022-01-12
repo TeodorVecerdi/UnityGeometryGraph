@@ -57,8 +57,8 @@ namespace GeometryGraph.Runtime.Geometry {
             
             FillBuiltinAttributes(vertexPositionsList, uvsList, faceNormalsList, materialIndicesList, smoothShadedList);
         }
-        
-        
+
+
         object ICloneable.Clone() {
             return Clone();
         }
@@ -69,7 +69,7 @@ namespace GeometryGraph.Runtime.Geometry {
             GeometryData.Merge(clone, this);
             return clone;
         }
-        
+
         public static GeometryData Empty => new();
 
         private void FillBuiltinAttributes(
@@ -103,7 +103,7 @@ namespace GeometryGraph.Runtime.Geometry {
             // Face Metadata ==> Adjacent faces
             FillFaceMetadata();
         }
-        
+
         private void FillVertexMetadata() {
             using IDisposable method = Profiler.ProfileMethod();
             // Edges
@@ -162,7 +162,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 fcC.Vert = face.VertC;
             }
         }
-        
+
         #region HashCode Implementations
 
         private int CalculateHashCodeElementCount() {
@@ -186,7 +186,7 @@ namespace GeometryGraph.Runtime.Geometry {
             // Located in `GeometryData.cs`
             return 0;
         }
-            
+
         private int CalculateHashCodeFull() {
             // TODO(#20): Implement CalculateHashCodeFull
             // Located in `GeometryData.cs`

@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
 
             valueField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - value) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 value = evt.newValue;
                 RuntimeNode.UpdateValue(value);

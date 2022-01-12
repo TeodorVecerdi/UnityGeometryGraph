@@ -32,8 +32,8 @@ namespace GeometryGraph.Editor {
             Button button = new(() => {
                 window.Close();
                 onSelect(valueProvider[index]);
-            }) { 
-                
+            }) {
+
                 text = title ?? (valueProvider[index] is Enum
                     ? RandomUtilities.DisplayNameEnum(valueProvider[index])
                     : RandomUtilities.DisplayNameString(valueProvider[index].ToString())),

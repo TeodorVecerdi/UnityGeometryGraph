@@ -14,7 +14,7 @@ namespace GeometryGraph.Editor {
         [SerializeField] public bool AreCategoriesEnabled;
         [SerializeField] public Vector3 GraphPosition;
         [SerializeField] public RuntimeGraphObject RuntimeGraph;
-        
+
         [SerializeField] private string serializedGraph;
         [SerializeField] private int fileVersion;
         [SerializeField] private bool isDirty;

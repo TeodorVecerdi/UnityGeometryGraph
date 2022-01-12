@@ -192,7 +192,7 @@ namespace GeometryGraph.Editor {
         public bool ShowReplaceGraphWindow() {
             int selection = EditorUtility.DisplayDialogComplex("Graph has unsaved changes", "Do you want to save the changes you made in the Geometry Graph?\nYour changes will be lost if you don't save them.", "Save As...", "Cancel", "Continue");
             // 0 = Save As, 1 = Cancel, 2 = Continue
-            if (selection == 1) 
+            if (selection == 1)
                 return false;
             if (selection == 2) {
                 // Reimport asset on disk, then replace
@@ -213,7 +213,7 @@ namespace GeometryGraph.Editor {
                 }
 
                 Debug.Log("Reimporting and replacing");
-                
+
                 string assetPath = AssetDatabase.GUIDToAssetPath(selectedAssetGuid);
                 AssetDatabase.ImportAsset(assetPath);
                 GraphFrameworkObject newGraphObject = GraphFrameworkUtility.FindOrLoadAtPath(assetPath);

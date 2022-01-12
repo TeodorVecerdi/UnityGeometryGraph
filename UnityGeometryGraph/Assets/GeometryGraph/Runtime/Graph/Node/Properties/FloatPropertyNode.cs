@@ -5,14 +5,14 @@ using UnityEngine;
 namespace GeometryGraph.Runtime.Graph {
     public class FloatPropertyNode : RuntimeNode {
         [SerializeReference] public Property Property;
-       
+
         public RuntimePort Port { get; private set; }
         public string PropertyGuid { get; private set; }
-        
+
         public FloatPropertyNode(string guid) : base(guid) {
             Port = RuntimePort.Create(PortType.Float, PortDirection.Output, this);
         }
-        
+
         protected override object GetValueForPort(RuntimePort port) {
             return Property.GetValueOrDefault<float>(Property, 0.0f);
         }

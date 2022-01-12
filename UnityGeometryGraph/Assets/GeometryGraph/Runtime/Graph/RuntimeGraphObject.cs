@@ -139,7 +139,7 @@ namespace GeometryGraph.Runtime.Graph {
             }
             // RuntimeData.OnBeforeSerialize();
         }
-        
+
         internal void OnPropertyReferenceNameUpdated(string propertyGuid, string newReferenceName) {
             foreach (Property runtimeDataProperty in RuntimeData.Properties) {
                 if (runtimeDataProperty.Guid != propertyGuid) continue;
@@ -188,7 +188,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         private void CleanupScenePropertyValues() {
             foreach (Property property in RuntimeData.Properties) {
-                property.Value = property.DefaultValue; 
+                property.Value = property.DefaultValue;
             }
         }
     }

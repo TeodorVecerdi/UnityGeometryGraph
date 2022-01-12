@@ -13,26 +13,26 @@ namespace GeometryGraph.Runtime.Graph {
             UpdateValueCode = ""
         )]
         public CurveData Input { get; private set; }
-       
+
         [AdditionalValueChangedCode(
             @"if (Result != null) {
 {indent}    Result.IsClosed = IsClosed;
 {indent}} else {
 {indent}    CalculateResult();
-{indent}}", 
+{indent}}",
             Where = AdditionalValueChangedCodeAttribute.Location.AfterUpdate
         )]
-        [In(CallCalculateMethodsIfChanged = false)] 
+        [In(CallCalculateMethodsIfChanged = false)]
         public bool IsClosed { get; private set; }
-         
+
         [In] public float3 Translation { get; private set; }
         [In] public float3 Rotation { get; private set; }
         [In] public float3 Scale { get; private set; }
         [Setting] public bool ChangeClosed { get; private set; }
 
         [Out] public CurveData Result { get; private set; }
-        
-        [GetterMethod(nameof(Result), Inline = true)] 
+
+        [GetterMethod(nameof(Result), Inline = true)]
         private CurveData GetResult() => Result ?? CurveData.Empty;
 
         protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
@@ -60,7 +60,7 @@ namespace GeometryGraph.Runtime.Graph {
                 quaternion rotationQuat = quaternion.Euler(math.radians(rotation[i]));
                 float4x4 matrix = float4x4.TRS(translation[i], rotationQuat, scale[i]);
                 float4x4 matrixNormal = float4x4.TRS(float3.zero, rotationQuat, scale[i]);
-                
+
                 position.Add(math.mul(matrix, Input.Position[i].float4(1.0f)).xyz);
                 tangent.Add(math.mul(matrixNormal, Input.Tangent[i].float4(1.0f)).xyz);
                 normal.Add(math.mul(matrixNormal, Input.Normal[i].float4(1.0f)).xyz);

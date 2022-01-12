@@ -10,18 +10,18 @@ namespace GeometryGraph.Runtime.Geometry {
         public static void MergeWith(this GeometryData geometry, Mesh mesh) {
             GeometryData.Merge(geometry, mesh);
         }
-        
+
         public static void MergeWith(this GeometryData lhs, GeometryData rhs) {
             GeometryData.Merge(lhs, rhs);   
         }
     }
-    
+
     public partial class GeometryData {
         public static void Merge(GeometryData geometry, Mesh mesh) {
             GeometryData rhs = new(mesh, 179.99f);
             Merge(geometry, rhs);
         }
-        
+
         public static void Merge(GeometryData lhs, GeometryData rhs) {
             //!! 1. Update metadata on `rhs`
             int rhsVertexOffset = lhs.vertices.Count;
@@ -43,7 +43,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 for (int i = 0; i < vertex.Faces.Count; i++) {
                     vertex.Faces[i] += rhsFaceOffset;
                 }
-                
+
                 for (int i = 0; i < vertex.FaceCorners.Count; i++) {
                     vertex.FaceCorners[i] += rhsFaceCornerOffset;
                 }
@@ -58,7 +58,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 edge.SelfIndex += rhsEdgeOffset;
                 edge.FaceA += rhsFaceOffset;
                 if(edge.FaceB != -1) edge.FaceB += rhsFaceOffset;
-                
+
                 rhsEdges.Add(edge);
             });
             
@@ -96,7 +96,7 @@ namespace GeometryGraph.Runtime.Geometry {
             int rhsMaterialIndexOffset = lhs.submeshCount;
             if (rhs.attributeManager.HasAttribute(AttributeId.Material, AttributeDomain.Face)) {
                 IEnumerable<int> rhsMaterialIndexAttr = rhs.GetAttribute<IntAttribute>(AttributeId.Material, AttributeDomain.Face).Select(i => i + rhsMaterialIndexOffset);
-                
+
                 //!! 4. Merge attributes on `lhs`
                 // Material index is treated separately
                 if (lhs.attributeManager.HasAttribute(AttributeId.Material, AttributeDomain.Face)) {
@@ -112,7 +112,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             // Rest of attributes just get merged normally
             // First attributes in lhs & rhs
-            IEnumerable<KeyValuePair<string, BaseAttribute>> allLhsAttributeDictionaries = 
+            IEnumerable<KeyValuePair<string, BaseAttribute>> allLhsAttributeDictionaries =
                 lhs.attributeManager.VertexAttributes
                    .Union(lhs.attributeManager.EdgeAttributes)
                    .Union(lhs.attributeManager.FaceAttributes)
@@ -129,7 +129,7 @@ namespace GeometryGraph.Runtime.Geometry {
             }
             
             // Then attributes in rhs but not in lhs
-            IEnumerable<KeyValuePair<string, BaseAttribute>> allRhsAttributeDictionaries = 
+            IEnumerable<KeyValuePair<string, BaseAttribute>> allRhsAttributeDictionaries =
                 rhs.attributeManager.VertexAttributes
                    .Union(rhs.attributeManager.EdgeAttributes)
                    .Union(rhs.attributeManager.FaceAttributes)

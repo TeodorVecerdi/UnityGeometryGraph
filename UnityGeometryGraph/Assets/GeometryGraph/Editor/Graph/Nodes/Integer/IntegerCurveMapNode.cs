@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
         private IntegerField minField;
         private IntegerField maxField;
         private CurveField curveField;
-        
+
         private GraphFrameworkPort valuePort;
         private GraphFrameworkPort minPort;
         private GraphFrameworkPort maxPort;
@@ -38,7 +38,7 @@ namespace GeometryGraph.Editor {
 
             valueField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == value) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 value = evt.newValue;
                 RuntimeNode.UpdateValue(value);
@@ -46,7 +46,7 @@ namespace GeometryGraph.Editor {
             
             minField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == min) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change min");
                 min = evt.newValue;
                 RuntimeNode.UpdateMin(min);
@@ -54,7 +54,7 @@ namespace GeometryGraph.Editor {
 
             maxField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == max) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change max");
                 max = evt.newValue;
                 RuntimeNode.UpdateMax(max);

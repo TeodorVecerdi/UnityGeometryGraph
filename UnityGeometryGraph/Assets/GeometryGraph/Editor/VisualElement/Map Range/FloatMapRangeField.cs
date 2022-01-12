@@ -47,19 +47,19 @@ namespace GeometryGraph.Editor {
             toMinField.SetValueWithoutNotify(0.0f);
             toMaxField.SetValueWithoutNotify(1.0f);
         }
-        
+
         public void RegisterFromMinValueChanged(EventCallback<ChangeEvent<float>> callback) {
             fromMinField.RegisterValueChangedCallback(callback);
         }
-        
+
         public void RegisterFromMaxValueChanged(EventCallback<ChangeEvent<float>> callback) {
             fromMaxField.RegisterValueChangedCallback(callback);
         }
-        
+
         public void RegisterToMinValueChanged(EventCallback<ChangeEvent<float>> callback) {
             toMinField.RegisterValueChangedCallback(callback);
         }
-        
+
         public void RegisterToMaxValueChanged(EventCallback<ChangeEvent<float>> callback) {
             toMaxField.RegisterValueChangedCallback(callback);
         }

@@ -8,10 +8,10 @@ namespace GeometryGraph.Runtime.Graph {
         [In(DefaultValue = "GeometryData.Empty")]
         [AdditionalValueChangedCode("{other} = {other}.Clone()", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
         public GeometryData Input { get; private set; } = GeometryData.Empty;
-        
+
         [AdditionalValueChangedCode("{other} = {other}.Clamped(0, Constants.MAX_SUBDIVISIONS)", Where = AdditionalValueChangedCodeAttribute.Location.AfterGetValue)]
         [In] public int Levels { get; private set; } = 1;
-        
+
         [Out] public GeometryData Result { get; private set; }
 
         [GetterMethod(nameof(Result), Inline = true)]
@@ -19,7 +19,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (Result == null) CalculateResult();
             return Result;
         }
-        
+
         protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
             if (port != InputPort) return;
             Input = GeometryData.Empty;

@@ -9,7 +9,7 @@ namespace GeometryGraph.Editor {
     public class ClampFloatNode : AbstractNode<GeometryGraph.Runtime.Graph.ClampFloatNode> {
         protected override string Title => "Clamp (Float)";
         protected override NodeCategory Category => NodeCategory.Float;
-    
+
         private GraphFrameworkPort inputPort;
         private GraphFrameworkPort minPort;
         private GraphFrameworkPort maxPort;
@@ -61,7 +61,7 @@ namespace GeometryGraph.Editor {
             
             Refresh();
         }
-        
+
         protected override void BindPorts() {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(minPort, RuntimeNode.MinPort);

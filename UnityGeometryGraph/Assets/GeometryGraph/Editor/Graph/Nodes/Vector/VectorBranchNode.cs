@@ -68,7 +68,7 @@ namespace GeometryGraph.Editor {
             
             Refresh();
         }
-        
+
         protected override void BindPorts() {
             BindPort(conditionPort, RuntimeNode.ConditionPort);
             BindPort(ifTruePort, RuntimeNode.IfTruePort);

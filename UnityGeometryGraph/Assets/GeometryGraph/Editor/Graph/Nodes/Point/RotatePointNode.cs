@@ -34,7 +34,7 @@ namespace GeometryGraph.Editor {
         private EnumSelectionDropdown<AxisMode> axisModeDropdown;
         private EnumSelectionDropdown<AngleMode> angleModeDropdown;
         private EnumSelectionToggle<RotationType> rotationTypeToggle;
-        
+
         private Vector3Field rotationField;
         private Vector3Field axisField;
         private FloatField angleField;
@@ -48,7 +48,7 @@ namespace GeometryGraph.Editor {
         private string axisAttribute;
         private float angle;
         private string angleAttribute;
-        
+
         private RotationMode rotationMode;
         private AxisMode axisMode;
         private AngleMode angleMode;
@@ -60,7 +60,7 @@ namespace GeometryGraph.Editor {
                 new("Rotate each point using an attribute", 1, false)
             }
         };
-        
+
         private static readonly SelectionTree axisTree = new(new List<object>(Enum.GetValues(typeof(AxisMode)).Convert(o => o))) {
             new SelectionCategory("Axis Type", false, SelectionCategory.CategorySize.Normal) {
                 new("Use a vector as the rotation axis", 0, false),
@@ -88,7 +88,7 @@ namespace GeometryGraph.Editor {
             rotationModeDropdown = new EnumSelectionDropdown<RotationMode>(rotationMode, rotationTree, "Rotation");
             rotationModeDropdown.RegisterCallback<ChangeEvent<RotationMode>>(evt => {
                 if (evt.newValue == rotationMode) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change rotation type");
                 rotationMode = evt.newValue;
                 RuntimeNode.UpdateRotationMode(rotationMode);
@@ -97,7 +97,7 @@ namespace GeometryGraph.Editor {
             axisModeDropdown = new EnumSelectionDropdown<AxisMode>(axisMode, axisTree, "Axis");
             axisModeDropdown.RegisterCallback<ChangeEvent<AxisMode>>(evt => {
                 if (evt.newValue == axisMode) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change axis type");
                 axisMode = evt.newValue;
                 RuntimeNode.UpdateAxisMode(axisMode);
@@ -106,7 +106,7 @@ namespace GeometryGraph.Editor {
             angleModeDropdown = new EnumSelectionDropdown<AngleMode>(angleMode, angleTree, "Angle");
             angleModeDropdown.RegisterCallback<ChangeEvent<AngleMode>>(evt => {
                 if (evt.newValue == angleMode) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change angle type");
                 angleMode = evt.newValue;
                 RuntimeNode.UpdateAngleMode(angleMode);
@@ -116,7 +116,7 @@ namespace GeometryGraph.Editor {
             rotationTypeToggle = new EnumSelectionToggle<RotationType>(rotationType);
             rotationTypeToggle.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == rotationType) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change rotation mode");
                 rotationType = evt.newValue;
                 RuntimeNode.UpdateRotationType(rotationType);
@@ -142,7 +142,7 @@ namespace GeometryGraph.Editor {
             
             rotationAttributeField.RegisterValueChangedCallback(evt => {
                 if (string.Equals(evt.newValue, rotationAttribute, StringComparison.InvariantCulture)) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Rotation Attribute name");
                 rotationAttribute = evt.newValue;
                 RuntimeNode.UpdateRotationAttribute(rotationAttribute);
@@ -150,7 +150,7 @@ namespace GeometryGraph.Editor {
 
             axisAttributeField.RegisterValueChangedCallback(evt => {
                 if (string.Equals(evt.newValue, axisAttribute, StringComparison.InvariantCulture)) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Axis Attribute name");
                 axisAttribute = evt.newValue;
                 RuntimeNode.UpdateAxisAttribute(axisAttribute);
@@ -158,7 +158,7 @@ namespace GeometryGraph.Editor {
 
             angleAttributeField.RegisterValueChangedCallback(evt => {
                 if (string.Equals(evt.newValue, angleAttribute, StringComparison.InvariantCulture)) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Angle Attribute name");
                 angleAttribute = evt.newValue;
                 RuntimeNode.UpdateAngleAttribute(angleAttribute);
@@ -202,7 +202,7 @@ namespace GeometryGraph.Editor {
                 angleAttributePort.HideAndDisconnect();
                 axisModeDropdown.AddToClassList("d-none");
                 angleModeDropdown.AddToClassList("d-none");
-                
+
                 rotationModeDropdown.RemoveFromClassList("d-none");
                 if (rotationMode == RotationMode.Vector) {
                     rotationPort.Show();
@@ -216,7 +216,7 @@ namespace GeometryGraph.Editor {
                 rotationPort.HideAndDisconnect();
                 rotationAttributePort.HideAndDisconnect();
                 rotationModeDropdown.AddToClassList("d-none");
-                
+
                 axisModeDropdown.RemoveFromClassList("d-none");
                 angleModeDropdown.RemoveFromClassList("d-none");
                 if (axisMode == AxisMode.Vector) {
@@ -226,7 +226,7 @@ namespace GeometryGraph.Editor {
                     axisPort.HideAndDisconnect();
                     axisAttributePort.Show();
                 }
-                
+
                 if (angleMode == AngleMode.Float) {
                     anglePort.Show();
                     angleAttributePort.HideAndDisconnect();
@@ -236,7 +236,7 @@ namespace GeometryGraph.Editor {
                 }
             }
         }
-        
+
         protected override void BindPorts() {
             BindPort(inputPort, RuntimeNode.InputPort);
             BindPort(rotationPort, RuntimeNode.RotationPort);

@@ -47,7 +47,7 @@ namespace GeometryGraph.Editor {
             topRadiusField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if (MathF.Abs(newValue - topRadius) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cylinder top radius");
                 topRadius = newValue;
                 RuntimeNode.UpdateTopRadius(topRadius);
@@ -57,7 +57,7 @@ namespace GeometryGraph.Editor {
             bottomRadiusField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_GEOMETRY_RADIUS);
                 if (MathF.Abs(newValue - bottomRadius) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cylinder bottom radius");
                 bottomRadius = newValue;
                 RuntimeNode.UpdateBottomRadius(bottomRadius);
@@ -67,7 +67,7 @@ namespace GeometryGraph.Editor {
             heightField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(Constants.MIN_GEOMETRY_HEIGHT);
                 if (MathF.Abs(newValue - height) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cylinder height");
                 height = newValue;
                 RuntimeNode.UpdateHeight(height);
@@ -78,7 +78,7 @@ namespace GeometryGraph.Editor {
             pointsField.RegisterValueChangedCallback(evt => {
                 int newValue = evt.newValue.Clamped(Constants.MIN_CIRCULAR_GEOMETRY_POINTS, Constants.MAX_CIRCULAR_GEOMETRY_POINTS);
                 if (newValue == points) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change cylinder points");
                 points = newValue;
                 RuntimeNode.UpdatePoints(points);
@@ -88,7 +88,7 @@ namespace GeometryGraph.Editor {
             horizontalUVRepetitionsField.RegisterValueChangedCallback(evt => {
                 int newValue = evt.newValue.MinClamped(1);
                 if (newValue == horizontalUVRepetitions) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change horizontal UV repetitions");
                 horizontalUVRepetitions = newValue;
                 RuntimeNode.UpdateHorizontalUVRepetitions(horizontalUVRepetitions);
@@ -98,7 +98,7 @@ namespace GeometryGraph.Editor {
             verticalUVRepetitionsField.RegisterValueChangedCallback(evt => {
                 int newValue = evt.newValue.MinClamped(1);
                 if (newValue == verticalUVRepetitions) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vertical UV repetitions");
                 verticalUVRepetitions = newValue;
                 RuntimeNode.UpdateVerticalUVRepetitions(verticalUVRepetitions);

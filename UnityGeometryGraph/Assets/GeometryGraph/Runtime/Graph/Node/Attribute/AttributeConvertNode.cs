@@ -15,7 +15,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public TargetDomain Domain { get; private set; } = TargetDomain.Auto;
         [Setting] public TargetType Type { get; private set; } = TargetType.Auto;
         [Out] public GeometryData Result { get; private set; }
-        
+
         [GetterMethod(nameof(Result), Inline = true)]
         private GeometryData GetResult() {
             if (Result == null) {
@@ -30,7 +30,7 @@ namespace GeometryGraph.Runtime.Graph {
                 Result = GeometryData.Empty;
                 return;
             }
-            
+
             Result = Geometry.Clone();
 
             if (string.IsNullOrWhiteSpace(ResultAttribute) || string.IsNullOrWhiteSpace(Attribute)) {
@@ -56,7 +56,7 @@ namespace GeometryGraph.Runtime.Graph {
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }
-            
+
             AttributeType targetType;
             if (Type == TargetType.Auto) {
                 if (Geometry.GetAttribute(ResultAttribute) is { } resultAttribute) {
@@ -80,7 +80,7 @@ namespace GeometryGraph.Runtime.Graph {
             Result.RemoveAttribute(ResultAttribute);
             Result.StoreAttribute(Result.GetAttribute(Attribute).Into(ResultAttribute, targetType, targetDomain), targetDomain);
         }
-        
+
         public enum AttributeConvertNode_Domain {
             Auto,
             Vertex,
@@ -88,7 +88,7 @@ namespace GeometryGraph.Runtime.Graph {
             Face,
             FaceCorner
         }
-        
+
         public enum AttributeConvertNode_Type {
             Auto,
             Float,

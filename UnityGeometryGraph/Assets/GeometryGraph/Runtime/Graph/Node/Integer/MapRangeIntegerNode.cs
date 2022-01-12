@@ -13,24 +13,24 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public int ToMin { get; private set; } = 0;
         [In] public int ToMax { get; private set; } = 1;
         [Out] public int Result { get; private set; }
-        
+
         private readonly List<int> results = new();
         private bool resultsDirty = true;
-        
+
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
         [GetterMethod(nameof(Result), Inline = true)]
         private int GetResult() {
             return CalculateResult(Value, FromMin, FromMax, ToMin, ToMax, Clamp);
         }
-        
+
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
             if (port != ResultPort || count <= 0) yield break;
             if (!resultsDirty && results.Count == count) {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 
@@ -50,7 +50,7 @@ namespace GeometryGraph.Runtime.Graph {
             resultsDirty = false;
         }
 
-        
+
         private int CalculateResult(int value, int fromMin, int fromMax, int toMin, int toMax, bool clamp) {
             int result = value.Map(fromMin, fromMax, toMin, toMax);
             return clamp ? result.Clamped(toMin, toMax) : result;

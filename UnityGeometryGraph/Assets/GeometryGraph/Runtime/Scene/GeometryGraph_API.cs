@@ -37,7 +37,7 @@ namespace GeometryGraph.Runtime {
             }
             SetPropertyValueByGuidImpl(sceneData.ReferenceToGuidDictionary[referenceName], value, PropertyType.Integer, $"with reference name `{referenceName}`");
         }
-        
+
         public void SetPropertyFloatValue(string referenceName, float value) {
             if (!sceneData.ReferenceToGuidDictionary.ContainsKey(referenceName)) {
                 Debug.LogError($"Property with reference name `{referenceName}` not found!");
@@ -45,7 +45,7 @@ namespace GeometryGraph.Runtime {
             }
             SetPropertyValueByGuidImpl(sceneData.ReferenceToGuidDictionary[referenceName], value, PropertyType.Float, $"with reference name `{referenceName}`");
         }
-        
+
         public void SetPropertyVector3Value(string referenceName, Vector3 value) {
             if (!sceneData.ReferenceToGuidDictionary.ContainsKey(referenceName)) {
                 Debug.LogError($"Property with reference name `{referenceName}` not found!");
@@ -53,7 +53,7 @@ namespace GeometryGraph.Runtime {
             }
             SetPropertyValueByGuidImpl(sceneData.ReferenceToGuidDictionary[referenceName], value, PropertyType.Vector, $"with reference name `{referenceName}`");
         }
-        
+
         public void SetPropertyStringValue(string referenceName, string value) {
             if (!sceneData.ReferenceToGuidDictionary.ContainsKey(referenceName)) {
                 Debug.LogError($"Property with reference name `{referenceName}` not found!");
@@ -61,7 +61,7 @@ namespace GeometryGraph.Runtime {
             }
             SetPropertyValueByGuidImpl(sceneData.ReferenceToGuidDictionary[referenceName], value, PropertyType.String, $"with reference name `{referenceName}`");
         }
-        
+
         public void SetPropertyGeometryObjectValue(string referenceName, GeometryObject value) {
             if (!sceneData.ReferenceToGuidDictionary.ContainsKey(referenceName)) {
                 Debug.LogError($"Property with reference name `{referenceName}` not found!");
@@ -69,7 +69,7 @@ namespace GeometryGraph.Runtime {
             }
             SetPropertyValueByGuidImpl(sceneData.ReferenceToGuidDictionary[referenceName], value, PropertyType.GeometryObject, $"with reference name `{referenceName}`");
         }
-        
+
         public void SetPropertyGeometryCollectionValue(string referenceName, GeometryCollection value) {
             if (!sceneData.ReferenceToGuidDictionary.ContainsKey(referenceName)) {
                 Debug.LogError($"Property with reference name `{referenceName}` not found!");

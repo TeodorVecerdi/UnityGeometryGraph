@@ -13,7 +13,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
         private float topRadius;
         private float bottomRadius;
         private float b;
-        
+
         public HelixCurve(int resolution, float rotations, float pitch, float topRadius, float bottomRadius) : base(resolution.Clamped(Constants.MIN_HELIX_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION)) {
             time = rotations * math_ext.TWO_PI;
             b = pitch / math_ext.TWO_PI;
@@ -48,7 +48,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             
             IsInitialized = true;
         }
-        
+
         [BurstCompile(CompileSynchronously = true)]
         private struct HelixCurveJob : ICurveJob {
             [WriteOnly] private NativeArray<float3> points;
@@ -61,7 +61,7 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             private readonly float bottomRadius;
             private readonly float time;
             private readonly float b;
-            
+
             public HelixCurveJob(NativeArray<float3> points, NativeArray<float3> tangents, NativeArray<float3> normals, NativeArray<float3> binormals, int resolution, float topRadius, float bottomRadius, float time, float b) {
                 this.points = points;
                 this.tangents = tangents;

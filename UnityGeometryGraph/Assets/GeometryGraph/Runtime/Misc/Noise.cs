@@ -43,7 +43,7 @@ namespace GeometryGraph.Runtime {
         private const float offset_3d_x = 84032.7825f;
         private const float offset_3d_y = 36672.8438f;
         private const float offset_3d_z = 54892.5638f;
-        
+
         [BurstCompile]
         public static void Simplex3X3(
             ref float3 position,

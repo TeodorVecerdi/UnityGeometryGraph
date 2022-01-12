@@ -17,7 +17,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         private readonly List<float3> results = new();
         private bool resultsDirty = true;
-        
+
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
         [GetterMethod(nameof(Result), Inline = true)]
@@ -45,7 +45,7 @@ namespace GeometryGraph.Runtime.Graph {
                     results.Add(result);
                     yield return result;
                 }
-                
+
                 yield break;
             }
 
@@ -57,7 +57,7 @@ namespace GeometryGraph.Runtime.Graph {
                     results.Add(result);
                     yield return result;
                 }
-                    
+
                 yield break;
             }
 
@@ -79,7 +79,7 @@ namespace GeometryGraph.Runtime.Graph {
                 _ => throw new ArgumentOutOfRangeException(nameof(Mode), Mode, null)
             };
         }
-        
+
         public enum RotateVectorNode_Mode {AxisAngle = 0, Euler = 1, X_Axis = 2, Y_Axis = 3, Z_Axis = 4}
     }
 }

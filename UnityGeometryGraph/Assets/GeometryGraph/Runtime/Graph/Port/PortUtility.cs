@@ -9,7 +9,7 @@ namespace GeometryGraph.Runtime.Graph {
                 case PortType.Vector:
                 case PortType.Boolean:
                     return true;
-                
+
                 case PortType.Geometry:
                 case PortType.Collection:
                 case PortType.String:
@@ -20,6 +20,6 @@ namespace GeometryGraph.Runtime.Graph {
                 default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
-        
+
     }
 }

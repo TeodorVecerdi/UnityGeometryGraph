@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Curve.TEMP {
-    
+
     public class CurveGenerator : MonoBehaviour, ICurveProvider {
         public CurveType Type;
         [MinValue(nameof(__MinResolution))] public int Resolution;

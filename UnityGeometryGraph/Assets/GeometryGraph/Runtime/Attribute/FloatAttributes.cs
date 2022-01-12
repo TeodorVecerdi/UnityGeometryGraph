@@ -7,18 +7,18 @@ namespace GeometryGraph.Runtime.AttributeSystem {
     [Serializable]
     public class FloatAttribute : BaseAttribute<float> {
         public override AttributeType Type => AttributeType.Float;
-   
+
         public FloatAttribute(string name) : base(name) {
         }
-        
+
         public FloatAttribute(string name, IEnumerable<float> values) : base(name, values) {
         }
     }
-    
+
     [Serializable]
     public class ClampedFloatAttribute : BaseAttribute<float> {
         public override AttributeType Type => AttributeType.ClampedFloat;
-        
+
         public override void Fill(IEnumerable<float> values) {
             Values.Clear();
             foreach (float value in values) {

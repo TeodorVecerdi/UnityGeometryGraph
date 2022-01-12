@@ -12,7 +12,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
     // Domain conversion
     internal static partial class AttributeConvert {
         internal static IEnumerable ConvertDomain(GeometryData geometry, BaseAttribute sourceAttribute, AttributeDomain to) {
-            if (sourceAttribute.Domain == to) 
+            if (sourceAttribute.Domain == to)
                 // NOTE: I use .Yield() so I don't return the attribute itself, but an actual IEnumerable over the attribute values
                 // null turns the action into a NoOp
                 return sourceAttribute.Yield(null);
@@ -51,10 +51,10 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static IEnumerable<TValue> ConvertDomain<TAttribute, TValue>(GeometryData geometry, TAttribute sourceAttribute, AttributeDomain to) 
-            where TAttribute : BaseAttribute 
+        internal static IEnumerable<TValue> ConvertDomain<TAttribute, TValue>(GeometryData geometry, TAttribute sourceAttribute, AttributeDomain to)
+            where TAttribute : BaseAttribute
         {
-            // NOTE: Might be worth rewriting the non-generic implementation here just to be type-safe with the .Yield(null) calls. 
+            // NOTE: Might be worth rewriting the non-generic implementation here just to be type-safe with the .Yield(null) calls.
             return (IEnumerable<TValue>)ConvertDomain(geometry, sourceAttribute, to);
         }
 
@@ -88,12 +88,12 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         private static IEnumerable ConvertDomain_EdgeToFace(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.Faces.Select(face => AverageParams(sourceAttribute.Type, sourceAttribute[face.EdgeA], sourceAttribute[face.EdgeB], sourceAttribute[face.EdgeC]));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_EdgeToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, geometry.Vertices[faceCorner.Vert].Edges.Select(sourceAttribute.GetValue)));
         }
-        
+
         //!! Face Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
@@ -110,12 +110,12 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                 return Average(sourceAttribute.Type, edgeIndexList.Select(sourceAttribute.GetValue));
             });
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceToFaceCorner(GeometryData geometry, BaseAttribute sourceAttribute) {
             return geometry.FaceCorners.Select(faceCorner => Average(sourceAttribute.Type, geometry.Vertices[faceCorner.Vert].Faces.Select(sourceAttribute.GetValue)));
         }
-        
+
         //!! Face Corner Conversion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceCornerToVertex(GeometryData geometry, BaseAttribute sourceAttribute) {
@@ -150,7 +150,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IEnumerable ConvertDomain_FaceCornerToFace(GeometryData geometry, BaseAttribute sourceAttribute) {
-            return geometry.Faces.Select(face => AverageParams(sourceAttribute.Type, 
+            return geometry.Faces.Select(face => AverageParams(sourceAttribute.Type,
                                      sourceAttribute[face.FaceCornerA], sourceAttribute[face.FaceCornerB], sourceAttribute[face.FaceCornerC]));
         }
 
@@ -170,7 +170,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
         }
-        
+
         // NOTE: Maybe there is a better / more correct way to 'average' boolean values but idk
         private static bool Average(IEnumerable<bool> values) {
             int count = 0;
@@ -206,13 +206,13 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             AttributeType type = typeConversionDictionary.ContainsKey(valueType) ? typeConversionDictionary[valueType] : AttributeType.Invalid;
             return type;
         }
-        
+
         internal static bool TryGetType(object value, out AttributeType type) {
             type = GetType(value);
             return type != AttributeType.Invalid;
         }
     }
-    
+
     // Type conversion
     internal static partial class AttributeConvert {
 
@@ -220,7 +220,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             return ConvertType<object>(value, from, to);
         }
 
-        // oof 
+        // oof
         internal static T ConvertType<T>(object value, AttributeType from, AttributeType to) {
             return from switch {
                 AttributeType.Boolean => to switch {

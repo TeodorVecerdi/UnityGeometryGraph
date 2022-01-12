@@ -9,8 +9,8 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float Min { get; private set; } = 0.0f;
         [In] public float Max { get; private set; } = 1.0f;
         [Out] public float Value { get; private set; }
-        
-        [GetterMethod(nameof(Value), Inline = true)] 
+
+        [GetterMethod(nameof(Value), Inline = true)]
         private float GetValue() => Rand.RangeSeeded(Min, Max, Seed);
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {

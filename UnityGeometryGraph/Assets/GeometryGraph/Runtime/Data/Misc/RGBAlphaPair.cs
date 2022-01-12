@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GeometryGraph.Runtime.Data {
     public readonly struct RGBAlphaPair {
         private readonly Color color;
-        
+
         public float3 RGB => new(color.r, color.g, color.b);
         public float Alpha => color.a;
 

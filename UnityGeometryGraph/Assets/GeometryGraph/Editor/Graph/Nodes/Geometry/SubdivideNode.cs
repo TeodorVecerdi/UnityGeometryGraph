@@ -29,7 +29,7 @@ namespace GeometryGraph.Editor {
             levelsField.RegisterValueChangedCallback(evt => {
                 int newValue = evt.newValue.Clamped(0, Constants.MAX_SUBDIVISIONS);
                 if (newValue == levels) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change subdivision levels");
                 levels = newValue;
                 RuntimeNode.UpdateLevels(levels);

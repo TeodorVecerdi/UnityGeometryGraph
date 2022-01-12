@@ -15,9 +15,9 @@ namespace GeometryGraph.Runtime.Graph {
 
         private readonly List<int> results = new();
         private bool resultsDirty = true;
-        
+
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
-        
+
         [GetterMethod(nameof(Result))]
         private int Calculate() {
             return Calculate(X, Y, Tolerance, Extra);
@@ -29,7 +29,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 

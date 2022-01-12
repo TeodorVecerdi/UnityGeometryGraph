@@ -21,7 +21,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public AttributeRandomizeNode_Domain Domain { get; private set; } = AttributeRandomizeNode_Domain.Auto;
         [Setting] public AttributeRandomizeNode_Type Type { get; private set; } = AttributeRandomizeNode_Type.Float;
         [Out] public GeometryData Result { get; private set; }
-        
+
         [GetterMethod(nameof(Result), Inline = true)]
         private GeometryData GetResult() {
             if (Result == null) {
@@ -38,7 +38,7 @@ namespace GeometryGraph.Runtime.Graph {
             }
 
             Result = Geometry.Clone();
-            
+
             AttributeDomain targetDomain = Domain switch {
                 AttributeRandomizeNode_Domain.Auto => Result.GetAttribute(Attribute)?.Domain ?? AttributeDomain.Vertex,
                 AttributeRandomizeNode_Domain.Vertex => AttributeDomain.Vertex,
@@ -49,7 +49,7 @@ namespace GeometryGraph.Runtime.Graph {
             };
 
             Result.RemoveAttribute(Attribute);
-            
+
             int count = targetDomain switch {
                 AttributeDomain.Vertex => Result.Vertices.Count,
                 AttributeDomain.Edge => Result.Edges.Count,
@@ -72,7 +72,7 @@ namespace GeometryGraph.Runtime.Graph {
                     for (int i = 0; i < count; i++) {
                         integers.Add(Rand.Range(MinInt, MaxInt));
                     }
-                    
+
                     Result.StoreAttribute(integers.Into<IntAttribute>(Attribute, targetDomain));
                     break;
                 case AttributeRandomizeNode_Type.Vector:
@@ -80,7 +80,7 @@ namespace GeometryGraph.Runtime.Graph {
                     for (int i = 0; i < count; i++) {
                         vectors.Add(RandPlus.Range(MinVector, MaxVector));
                     }
-                    
+
                     Result.StoreAttribute(vectors.Into<Vector3Attribute>(Attribute, targetDomain));
                     break;
                 case AttributeRandomizeNode_Type.Boolean:
@@ -88,7 +88,7 @@ namespace GeometryGraph.Runtime.Graph {
                     for (int i = 0; i < count; i++) {
                         booleans.Add(Rand.Bool);
                     }
-                    
+
                     Result.StoreAttribute(booleans.Into<BoolAttribute>(Attribute, targetDomain));
                     break;
                 default: throw new ArgumentOutOfRangeException();
@@ -102,7 +102,7 @@ namespace GeometryGraph.Runtime.Graph {
             Face,
             FaceCorner,
         }
-        
+
         public enum AttributeRandomizeNode_Type {
             Float,
             Integer,

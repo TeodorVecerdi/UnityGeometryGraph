@@ -12,7 +12,7 @@ namespace GeometryGraph.Editor {
         private float toMax = 1.0f;
 
         private FloatMapRangeField floatMapRangeField;
-        
+
         protected override void CreateNode() {
             floatMapRangeField = new FloatMapRangeField("Label", fromMin, fromMax, toMin, toMax);
             floatMapRangeField.RegisterFromMinValueChanged(evt => {

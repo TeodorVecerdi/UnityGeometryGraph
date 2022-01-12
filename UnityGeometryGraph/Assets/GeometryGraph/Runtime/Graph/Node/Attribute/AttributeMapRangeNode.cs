@@ -29,7 +29,7 @@ namespace GeometryGraph.Runtime.Graph {
         [Setting] public TargetDomain Domain { get; private set; } = TargetDomain.Auto;
         [Setting] public TargetType Type { get; private set; } = TargetType.Auto;
         [Out] public GeometryData Result { get; private set; }
-        
+
         [GetterMethod(nameof(Result), Inline = true)]
         private GeometryData GetResult() {
             if (Result == null) {
@@ -51,7 +51,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (string.IsNullOrWhiteSpace(Attribute) || string.IsNullOrWhiteSpace(ResultAttribute) || !Geometry.HasAttribute(Attribute)) {
                 return;
             }
-            
+
             AttributeDomain targetDomain = Domain switch {
                 TargetDomain.Auto => Result.GetAttribute(Attribute)!.Domain,
                 TargetDomain.Vertex => AttributeDomain.Vertex,
@@ -60,7 +60,7 @@ namespace GeometryGraph.Runtime.Graph {
                 TargetDomain.FaceCorner => AttributeDomain.FaceCorner,
                 _ => throw new ArgumentOutOfRangeException()
             };
-            
+
             AttributeType targetType = Type switch {
                 TargetType.Auto => Result.GetAttribute(Attribute)!.Type,
                 TargetType.Float => AttributeType.Float,
@@ -68,7 +68,7 @@ namespace GeometryGraph.Runtime.Graph {
                 TargetType.Vector => AttributeType.Vector3,
                 _ => throw new ArgumentOutOfRangeException()
             };
-            
+
             switch (targetType) {
                 case AttributeType.Float: {
                     FloatAttribute attribute = Result.GetAttribute<FloatAttribute>(Attribute, targetDomain);
@@ -95,7 +95,7 @@ namespace GeometryGraph.Runtime.Graph {
                     float2 fromMax = new(FromMaxFloat, FromMaxFloat);
                     float2 toMin = new(ToMinFloat, ToMinFloat);
                     float2 toMax = new(ToMaxFloat, ToMaxFloat);
-                    
+
                     Vector2Attribute attribute = Result.GetAttribute<Vector2Attribute>(Attribute, targetDomain);
                     Result.StoreAttribute(attribute!.Yield(value => math.remap(value, fromMin, fromMax, toMin, toMax)).Into<Vector2Attribute>(ResultAttribute, targetDomain));
                     break;
@@ -106,7 +106,7 @@ namespace GeometryGraph.Runtime.Graph {
                     Result.StoreAttribute(((IEnumerable<bool>)attribute!).Into<BoolAttribute>(ResultAttribute, targetDomain));
                     break;
                 }
-                    
+
                 case AttributeType.Invalid: break;
                 default: throw new ArgumentOutOfRangeException();
             }

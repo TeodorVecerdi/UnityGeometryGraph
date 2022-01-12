@@ -28,7 +28,7 @@ namespace GeometryGraph.Runtime.Graph {
             }
             return objectValue == null ? (IEnumerable<GeometryData>)Array.Empty<GeometryData>() : (IEnumerable<GeometryData>)objectValue.Collection.Select(data => data.Clone());
         }
-        
+
         public override string Serialize() {
             return new JObject {
                 ["p"] = Property?.Guid

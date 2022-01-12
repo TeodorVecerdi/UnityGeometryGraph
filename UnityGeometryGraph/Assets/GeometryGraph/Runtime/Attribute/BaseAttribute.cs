@@ -10,10 +10,10 @@ namespace GeometryGraph.Runtime.AttributeSystem {
     [Serializable]
     public abstract class BaseAttribute : IEnumerable, ICloneable {
         private static readonly Type objectType = typeof(object);
-        
+
         public abstract AttributeType Type { get; }
         public virtual Type ElementType => objectType;
-        
+
         public string Name;
         public AttributeDomain Domain;
         public List<object> Values;
@@ -35,7 +35,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         public object GetValue(int index) {
             return Values[index];
         }
-        
+
         public object this[int index] {
             get => GetValue(index);
             set => Values[index] = value;
@@ -52,12 +52,12 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             return clone;
         }
     }
-    
+
     [Serializable]
     public abstract class BaseAttribute<T> : BaseAttribute, IEnumerable<T> {
         private static readonly Type elementType = typeof(T);
         public sealed override Type ElementType => elementType;
-        
+
         public new T GetValue(int index) {
             return (T) Values[index];
         }
@@ -128,13 +128,13 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     yield return action(value, default, index >= attribute1.Values.Count ? default : attribute1[index]);
                     index++;
                 }
-                
+
                 if (index >= attribute1.Count) yield break;
-                
+
                 for(int i = index; i < attribute1.Count; i++) {
                     yield return action(default, default, attribute1[i]);
                 }
-                
+
                 yield break;
             } 
             
@@ -144,13 +144,13 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                     yield return action(value, index >= attribute0.Values.Count ? default : attribute0[index], default);
                     index++;
                 }
-                
+
                 if (index >= attribute0.Count) yield break;
-                
+
                 for(int i = index; i < attribute0.Count; i++) {
                     yield return action(default, attribute0[i], default);
                 }
-                
+
                 yield break;
             }
 
@@ -183,14 +183,14 @@ namespace GeometryGraph.Runtime.AttributeSystem {
         IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(base.GetEnumerator());
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(base.GetEnumerator());
 
-        
+
         public struct Enumerator : IEnumerator<T> {
             private readonly IEnumerator baseEnumerator;
-            
+
             public Enumerator(IEnumerator baseEnumerator) {
                 this.baseEnumerator = baseEnumerator;
             }
-            
+
             public bool MoveNext() {
                 return baseEnumerator.MoveNext();
             }
@@ -246,7 +246,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             otherAttribute.Fill(valuesList.Select(val => AttributeConvert.ConvertType<object>(val, type, otherAttribute.Type)));
             return otherAttribute;
         }
-        
+
         public static TAttribute Into<TAttribute>(this IEnumerable values, TAttribute otherAttribute) where TAttribute : BaseAttribute {
             List<object> valuesList = values.Convert(o => o).ToList();
             AttributeType type = otherAttribute.Type;
@@ -262,7 +262,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             sb.AppendLine($"Values: {attribute.Values.ToListString()}");
             Debug.Log(sb.ToString());
         }
-        
+
         public static IEnumerable Yield(this IEnumerable enumerable, Func<object, object> action) {
             action ??= AttributeActions.NoOp<object>();
 
@@ -279,7 +279,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                 yield return action(value);
             }
         }
-        
+
         public static IEnumerable<T> YieldWithAttribute<T>(this IEnumerable<T> enumerable, AttributeType selfType, BaseAttribute other, Func<T, T, T> action) {
             action ??= AttributeActions.NoOp<T, T>();
            

@@ -10,7 +10,7 @@ namespace GeometryGraph.Runtime {
     public class Profiler {
         private static Stack<ProfileSession> sessionStack = new();
         private static List<ProfileSession> finishedSessions = new();
-        
+
         public static IDisposable BeginSession(string name, bool printWhenDone) {
             ProfileSession session = new(name);
             sessionStack.Push(session);
@@ -43,7 +43,7 @@ namespace GeometryGraph.Runtime {
         public static void Cleanup() {
             finishedSessions.Clear();
         }
-        
+
         private class DummyDisposable : IDisposable {
             public void Dispose() { }
         }
@@ -65,7 +65,7 @@ namespace GeometryGraph.Runtime {
 
         private class ProfileSessionDisposable : IDisposable {
             private bool printWhenDone;
-            
+
             public ProfileSessionDisposable(bool printWhenDone) {
                 this.printWhenDone = printWhenDone;
             }
@@ -79,7 +79,7 @@ namespace GeometryGraph.Runtime {
         }
     }
 
-    
+
 
     public class ProfileSession {
         public string Name;
@@ -104,11 +104,11 @@ namespace GeometryGraph.Runtime {
     public class Method {
         private readonly Stopwatch methodStopwatch;
         private TimeSpan elapsed;
-        
+
         public readonly string Name;
         public readonly Method Parent;
         public readonly List<Method> Children = new();
-        
+
         public TimeSpan Elapsed => elapsed;
 
         public Method(string name, Method parent) {

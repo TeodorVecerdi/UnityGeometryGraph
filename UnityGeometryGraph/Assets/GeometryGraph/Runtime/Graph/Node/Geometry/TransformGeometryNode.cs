@@ -26,7 +26,7 @@ namespace GeometryGraph.Runtime.Graph {
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             if (Input == null || !Input.HasAttribute("position", AttributeDomain.Vertex)) return;
-            
+
             float3 translation = GetValue(TranslationPort, Translation);
             float3 rotation = GetValue(RotationPort, Rotation);
             float3 scale = GetValue(ScalePort, Scale);

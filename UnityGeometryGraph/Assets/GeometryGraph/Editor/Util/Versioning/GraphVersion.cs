@@ -59,7 +59,7 @@ namespace GeometryGraph.Editor {
 
             GUI.enabled = true;
         }
-        
+
         private void SetStyles() {
             bigLabel = new GUIStyle(GUI.skin.label);
             button = new GUIStyle(GUI.skin.button) {alignment = TextAnchor.MiddleCenter};

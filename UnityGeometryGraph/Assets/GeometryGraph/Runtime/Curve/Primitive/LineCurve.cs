@@ -53,12 +53,12 @@ namespace GeometryGraph.Runtime.Curve.Primitive {
             [WriteOnly] private NativeArray<float3> binormals;
 
             private readonly int resolution;
-            private readonly float3 start; 
+            private readonly float3 start;
             private readonly float3 end;
-            
+
             private readonly float3 tangent;
             private readonly float3 normal;
-            private readonly float3 binormal; 
+            private readonly float3 binormal;
 
             public LineJob(NativeArray<float3> points, NativeArray<float3> tangents, NativeArray<float3> normals, NativeArray<float3> binormals, int resolution, float3 start, float3 end) {
                 this.points = points;

@@ -11,13 +11,13 @@ namespace GeometryGraph.Runtime.Graph {
             GetValueCode = "{self} = GetValue(connection, CurveData.Empty).Clone()"
         )]
         public CurveData Source { get; private set; }
-        
+
         [In(
             UpdateValueCode = "",
             GetValueCode = "{self} = GetValue(connection, CurveData.Empty).Clone()"
         )]
         public CurveData Profile { get; private set; }
-        
+
         [In] public float RotationOffset { get; private set; }
         [In] public float IncrementalRotationOffset { get; private set; }
 

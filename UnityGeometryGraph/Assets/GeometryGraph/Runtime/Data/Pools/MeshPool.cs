@@ -7,12 +7,12 @@ namespace GeometryGraph.Runtime.Data {
     [Serializable]
     public class MeshPool : ObjectPool<Mesh> {
         [SerializeField] private IndexFormat meshIndexFormat;
-        
+
         public MeshPool(IndexFormat meshIndexFormat, int initialPoolSize = 4, float growthFactor = 2.0f) : base(initialPoolSize, growthFactor) {
             Debug.Log("Created mesh pool");
             this.meshIndexFormat = meshIndexFormat;
         }
-        
+
         protected override Mesh CreatePooled() {
             Debug.Log("Creating mesh");
             return new Mesh {

@@ -10,13 +10,13 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public int Min {get; private set; } = 0;
         [In] public int Max {get; private set; } = 1;
         [Out] public int Result {get; private set; }
-        
+
         private readonly List<int> results = new();
         private bool resultsDirty = true;
 
         [GetterMethod(nameof(Result), Inline = true)]
         private int GetResult() => Input.Clamped(Min, Max);
-        
+
         [CalculatesAllProperties] private void MarkResultsDirty() => resultsDirty = true;
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
@@ -25,7 +25,7 @@ namespace GeometryGraph.Runtime.Graph {
                 for (int i = 0; i < count; i++) {
                     yield return results[i];
                 }
-                
+
                 yield break;
             }
 

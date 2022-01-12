@@ -27,7 +27,7 @@ namespace GeometryGraph.Runtime.Graph {
             }
             return Result;
         }
-        
+
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             if (Geometry == null || string.IsNullOrWhiteSpace(Attribute)) {
@@ -35,7 +35,7 @@ namespace GeometryGraph.Runtime.Graph {
                 return;
             }
             Result = Geometry.Clone();
-            
+
             int count = TargetDomain switch {
                 AttributeDomain.Vertex => Geometry.Vertices.Count,
                 AttributeDomain.Edge => Geometry.Edges.Count,
@@ -49,9 +49,9 @@ namespace GeometryGraph.Runtime.Graph {
             if (!string.IsNullOrWhiteSpace(XResult) is var xHasValue && xHasValue) numResults++;
             if (!string.IsNullOrWhiteSpace(YResult) is var yHasValue && yHasValue) numResults++;
             if (!string.IsNullOrWhiteSpace(ZResult) is var zHasValue && zHasValue) numResults++;
-            
+
             if (numResults == 0) return;
-            
+
             if (InputType is AttributeSplitNode_InputType.Vector) {
                 IEnumerable<float3> values = GetValues(VectorPort, count, Vector);
                 switch (numResults) {
@@ -106,7 +106,7 @@ namespace GeometryGraph.Runtime.Graph {
                 }
             }
         }
-        
+
         public enum AttributeSplitNode_InputType {
             Vector,
             Attribute

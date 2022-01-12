@@ -24,10 +24,10 @@ namespace GeometryGraph.Editor {
             });
             AddPort(valuePort);
             extensionContainer.Add(valueField);
-            
+
             Refresh();
         }
-        
+
         protected override void BindPorts() {
             BindPort(valuePort, RuntimeNode.ValuePort);
         }
@@ -42,7 +42,7 @@ namespace GeometryGraph.Editor {
             value = data.Value<float>("v");
             valueField.SetValueWithoutNotify(value);
             RuntimeNode.UpdateValue(value);
-            
+
             base.Deserialize(data);
         }
     }

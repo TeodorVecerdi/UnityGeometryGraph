@@ -87,7 +87,7 @@ namespace GeometryGraph.Editor {
             
             return root;
         }
-        
+
         protected internal override void Deserialize(JObject data) {
             operation = (CompareOperation) data.Value<int>("o");
             a = data.Value<int>("a");

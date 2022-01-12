@@ -43,7 +43,7 @@ namespace GeometryGraph.Editor {
         private CompareOperation operation = CompareOperation.LessThan;
         private CompareType typeX = CompareType.Attribute;
         private CompareType typeY = CompareType.Attribute;
-        
+
         private static readonly SelectionTree compareOperationTree = new(new List<object>(Enum.GetValues(typeof(CompareOperation)).Convert(o => o))) {
             new SelectionCategory("Operation", false) {
                 new("a < b", 0, false),
@@ -54,7 +54,7 @@ namespace GeometryGraph.Editor {
                 new("a ≠ b, within tolerance", 5, false),
             }
         };
-        
+
         // types are Attribute and Float
         private static readonly SelectionTree compareTypeTree = new(new List<object>(Enum.GetValues(typeof(CompareType)).Convert(o => o))) {
             new SelectionCategory("Type", false) {

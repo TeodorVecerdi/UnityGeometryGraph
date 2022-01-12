@@ -52,7 +52,7 @@ namespace GeometryGraph.Editor {
         private float3 maxVector = float3_ext.one;
         private TargetType type = TargetType.Auto;
         private TargetDomain domain = TargetDomain.Auto;
-        
+
         private static readonly SelectionTree domainTree = new (new List<object>(Enum.GetValues(typeof(TargetDomain)).Convert(o => o))) {
             new SelectionCategory("Domain", false) {
                 new ("Uses the domain of the original attribute", 0, true),
@@ -61,7 +61,7 @@ namespace GeometryGraph.Editor {
                 new ("Uses the Face domain (performing domain conversion if necessary)", 3, false),
                 new ("Uses the Face Corner domain (performing domain conversion if necessary)", 4, false)
             }
-        };        
+        };
         private static readonly SelectionTree typeTree = new (new List<object>(Enum.GetValues(typeof(TargetType)).Convert(o => o))) {
             new SelectionCategory("Type", false) {
                 new ("Chooses the type of the original attribute", 0, true),
@@ -89,7 +89,7 @@ namespace GeometryGraph.Editor {
             
             domainDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == domain) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change domain");
                 domain = evt.newValue;
                 RuntimeNode.UpdateDomain(domain);
@@ -97,7 +97,7 @@ namespace GeometryGraph.Editor {
             
             typeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == type) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change type");
                 type = evt.newValue;
                 RuntimeNode.UpdateType(type);
@@ -106,7 +106,7 @@ namespace GeometryGraph.Editor {
             
             attributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change attribute");
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
@@ -114,7 +114,7 @@ namespace GeometryGraph.Editor {
             
             resultAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == resultAttribute) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change result attribute");
                 resultAttribute = evt.newValue;
                 RuntimeNode.UpdateResultAttribute(resultAttribute);
@@ -122,7 +122,7 @@ namespace GeometryGraph.Editor {
             
             minIntField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == minInt) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change min int");
                 minInt = evt.newValue;
                 RuntimeNode.UpdateMinInt(minInt);
@@ -130,7 +130,7 @@ namespace GeometryGraph.Editor {
             
             maxIntField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == maxInt) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change max int");
                 maxInt = evt.newValue;
                 RuntimeNode.UpdateMaxInt(maxInt);
@@ -138,7 +138,7 @@ namespace GeometryGraph.Editor {
             
             minFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - minFloat) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change min float");
                 minFloat = evt.newValue;
                 RuntimeNode.UpdateMinFloat(minFloat);
@@ -146,7 +146,7 @@ namespace GeometryGraph.Editor {
             
             maxFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - maxFloat) < Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change max float");
                 maxFloat = evt.newValue;
                 RuntimeNode.UpdateMaxFloat(maxFloat);
@@ -154,7 +154,7 @@ namespace GeometryGraph.Editor {
             
             minVectorField.RegisterValueChangedCallback(evt => {
                 if (math.distancesq(evt.newValue, minVector) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change min vector");
                 minVector = evt.newValue;
                 RuntimeNode.UpdateMinVector(minVector);
@@ -162,7 +162,7 @@ namespace GeometryGraph.Editor {
             
             maxVectorField.RegisterValueChangedCallback(evt => {
                 if (math.distancesq(evt.newValue, maxVector) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
-                
+
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change max vector");
                 maxVector = evt.newValue;
                 RuntimeNode.UpdateMaxVector(maxVector);
@@ -202,7 +202,7 @@ namespace GeometryGraph.Editor {
 
             OnTypeChanged();
         }
-        
+
         private void OnTypeChanged() {
             switch (type) {
                 case TargetType.Auto:
@@ -246,7 +246,7 @@ namespace GeometryGraph.Editor {
             BindPort(maxVectorPort, RuntimeNode.MaxVectorPort);
             BindPort(resultPort, RuntimeNode.ResultPort);
         }
-        
+
         protected internal override JObject Serialize() {
             JObject root = base.Serialize();
             JArray array = new() {
