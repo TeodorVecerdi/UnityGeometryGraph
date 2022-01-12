@@ -52,7 +52,7 @@ namespace GeometryGraph.Editor {
                 eulerRotation = math_ext.wrap(evt.newValue, -180.0f, 180.0f);
                 RuntimeNode.UpdateRotation(eulerRotation);
             });
-            
+
             (scalePort, scaleField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>(
                 "Scale", PortType.Vector, this, showLabelOnField: false,
                 onDisconnect: (_, _) => RuntimeNode.UpdateScale(scale)
@@ -63,7 +63,7 @@ namespace GeometryGraph.Editor {
                 scale = evt.newValue;
                 RuntimeNode.UpdateScale(scale);
             });
-            
+
             AddPort(inputGeometryPort);
             AddPort(translationPort);
             inputContainer.Add(translationField);
@@ -71,9 +71,9 @@ namespace GeometryGraph.Editor {
             inputContainer.Add(eulerRotationField);
             AddPort(scalePort);
             inputContainer.Add(scaleField);
-            
+
             AddPort(outputGeometryPort);
-            
+
             Refresh();
         }
 
@@ -91,7 +91,7 @@ namespace GeometryGraph.Editor {
             root["t"] = JsonConvert.SerializeObject(translation, Formatting.None, float3Converter.Converter);
             root["r"] = JsonConvert.SerializeObject(eulerRotation, Formatting.None, float3Converter.Converter);
             root["s"] = JsonConvert.SerializeObject(scale, Formatting.None, float3Converter.Converter);
-            
+
             return root;
         }
 
@@ -100,15 +100,15 @@ namespace GeometryGraph.Editor {
             translation = JsonConvert.DeserializeObject<float3>(data.Value<string>("t")!, float3Converter.Converter);
             eulerRotation = JsonConvert.DeserializeObject<float3>(data.Value<string>("r")!, float3Converter.Converter);
             scale = JsonConvert.DeserializeObject<float3>(data.Value<string>("s")!, float3Converter.Converter);
-            
+
             translationField.SetValueWithoutNotify(translation);
             eulerRotationField.SetValueWithoutNotify(eulerRotation);
             scaleField.SetValueWithoutNotify(scale);
-            
+
             RuntimeNode.UpdateTranslation(translation);
             RuntimeNode.UpdateRotation(eulerRotation);
             RuntimeNode.UpdateScale(scale);
-            
+
             base.Deserialize(data); 
         }
     }

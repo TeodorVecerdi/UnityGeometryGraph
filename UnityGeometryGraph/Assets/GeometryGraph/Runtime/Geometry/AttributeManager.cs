@@ -103,7 +103,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 AttributeConvert.ConvertDomain(owner, attribute, targetDomain).Into(attribute);
                 attribute.Domain = targetDomain;
             }
-            
+
             AttributeDictionary destDict = targetDomain switch {
                 AttributeDomain.Vertex => vertexAttributes,
                 AttributeDomain.Edge => edgeAttributes,
@@ -111,7 +111,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 AttributeDomain.FaceCorner => faceCornerAttributes,
                 _ => throw new ArgumentOutOfRangeException(nameof(targetDomain), targetDomain, null)
             };
-            
+
             dirty = true;
             bool overwritten = destDict.ContainsKey(attribute.Name);
             destDict[attribute.Name] = attribute;
@@ -147,7 +147,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 AttributeDomain.FaceCorner => faceCornerAttributes,
                 _ => throw new ArgumentOutOfRangeException(nameof(attribute.Domain), attribute.Domain, null)
             };
-            
+
             if (searchDict.ContainsKey(attribute.Name) && searchDict[attribute.Name] == attribute) {
                 return searchDict.Remove(attribute.Name);
             }
@@ -211,7 +211,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
         public void OnBeforeSerialize() {
             if (!dirty) return;
-            
+
             dirty = false;
             SerializeDictionary(vertexAttributes, ref serializedVertexAttributes);
             SerializeDictionary(edgeAttributes, ref serializedEdgeAttributes);
@@ -229,7 +229,7 @@ namespace GeometryGraph.Runtime.Geometry {
         private void SerializeDictionary(AttributeDictionary source, ref SerializedAttributeDictionary destination) {
             if(source == null) return;
             destination = new SerializedAttributeDictionary();
-            
+
             foreach (KeyValuePair<string, BaseAttribute> keyValuePair in source) {
                 destination[keyValuePair.Key] = SerializedAttribute.Serialize(keyValuePair.Value);
             }
@@ -240,7 +240,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 return;
             }
             if (source.Count == 0) source.OnAfterDeserialize();
-            
+
             destination = new AttributeDictionary();
             foreach (KeyValuePair<string, SerializedAttribute> keyValuePair in source) {
                 destination[keyValuePair.Key] = SerializedAttribute.Deserialize(keyValuePair.Value);

@@ -40,13 +40,13 @@ namespace GeometryGraph.Runtime.Graph {
             List<float> tolerances = GetValues(TolerancePort, count, Tolerance).ToList();
             List<float> extras = GetValues(ExtraPort, count, Extra).ToList();
             results.Clear();
-            
+
             for (int i = 0; i < count; i++) {
                 float result = CalculateResult(xs[i], ys[i], tolerances[i], extras[i]);
                 results.Add(result);
                 yield return result;
             }
-            
+
             resultsDirty = false;
         }
 

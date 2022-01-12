@@ -52,7 +52,7 @@ namespace GeometryGraph.Editor {
                 start = newValue;
                 RuntimeNode.UpdateStart(start);
             });
-            
+
             endField.RegisterValueChangedCallback(evt => {
                 float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(end)) return;
@@ -60,11 +60,11 @@ namespace GeometryGraph.Editor {
                 end = newValue;
                 RuntimeNode.UpdateEnd(end);
             });
-            
+
             pointsField.SetValueWithoutNotify(points);
             startField.SetValueWithoutNotify(start);
             endField.SetValueWithoutNotify(end);
-            
+
             pointsPort.Add(pointsField);
             AddPort(pointsPort);
             AddPort(startPort);
@@ -72,7 +72,7 @@ namespace GeometryGraph.Editor {
             AddPort(endPort);
             inputContainer.Add(endField);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -100,15 +100,15 @@ namespace GeometryGraph.Editor {
             points = array!.Value<int>(0);
             start = JsonConvert.DeserializeObject<float3>(array!.Value<string>(1)!, float3Converter.Converter);
             end = JsonConvert.DeserializeObject<float3>(array!.Value<string>(2)!, float3Converter.Converter);
-            
+
             pointsField.SetValueWithoutNotify(points);
             startField.SetValueWithoutNotify(start);
             endField.SetValueWithoutNotify(end);
-            
+
             RuntimeNode.UpdatePoints(points);
             RuntimeNode.UpdateStart(start);
             RuntimeNode.UpdateEnd(end);
-            
+
             base.Deserialize(data);
         }
     }

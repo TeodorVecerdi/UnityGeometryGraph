@@ -22,7 +22,7 @@ namespace GeometryGraph.Runtime.Graph {
             CurveData curve = RuntimeData.OutputNode.GetCurveData();
             InstancedGeometryData instancedGeometry = RuntimeData.OutputNode.GetInstancedGeometryData();
             CleanupScenePropertyValues();
-            
+
             return new GeometryGraphEvaluationResult(geometry, curve, instancedGeometry);
         }
 
@@ -118,7 +118,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (connection == null) {
                 return;
             }
-            
+
             connection.Output?.Node?.NotifyConnectionRemoved(connection, connection.Output);
             connection.Input?.Node?.NotifyConnectionRemoved(connection, connection.Input);
             connection.Output?.Connections?.Remove(connection);
@@ -171,7 +171,7 @@ namespace GeometryGraph.Runtime.Graph {
 
         private void NotifyPorts() {
             DebugUtility.Log("Announcing port value changes on property nodes and Time nodes");
-            
+
             foreach (RuntimeNode runtimeNode in RuntimeData.Nodes) {
                 switch (runtimeNode) {
                     case GeometryObjectPropertyNode propertyNode: propertyNode.NotifyPortValueChanged(propertyNode.Port); break;

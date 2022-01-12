@@ -46,17 +46,17 @@ namespace GeometryGraph.Editor {
                 radius = newValue;
                 RuntimeNode.UpdateRadius(radius);
             });
-            
-            
+
+
             pointsField.SetValueWithoutNotify(points);
             radiusField.SetValueWithoutNotify(radius);
-            
+
             pointsPort.Add(pointsField);
             radiusPort.Add(radiusField);
             AddPort(pointsPort);
             AddPort(radiusPort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -81,13 +81,13 @@ namespace GeometryGraph.Editor {
 
             points = array!.Value<int>(0);
             radius = array!.Value<float>(1);
-            
+
             pointsField.SetValueWithoutNotify(points);
             radiusField.SetValueWithoutNotify(radius);
-            
+
             RuntimeNode.UpdatePoints(points);
             RuntimeNode.UpdateRadius(radius);
-            
+
             base.Deserialize(data);
         }
     }

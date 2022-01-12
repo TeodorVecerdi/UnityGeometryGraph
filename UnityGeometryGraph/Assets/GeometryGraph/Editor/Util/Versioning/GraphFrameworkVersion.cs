@@ -21,7 +21,7 @@ namespace GeometryGraph.Editor {
         public static void SaveVersion(SemVer newVersion) {
             Version.Set(newVersion);
             versionFile.Apply();
-            
+
             /*// Load package.json file and update version
             var packagePath = $"{GraphFrameworkUtility.DialogueGraphPath}\\package.json";
             var packageText = File.ReadAllText(packagePath);

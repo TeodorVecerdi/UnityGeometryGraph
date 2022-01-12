@@ -68,7 +68,7 @@ namespace GeometryGraph.Runtime {
 
         internal void Reset() {
             Debug.Log("Reset Properties");
-            
+
             propertyData.Clear();
             referenceToGuidDictionary.Clear();
             guidToReferenceDictionary.Clear();
@@ -95,7 +95,7 @@ namespace GeometryGraph.Runtime {
         internal void EnsureCorrectGuidsAndReferences(List<Property> runtimeDataProperties) {
             HashSet<string> allGuids = runtimeDataProperties.Select(property => property.Guid).ToHashSet();
             HashSet<string> allReferences = runtimeDataProperties.Select(property => property.ReferenceName).ToHashSet();
-            
+
             // Remove all that don't exist anymore
             foreach (string guid in guidToReferenceDictionary.Keys.ToList()) {
                 if (allGuids.Contains(guid)) continue;
@@ -105,7 +105,7 @@ namespace GeometryGraph.Runtime {
                 referenceToGuidDictionary.Remove(reference);
                 Debug.Log($"Removed invalid guid: `{guid}` and `{reference}`");
             }
-            
+
             foreach (string reference in referenceToGuidDictionary.Keys.ToList()) {
                 if (allReferences.Contains(reference)) continue;
 
@@ -208,7 +208,7 @@ namespace GeometryGraph.Runtime {
                 PropertyType.String => $"{StringValue}",
                 _ => throw new ArgumentOutOfRangeException()
             };
-            
+
             string defaultValue = PropertyType switch {
                 PropertyType.GeometryObject => DefaultObjectValue != null ? DefaultObjectValue.name : "null",
                 PropertyType.GeometryCollection => DefaultCollectionValue != null ? DefaultCollectionValue.name : "null",
@@ -218,7 +218,7 @@ namespace GeometryGraph.Runtime {
                 PropertyType.String => $"{DefaultStringValue}",
                 _ => throw new ArgumentOutOfRangeException()
             };
-            
+
             return $"{value} (default: {defaultValue})";
         }
     }

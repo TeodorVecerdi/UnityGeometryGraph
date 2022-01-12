@@ -19,7 +19,7 @@ namespace GeometryGraph.Runtime {
                     Evaluate();
                 }
             }
-            
+
             RenderInstances();
         }
 
@@ -37,7 +37,7 @@ namespace GeometryGraph.Runtime {
                     material.enableInstancing = true;
                 }
             }
-            
+
             int geometryCount = instancedGeometryData.GeometryCount;
             for(int i = 0; i < geometryCount; i++) {
                 GeometryData geometry = instancedGeometryData.Geometry(i);

@@ -18,7 +18,7 @@ namespace GeometryGraph.Runtime.Data {
         protected ObjectPool(int initialPoolSize, float growthFactor) {
             this.initialPoolSize = initialPoolSize;
             this.growthFactor = growthFactor;
-            
+
             size = 0;
             Allocate(initialPoolSize);
         }

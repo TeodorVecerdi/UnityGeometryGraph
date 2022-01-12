@@ -32,13 +32,13 @@ namespace GeometryGraph.Runtime.Graph {
             List<int> ifTrue = GetValues(IfTruePort, count, IfTrue).ToList();
             List<int> ifFalse = GetValues(IfFalsePort, count, IfFalse).ToList();
             results.Clear();
-            
+
             for (int i = 0; i < count; i++) {
                 int result = conditions[i] ? ifTrue[i] : ifFalse[i];
                 results.Add(result);
                 yield return result;
             }
-            
+
             resultsDirty = false;
         }
 

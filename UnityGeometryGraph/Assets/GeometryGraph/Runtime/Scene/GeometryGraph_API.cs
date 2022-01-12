@@ -20,7 +20,7 @@ namespace GeometryGraph.Runtime {
             }
             EnsureCorrectState();
             isAsyncEvaluationComplete = false;
-           
+
             GeometryGraphEvaluationResult evaluationResult = graph.Evaluate(sceneData);
             HandleEvaluationResult(evaluationResult, export);
             onComplete?.Invoke(evaluationResult);
@@ -86,13 +86,13 @@ namespace GeometryGraph.Runtime {
                 Debug.LogError($"Property {propertyName} not found!");
                 return;
             }
-            
+
             if(sceneData.PropertyData[guid].PropertyType != valueType) {
                 Debug.LogError($"Type mismatch while attempting to set value for property {propertyName}! Expected `{sceneData.PropertyData[guid].PropertyType}`, tried to set `{valueType}`.");
                 return;
             }
-            
-            
+
+
             sceneData.UpdatePropertyValue(guid, value);
         }
     }

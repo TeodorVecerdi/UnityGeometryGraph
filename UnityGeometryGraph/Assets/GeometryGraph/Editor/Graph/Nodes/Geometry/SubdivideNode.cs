@@ -36,13 +36,13 @@ namespace GeometryGraph.Editor {
             });
 
             levelsPort.Add(levelsField);
-            
+
             AddPort(inputPort);
             AddPort(levelsPort);
             AddPort(resultPort);
-            
+
             levelsField.SetValueWithoutNotify(levels);
-            
+
             Refresh();
         }
 
@@ -56,15 +56,15 @@ namespace GeometryGraph.Editor {
             JObject root = base.Serialize();
 
             root["l"] = levels;
-            
+
             return root;
         }
 
         protected internal override void Deserialize(JObject data) {
             levels = data.Value<int>("l");
-            
+
             levelsField.SetValueWithoutNotify(levels);
-            
+
             RuntimeNode.UpdateLevels(levels);
 
             base.Deserialize(data);

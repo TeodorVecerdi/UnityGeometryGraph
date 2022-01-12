@@ -52,10 +52,10 @@ namespace GeometryGraph.Editor {
 
             inputContainer.Add(curveField);
             valuePort.Add(valueField);
-            
+
             AddPort(valuePort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -65,7 +65,7 @@ namespace GeometryGraph.Editor {
             // Honestly, the class is a big mess in general.
             typeof(CurveField).GetField("m_CurveColor", BindingFlags.Instance | BindingFlags.NonPublic)!
                               .SetValue(curveField, new Color(0.8f, 0.8f, 0.8f));
-            
+
             // The curve field has a weird 1px high element with a different background color.
             StyleColor backgroundColor = curveField[0][0][0].style.backgroundColor;
             backgroundColor.value = new Color(0x2E / (float)0xFF, 0x2E / (float)0xFF, 0x2E / (float)0xFF);
@@ -90,10 +90,10 @@ namespace GeometryGraph.Editor {
             JArray array = data["d"] as JArray;
             value = array.Value<float>(0);
             curve = Deserializer.AnimationCurve(array[1] as JObject);
-            
+
             valueField.SetValueWithoutNotify(value);
             curveField.SetValueWithoutNotify(curve.UnityCurve);
-            
+
             RuntimeNode.UpdateValue(value);
             RuntimeNode.UpdateCurve(curve);
 

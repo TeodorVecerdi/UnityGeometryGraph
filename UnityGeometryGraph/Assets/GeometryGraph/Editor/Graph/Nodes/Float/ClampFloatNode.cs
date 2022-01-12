@@ -34,31 +34,31 @@ namespace GeometryGraph.Editor {
                 inputValue = evt.newValue;
                 RuntimeNode.UpdateInput(inputValue);
             });
-            
+
             minField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 minValue = evt.newValue;
                 RuntimeNode.UpdateMin(minValue);
             });
-            
+
             maxField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 maxValue = evt.newValue;
                 RuntimeNode.UpdateMax(maxValue);
             });
-            
+
             minField.SetValueWithoutNotify(0.0f);
             maxField.SetValueWithoutNotify(1.0f);
 
             inputPort.Add(inputField);
             minPort.Add(minField);
             maxPort.Add(maxField);
-            
+
             AddPort(inputPort);
             AddPort(minPort);
             AddPort(maxPort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -75,7 +75,7 @@ namespace GeometryGraph.Editor {
             root["i"] = inputValue;
             root["m"] = minValue;
             root["M"] = maxValue;
-            
+
             return root;
         }
 
@@ -83,11 +83,11 @@ namespace GeometryGraph.Editor {
             inputValue = data.Value<float>("i");
             minValue = data.Value<float>("m");
             maxValue = data.Value<float>("M");
-            
+
             inputField.SetValueWithoutNotify(inputValue);
             minField.SetValueWithoutNotify(minValue);
             maxField.SetValueWithoutNotify(maxValue);
-            
+
             RuntimeNode.UpdateInput(inputValue);
             RuntimeNode.UpdateMin(minValue);
             RuntimeNode.UpdateMax(maxValue);

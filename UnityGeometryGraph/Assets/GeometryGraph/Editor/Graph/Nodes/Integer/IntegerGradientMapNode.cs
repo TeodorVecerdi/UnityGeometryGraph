@@ -36,7 +36,7 @@ namespace GeometryGraph.Editor {
             (valuePort, valueField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Value", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateValue(value));
             (minPort, minField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Min", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMin(min));
             (maxPort, maxField) = GraphFrameworkPort.CreateWithBackingField<IntegerField, int>("Max", PortType.Integer, this, onDisconnect: (_, _) => RuntimeNode.UpdateMax(max));
-            
+
             resultRGBPort = GraphFrameworkPort.Create("Color", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
             resultAlphaPort = GraphFrameworkPort.Create("Alpha", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
 
@@ -47,7 +47,7 @@ namespace GeometryGraph.Editor {
                 value = evt.newValue;
                 RuntimeNode.UpdateValue(value);
             });
-            
+
             minField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == min) return;
 
@@ -55,7 +55,7 @@ namespace GeometryGraph.Editor {
                 min = evt.newValue;
                 RuntimeNode.UpdateMin(min);
             });
-            
+
             maxField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == max) return;
 
@@ -87,12 +87,12 @@ namespace GeometryGraph.Editor {
             gradientContainer.AddToClassList("gradient-container");
             gradientContainer.Add(gradientField);
             gradientContainer.Add(colorOnlyField);
-            
+
             inputContainer.Add(gradientContainer);
             valuePort.Add(valueField);
             minPort.Add(minField);
             maxPort.Add(maxField);
-            
+
             AddPort(valuePort);
             AddPort(minPort);
             AddPort(maxPort);
@@ -131,13 +131,13 @@ namespace GeometryGraph.Editor {
             min = array.Value<int>(1);
             max = array.Value<int>(2);
             gradient = Deserializer.Gradient(array[3] as JObject);
-            
+
             valueField.SetValueWithoutNotify(value);
             minField.SetValueWithoutNotify(min);
             maxField.SetValueWithoutNotify(max);
             gradientField.SetValueWithoutNotify(gradient.UnityGradient);
             SetColorField(gradient.UnityGradient);
-            
+
             RuntimeNode.UpdateValue(value);
             RuntimeNode.UpdateMin(min);
             RuntimeNode.UpdateMax(max);

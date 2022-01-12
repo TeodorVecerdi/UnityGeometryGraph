@@ -90,7 +90,7 @@ namespace GeometryGraph.Editor {
                 referenceNameField.SetValueWithoutNotify(newValue);
                 editorView.GraphObject.RuntimeGraph.OnPropertyReferenceNameUpdated(property.GUID, property.ReferenceName);
             });
-            
+
             AddRow(referenceNameField);
             AddRow(defaultValueField);
         }
@@ -98,7 +98,7 @@ namespace GeometryGraph.Editor {
         public void AddRow(VisualElement control) {
             VisualElement rowView = new();
             rowView.AddToClassList("rowView");
-            
+
             control.AddToClassList("rowViewControl");
             rowView.Add(control);
 

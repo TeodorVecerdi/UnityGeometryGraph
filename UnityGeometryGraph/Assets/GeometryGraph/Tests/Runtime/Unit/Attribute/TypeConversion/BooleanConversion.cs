@@ -13,7 +13,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var intAttribute = boolAttribute.Into<IntAttribute>("intAttribute", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(intAttribute.Values.Count, boolAttribute.Values.Count, "Attribute length doesn't match: int:{0} == bool:{1}", intAttribute.Values.Count, boolAttribute.Values.Count);
-            
+
             Assert.IsTrue(
                 boolAttribute.Zip(intAttribute, (boolean, integer) => (boolean, integer))
                              .All(pair => (pair.boolean ? 1 : 0) == pair.integer),

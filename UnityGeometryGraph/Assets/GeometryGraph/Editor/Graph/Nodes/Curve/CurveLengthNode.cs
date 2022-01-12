@@ -13,7 +13,7 @@ namespace GeometryGraph.Editor {
         protected override void CreateNode() {
             curvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
             lengthPort = GraphFrameworkPort.Create("Length", Direction.Output, Port.Capacity.Multi, PortType.Float, this);
-            
+
             AddPort(curvePort);
             AddPort(lengthPort);
         }

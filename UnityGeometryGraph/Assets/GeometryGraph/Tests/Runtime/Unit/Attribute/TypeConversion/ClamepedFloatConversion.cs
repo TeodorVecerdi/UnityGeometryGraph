@@ -11,7 +11,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var boolAttribute = floatAttribute.Into<BoolAttribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(floatAttribute.Values.Count, boolAttribute.Values.Count, "Attribute length doesn't match: float:{0} == bool:{1}", floatAttribute.Values.Count, boolAttribute.Values.Count);
-            
+
             Assert.IsTrue(
                 boolAttribute.Zip(floatAttribute, (boolean, @float) => (boolean, @float))
                              .All(pair => pair.@float != 0.0f == pair.boolean),
@@ -25,7 +25,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var intAttribute = floatAttribute.Into<IntAttribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(floatAttribute.Values.Count, intAttribute.Values.Count, "Attribute length doesn't match: float:{0} == int:{1}", floatAttribute.Values.Count, intAttribute.Values.Count);
-            
+
             Assert.IsTrue(
                 intAttribute.Zip(floatAttribute, (integer, @float) => (integer, @float))
                             .All(pair => (int)pair.@float == pair.integer),
@@ -39,7 +39,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var floatAttribute = clampedFloatAttribute.Into<FloatAttribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(clampedFloatAttribute.Values.Count, floatAttribute.Values.Count, "Attribute length doesn't match: float:{0} == clampedFloat:{1}", clampedFloatAttribute.Values.Count, floatAttribute.Values.Count);
-            
+
             Assert.IsTrue(
                 floatAttribute.Zip(clampedFloatAttribute, (@float, clampedFloat) => (@float, clampedFloat))
                                      .All(pair => pair.@float == pair.clampedFloat),
@@ -53,7 +53,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var vec2Attribute = floatAttribute.Into<Vector2Attribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(floatAttribute.Values.Count, vec2Attribute.Values.Count, "Attribute length doesn't match: float:{0} == vec2:{1}", floatAttribute.Values.Count, vec2Attribute.Values.Count);
-            
+
             Assert.IsTrue(
                 vec2Attribute.Zip(floatAttribute, (vec2, @float) => (vec2, @float))
                              .All(pair => pair.vec2.x == pair.@float && pair.vec2.y == pair.@float),
@@ -67,7 +67,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var vec3Attribute = floatAttribute.Into<Vector3Attribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(floatAttribute.Values.Count, vec3Attribute.Values.Count, "Attribute length doesn't match: float:{0} == vec3:{1}", floatAttribute.Values.Count, vec3Attribute.Values.Count);
-            
+
             Assert.IsTrue(
                 vec3Attribute.Zip(floatAttribute, (vec3, @float) => (vec3, @float))
                              .All(pair => pair.vec3.x == pair.@float && pair.vec3.y == pair.@float && pair.vec3.z == pair.@float),

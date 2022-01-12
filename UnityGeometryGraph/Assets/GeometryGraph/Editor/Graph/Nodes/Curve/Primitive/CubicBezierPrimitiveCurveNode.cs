@@ -71,7 +71,7 @@ namespace GeometryGraph.Editor {
                 start = newValue;
                 RuntimeNode.UpdateStart(start);
             });
-            
+
             controlAField.RegisterValueChangedCallback(evt => {
                 float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(controlA)) return;
@@ -79,7 +79,7 @@ namespace GeometryGraph.Editor {
                 controlA = newValue;
                 RuntimeNode.UpdateControlA(controlA);
             });
-            
+
             controlBField.RegisterValueChangedCallback(evt => {
                 float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(controlB)) return;
@@ -87,7 +87,7 @@ namespace GeometryGraph.Editor {
                 controlB = newValue;
                 RuntimeNode.UpdateControlB(controlB);
             });
-            
+
             endField.RegisterValueChangedCallback(evt => {
                 float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(end)) return;
@@ -95,13 +95,13 @@ namespace GeometryGraph.Editor {
                 end = newValue;
                 RuntimeNode.UpdateEnd(end);
             });
-            
+
             pointsField.SetValueWithoutNotify(points);
             startField.SetValueWithoutNotify(start);
             controlAField.SetValueWithoutNotify(controlA);
             controlBField.SetValueWithoutNotify(controlB);
             endField.SetValueWithoutNotify(end);
-            
+
             pointsPort.Add(pointsField);
             closedPort.Add(closedToggle);
             AddPort(closedPort);
@@ -115,7 +115,7 @@ namespace GeometryGraph.Editor {
             AddPort(endPort);
             inputContainer.Add(endField);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -152,21 +152,21 @@ namespace GeometryGraph.Editor {
             controlA = JsonConvert.DeserializeObject<float3>(array!.Value<string>(3)!, float3Converter.Converter);
             controlB = JsonConvert.DeserializeObject<float3>(array!.Value<string>(4)!, float3Converter.Converter);
             end = JsonConvert.DeserializeObject<float3>(array!.Value<string>(5)!, float3Converter.Converter);
-            
+
             pointsField.SetValueWithoutNotify(points);
             closedToggle.SetValueWithoutNotify(closed);
             startField.SetValueWithoutNotify(start);
             controlAField.SetValueWithoutNotify(controlA);
             controlBField.SetValueWithoutNotify(controlB);
             endField.SetValueWithoutNotify(end);
-            
+
             RuntimeNode.UpdatePoints(points);
             RuntimeNode.UpdateIsClosed(closed);
             RuntimeNode.UpdateStart(start);
             RuntimeNode.UpdateControlA(controlA);
             RuntimeNode.UpdateControlB(controlB);
             RuntimeNode.UpdateEnd(end);
-            
+
             base.Deserialize(data);
         }
     }

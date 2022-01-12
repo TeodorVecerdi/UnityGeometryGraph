@@ -53,13 +53,13 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateMode(mode);
                 OnModeChanged();
             });
-            
+
             translationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change translation");
                 translation = evt.newValue;
                 RuntimeNode.UpdateTranslation(translation);
             });
-            
+
             attributeNameField.RegisterValueChangedCallback(evt => {
                 if (string.Equals(evt.newValue, attributeName, StringComparison.InvariantCulture)) return;
 
@@ -69,7 +69,7 @@ namespace GeometryGraph.Editor {
             });
 
             attributePort.Add(attributeNameField);
-            
+
             inputContainer.Add(modeDropdown);
             AddPort(inputPort);
             AddPort(translationPort);
@@ -78,7 +78,7 @@ namespace GeometryGraph.Editor {
             AddPort(resultPort);
 
             OnModeChanged();
-            
+
             Refresh();
         }
 
@@ -105,7 +105,7 @@ namespace GeometryGraph.Editor {
             root["t"] = JsonConvert.SerializeObject(translation, Formatting.None, float3Converter.Converter);
             root["a"] = attributeName;
             root["m"] = (int)mode;
-            
+
             return root;
         }
 
@@ -113,11 +113,11 @@ namespace GeometryGraph.Editor {
             translation = JsonConvert.DeserializeObject<float3>(data.Value<string>("t"), float3Converter.Converter);
             attributeName = data.Value<string>("a");
             mode = (Mode) data.Value<int>("m");
-            
+
             translationField.SetValueWithoutNotify(translation);
             attributeNameField.SetValueWithoutNotify(attributeName);
             modeDropdown.SetValueWithoutNotify(mode);
-            
+
             RuntimeNode.UpdateTranslation(translation);
             RuntimeNode.UpdateAttributeName(attributeName);
             RuntimeNode.UpdateMode(mode);

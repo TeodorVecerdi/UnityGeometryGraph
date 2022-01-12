@@ -73,7 +73,7 @@ namespace GeometryGraph.Editor {
 
             domainDropdown = new EnumSelectionDropdown<TargetDomain>(domain, domainTree, "Domain");
             typeDropdown = new EnumSelectionDropdown<FillType>(type, typeTree);
-            
+
             domainDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == domain) return;
 
@@ -81,7 +81,7 @@ namespace GeometryGraph.Editor {
                 domain = evt.newValue;
                 RuntimeNode.UpdateDomain(domain);
             });
-            
+
             typeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == type) return;
 
@@ -90,7 +90,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateType(type);
                 OnTypeChanged();
             });
-            
+
             attributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attribute) return;
 
@@ -98,7 +98,7 @@ namespace GeometryGraph.Editor {
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
             });
-            
+
             floatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - floatValue) < Constants.FLOAT_TOLERANCE) return;
 
@@ -106,7 +106,7 @@ namespace GeometryGraph.Editor {
                 floatValue = evt.newValue;
                 RuntimeNode.UpdateFloat(floatValue);
             });
-            
+
             integerField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == integerValue) return;
 
@@ -114,7 +114,7 @@ namespace GeometryGraph.Editor {
                 integerValue = evt.newValue;
                 RuntimeNode.UpdateInteger(integerValue);
             });
-            
+
             vectorField.RegisterValueChangedCallback(evt => {
                 if (math.distancesq(vectorValue, evt.newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
 
@@ -122,7 +122,7 @@ namespace GeometryGraph.Editor {
                 vectorValue = evt.newValue;
                 RuntimeNode.UpdateVector(vectorValue);
             });
-            
+
             booleanField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == booleanValue) return;
 
@@ -130,18 +130,18 @@ namespace GeometryGraph.Editor {
                 booleanValue = evt.newValue;
                 RuntimeNode.UpdateBoolean(booleanValue);
             });
-            
+
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
-            
+
             attributePort.Add(attributeField);
             floatPort.Add(floatField);
             integerPort.Add(integerField);
             booleanPort.Add(booleanField);
-            
+
             inputContainer.Add(domainDropdown);
             inputContainer.Add(typeDropdown);
-            
+
             AddPort(geometryPort);
             AddPort(attributePort);
             AddPort(floatPort);
@@ -205,7 +205,7 @@ namespace GeometryGraph.Editor {
                 (int) domain,
                 (int) type
             };
-            
+
             root["d"] = array;
             return root;
         }
@@ -219,7 +219,7 @@ namespace GeometryGraph.Editor {
             booleanValue = array.Value<int>(4) == 1;
             domain = (TargetDomain) array.Value<int>(5);
             type = (FillType) array.Value<int>(6);
-            
+
             attributeField.SetValueWithoutNotify(attribute);
             floatField.SetValueWithoutNotify(floatValue);
             integerField.SetValueWithoutNotify(integerValue);
@@ -227,7 +227,7 @@ namespace GeometryGraph.Editor {
             booleanField.SetValueWithoutNotify(booleanValue);
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
-            
+
             RuntimeNode.UpdateAttribute(attribute);
             RuntimeNode.UpdateFloat(floatValue);
             RuntimeNode.UpdateInteger(integerValue);
@@ -235,9 +235,9 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateBoolean(booleanValue);
             RuntimeNode.UpdateDomain(domain);
             RuntimeNode.UpdateType(type);
-            
+
             OnTypeChanged();
-            
+
             base.Deserialize(data);
         }
     }

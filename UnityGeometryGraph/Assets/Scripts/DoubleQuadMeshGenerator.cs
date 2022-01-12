@@ -16,7 +16,7 @@ public class DoubleQuadMeshGenerator : MonoBehaviour {
 
         var vertices = new List<Vector3>();
         var triangles = new List<int>();
-        
+
         // Front
         vertices.Add(v0);
         vertices.Add(v1);
@@ -67,7 +67,7 @@ public class DoubleQuadMeshGenerator : MonoBehaviour {
         var t1 = new List<int> {2, 3, 1};
         List<int> t2 = null;
         List<int> t3 = null;
-        
+
         if (doubleSided) {
             vertices.Add(v0);
             vertices.Add(v1);
@@ -76,7 +76,7 @@ public class DoubleQuadMeshGenerator : MonoBehaviour {
             t2 = new List<int> { 0 + 4, 1 + 4, 2 + 4 };
             t3 = new List<int> { 2 + 4, 1 + 4, 3 + 4 };
         }
-        
+
         var mesh = new Mesh {name = "$$_Double Quad"};
         mesh.subMeshCount = doubleSided ? 4 : 2;
         mesh.SetVertices(vertices);
@@ -86,7 +86,7 @@ public class DoubleQuadMeshGenerator : MonoBehaviour {
             mesh.SetTriangles(t2, 2);
             mesh.SetTriangles(t3, 3);
         }
-        
+
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
 

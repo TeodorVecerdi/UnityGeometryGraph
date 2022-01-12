@@ -83,10 +83,10 @@ namespace GeometryGraph.Editor {
             (minVectorPort, minVectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Min", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateMinVector(minVector));
             (maxVectorPort, maxVectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("Max", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateMaxVector(maxVector));
             resultPort = GraphFrameworkPort.Create("Geometry", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
-            
+
             domainDropdown = new EnumSelectionDropdown<TargetDomain>(domain, domainTree, "Domain");
             typeDropdown = new EnumSelectionDropdown<TargetType>(type, typeTree);
-            
+
             domainDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == domain) return;
 
@@ -94,7 +94,7 @@ namespace GeometryGraph.Editor {
                 domain = evt.newValue;
                 RuntimeNode.UpdateDomain(domain);
             });
-            
+
             typeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == type) return;
 
@@ -103,7 +103,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateType(type);
                 OnTypeChanged();
             });
-            
+
             attributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attribute) return;
 
@@ -111,7 +111,7 @@ namespace GeometryGraph.Editor {
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
             });
-            
+
             resultAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == resultAttribute) return;
 
@@ -119,7 +119,7 @@ namespace GeometryGraph.Editor {
                 resultAttribute = evt.newValue;
                 RuntimeNode.UpdateResultAttribute(resultAttribute);
             });
-            
+
             minIntField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == minInt) return;
 
@@ -127,7 +127,7 @@ namespace GeometryGraph.Editor {
                 minInt = evt.newValue;
                 RuntimeNode.UpdateMinInt(minInt);
             });
-            
+
             maxIntField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == maxInt) return;
 
@@ -135,7 +135,7 @@ namespace GeometryGraph.Editor {
                 maxInt = evt.newValue;
                 RuntimeNode.UpdateMaxInt(maxInt);
             });
-            
+
             minFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - minFloat) < Constants.FLOAT_TOLERANCE) return;
 
@@ -143,7 +143,7 @@ namespace GeometryGraph.Editor {
                 minFloat = evt.newValue;
                 RuntimeNode.UpdateMinFloat(minFloat);
             });
-            
+
             maxFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - maxFloat) < Constants.FLOAT_TOLERANCE) return;
 
@@ -151,7 +151,7 @@ namespace GeometryGraph.Editor {
                 maxFloat = evt.newValue;
                 RuntimeNode.UpdateMaxFloat(maxFloat);
             });
-            
+
             minVectorField.RegisterValueChangedCallback(evt => {
                 if (math.distancesq(evt.newValue, minVector) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
 
@@ -159,7 +159,7 @@ namespace GeometryGraph.Editor {
                 minVector = evt.newValue;
                 RuntimeNode.UpdateMinVector(minVector);
             });
-            
+
             maxVectorField.RegisterValueChangedCallback(evt => {
                 if (math.distancesq(evt.newValue, maxVector) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
 
@@ -167,7 +167,7 @@ namespace GeometryGraph.Editor {
                 maxVector = evt.newValue;
                 RuntimeNode.UpdateMaxVector(maxVector);
             });
-            
+
             minIntField.SetValueWithoutNotify(minInt);
             maxIntField.SetValueWithoutNotify(maxInt);
             minFloatField.SetValueWithoutNotify(minFloat);
@@ -176,17 +176,17 @@ namespace GeometryGraph.Editor {
             maxVectorField.SetValueWithoutNotify(maxVector);
             typeDropdown.SetValueWithoutNotify(type);
             domainDropdown.SetValueWithoutNotify(domain);
-            
+
             attributePort.Add(attributeField);
             resultAttributePort.Add(resultAttributeField);
             minIntPort.Add(minIntField);
             maxIntPort.Add(maxIntField);
             minFloatPort.Add(minFloatField);
             maxFloatPort.Add(maxFloatField);
-            
+
             inputContainer.Add(domainDropdown);
             inputContainer.Add(typeDropdown);
-            
+
             AddPort(geometryPort);
             AddPort(attributePort);
             AddPort(resultAttributePort);
@@ -261,7 +261,7 @@ namespace GeometryGraph.Editor {
                 (int) domain,
                 (int) type
             };
-            
+
             root["d"] = array;
             return root;
         }
@@ -278,7 +278,7 @@ namespace GeometryGraph.Editor {
             maxVector = JsonConvert.DeserializeObject<float3>(array.Value<string>(7), float3Converter.Converter);
             domain = (TargetDomain) array.Value<int>(8);
             type = (TargetType) array.Value<int>(9);
-            
+
             attributeField.SetValueWithoutNotify(attribute);
             resultAttributeField.SetValueWithoutNotify(resultAttribute);
             minFloatField.SetValueWithoutNotify(minFloat);
@@ -289,7 +289,7 @@ namespace GeometryGraph.Editor {
             maxVectorField.SetValueWithoutNotify(maxVector);
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
-            
+
             RuntimeNode.UpdateAttribute(attribute);
             RuntimeNode.UpdateResultAttribute(resultAttribute);
             RuntimeNode.UpdateMinFloat(minFloat);
@@ -300,9 +300,9 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateMaxVector(maxVector);
             RuntimeNode.UpdateDomain(domain);
             RuntimeNode.UpdateType(type);
-            
+
             OnTypeChanged();
-            
+
             base.Deserialize(data);
         }
     }

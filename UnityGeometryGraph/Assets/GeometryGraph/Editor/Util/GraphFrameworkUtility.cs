@@ -20,11 +20,11 @@ namespace GeometryGraph.Editor {
 
         public static bool CreateFile(string path, GraphFrameworkObject graphObject, bool refreshAsset = true) {
             if (graphObject == null || string.IsNullOrEmpty(path)) return false;
-            
+
             string assetGuid = AssetDatabase.AssetPathToGUID(path);
             graphObject.GraphData.AssetGuid = assetGuid;
             graphObject.RuntimeGraph.RuntimeData.Guid = Guid.NewGuid().ToString();
-            
+
             CreateFileNoUpdate(path, graphObject, refreshAsset);
             return true;
         }

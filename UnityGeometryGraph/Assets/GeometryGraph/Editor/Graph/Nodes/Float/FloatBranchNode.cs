@@ -35,31 +35,31 @@ namespace GeometryGraph.Editor {
                 condition = evt.newValue;
                 RuntimeNode.UpdateCondition(condition);
             });
-            
+
             ifTrueField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - ifTrue) < Constants.FLOAT_TOLERANCE) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change branch node if true value");
                 ifTrue = evt.newValue;
                 RuntimeNode.UpdateIfTrue(ifTrue);
             });
-            
+
             ifFalseField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - ifFalse) < Constants.FLOAT_TOLERANCE) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change branch node if false value");
                 ifFalse = evt.newValue;
                 RuntimeNode.UpdateIfFalse(ifFalse);
             });
-            
+
 
             conditionPort.Add(conditionToggle);
             ifTruePort.Add(ifTrueField);
             ifFalsePort.Add(ifFalseField);
-            
+
             AddPort(conditionPort);
             AddPort(ifTruePort);
             AddPort(ifFalsePort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -83,19 +83,19 @@ namespace GeometryGraph.Editor {
 
         protected internal override void Deserialize(JObject data) {
             JArray array = data["d"] as JArray;
-            
+
             condition = array!.Value<int>(0) == 1;
             ifTrue = array.Value<float>(1);
             ifFalse = array.Value<float>(2);
-            
+
             conditionToggle.SetValueWithoutNotify(condition);
             ifTrueField.SetValueWithoutNotify(ifTrue);
             ifFalseField.SetValueWithoutNotify(ifFalse);
-            
+
             RuntimeNode.UpdateCondition(condition);
             RuntimeNode.UpdateIfTrue(ifTrue);
             RuntimeNode.UpdateIfFalse(ifFalse);
-            
+
             base.Deserialize(data);
         }
     }

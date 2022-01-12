@@ -61,7 +61,7 @@ namespace GeometryGraph.Editor {
 
             sizeField.SetValueWithoutNotify(size);
             RuntimeNode.UpdateSize(size);
-            
+
             base.Deserialize(data);
         }
     }

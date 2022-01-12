@@ -29,7 +29,7 @@ namespace GeometryGraph.Runtime.Graph {
                 }
                 yield break;
             }
-            
+
             resultsDirty = false;
             results.Clear();
             List<bool> a = GetValues(APort, count, A).ToList();

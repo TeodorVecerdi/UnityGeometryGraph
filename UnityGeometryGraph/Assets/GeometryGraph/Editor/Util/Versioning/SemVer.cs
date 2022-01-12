@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
                 this = Invalid;
                 return;
             }
-            
+
             MAJOR = major;
             MINOR = minor;
             PATCH = patch;

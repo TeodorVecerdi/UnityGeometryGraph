@@ -52,7 +52,7 @@ namespace GeometryGraph.Editor {
 
                 columns[currentColumn].Add(category);
             }
-            
+
             return columns.Aggregate(0.0f, (current, column) => Mathf.Max(current, column.Sum(category => category.GetHeight())));
         }
 

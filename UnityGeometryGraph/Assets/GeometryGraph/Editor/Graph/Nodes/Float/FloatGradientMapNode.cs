@@ -60,10 +60,10 @@ namespace GeometryGraph.Editor {
             gradientContainer.AddToClassList("gradient-container");
             gradientContainer.Add(gradientField);
             gradientContainer.Add(colorOnlyField);
-            
+
             inputContainer.Add(gradientContainer);
             valuePort.Add(valueField);
-            
+
             AddPort(valuePort);
             AddPort(resultRGBPort);
             AddPort(resultAlphaPort);
@@ -94,11 +94,11 @@ namespace GeometryGraph.Editor {
             JArray array = data["d"] as JArray;
             value = array.Value<float>(0);
             gradient = Deserializer.Gradient(array[1] as JObject);
-            
+
             valueField.SetValueWithoutNotify(value);
             gradientField.SetValueWithoutNotify(gradient.UnityGradient);
             SetColorField(gradient.UnityGradient);
-            
+
             RuntimeNode.UpdateValue(value);
             RuntimeNode.UpdateGradient(gradient);
 

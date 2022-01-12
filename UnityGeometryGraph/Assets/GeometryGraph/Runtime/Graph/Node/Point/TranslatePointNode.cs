@@ -33,9 +33,9 @@ namespace GeometryGraph.Runtime.Graph {
                 /*
                 Storing even though I'm writing to the same attribute (with the .Into call) because AttributeManager
                 makes no guarantee that it will return the original attribute and not a clone of the attribute.
-                
+
                 Cloning happens when there is a domain or type mismatch and the original attribute gets converted.
-                
+
                 Also, storing the same attribute twice has no side effects and it's safe. The StoreAttribute method 
                 returns a boolean indicating whether an attribute was overwritten by the Store operation in case you 
                 care about that.

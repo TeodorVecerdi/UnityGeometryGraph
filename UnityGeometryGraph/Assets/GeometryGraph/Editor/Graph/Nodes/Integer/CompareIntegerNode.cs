@@ -54,7 +54,7 @@ namespace GeometryGraph.Editor {
                 a = evt.newValue;
                 RuntimeNode.UpdateA(a);
             });
-            
+
             bField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 b = evt.newValue;
@@ -63,12 +63,12 @@ namespace GeometryGraph.Editor {
 
             aPort.Add(aField);
             bPort.Add(bField);
-            
+
             inputContainer.Add(operationDropdown);
             AddPort(aPort);
             AddPort(bPort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -84,7 +84,7 @@ namespace GeometryGraph.Editor {
             root["o"] = (int)operation;
             root["a"] = a;
             root["b"] = b;
-            
+
             return root;
         }
 
@@ -92,11 +92,11 @@ namespace GeometryGraph.Editor {
             operation = (CompareOperation) data.Value<int>("o");
             a = data.Value<int>("a");
             b = data.Value<int>("b");
-            
+
             operationDropdown.SetValueWithoutNotify(operation, 1);
             aField.SetValueWithoutNotify(a);
             bField.SetValueWithoutNotify(b);
-            
+
             RuntimeNode.UpdateOperation(operation);
             RuntimeNode.UpdateA(a);
             RuntimeNode.UpdateB(b);

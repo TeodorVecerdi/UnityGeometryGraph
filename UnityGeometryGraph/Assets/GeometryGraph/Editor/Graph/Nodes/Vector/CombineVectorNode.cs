@@ -35,13 +35,13 @@ namespace GeometryGraph.Editor {
                 vector.x = evt.newValue;
                 RuntimeNode.UpdateX(vector.x);
             });
-            
+
             yField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector y component");
                 vector.y = evt.newValue;
                 RuntimeNode.UpdateY(vector.y);
             });
-            
+
             zField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector z component");
                 vector.z = evt.newValue;
@@ -51,12 +51,12 @@ namespace GeometryGraph.Editor {
             xPort.Add(xField);
             yPort.Add(yField);
             zPort.Add(zField);
-            
+
             AddPort(xPort);
             AddPort(yPort);
             AddPort(zPort);
             AddPort(vectorPort);
-            
+
             Refresh();
         }
 
@@ -70,13 +70,13 @@ namespace GeometryGraph.Editor {
         protected internal override JObject Serialize() {
             JObject root = base.Serialize();
             root["v"] = JsonConvert.SerializeObject(vector, float3Converter.Converter);
-            
+
             return root;
         }
 
         protected internal override void Deserialize(JObject data) {
             vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v"), float3Converter.Converter);
-            
+
             xField.SetValueWithoutNotify(vector.x);
             yField.SetValueWithoutNotify(vector.y);
             zField.SetValueWithoutNotify(vector.z);

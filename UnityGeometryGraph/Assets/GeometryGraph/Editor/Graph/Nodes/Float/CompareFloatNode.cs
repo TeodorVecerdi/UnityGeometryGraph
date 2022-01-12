@@ -65,7 +65,7 @@ namespace GeometryGraph.Editor {
                 a = evt.newValue;
                 RuntimeNode.UpdateA(a);
             });
-            
+
             bField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 b = evt.newValue;
@@ -75,13 +75,13 @@ namespace GeometryGraph.Editor {
             tolerancePort.Add(toleranceField); 
             aPort.Add(aField);
             bPort.Add(bField);
-            
+
             inputContainer.Add(operationDropdown);
             AddPort(tolerancePort);
             AddPort(aPort);
             AddPort(bPort);
             AddPort(resultPort);
-            
+
             OnOperationChanged();
 
             Refresh();
@@ -101,13 +101,13 @@ namespace GeometryGraph.Editor {
             root["t"] = tolerance;
             root["a"] = a;
             root["b"] = b;
-            
+
             return root;
         }
 
         private void OnOperationChanged() {
             bool showTolerance = operation == CompareOperation.Equal || operation == CompareOperation.NotEqual;
-            
+
             if (showTolerance) {
                 tolerancePort.Show();
             } else {
@@ -120,12 +120,12 @@ namespace GeometryGraph.Editor {
             tolerance = data.Value<float>("t");
             a = data.Value<float>("a");
             b = data.Value<float>("b");
-            
+
             operationDropdown.SetValueWithoutNotify(operation, 1);
             toleranceField.SetValueWithoutNotify(tolerance);
             aField.SetValueWithoutNotify(a);
             bField.SetValueWithoutNotify(b);
-            
+
             RuntimeNode.UpdateOperation(operation);
             RuntimeNode.UpdateTolerance(tolerance);
             RuntimeNode.UpdateA(a);

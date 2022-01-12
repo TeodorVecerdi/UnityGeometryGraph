@@ -12,7 +12,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             float3 min = float3_ext.one * float.MaxValue;
             float3 max = float3_ext.one * float.MinValue;
-            
+
             foreach (float3 position in positionAttribute) {
                 min = math.min(min, position);
                 max = math.max(max, position);

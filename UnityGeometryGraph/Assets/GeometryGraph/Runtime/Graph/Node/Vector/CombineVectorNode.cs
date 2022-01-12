@@ -35,13 +35,13 @@ namespace GeometryGraph.Runtime.Graph {
             List<float> ys = GetValues(YPort, count, Y).ToList();
             List<float> zs = GetValues(ZPort, count, Z).ToList();
             results.Clear();
-            
+
             for (int i = 0; i < count; i++) {
                 float3 result = new(xs[i], ys[i], zs[i]);
                 results.Add(result);
                 yield return result;
             }
-            
+
             resultsDirty = false;
         }
     }

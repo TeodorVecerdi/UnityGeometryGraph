@@ -48,10 +48,10 @@ namespace GeometryGraph.Runtime.Graph {
 
                 yield break;
             }
-            
+
             IEnumerable<float> values = GetValues(ValuePort, count, Value);
             results.Clear();
-            
+
             foreach (float value in values) {
                 RGBAlphaPair evaluated = Gradient.Evaluate(value);
                 results.Add(evaluated);
@@ -61,7 +61,7 @@ namespace GeometryGraph.Runtime.Graph {
                     yield return evaluated.Alpha;
                 }
             }
-            
+
             resultsDirty = false;
         }
 

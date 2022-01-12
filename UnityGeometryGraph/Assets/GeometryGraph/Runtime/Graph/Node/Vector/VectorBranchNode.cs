@@ -28,13 +28,13 @@ namespace GeometryGraph.Runtime.Graph {
 
                 yield break;
             }
-            
+
             List<bool> conditions = GetValues(ConditionPort, count, Condition).ToList();
             List<float3> ifTrue = GetValues(IfTruePort, count, IfTrue).ToList();
             List<float3> ifFalse = GetValues(IfFalsePort, count, IfFalse).ToList();
             results.Clear();
             resultsDirty = false;
-            
+
             for (int i = 0; i < count; i++) {
                 float3 result = conditions[i] ? ifTrue[i] : ifFalse[i];
                 results.Add(result);

@@ -43,7 +43,7 @@ namespace GeometryGraph.Editor {
                 value = evt.newValue;
                 RuntimeNode.UpdateValue(value);
             });
-            
+
             minField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == min) return;
 
@@ -59,7 +59,7 @@ namespace GeometryGraph.Editor {
                 max = evt.newValue;
                 RuntimeNode.UpdateMax(max);
             });
-            
+
             curveField = new CurveField { renderMode = CurveField.RenderMode.Mesh };
             InjectStyle();
 
@@ -78,12 +78,12 @@ namespace GeometryGraph.Editor {
             valuePort.Add(valueField);
             minPort.Add(minField);
             maxPort.Add(maxField);
-            
+
             AddPort(valuePort);
             AddPort(minPort);
             AddPort(maxPort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -93,7 +93,7 @@ namespace GeometryGraph.Editor {
             // Honestly, the class is a big mess in general.
             typeof(CurveField).GetField("m_CurveColor", BindingFlags.Instance | BindingFlags.NonPublic)!
                               .SetValue(curveField, new Color(0.8f, 0.8f, 0.8f));
-            
+
             // The curve field has a weird 1px high element with a different background color.
             StyleColor backgroundColor = curveField[0][0][0].style.backgroundColor;
             backgroundColor.value = new Color(0x2E / (float)0xFF, 0x2E / (float)0xFF, 0x2E / (float)0xFF);
@@ -124,12 +124,12 @@ namespace GeometryGraph.Editor {
             min = array.Value<int>(1);
             max = array.Value<int>(2);
             curve = Deserializer.AnimationCurve(array[3] as JObject);
-            
+
             valueField.SetValueWithoutNotify(value);
             minField.SetValueWithoutNotify(min);
             maxField.SetValueWithoutNotify(max);
             curveField.SetValueWithoutNotify(curve.UnityCurve);
-            
+
             RuntimeNode.UpdateValue(value);
             RuntimeNode.UpdateMin(min);
             RuntimeNode.UpdateMax(max);

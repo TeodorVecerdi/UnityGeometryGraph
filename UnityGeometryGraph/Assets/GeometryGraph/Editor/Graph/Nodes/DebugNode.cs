@@ -16,7 +16,7 @@ namespace GeometryGraph.Editor {
 
             label = new Label("Value: [none]");
             RuntimeNode?.SetOnValueChanged(OnValueChanged);
-            
+
             AddPort(valuePort);
             inputContainer.Add(label);
         }

@@ -34,7 +34,7 @@ namespace GeometryGraph.Runtime.Geometry {
             }
 
             PrepareMesh();
-            
+
             positionAttr = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             normalAttr = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
             uvAttr = geometry.GetAttribute<Vector2Attribute>("uv", AttributeDomain.FaceCorner);
@@ -72,7 +72,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     AddAdjacentFace(sharedC, face.VertC, face.VertA, triangleOffset, t0, t2, normal);
                 }
             }
-            
+
             ApplyMesh();
         }
 
@@ -100,7 +100,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var t1 = 1 + triangleOffset;
             var t2 = 2 + triangleOffset;
             var submesh = submeshAttr[faceIndex];
-            
+
             vertices.Add(v0);
             vertices.Add(v1);
             vertices.Add(v2);
@@ -113,7 +113,7 @@ namespace GeometryGraph.Runtime.Geometry {
             triangles[submesh].Add(t0);
             triangles[submesh].Add(t1);
             triangles[submesh].Add(t2);
-            
+
             return (t0, t1, t2);
         }
 
@@ -126,7 +126,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             mesh.Clear();
             mesh.subMeshCount = geometry.SubmeshCount;
-            
+
             vertices.Clear();
             normals.Clear();
             uvs.Clear();
@@ -135,14 +135,14 @@ namespace GeometryGraph.Runtime.Geometry {
             for (var i = 0; i < geometry.SubmeshCount; i++) {
                 triangles.Add(new List<int>());
             }
-            
+
             exportedFaces.Clear();
         }
 
         private int GetSharedFace(int faceIndex, int edgeIndex, float3 normal) {
             var edge = geometry.Edges[edgeIndex];
             var sharedFaceIndex = edge.FaceA != faceIndex ? edge.FaceA : edge.FaceB;
-            
+
             if (exportedFaces.Contains(sharedFaceIndex)) return -1;
             if (sharedFaceIndex != -1 && normalAttr[sharedFaceIndex].Equals(normal)) {
                 return sharedFaceIndex;
@@ -154,7 +154,7 @@ namespace GeometryGraph.Runtime.Geometry {
         private void AddAdjacentFace(int sharedA, int vertexA, int vertexB, int triangle0, int triangle1, int triangle2, float3 normal) {
             Vector3 otherVertex;
             Vector2 otherUV;
-            
+
             var sharedFace = geometry.Faces[sharedA];
             if (sharedFace.VertA != vertexA && sharedFace.VertA != vertexB) {
                 otherVertex = positionAttr[sharedFace.VertA];
@@ -171,7 +171,7 @@ namespace GeometryGraph.Runtime.Geometry {
             vertices.Add(otherVertex);
             normals.Add(normal);
             uvs.Add(otherUV);
-                    
+
             triangles[submesh].Add(triangle0);
             triangles[submesh].Add(triangle1);
             triangles[submesh].Add(triangle2);

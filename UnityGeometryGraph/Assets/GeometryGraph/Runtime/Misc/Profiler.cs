@@ -22,12 +22,12 @@ namespace GeometryGraph.Runtime {
                 // Debug.LogWarning("Attempting to profile a method without starting a profiling session! Call Profiler.BeginSession first.");
                 return new DummyDisposable();
             }
-            
+
             StackTrace stack = new(1);
             MethodBase stackMethod = stack.GetFrame(0).GetMethod();
             string className = stackMethod.DeclaringType?.Name;
             string methodName = stackMethod.Name;
-            
+
             ProfileSession currentSession = sessionStack.Peek();
             Method currentMethod = null;
             if (currentSession.MethodStack.Count > 0) {

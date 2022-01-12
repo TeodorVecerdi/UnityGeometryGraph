@@ -47,9 +47,9 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
                 meshFilter.sharedMesh = mesh;
             }
             if (aligned == null) return;
-            
+
             mesh.Clear();
-            
+
             var vertices = new List<Vector3>();
             var uvs = new List<Vector2>();
             float2 minUV = new float2(float.MaxValue, float.MaxValue);
@@ -71,7 +71,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
                 minUV = math.min(minUV, uv);
                 maxUV = math.max(maxUV, uv);
             }
-            
+
             for (var i = 0; i < uvs.Count; i++) {
                 if (NormalizeUVs) {
                     float2 currentUV = uvs[i];
@@ -83,7 +83,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
             }
 
             var triangles = new List<int>();
-            
+
             // First face
             if (EndingCap) {
                 triangles.Add(0);
@@ -107,7 +107,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
                     triangles.Add(i + 1);
                 }
             }
-            
+
             // Last face
             if (aligned.Points > 3) {
                 if (EndingCap) {
@@ -120,7 +120,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
                     triangles.Add(aligned.Points - 1);
                 }
             }
-            
+
             mesh.SetVertices(vertices);
             mesh.SetUVs(0, uvs);
             mesh.SetTriangles(triangles, 0);
@@ -140,7 +140,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
             var binormal = new List<float3>();
 
             var sw = Stopwatch.StartNew();
-           
+
             for (var i = 0; i < toAlign.Points; i++) {
                 position.Add(math.mul(matrix, toAlign.Position[i].float4(1.0f)).xyz);
                 tangent.Add(math.mul(matrix, toAlign.Tangent[i].float4()).xyz);

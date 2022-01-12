@@ -89,7 +89,7 @@ namespace GeometryGraph.Editor {
                 domain = evt.newValue;
                 RuntimeNode.UpdateTargetDomain(domain);
             });
-            
+
             xTypeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == xType) return;
 
@@ -98,7 +98,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateXType(xType);
                 OnTypeChanged();
             });
-            
+
             yTypeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == yType) return;
 
@@ -107,7 +107,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateYType(yType);
                 OnTypeChanged();
             });
-            
+
             zTypeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == zType) return;
 
@@ -116,7 +116,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateZType(zType);
                 OnTypeChanged();
             });
-            
+
             xFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - xFloat) < Constants.FLOAT_TOLERANCE) return;
 
@@ -124,7 +124,7 @@ namespace GeometryGraph.Editor {
                 xFloat = evt.newValue;
                 RuntimeNode.UpdateXFloat(xFloat);
             });
-            
+
             yFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - yFloat) < Constants.FLOAT_TOLERANCE) return;
 
@@ -132,7 +132,7 @@ namespace GeometryGraph.Editor {
                 yFloat = evt.newValue;
                 RuntimeNode.UpdateYFloat(yFloat);
             });
-            
+
             zFloatField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - zFloat) < Constants.FLOAT_TOLERANCE) return;
 
@@ -140,7 +140,7 @@ namespace GeometryGraph.Editor {
                 zFloat = evt.newValue;
                 RuntimeNode.UpdateZFloat(zFloat);
             });
-            
+
             xAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == xAttribute) return;
 
@@ -148,7 +148,7 @@ namespace GeometryGraph.Editor {
                 xAttribute = evt.newValue;
                 RuntimeNode.UpdateXAttribute(xAttribute);
             });
-            
+
             yAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == yAttribute) return;
 
@@ -156,7 +156,7 @@ namespace GeometryGraph.Editor {
                 yAttribute = evt.newValue;
                 RuntimeNode.UpdateYAttribute(yAttribute);
             });
-            
+
             zAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == zAttribute) return;
 
@@ -164,7 +164,7 @@ namespace GeometryGraph.Editor {
                 zAttribute = evt.newValue;
                 RuntimeNode.UpdateZAttribute(zAttribute);
             });
-            
+
             resultAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == resultAttribute) return;
 
@@ -172,12 +172,12 @@ namespace GeometryGraph.Editor {
                 resultAttribute = evt.newValue;
                 RuntimeNode.UpdateResultAttribute(resultAttribute);
             });
-            
+
             domainDropdown.SetValueWithoutNotify(domain);
             xTypeDropdown.SetValueWithoutNotify(xType);
             yTypeDropdown.SetValueWithoutNotify(yType);
             zTypeDropdown.SetValueWithoutNotify(zType);
-            
+
             xFloatPort.Add(xFloatField);
             yFloatPort.Add(yFloatField);
             zFloatPort.Add(zFloatField);
@@ -185,12 +185,12 @@ namespace GeometryGraph.Editor {
             yAttributePort.Add(yAttributeField);
             zAttributePort.Add(zAttributeField);
             resultAttributePort.Add(resultAttributeField);
-            
+
             inputContainer.Add(domainDropdown);
             inputContainer.Add(xTypeDropdown);
             inputContainer.Add(yTypeDropdown);
             inputContainer.Add(zTypeDropdown);
-            
+
             AddPort(geometryPort);
             AddPort(xFloatPort);
             AddPort(xAttributePort);
@@ -212,7 +212,7 @@ namespace GeometryGraph.Editor {
                 xFloatPort.HideAndDisconnect();
                 xAttributePort.Show();
             }
-            
+
             if (yType is ComponentType.Float) {
                 yFloatPort.Show();
                 yAttributePort.HideAndDisconnect();
@@ -220,7 +220,7 @@ namespace GeometryGraph.Editor {
                 yFloatPort.HideAndDisconnect();
                 yAttributePort.Show();
             }
-            
+
             if (zType is ComponentType.Float) {
                 zFloatPort.Show();
                 zAttributePort.HideAndDisconnect();
@@ -256,7 +256,7 @@ namespace GeometryGraph.Editor {
                 (int)yType,
                 (int)zType
             };
-            
+
             root["d"] = array;
             return root;
         }
@@ -274,7 +274,7 @@ namespace GeometryGraph.Editor {
             xType = (ComponentType)array.Value<int>(7);
             yType = (ComponentType)array.Value<int>(8);
             zType = (ComponentType)array.Value<int>(9);
-            
+
             xFloatField.SetValueWithoutNotify(xFloat);
             yFloatField.SetValueWithoutNotify(yFloat);
             zFloatField.SetValueWithoutNotify(zFloat);
@@ -285,7 +285,7 @@ namespace GeometryGraph.Editor {
             xTypeDropdown.SetValueWithoutNotify(xType);
             yTypeDropdown.SetValueWithoutNotify(yType);
             zTypeDropdown.SetValueWithoutNotify(zType);
-            
+
             RuntimeNode.UpdateXFloat(xFloat);
             RuntimeNode.UpdateYFloat(yFloat);
             RuntimeNode.UpdateZFloat(zFloat);
@@ -296,9 +296,9 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateXType(xType);
             RuntimeNode.UpdateYType(yType);
             RuntimeNode.UpdateZType(zType);
-            
+
             OnTypeChanged();
-            
+
             base.Deserialize(data);
         }
     }

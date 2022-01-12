@@ -34,14 +34,14 @@ namespace GeometryGraph.Runtime.Geometry {
 
             /* ALGO
              For each face, add a face in resulting mesh.
-             
+
              How to share vertices in triangles? 
                 - Maybe keep track of already done faces, then create triangles out of adjacent faces as well if their normals are the same
                 - Then each loop only do the face (and adjacent faces) if they haven't already been done
             */
 
             PrepareMesh();
-            
+
             positionAttr = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex);
             normalAttr = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face);
             uvAttr = geometry.GetAttribute<Vector2Attribute>("uv", AttributeDomain.FaceCorner);
@@ -83,7 +83,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     AddAdjacentFace(sharedC, geometry.Edges[face.EdgeC].VertA, geometry.Edges[face.EdgeC].VertB, triangleOffset, triC0, triC1, normal);
                 }
             }
-            
+
             ApplyMesh();
         }
 
@@ -107,7 +107,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var t0 = 0 + triangleOffset;
             var t1 = 1 + triangleOffset;
             var t2 = 2 + triangleOffset;
-            
+
             vertices.Add(v0);
             vertices.Add(v1);
             vertices.Add(v2);
@@ -120,7 +120,7 @@ namespace GeometryGraph.Runtime.Geometry {
             triangles.Add(t0);
             triangles.Add(t1);
             triangles.Add(t2);
-            
+
             return (t0, t1, t2);
         }
 
@@ -132,7 +132,7 @@ namespace GeometryGraph.Runtime.Geometry {
             }
 
             mesh.Clear();
-            
+
             vertices.Clear();
             normals.Clear();
             uvs.Clear();
@@ -145,7 +145,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var sharedFaceIndex = -1;
             if (edge.FaceA == faceIndex) sharedFaceIndex = edge.FaceB;
             else if (edge.FaceB == faceIndex) sharedFaceIndex = edge.FaceA;
-            
+
             if (exportedFaces.Contains(sharedFaceIndex)) return -1;
             if (sharedFaceIndex != -1 && normalAttr[sharedFaceIndex].Equals(normal)) {
                 return sharedFaceIndex;
@@ -157,7 +157,7 @@ namespace GeometryGraph.Runtime.Geometry {
         private void AddAdjacentFace(int sharedA, int vertexA, int vertexB, int triangle0, int triangle1, int triangle2, float3 normal) {
             Vector3 otherVertex;
             Vector2 otherUV;
-            
+
             var sharedFace = geometry.Faces[sharedA];
             if (sharedFace.VertA != vertexA && sharedFace.VertA != vertexB) {
                 otherVertex = positionAttr[sharedFace.VertA];
@@ -169,7 +169,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 otherVertex = positionAttr[sharedFace.VertC];
                 otherUV = uvAttr[sharedFace.FaceCornerC];
             }
-            
+
             vertices.Add(otherVertex);
             normals.Add(normal);
             uvs.Add(otherUV);

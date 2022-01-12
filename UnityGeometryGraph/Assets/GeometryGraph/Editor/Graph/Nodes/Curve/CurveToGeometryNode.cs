@@ -57,7 +57,7 @@ namespace GeometryGraph.Editor {
                 rotationOffset = evt.newValue;
                 RuntimeNode.UpdateRotationOffset(rotationOffset);
             });
-            
+
             incrementalRotationOffsetField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - incrementalRotationOffset) < Constants.FLOAT_TOLERANCE) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change incremental rotation");
@@ -98,7 +98,7 @@ namespace GeometryGraph.Editor {
                 shadeSmoothCaps = evt.newValue;
                 RuntimeNode.UpdateShadeSmoothCaps(shadeSmoothCaps);
             });
-            
+
             capUVTypeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == capUVType) return;
 
@@ -109,15 +109,15 @@ namespace GeometryGraph.Editor {
 
             rotationOffsetPort.Add(rotationOffsetField);
             incrementalRotationOffsetPort.Add(incrementalRotationOffsetField);
-            
+
             OnProfileCurveDisconnected(null, null);
-            
+
             inputContainer.Add(closeCapsToggle);
             inputContainer.Add(separateMaterialForCapsToggle);
             inputContainer.Add(shadeSmoothCurveToggle);
             inputContainer.Add(shadeSmoothCapsToggle);
             inputContainer.Add(capUVTypeDropdown);
-            
+
             AddPort(inputCurvePort);
             AddPort(profileCurvePort);
             AddPort(rotationOffsetPort);
@@ -128,7 +128,7 @@ namespace GeometryGraph.Editor {
         private void OnProfileCurveConnected(Edge _1, GraphFrameworkPort _2) {
             rotationOffsetPort.Show();
             incrementalRotationOffsetPort.Show();
-            
+
             closeCapsToggle.RemoveFromClassList("d-none");
             separateMaterialForCapsToggle.RemoveFromClassList("d-none");
             shadeSmoothCurveToggle.RemoveFromClassList("d-none");
@@ -139,7 +139,7 @@ namespace GeometryGraph.Editor {
         private void OnProfileCurveDisconnected(Edge _1, GraphFrameworkPort _2) {
             rotationOffsetPort.HideAndDisconnect();
             incrementalRotationOffsetPort.HideAndDisconnect();
-            
+
             closeCapsToggle.AddToClassList("d-none");
             separateMaterialForCapsToggle.AddToClassList("d-none");
             shadeSmoothCurveToggle.AddToClassList("d-none");
@@ -172,7 +172,7 @@ namespace GeometryGraph.Editor {
 
         protected internal override void Deserialize(JObject data) {
             JArray array = data["d"] as JArray;
-            
+
             rotationOffset = array!.Value<float>(0);
             incrementalRotationOffset = array.Value<float>(1);
             closeCaps = array.Value<int>(2) == 1;
@@ -180,7 +180,7 @@ namespace GeometryGraph.Editor {
             shadeSmoothCurve = array.Value<int>(4) == 1;
             shadeSmoothCaps = array.Value<int>(5) == 1;
             capUVType = (CurveToGeometrySettings.CapUVType) array.Value<int>(6);
-            
+
             rotationOffsetField.SetValueWithoutNotify(rotationOffset);
             incrementalRotationOffsetField.SetValueWithoutNotify(incrementalRotationOffset);
             closeCapsToggle.SetValueWithoutNotify(closeCaps);
@@ -196,7 +196,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateShadeSmoothCurve(shadeSmoothCurve);
             RuntimeNode.UpdateShadeSmoothCaps(shadeSmoothCaps);
             RuntimeNode.UpdateCapUVType(capUVType);
-            
+
             base.Deserialize(data);
         }
     }

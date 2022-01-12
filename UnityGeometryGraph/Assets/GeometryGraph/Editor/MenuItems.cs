@@ -33,7 +33,7 @@ namespace GeometryGraph.Editor {
             foreach (GraphFrameworkObject graphFrameworkObject in instances) {
                 Debug.Log($"GFO:{graphFrameworkObject.GetInstanceID()}");
             }
-            
+
             RuntimeGraphObject[] runtimeGraphObjects = Resources.FindObjectsOfTypeAll<RuntimeGraphObject>();
             Debug.Log($"Runtime GO: {runtimeGraphObjects.Length}");
             foreach (RuntimeGraphObject runtimeGraphObject in runtimeGraphObjects) {
@@ -60,7 +60,7 @@ namespace GeometryGraph.Editor {
                     Object.DestroyImmediate(graphFrameworkObject, true);
                 }
             }
-            
+
             RuntimeGraphObject[] runtimeGraphObjects = Resources.FindObjectsOfTypeAll<RuntimeGraphObject>();
             foreach (RuntimeGraphObject runtimeGraphObject in runtimeGraphObjects) {
                 if (runtimeGraphObject.GetInstanceID() < 0) {

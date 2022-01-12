@@ -46,7 +46,7 @@ namespace GeometryGraph.Runtime.Graph {
                 results.Add(result);
                 yield return result;
             }
-            
+
             resultsDirty = false;
         }
 

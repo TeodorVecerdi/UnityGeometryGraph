@@ -60,7 +60,7 @@ namespace GeometryGraph.Runtime.Data {
             for (int i = 0; i < mesh.subMeshCount; i++) {
                 mesh.SetTriangles(sourceMesh.GetTriangles(i), i);
             }
-            
+
             mesh.RecalculateBounds();
             return mesh;
         }

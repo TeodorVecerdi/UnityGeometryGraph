@@ -122,7 +122,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateRotationType(rotationType);
                 OnModeChanged();
             });
-            
+
             rotationField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change rotation vector");
                 rotation = evt.newValue;
@@ -133,13 +133,13 @@ namespace GeometryGraph.Editor {
                 axis = evt.newValue;
                 RuntimeNode.UpdateAxis(axis);
             });
-            
+
             angleField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change angle value");
                 angle = evt.newValue;
                 RuntimeNode.UpdateAngle(angle);
             });
-            
+
             rotationAttributeField.RegisterValueChangedCallback(evt => {
                 if (string.Equals(evt.newValue, rotationAttribute, StringComparison.InvariantCulture)) return;
 
@@ -174,7 +174,7 @@ namespace GeometryGraph.Editor {
             inputContainer.Add(axisModeDropdown);
             inputContainer.Add(angleModeDropdown);
             AddPort(inputPort);
-            
+
             AddPort(rotationPort);
             inputContainer.Add(rotationField);
             AddPort(rotationAttributePort);
@@ -182,14 +182,14 @@ namespace GeometryGraph.Editor {
             AddPort(axisPort);
             inputContainer.Add(axisField);
             AddPort(axisAttributePort);
-            
+
             AddPort(anglePort);
             AddPort(angleAttributePort);
-            
+
             AddPort(resultPort);
 
             OnModeChanged();
-            
+
             Refresh();
         }
 
@@ -261,7 +261,7 @@ namespace GeometryGraph.Editor {
             root["7"] = (int)axisMode;
             root["8"] = (int)angleMode;
             root["9"] = (int)rotationType;
-            
+
             return root;
         }
 
@@ -276,7 +276,7 @@ namespace GeometryGraph.Editor {
             axisMode = (AxisMode) data.Value<int>("7");
             angleMode = (AngleMode) data.Value<int>("8");
             rotationType = (RotationType) data.Value<int>("9");
-            
+
             rotationField.SetValueWithoutNotify(rotation);
             axisField.SetValueWithoutNotify(axis);
             angleField.SetValueWithoutNotify(angle);
@@ -287,7 +287,7 @@ namespace GeometryGraph.Editor {
             axisModeDropdown.SetValueWithoutNotify(axisMode);
             angleModeDropdown.SetValueWithoutNotify(angleMode);
             rotationTypeToggle.SetValueWithoutNotify(rotationType);
-            
+
             RuntimeNode.UpdateRotation(rotation);
             RuntimeNode.UpdateAxis(axis);
             RuntimeNode.UpdateAngle(angle);

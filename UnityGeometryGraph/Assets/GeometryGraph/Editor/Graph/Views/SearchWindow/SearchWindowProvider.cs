@@ -182,7 +182,7 @@ namespace GeometryGraph.Editor {
 
         public bool OnSelectEntry(SearcherItem selectedEntry, Vector2 mousePosition) {
             SearchNodeItem searchNodeItem = selectedEntry as SearchNodeItem;
-            
+
             if (searchNodeItem == null || searchNodeItem.NodeEntry is { Type: null, Node: null }) {
                 return false;
             }

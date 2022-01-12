@@ -21,8 +21,8 @@ namespace GeometryGraph.Editor {
         }
 
         private void CreateGUI() {
-            if(tree == null) return; 
-            
+            if(tree == null) return;
+
             rootVisualElement.Clear();
             rootVisualElement.AddStyleSheet("Styles/SelectionWindow");
             rootVisualElement.name = "SelectionWindow";

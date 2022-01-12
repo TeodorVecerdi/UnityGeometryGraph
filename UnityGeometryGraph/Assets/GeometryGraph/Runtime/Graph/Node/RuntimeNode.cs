@@ -18,7 +18,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (count <= 0) {
                 yield break;
             }
-            
+
             // Here I'm just returning the same value `count` times.
             // Nodes that override this method can return whatever they want.
             object value = GetValueForPort(port);
@@ -74,7 +74,7 @@ namespace GeometryGraph.Runtime.Graph {
                 T tValue = (T)value;
                 if (tValue != null) return tValue;
             }
-            
+
             return (T)PortValueConverter.Convert(value, outputPort.Type, connection.Input.Type);
         }
 
@@ -83,7 +83,7 @@ namespace GeometryGraph.Runtime.Graph {
                 Debug.LogError($"Attempting to get a value from an output port: {GetType()}");
                 return defaultValue;
             }
-            
+
             Connection firstConnection = port.Connections.FirstOrDefault();
             if (firstConnection == null) {
                 return defaultValue;
@@ -98,7 +98,7 @@ namespace GeometryGraph.Runtime.Graph {
                 Debug.LogError($"Attempting to get values from an output port: {GetType()}");
                 yield break;
             }
-            
+
             Connection firstConnection = port.Connections.FirstOrDefault();
             if (firstConnection == null) {
                 for (int i = 0; i < count; i++) {
@@ -115,7 +115,7 @@ namespace GeometryGraph.Runtime.Graph {
                 }
                 yield break;
             }
-            
+
             IEnumerable<object> values = outputPort.Node.GetValuesForPort(outputPort, count);
             foreach (object value in values) {
                 if (PortTypeUtility.IsUnmanagedType(outputPort.Type)) {

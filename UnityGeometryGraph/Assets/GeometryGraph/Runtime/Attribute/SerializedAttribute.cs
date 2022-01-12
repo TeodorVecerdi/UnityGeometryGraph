@@ -36,19 +36,19 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             Type attributeType = System.Type.GetType(serializedAttribute.Type);
             Type valueType = System.Type.GetType(serializedAttribute.ValueType);
             Type listValueType = listType.MakeGenericType(valueType);
-            
+
             JObject json = JObject.Parse(serializedAttribute.Data);
-            
+
             string name = json.Value<string>("n");
             BaseAttribute attribute = (BaseAttribute) Activator.CreateInstance(attributeType!, name);
             IEnumerable values = (IEnumerable) JsonConvert.DeserializeObject(json.Value<string>("v")!, listValueType, settings);
-            
+
             attribute.Domain = (AttributeDomain) json.Value<int>("d");
             attribute.Values = new List<object>();
             foreach (object value in values!) {
                 attribute.Values.Add(value);
             }
-            
+
             return attribute;
         }
     }

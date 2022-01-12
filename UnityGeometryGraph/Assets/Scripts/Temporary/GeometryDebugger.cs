@@ -280,13 +280,13 @@ namespace GeometryGraph.Runtime.Geometry {
                         var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                         Gizmos.color = UnityEditor.Handles.color = color;
                         UnityEditor.Handles.DrawAAPolyLine(4.0f, e0v0, e0v1);
-                
+
                         var e1v0 = vertices[data.Edges[face.EdgeB].VertA];
                         var e1v1 = vertices[data.Edges[face.EdgeB].VertB];
                         color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                         Gizmos.color = UnityEditor.Handles.color = color;
                         UnityEditor.Handles.DrawAAPolyLine(4.0f, e1v0, e1v1);
-                
+
                         var e2v0 = vertices[data.Edges[face.EdgeC].VertA];
                         var e2v1 = vertices[data.Edges[face.EdgeC].VertB];
                         color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);

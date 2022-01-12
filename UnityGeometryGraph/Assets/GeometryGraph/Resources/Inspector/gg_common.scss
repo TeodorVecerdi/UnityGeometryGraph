@@ -64,13 +64,13 @@ Button.toggle-button {
     font-size: 13px;
     border-radius: 0;
     -unity-overflow-clip-box: content-box;
-    
+
     &.toggle-button__active {
         //border-color: var(--theme-dark);
         background-color: var(--toggle-button-bg--active);
         -unity-font-style: bold;
     }
-    
+
     &:focus {
         border-color: var(--theme-dark);
         //background-color: var(--toggle-button-bg--focus);
@@ -81,7 +81,7 @@ VisualElement#GeometryGraphInspector {
     // Fixes padding that unity adds to inspectors
     margin-bottom: -7px;
     margin-top: -1px;
-    
+
     background-color: var(--inspector-bg);
     overflow: hidden;
 
@@ -109,7 +109,7 @@ VisualElement#GeometryGraphInspector {
             color: var(--text-white);
             font-size: 22px;
         }
-        
+
         border-bottom-width: 1px;
         border-bottom-color: var(--theme-dark);
     }
@@ -118,12 +118,12 @@ VisualElement#GeometryGraphInspector {
         padding-left: 8px;
         padding-right: 8px;
         min-height: 32px;
-        
+
         Button.evaluate-button {
             margin: 4px 0 8px 0;
             padding: 4px;
         }
-        
+
         VisualElement.properties-container {
             & .no-properties-notice {
                 color: var(--text-white);
@@ -131,24 +131,24 @@ VisualElement#GeometryGraphInspector {
             }
         }
     }
-    
+
     TabContainer.tab-container {
         & > VisualElement.tab-buttons-container {
             flex-direction: row;
             align-content: flex-start;
-            
+
             & > Button.tab-button {
                 margin: 0;
                 border-width: 0;
-                
+
                 flex-shrink: 1;
                 width: 100%;
                 //min-width: 0;
-                
+
                 margin-right: 1px;
                 border-top-width: 2px;
                 border-top-color: var(--inspector-bg);
-                
+
                 padding-top: 3px;
                 padding-bottom: 3px;
 
@@ -162,7 +162,7 @@ VisualElement#GeometryGraphInspector {
             padding-bottom: 4px;
             & > VisualElement.tab-content {
                 display: none;
-                
+
                 &.tab-content__active {
                     padding-top: 8px;
                     padding-bottom: 8px;
@@ -174,7 +174,7 @@ VisualElement#GeometryGraphInspector {
             }
         }
     }
-    
+
     VisualElement#MissingGraphNotice {
         padding: 4px;
         Label.missing-graph-notice-main {
@@ -205,40 +205,40 @@ VisualElement#GeometryGraphInspector {
                 border-width: 0;
                 border-radius: 0;
                 background-color: transparent;
-                
+
                 font-size: 14px;
-                
+
                 border-bottom-width: 1px;
                 border-bottom-color: var(--inspector-bg);
                 -unity-overflow-clip-box: content-box;
                 color: var(--theme);
                 cursor: link;
-                
+
                 &:hover {
                     color: var(--theme-dark);
                     border-bottom-color: var(--theme-dark);
                 }
-                
+
                 &:focus {
                     color: var(--theme-dark);
                     border-bottom-color: var(--theme-dark);
                 }
             }    
         }
-        
+
     }
-    
+
     VisualElement.curve-visualizer-container > VisualElement#CurveVisualizerMain {
         VisualElement.curve-settings-container {
             margin-top: 12px;
-            
+
             VisualElement.curve-settings-category-header {
                 flex-direction: row;
                 flex-wrap: wrap-reverse;
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 4px;
-                
+
                 & > Button.toggle-button {
                     padding-top: 2px;
                     padding-bottom: 2px;
@@ -246,7 +246,7 @@ VisualElement#GeometryGraphInspector {
                     min-width: 48px;
                 }
             }
-            
+
             Label.curve-settings-category-title {
                 font-size: 14px;
                 color: var(--text-white);
@@ -254,7 +254,7 @@ VisualElement#GeometryGraphInspector {
             }
         }
     }
-    
+
     VisualElement.instances-container > VisualElement#InstancesContent {
         PropertyField.materials-list {
             margin-left: 16px;

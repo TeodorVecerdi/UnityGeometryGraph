@@ -35,13 +35,13 @@ namespace GeometryGraph.Runtime.Graph {
             List<int> aValues = GetValues(APort, count, A).ToList();
             List<int> bValues = GetValues(BPort, count, B).ToList();
             results.Clear();
-            
+
             for (int i = 0; i < count; i++) {
                 bool result = CalculateResult(aValues[i], bValues[i]);
                 results.Add(result);
                 yield return result;
             }
-            
+
             resultsDirty = false;
         }
 

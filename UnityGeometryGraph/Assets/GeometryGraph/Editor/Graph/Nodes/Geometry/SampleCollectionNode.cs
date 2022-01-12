@@ -48,14 +48,14 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateSampleType(sampleType);
                 OnSampleTypeChanged();
             });
-            
+
             indexField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == index) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change collection sample index");
                 index = evt.newValue;
                 RuntimeNode.UpdateIndex(index);
             });
-            
+
             seedField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == seed) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change collection sample seed");
@@ -65,15 +65,15 @@ namespace GeometryGraph.Editor {
 
             indexPort.Add(indexField);
             seedPort.Add(seedField);
-            
+
             inputContainer.Add(sampleTypeDropdown);
             AddPort(collectionPort);
             AddPort(indexPort);
             AddPort(seedPort);
             AddPort(resultPort);
-            
+
             OnSampleTypeChanged();
-            
+
             Refresh();
         }
 
@@ -100,7 +100,7 @@ namespace GeometryGraph.Editor {
             root["i"] = index;
             root["s"] = seed;
             root["m"] = (int)sampleType;
-            
+
             return root;
         }
 
@@ -108,15 +108,15 @@ namespace GeometryGraph.Editor {
             index = data.Value<int>("i");
             seed = data.Value<int>("s");
             sampleType = (SampleType) data.Value<int>("m");
-            
+
             indexField.SetValueWithoutNotify(index);
             seedField.SetValueWithoutNotify(seed);
             sampleTypeDropdown.SetValueWithoutNotify(sampleType);
-            
+
             RuntimeNode.UpdateIndex(index);
             RuntimeNode.UpdateSeed(seed);
             RuntimeNode.UpdateSampleType(sampleType);
-            
+
             OnSampleTypeChanged();
 
             base.Deserialize(data);

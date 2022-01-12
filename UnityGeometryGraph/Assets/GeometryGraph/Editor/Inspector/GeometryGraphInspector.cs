@@ -38,11 +38,11 @@ namespace GeometryGraph.Editor {
                 targetGraph.GraphGuid = targetGraph.Graph.RuntimeData.Guid;
                 OnGraphChanged(targetGraph.Graph);
             }
-            
+
             if (targetGraph.SceneData.PropertyHashCode != targetGraph.Graph.RuntimeData.PropertyHashCode) {
                 targetGraph.OnPropertiesChanged(targetGraph.Graph.RuntimeData.PropertyHashCode);
             }
-            
+
             foreach (Property property in targetGraph.Graph.RuntimeData.Properties) {
                 targetGraph.SceneData.UpdatePropertyDefaultValue(property.Guid, property.DefaultValue);
             }
@@ -60,7 +60,7 @@ namespace GeometryGraph.Editor {
             root = new VisualElement {name = "GeometryGraphInspector"};
             root.AddStyleSheet(EditorGUIUtility.isProSkin ? "Inspector/gg_dark" : "Inspector/gg_light");
             root.AddStyleSheet("Inspector/gg_common");
-            
+
 
             VisualElement title = new();
             title.AddToClassList("title");
@@ -80,7 +80,7 @@ namespace GeometryGraph.Editor {
             graphPropertyField.Bind(serializedObject);
             graphPropertyField.RegisterValueChangeCallback(OnGraphChanged);
             content.Add(graphPropertyField);
-            
+
             PropertyField meshFilterPropertyField = new(serializedObject.FindProperty("meshFilter"), "Mesh Filter") {
                 name = "meshFilter-field"
             };
@@ -89,14 +89,14 @@ namespace GeometryGraph.Editor {
                 serializedObject.FindProperty("initializedMeshFilter").boolValue = false;
             });
             content.Add(meshFilterPropertyField);
-            
+
 
             BuildMissingGraphNotice();
             content.Add(missingGraphNotice);
-            
+
             mainContent = new VisualElement();
             mainContent.AddToClassList("main-content");
-            
+
             Button evaluateButton = new(() => {
                 targetGraph.Evaluate();
             }) {text = "Evaluate Graph"};
@@ -113,30 +113,30 @@ namespace GeometryGraph.Editor {
 
             root.Add(title);
             root.Add(content);
-            
+
             return root;
         }
 
         private void BuildMissingGraphNotice() {
             missingGraphNotice = new VisualElement { name = "MissingGraphNotice" };
             missingGraphNotice.AddToClassList("d-none");
-            
+
             Label missingGraphNoticeLabel = new("No graph selected");
             missingGraphNoticeLabel.AddToClassList("missing-graph-notice-main");
             missingGraphNotice.Add(missingGraphNoticeLabel);
-            
+
             VisualElement cta = new();
             cta.AddToClassList("missing-graph-notice-cta");
             missingGraphNotice.Add(cta);
-            
+
             Label missingGraphNoticeCta0 = new("Assign one or");
             missingGraphNoticeCta0.AddToClassList("missing-graph-notice-cta-0");
             cta.Add(missingGraphNoticeCta0);
-            
+
             Button missingGraphNoticeCtaButton = new(CreateAndAssignGraph) {text = "create new graph"};
             missingGraphNoticeCtaButton.AddToClassList("missing-graph-notice-cta-button");
             cta.Add(missingGraphNoticeCtaButton);
-            
+
             Label missingGraphNoticeCta1 = new(".");
             missingGraphNoticeCta1.AddToClassList("missing-graph-notice-cta-1");
             cta.Add(missingGraphNoticeCta1);
@@ -157,12 +157,12 @@ namespace GeometryGraph.Editor {
         private void BuildTabs() {
             propertiesTab = tabContainer.CreateTab("Properties");
             propertiesTab.AddToClassList("properties-container");
-            
+
             noPropertiesNotice = new Label("No properties");
             noPropertiesNotice.AddToClassList("no-properties-notice");
             noPropertiesNotice.AddToClassList("d-none");
             propertiesTab.Add(noPropertiesNotice);
-            
+
             instancesTab = tabContainer.CreateTab("Instances");
             instancesTab.AddToClassList("instances-container");
 
@@ -187,10 +187,10 @@ namespace GeometryGraph.Editor {
                 propertiesTab.RemoveFromClassList("d-none");
                 noPropertiesNotice.AddToClassList("d-none");
             }
-            
+
             mainContent.RemoveFromClassList("d-none");
             missingGraphNotice.AddToClassList("d-none");
-            
+
             BuildPropertiesTab(graphObject);
             BuildCurveTab();
             BuildInstancesTab();
@@ -211,7 +211,7 @@ namespace GeometryGraph.Editor {
             int propIndex = 0;
             Dictionary<string, (Property property, int index)> propertyDictionary =
                 graphObject.RuntimeData.Properties.ToDictionary(property => property.Guid, property => (property, propIndex++));
-            
+
             UnityEditor.SerializedProperty keysProperty = serializedObject.FindProperty("sceneData.propertyData.keys");
             UnityEditor.SerializedProperty valuesProperty = serializedObject.FindProperty("sceneData.propertyData.values");
             IEnumerator keysEnumerator = keysProperty.GetEnumerator();
@@ -263,7 +263,7 @@ namespace GeometryGraph.Editor {
                 propertyField.Bind(serializedObject);
                 properties.Add(propertyField);
             }
-            
+
             foreach (PropertyField propertyField in properties) {
                 contentContainer.Add(propertyField);
             }
@@ -278,7 +278,7 @@ namespace GeometryGraph.Editor {
                 curveVisualizerTab.Add(mainContainer);
             }
             mainContainer.Clear();
-            
+
             (PropertyField enabledField, Button enabledButton) = MakeCurveVisualizerToggle("Disable Curve Visualizer", "Enable Curve Visualizer", "Enabled", settingsProperty);
             mainContainer.Add(enabledField);
             mainContainer.Add(enabledButton);
@@ -294,7 +294,7 @@ namespace GeometryGraph.Editor {
                     field.SetEnabled(shouldEnable);
                 }
             });
-            
+
             VisualElement splineSettingsContainer = new VisualElement().WithClasses("spline-settings-container", "curve-settings-container");
             mainContainer.Add(splineSettingsContainer);
             {
@@ -328,7 +328,7 @@ namespace GeometryGraph.Editor {
                 fields.Add(("ShowSpline", splineWidthField));
                 fields.Add(("ShowSpline", splineColorField));
             }
-            
+
             VisualElement pointSettingsContainer = new VisualElement().WithClasses("point-settings-container", "curve-settings-container");
             mainContainer.Add(pointSettingsContainer);
             {
@@ -414,7 +414,7 @@ namespace GeometryGraph.Editor {
                 fields.Add(("ShowDirectionVectors", directionNormalColorField));
                 fields.Add(("ShowDirectionVectors", directionBinormalColorField));
             }
-            
+
             curveVisualizerTab.Add(mainContainer);
         }
 
@@ -427,7 +427,7 @@ namespace GeometryGraph.Editor {
             } else {
                 contentContainer.Clear();
             }
-            
+
             PropertyField materialsListField = new(settingsProperty.FindPropertyRelative("Materials"), "Materials");
             materialsListField.AddToClassList("materials-list");
             materialsListField.Bind(serializedObject);
@@ -473,11 +473,11 @@ namespace GeometryGraph.Editor {
                 property.boolValue = !property.boolValue;
                 serializedObject.ApplyModifiedProperties();
             };
-            
+
             if (property.boolValue) {
                 button.AddToClassList("toggle-button__active");
             }
-            
+
             field.RegisterValueChangeCallback(evt => {
                 if (evt.changedProperty.boolValue) {
                     button.AddToClassList("toggle-button__active");
@@ -486,7 +486,7 @@ namespace GeometryGraph.Editor {
                 }
                 button.text = evt.changedProperty.boolValue ? onLabel : offLabel;
             });
-            
+
             return (field, button);
         }
 
@@ -539,7 +539,7 @@ namespace GeometryGraph.Editor {
             foreach (Property property in graph.RuntimeData.Properties) {
                 targetGraph.SceneData.AddProperty(property.Guid, property.ReferenceName, new PropertyValue(property));
             }
-            
+
             serializedObject.Update();
         }
     }

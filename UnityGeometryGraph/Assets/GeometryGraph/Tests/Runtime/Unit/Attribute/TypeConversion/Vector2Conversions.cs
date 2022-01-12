@@ -10,7 +10,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
         public void Vector2ToBoolean() {
             var vec2Attribute = Enumerable.Range(0, 100).Select(_ => new float2(Rand.Range(0, 2), Rand.Range(0, 2))).Into<Vector2Attribute>("src", AttributeDomain.Vertex);
             var boolAttribute = vec2Attribute.Into<BoolAttribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
-           
+
             Assert.AreEqual(vec2Attribute.Values.Count, boolAttribute.Values.Count, "Attribute length doesn't match: vec2:{0} == bool:{1}", vec2Attribute.Values.Count, boolAttribute.Values.Count);
 
             Assert.IsTrue(
@@ -24,7 +24,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
         public void Vector2ToInteger() {
             var vec2Attribute = Enumerable.Range(0, 100).Select(_ => new float2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f))).Into<Vector2Attribute>("src", AttributeDomain.Vertex);
             var intAttribute = vec2Attribute.Into<IntAttribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
-           
+
             Assert.AreEqual(vec2Attribute.Values.Count, intAttribute.Values.Count, "Attribute length doesn't match: vec2:{0} == int:{1}", vec2Attribute.Values.Count, intAttribute.Values.Count);
 
             Assert.IsTrue(
@@ -38,7 +38,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
         public void Vector2ToFloat() {
             var vec2Attribute = Enumerable.Range(0, 100).Select(_ => new float2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f))).Into<Vector2Attribute>("src", AttributeDomain.Vertex);
             var floatAttribute = vec2Attribute.Into<FloatAttribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
-           
+
             Assert.AreEqual(vec2Attribute.Values.Count, floatAttribute.Values.Count, "Attribute length doesn't match: vec2:{0} == float:{1}", vec2Attribute.Values.Count, floatAttribute.Values.Count);
 
             Assert.IsTrue(
@@ -52,7 +52,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
         public void Vector2ToClampedFloat() {
             var vec2Attribute = Enumerable.Range(0, 100).Select(_ => new float2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f))).Into<Vector2Attribute>("src", AttributeDomain.Vertex);
             var clampedFloatAttribute = vec2Attribute.Into<ClampedFloatAttribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
-           
+
             Assert.AreEqual(vec2Attribute.Values.Count, clampedFloatAttribute.Values.Count, "Attribute length doesn't match: vec2:{0} == clampedFloat:{1}", vec2Attribute.Values.Count, clampedFloatAttribute.Values.Count);
 
             Assert.IsTrue(
@@ -66,7 +66,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
         public void Vector2ToVector3() {
             var vec2Attribute = Enumerable.Range(0, 100).Select(_ => new float2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f))).Into<Vector2Attribute>("src", AttributeDomain.Vertex);
             var vec3Attribute = vec2Attribute.Into<Vector3Attribute>("dst", AttributeDomain.Vertex as AttributeDomain?);
-           
+
             Assert.AreEqual(vec2Attribute.Values.Count, vec3Attribute.Values.Count, "Attribute length doesn't match: vec2:{0} == vec3:{1}", vec2Attribute.Values.Count, vec3Attribute.Values.Count);
 
             Assert.IsTrue(

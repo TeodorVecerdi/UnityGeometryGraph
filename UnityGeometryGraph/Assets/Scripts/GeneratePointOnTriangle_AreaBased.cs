@@ -53,7 +53,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
 
             Handles.color = Color.yellow;
             Handles.DrawAAConvexPolygon(p0, p1, p2);
-            
+
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(p0, gizmoSize);
             Gizmos.DrawSphere(p1, gizmoSize);

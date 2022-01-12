@@ -11,7 +11,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
         public void WithIEnumerable_UsingNameDomain() {
             var sourceValues = Enumerable.Range(0, 100).Select(_ => Rand.Bool).ToList();
             var expected = sourceValues.Select(b => b ? 1.0f : 0.0f);
-            
+
             var attribute = sourceValues.Into<FloatAttribute>("attr", AttributeDomain.Vertex);
             Assert.AreEqual(attribute.Type, AttributeType.Float, "{0} == AttributeType.Float", attribute.Type);
             Assert.AreEqual(attribute.Domain, AttributeDomain.Vertex, "{0} == AttributeDomain.Vertex", attribute.Domain);
@@ -40,7 +40,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             var sourceValues2 = Enumerable.Range(0, 100).Select(_ => Rand.Bool).ToList();
             var attr = sourceValues2.Into<FloatAttribute>(destAttr);
             var expected = sourceValues2.Select(b => b ? 1.0f : 0.0f);
-            
+
             Assert.AreSame(attr, destAttr, "attr == destAttr");
             Assert.IsTrue(attr.SequenceEqual(expected), "attr.SequenceEqual(expected)");
         }
@@ -53,8 +53,8 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             var sourceValues2 = Enumerable.Range(0, 100).Select(_ => Rand.Bool).ToList();
             var attr = sourceValues2.Into((BaseAttribute)destAttr);
             var expected = sourceValues2.Select(b => b ? 1.0f : 0.0f);
-            
-            
+
+
             Assert.AreSame(attr, destAttr, "attr == destAttr");
             Assert.IsTrue(attr.Values.SequenceEqual(expected.Convert(input => (object)input)), "attr.Values.SequenceEqual(expected.Convert(input => (object)input))");
         }

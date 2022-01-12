@@ -38,16 +38,16 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateMode(mode);
                 OnModeChanged();
             });
-            
+
             collectionSamplingSeedField.RegisterCallback<ChangeEvent<int>>(evt => {
                 if (evt.newValue == collectionSamplingSeed) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change Geometry Instance collection sampling seed");
                 collectionSamplingSeed = evt.newValue;
                 RuntimeNode.UpdateCollectionSamplingSeed(collectionSamplingSeed);
             });
-            
+
             collectionSamplingSeedPort.Add(collectionSamplingSeedField);
-            
+
             inputContainer.Add(modeToggle);
             AddPort(pointsPort);
             AddPort(geometryPort);
@@ -92,15 +92,15 @@ namespace GeometryGraph.Editor {
             JArray d = data["d"].Value<JArray>();
             collectionSamplingSeed = d.Value<int>(0);
             mode = (Mode) d.Value<int>(1);
-            
+
             collectionSamplingSeedField.SetValueWithoutNotify(collectionSamplingSeed);
             modeToggle.SetValueWithoutNotify(mode);
-            
+
             RuntimeNode.UpdateCollectionSamplingSeed(collectionSamplingSeed);
             RuntimeNode.UpdateMode(mode);
-            
+
             OnModeChanged();
-            
+
             base.Deserialize(data);
         }
     }

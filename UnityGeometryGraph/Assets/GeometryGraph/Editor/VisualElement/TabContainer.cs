@@ -11,19 +11,19 @@ namespace GeometryGraph.Editor {
         public TabContainer(Action<int> onTabSelected = null) {
             this.onTabSelected = onTabSelected;
             AddToClassList("tab-container");
-            
+
             tabButtonsContainer = new VisualElement();
             tabButtonsContainer.AddToClassList("tab-buttons-container");
             tabContentContainer = new VisualElement();
             tabContentContainer.AddToClassList("tab-content-container");
-            
+
             Add(tabButtonsContainer);
             Add(tabContentContainer);
         }
 
         public VisualElement CreateTab(string label) {
             int index = tabButtonsContainer.childCount;
-            
+
             VisualElement tabContent = new();
             tabContent.AddToClassList("tab-content");
             if (index == 0) {
@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
             }
             tabContent.userData = index;
             tabContentContainer.Add(tabContent);
-            
+
             Button tabButton = new (() => SetActive(index)) {text = label};
             tabButton.AddToClassList("tab-button");
             if (index == 0) {
@@ -39,15 +39,15 @@ namespace GeometryGraph.Editor {
             }
             tabButton.userData = index;
             tabButtonsContainer.Add(tabButton);
-            
+
             return tabContent;
         }
 
         public void SetActive(int index) {
             if (selectedIndex == index) return;
-            
+
             onTabSelected?.Invoke(index);
-            
+
             if (selectedIndex != -1) {
                 tabContentContainer[selectedIndex].RemoveFromClassList("tab-content__active");
                 tabButtonsContainer[selectedIndex].RemoveFromClassList("tab-button__active");

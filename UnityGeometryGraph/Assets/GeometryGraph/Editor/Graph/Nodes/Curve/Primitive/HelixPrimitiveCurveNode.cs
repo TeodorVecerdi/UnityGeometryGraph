@@ -49,7 +49,7 @@ namespace GeometryGraph.Editor {
                 points = newValue;
                 RuntimeNode.UpdatePoints(points);
             });
-            
+
             rotationsField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - rotations) < Constants.FLOAT_TOLERANCE) return;
 
@@ -57,7 +57,7 @@ namespace GeometryGraph.Editor {
                 rotations = evt.newValue;
                 RuntimeNode.UpdateRotations(rotations);
             });
-            
+
             pitchField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - pitch) < Constants.FLOAT_TOLERANCE) return;
 
@@ -75,7 +75,7 @@ namespace GeometryGraph.Editor {
                 topRadius = newValue;
                 RuntimeNode.UpdateTopRadius(topRadius);
             });
-            
+
             bottomRadiusField.Min = Constants.MIN_CIRCULAR_CURVE_RADIUS;
             bottomRadiusField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS);
@@ -85,14 +85,14 @@ namespace GeometryGraph.Editor {
                 bottomRadius = newValue;
                 RuntimeNode.UpdateBottomRadius(bottomRadius);
             });
-            
-            
+
+
             pointsField.SetValueWithoutNotify(points);
             rotationsField.SetValueWithoutNotify(rotations);
             pitchField.SetValueWithoutNotify(pitch);
             topRadiusField.SetValueWithoutNotify(topRadius);
             bottomRadiusField.SetValueWithoutNotify(bottomRadius);
-            
+
             pointsPort.Add(pointsField);
             rotationsPort.Add(rotationsField);
             pitchPort.Add(pitchField);
@@ -104,7 +104,7 @@ namespace GeometryGraph.Editor {
             AddPort(topRadiusPort);
             AddPort(bottomRadiusPort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -138,19 +138,19 @@ namespace GeometryGraph.Editor {
             pitch = array!.Value<float>(2);
             topRadius = array!.Value<float>(3);
             bottomRadius = array!.Value<float>(4);
-            
+
             pointsField.SetValueWithoutNotify(points);
             rotationsField.SetValueWithoutNotify(rotations);
             pitchField.SetValueWithoutNotify(pitch);
             topRadiusField.SetValueWithoutNotify(topRadius);
             bottomRadiusField.SetValueWithoutNotify(bottomRadius);
-            
+
             RuntimeNode.UpdatePoints(points);
             RuntimeNode.UpdateRotations(rotations);
             RuntimeNode.UpdatePitch(pitch);
             RuntimeNode.UpdateTopRadius(topRadius);
             RuntimeNode.UpdateBottomRadius(bottomRadius);
-            
+
             base.Deserialize(data);
         }
     }

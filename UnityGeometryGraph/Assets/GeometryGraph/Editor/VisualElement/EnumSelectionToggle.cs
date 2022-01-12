@@ -15,7 +15,7 @@ namespace GeometryGraph.Editor {
         public EnumSelectionToggle(T value) {
             values = Enum.GetValues(typeof(T)).Convert(o => (T)o).ToArray();
             names = values.Select(v => RandomUtilities.DisplayNameEnum(v)).ToArray();
-            
+
             AddToClassList("enum-selection-toggle");
             Build();
             SetValueWithoutNotify(value);
@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
                 buttons[i].AddToClassList("toggle-button");
                 Add(buttons[i]);
             }
-            
+
             buttons[0].AddToClassList("first");
             buttons[^1].AddToClassList("last");
         }

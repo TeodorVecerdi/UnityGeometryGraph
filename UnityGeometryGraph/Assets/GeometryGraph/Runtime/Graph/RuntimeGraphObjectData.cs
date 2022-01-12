@@ -78,7 +78,7 @@ namespace GeometryGraph.Runtime {
             if (serializedRuntimeNodes == null) return;
 
             IsDuringSerialization = true;
-            
+
             Nodes ??= new List<RuntimeNode>();
             Nodes.Clear();
             OutputNode = null;
@@ -121,7 +121,7 @@ namespace GeometryGraph.Runtime {
                     case StringPropertyNode propertyNode: propertyNode.Property = Properties.Find(property => property.Guid == propertyNode.PropertyGuid); break;
                 }
             }
-            
+
             foreach (RuntimeNode node in Nodes) {
                 if (!DeserializingFromJson) {
                     node.OnAfterDeserialize();

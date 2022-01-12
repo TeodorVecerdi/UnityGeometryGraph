@@ -28,7 +28,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 ClearMesh(mesh);
                 return;
             }
-            
+
             this.geometry = geometry;
             ExportGeometryImpl(mesh);
         }
@@ -118,7 +118,7 @@ namespace GeometryGraph.Runtime.Geometry {
             for (int i = 0; i < geometry.SubmeshCount; i++) {
                 triangles.Add(new List<int>());
             }
-            
+
             exportedFaces.Clear();
         }
 
@@ -128,19 +128,19 @@ namespace GeometryGraph.Runtime.Geometry {
             float3 v0 = positionAttr[face.VertA];
             float3 v1 = positionAttr[face.VertB];
             float3 v2 = positionAttr[face.VertC];
-            
+
             int t0 = 0 + triangleOffset;
             int t1 = 1 + triangleOffset;
             int t2 = 2 + triangleOffset;
             int submesh = submeshAttr[faceIndex];
-            
+
             vertices.Add(v0);
             vertices.Add(v1);
             vertices.Add(v2);
             normals.Add(normal0);
             normals.Add(normal1);
             normals.Add(normal2);
-            
+
             if (uvAttr != null) {
                 float2 uv0 = uvAttr[face.FaceCornerA];
                 float2 uv1 = uvAttr[face.FaceCornerB];
@@ -170,14 +170,14 @@ namespace GeometryGraph.Runtime.Geometry {
                 triangles[submesh].Add(t1);
                 triangles[submesh].Add(t2);
             }
-            
+
             return (t0, t1, t2);
         }
 
         private int GetSharedFace(int faceIndex, int edgeIndex, float3 normal) {
             GeometryData.Edge edge = geometry.Edges[edgeIndex];
             int sharedFaceIndex = edge.FaceA != faceIndex ? edge.FaceA : edge.FaceB;
-            
+
             if (exportedFaces.Contains(sharedFaceIndex)) return -1;
             if (sharedFaceIndex != -1 && math_ext.angle(normalAttr[sharedFaceIndex], normal) < 0.01f) {
             // if (sharedFaceIndex != -1 && normalAttr[sharedFaceIndex].Equals(normal)) {
@@ -201,7 +201,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 otherVertexIndex = sharedFace.VertC;
                 otherFaceCornerIndex = sharedFace.FaceCornerC;
             }
-            
+
             float3 otherVertex = positionAttr[otherVertexIndex];
             float2 otherUV = uvAttr != null ? uvAttr[otherFaceCornerIndex] : float2.zero;
             float3 normal = !shadeSmoothAttr[sharedA]
@@ -218,7 +218,7 @@ namespace GeometryGraph.Runtime.Geometry {
             bool eqNegX = Math.Abs(sharedFaceNormal.x) > Constants.FLOAT_TOLERANCE && Math.Abs(sharedFaceNormal.x + calculatedNormal.x) < Constants.FLOAT_TOLERANCE;
             bool eqNegY = Math.Abs(sharedFaceNormal.y) > Constants.FLOAT_TOLERANCE && Math.Abs(sharedFaceNormal.y + calculatedNormal.y) < Constants.FLOAT_TOLERANCE;
             bool eqNegZ = Math.Abs(sharedFaceNormal.z) > Constants.FLOAT_TOLERANCE && Math.Abs(sharedFaceNormal.z + calculatedNormal.z) < Constants.FLOAT_TOLERANCE;
-            
+
             if (eqNegX || eqNegY || eqNegZ) {
                 Debug.Log("flipped face");
                 triangles[submesh].Add(triangle1);

@@ -37,7 +37,7 @@ namespace GeometryGraph.Editor {
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             (attributePort, attributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Attribute", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateAttribute(attribute));
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
-            
+
             domainDropdown = new EnumSelectionDropdown<Domain>(domain, domainTree, "Domain");
 
             domainDropdown.RegisterValueChangedCallback(evt => {
@@ -47,7 +47,7 @@ namespace GeometryGraph.Editor {
                 domain = evt.newValue;
                 RuntimeNode.UpdateDomain(domain);
             });
-            
+
             attributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attribute) return;
 
@@ -55,11 +55,11 @@ namespace GeometryGraph.Editor {
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
             });
-            
+
             domainDropdown.SetValueWithoutNotify(domain);
 
             attributePort.Add(attributeField);
-            
+
             inputContainer.Add(domainDropdown);
             AddPort(geometryPort);
             AddPort(attributePort);
@@ -86,13 +86,13 @@ namespace GeometryGraph.Editor {
             JArray array = data["d"] as JArray;
             attribute = array!.Value<string>(0);
             domain = (Domain)array.Value<int>(1);
-            
+
             attributeField.SetValueWithoutNotify(attribute);
             domainDropdown.SetValueWithoutNotify(domain);
-            
+
             RuntimeNode.UpdateAttribute(attribute);
             RuntimeNode.UpdateDomain(domain);
-            
+
             base.Deserialize(data);
         }
     }

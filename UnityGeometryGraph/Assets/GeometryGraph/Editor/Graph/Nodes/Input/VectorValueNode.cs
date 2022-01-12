@@ -27,7 +27,7 @@ namespace GeometryGraph.Editor {
             });
             AddPort(valuePort);
             extensionContainer.Add(valueField);
-            
+
             Refresh();
         }
 
@@ -45,7 +45,7 @@ namespace GeometryGraph.Editor {
             value = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);
             valueField.SetValueWithoutNotify(value);
             RuntimeNode.UpdateValue(value);
-            
+
             base.Deserialize(data);
         }
     }

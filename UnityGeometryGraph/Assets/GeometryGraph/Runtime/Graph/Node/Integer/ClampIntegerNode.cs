@@ -33,13 +33,13 @@ namespace GeometryGraph.Runtime.Graph {
             List<int> mins = GetValues(MinPort, count, Min).ToList();
             List<int> maxs = GetValues(MaxPort, count, Max).ToList();
             results.Clear();
-            
+
             for (int i = 0; i < count; i++) {
                 int result = inputs[i].Clamped(mins[i], maxs[i]);
                 results.Add(result);
                 yield return result;
             }
-            
+
             resultsDirty = false;
         }
     }

@@ -37,7 +37,7 @@ namespace GeometryGraph.Runtime.Graph {
             results.Clear();
             List<float3> vector = GetValues(VectorPort, count, Vector).ToList();
             List<float3> center = GetValues(CenterPort, count, Center).ToList();
-            
+
             if (Mode == RotateVectorNode_Mode.Euler) {
                 List<float3> eulerAngles = GetValues(EulerAnglesPort, count, EulerAngles).ToList();
                 for (int i = 0; i < count; i++) {

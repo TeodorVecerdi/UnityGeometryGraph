@@ -21,16 +21,16 @@ namespace GeometryGraph.Editor {
                 Add(labelElement);
                 AddToClassList("with-label");
             }
-            
+
             Add(button);
-            
+
             button.clicked += () => {
                 Vector2 pos = GUIUtility.GUIToScreenPoint(worldBound.position);
                 SelectionWindow.ShowWindow(pos, worldBound.height, tree, selection => {
                     this.value = (T)selection;
                 });
             };
-            
+
             SetValueWithoutNotify(value, 1);
         }
 
@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
             button.text = buttonText;
 
             scheduleNesting = scheduleNesting.Clamped(0, 2);
-            
+
             if (scheduleNesting == 0) {
                 schedule.Execute(() => {
                     Vector2 size = button.MeasureTextSize(buttonText, 15, MeasureMode.Undefined, 0, MeasureMode.Undefined);
@@ -63,7 +63,7 @@ namespace GeometryGraph.Editor {
                     });
                 });
             }
-                
+
         }
 
         void INotifyValueChanged<T>.SetValueWithoutNotify(T newValue) {

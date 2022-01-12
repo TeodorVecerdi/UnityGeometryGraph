@@ -32,13 +32,13 @@ namespace GeometryGraph.Editor {
                 materialIndex = newValue;
                 RuntimeNode.UpdateMaterialIndex(materialIndex);
             });
-            
+
             materialIndexPort.Add(materialIndexField);
-            
+
             AddPort(inputPort);
             AddPort(materialIndexPort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -56,11 +56,11 @@ namespace GeometryGraph.Editor {
 
         protected internal override void Deserialize(JObject data) {
             materialIndex = data.Value<int>("0");
-            
+
             materialIndexField.SetValueWithoutNotify(materialIndex);
-            
+
             RuntimeNode.UpdateMaterialIndex(materialIndex);
-            
+
             base.Deserialize(data);
         }
     }

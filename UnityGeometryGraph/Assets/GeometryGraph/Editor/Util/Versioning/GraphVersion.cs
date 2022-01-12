@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
                 SetStyles();
                 shouldSetStyles = false;
             }
-            
+
             GUILayout.Label($"Current version {version.Version}", bigLabel);
 
             EditorGUI.BeginChangeCheck();

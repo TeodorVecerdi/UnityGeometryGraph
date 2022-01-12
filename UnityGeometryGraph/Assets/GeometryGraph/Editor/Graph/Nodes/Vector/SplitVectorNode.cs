@@ -35,13 +35,13 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateVector(vector);
             });
 
-            
+
             AddPort(vectorPort);
             inputContainer.Add(vectorField);
             AddPort(xPort);
             AddPort(yPort);
             AddPort(zPort);
-            
+
             Refresh();
         }
 
@@ -55,13 +55,13 @@ namespace GeometryGraph.Editor {
         protected internal override JObject Serialize() {
             JObject root = base.Serialize();
             root["v"] = JsonConvert.SerializeObject(vector, float3Converter.Converter);
-            
+
             return root;
         }
 
         protected internal override void Deserialize(JObject data) {
             vector = JsonConvert.DeserializeObject<float3>(data.Value<string>("v")!, float3Converter.Converter);
-            
+
             vectorField.SetValueWithoutNotify(vector);
             RuntimeNode.UpdateVector(vector);
 

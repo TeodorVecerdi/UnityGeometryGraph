@@ -17,12 +17,12 @@ namespace GeometryGraph.Editor {
 
             GraphFrameworkData graphData = new(runtimeGraphObject);
             GraphFrameworkObject graphObject = CreateInstance<GraphFrameworkObject>();
-            
+
             graphObject.Initialize(graphData);
             graphObject.GraphData.GraphVersion = GraphFrameworkVersion.Version.GetValue();
 
             GraphFrameworkUtility.CreateFile(path, graphObject, false);
-            
+
             AssetDatabase.ImportAsset(path);
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
 
@@ -34,7 +34,7 @@ namespace GeometryGraph.Editor {
 
             GraphFrameworkData graphData = new(runtimeGraphObject);
             GraphFrameworkObject graphObject = CreateInstance<GraphFrameworkObject>();
-            
+
             graphObject.Initialize(graphData);
             graphObject.GraphData.AssetGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(instanceId));
             graphObject.GraphData.GraphVersion = GraphFrameworkVersion.Version.GetValue();
@@ -42,7 +42,7 @@ namespace GeometryGraph.Editor {
 
             GraphFrameworkUtility.CreateFile(pathName, graphObject, false);
             AssetDatabase.ImportAsset(pathName);
-           
+
             DeleteObjectsWithNegativeInstanceID();
         }
 
@@ -53,7 +53,7 @@ namespace GeometryGraph.Editor {
                     Object.DestroyImmediate(graphFrameworkObject, true);
                 }
             }
-            
+
             RuntimeGraphObject[] runtimeGraphObjects = Resources.FindObjectsOfTypeAll<RuntimeGraphObject>();
             foreach (RuntimeGraphObject runtimeGraphObject in runtimeGraphObjects) {
                 if (runtimeGraphObject.GetInstanceID() < 0) {

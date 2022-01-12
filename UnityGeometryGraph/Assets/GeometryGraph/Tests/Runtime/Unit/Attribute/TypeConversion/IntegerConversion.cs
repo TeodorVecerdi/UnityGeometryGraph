@@ -11,7 +11,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var boolAttribute = intAttribute.Into<BoolAttribute>("boolAttribute", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(intAttribute.Values.Count, boolAttribute.Values.Count, "Attribute length doesn't match: int:{0} == bool:{1}", intAttribute.Values.Count, boolAttribute.Values.Count);
-            
+
             Assert.IsTrue(
                 boolAttribute.Zip(intAttribute, (boolean, integer) => (boolean, integer))
                              .All(pair => pair.integer != 0 == pair.boolean),
@@ -25,7 +25,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var floatAttribute = intAttribute.Into<FloatAttribute>("into", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(intAttribute.Values.Count, floatAttribute.Values.Count, "Attribute length doesn't match: int:{0} == float:{1}", intAttribute.Values.Count, floatAttribute.Values.Count);
-            
+
             Assert.IsTrue(
                 floatAttribute.Zip(intAttribute, (@float, integer) => (@float, integer))
                               .All(pair => pair.integer == (int)pair.@float),
@@ -39,7 +39,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var floatAttribute = intAttribute.Into<ClampedFloatAttribute>("into", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(intAttribute.Values.Count, floatAttribute.Values.Count, "Attribute length doesn't match: int:{0} == float:{1}", intAttribute.Values.Count, floatAttribute.Values.Count);
-            
+
             Assert.IsTrue(
                 floatAttribute.Zip(intAttribute, (@float, integer) => (@float, integer))
                               .All(pair => pair.integer > 1 ? pair.@float == 1.0f : pair.integer < 0 ? pair.@float == 0.0f : pair.@float == pair.integer),
@@ -53,7 +53,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var vec2Attribute = intAttribute.Into<Vector2Attribute>("into", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(intAttribute.Values.Count, vec2Attribute.Values.Count, "Attribute length doesn't match: int:{0} == vec2:{1}", intAttribute.Values.Count, vec2Attribute.Values.Count);
-            
+
             Assert.IsTrue(
                 vec2Attribute.Zip(intAttribute, (vec2, integer) => (vec2, integer))
                              .All(pair => pair.vec2.x == pair.integer && pair.vec2.y == pair.integer),
@@ -67,7 +67,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             var vec3Attribute = intAttribute.Into<Vector3Attribute>("into", AttributeDomain.Vertex as AttributeDomain?);
 
             Assert.AreEqual(intAttribute.Values.Count, vec3Attribute.Values.Count, "Attribute length doesn't match: int:{0} == vec3:{1}", intAttribute.Values.Count, vec3Attribute.Values.Count);
-            
+
             Assert.IsTrue(
                 vec3Attribute.Zip(intAttribute, (vec3, integer) => (vec3, integer))
                              .All(pair => pair.vec3.x == pair.integer && pair.vec3.y == pair.integer && pair.vec3.z == pair.integer),

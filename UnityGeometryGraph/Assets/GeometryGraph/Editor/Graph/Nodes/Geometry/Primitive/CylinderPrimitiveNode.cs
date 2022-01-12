@@ -83,7 +83,7 @@ namespace GeometryGraph.Editor {
                 points = newValue;
                 RuntimeNode.UpdatePoints(points);
             });
-            
+
             horizontalUVRepetitionsField.Min = 1;
             horizontalUVRepetitionsField.RegisterValueChangedCallback(evt => {
                 int newValue = evt.newValue.MinClamped(1);
@@ -93,7 +93,7 @@ namespace GeometryGraph.Editor {
                 horizontalUVRepetitions = newValue;
                 RuntimeNode.UpdateHorizontalUVRepetitions(horizontalUVRepetitions);
             });
-            
+
             verticalUVRepetitionsField.Min = 1;
             verticalUVRepetitionsField.RegisterValueChangedCallback(evt => {
                 int newValue = evt.newValue.MinClamped(1);
@@ -122,11 +122,11 @@ namespace GeometryGraph.Editor {
             AddPort(bottomRadiusPort);
             AddPort(heightPort);
             AddPort(pointsPort);
-            
+
             inputContainer.Add(new Label("UV Settings") {name = "uvSettingsTitle"});
             AddPort(horizontalUVRepetitionsPort);
             AddPort(verticalUVRepetitionsPort);
-            
+
             AddPort(resultPort);
 
             Refresh();

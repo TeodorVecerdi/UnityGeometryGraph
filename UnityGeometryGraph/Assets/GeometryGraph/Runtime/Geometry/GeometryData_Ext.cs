@@ -33,7 +33,7 @@ namespace GeometryGraph.Runtime.Geometry {
             List<Edge> rhsEdges = new();
             List<Face> rhsFaces = new();
             List<FaceCorner> rhsFaceCorners = new();
-            
+
             rhs.vertices.ForEach(v => {
                 Vertex vertex = (Vertex) v.Clone();
                 for (int i = 0; i < vertex.Edges.Count; i++) {
@@ -49,7 +49,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 }
                 rhsVertices.Add(vertex);
             });
-            
+
             rhs.edges.ForEach(e => {
                 Edge edge = (Edge) e.Clone();
                 edge.VertA += rhsVertexOffset;
@@ -61,7 +61,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
                 rhsEdges.Add(edge);
             });
-            
+
             rhs.faces.ForEach(f => {
                 Face face = (Face)f.Clone();
                 face.VertA += rhsVertexOffset;
@@ -78,14 +78,14 @@ namespace GeometryGraph.Runtime.Geometry {
                 }
                 rhsFaces.Add(face);
             });
-            
+
             rhs.faceCorners.ForEach(fc => {
                 FaceCorner faceCorner = (FaceCorner)fc.Clone();
                 faceCorner.Face += rhsFaceOffset;
                 faceCorner.Vert += rhsVertexOffset;
                 rhsFaceCorners.Add(faceCorner);
             });
-            
+
             //!! 2. Merge metadata into `lhs`
             lhs.vertices.AddRange(rhsVertices);
             lhs.edges.AddRange(rhsEdges);
@@ -108,7 +108,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 }
             }
 
-            
+
 
             // Rest of attributes just get merged normally
             // First attributes in lhs & rhs
@@ -117,7 +117,7 @@ namespace GeometryGraph.Runtime.Geometry {
                    .Union(lhs.attributeManager.EdgeAttributes)
                    .Union(lhs.attributeManager.FaceAttributes)
                    .Union(lhs.attributeManager.FaceCornerAttributes);
-           
+
             foreach (KeyValuePair<string, BaseAttribute> pair in allLhsAttributeDictionaries) {
                 if (string.Equals(pair.Key, AttributeId.Material, StringComparison.InvariantCulture) && pair.Value.Domain == AttributeDomain.Face) continue;
                 if(!rhs.attributeManager.HasAttribute(pair.Key, pair.Value.Domain)) continue;
@@ -127,7 +127,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     .AppendMany(rhs.attributeManager.Request(pair.Key, pair.Value.Domain).Convert(o => o))
                     .Into(pair.Value);
             }
-            
+
             // Then attributes in rhs but not in lhs
             IEnumerable<KeyValuePair<string, BaseAttribute>> allRhsAttributeDictionaries =
                 rhs.attributeManager.VertexAttributes
@@ -139,7 +139,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 if(lhs.attributeManager.HasAttribute(pair.Key, pair.Value.Domain)) continue;
                 lhs.attributeManager.Store((BaseAttribute) pair.Value.Clone());
             }
-            
+
             //!! 5. Update metadata on `lhs`
             lhs.submeshCount += rhs.submeshCount;
         }

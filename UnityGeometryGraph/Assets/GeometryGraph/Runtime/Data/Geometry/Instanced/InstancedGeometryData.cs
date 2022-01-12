@@ -41,7 +41,7 @@ namespace GeometryGraph.Runtime.Data {
                 Debug.LogException(new IndexOutOfRangeException($"Index {geometryIndex} out of range [0, {transformCount.Count - 1}]"));
                 return Enumerable.Empty<InstancedTransformData>();
             }
-            
+
             int transformStartIndex = geometryIndex == 0 ? 0 : transformCount.Take(geometryIndex - 1).Sum();
             return transformData.Skip(transformStartIndex).Take(transformCount[geometryIndex]);
         }

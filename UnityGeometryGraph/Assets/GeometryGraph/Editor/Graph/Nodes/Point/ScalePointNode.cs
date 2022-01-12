@@ -58,19 +58,19 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateMode(mode);
                 OnModeChanged();
             });
-            
+
             vectorField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change vector scale");
                 vector = evt.newValue;
                 RuntimeNode.UpdateVector(vector);
             });
-            
+
             scalarField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change scalar scale");
                 scalar = evt.newValue;
                 RuntimeNode.UpdateScalar(scalar);
             });
-            
+
             attributeNameField.RegisterValueChangedCallback(evt => {
                 if (string.Equals(evt.newValue, attributeName, StringComparison.InvariantCulture)) return;
 
@@ -91,7 +91,7 @@ namespace GeometryGraph.Editor {
             AddPort(resultPort);
 
             OnModeChanged();
-            
+
             Refresh();
         }
 
@@ -132,7 +132,7 @@ namespace GeometryGraph.Editor {
             root["s"] = scalar;
             root["a"] = attributeName;
             root["m"] = (int)mode;
-            
+
             return root;
         }
 
@@ -141,12 +141,12 @@ namespace GeometryGraph.Editor {
             scalar = data.Value<float>("s");
             attributeName = data.Value<string>("a");
             mode = (Mode) data.Value<int>("m");
-            
+
             vectorField.SetValueWithoutNotify(vector);
             scalarField.SetValueWithoutNotify(scalar);
             attributeNameField.SetValueWithoutNotify(attributeName);
             modeDropdown.SetValueWithoutNotify(mode);
-            
+
             RuntimeNode.UpdateVector(vector);
             RuntimeNode.UpdateScalar(scalar);
             RuntimeNode.UpdateAttributeName(attributeName);

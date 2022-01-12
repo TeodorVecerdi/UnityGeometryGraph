@@ -27,7 +27,7 @@ namespace GeometryGraph.Runtime.Graph {
             if (Input == null) return;
             Result = Input.Clone();
             Vector3Attribute scaleAttr = Result.GetAttributeOrDefault<Vector3Attribute, float3>("scale", AttributeDomain.Vertex, float3_ext.one);
-            
+
             if (Mode is ScalePointNode_Mode.Vector or ScalePointNode_Mode.Float) {
                 if (Mode is ScalePointNode_Mode.Float) {
                     FloatAttribute multiplier = GetValues(ScalarPort, Input.Vertices.Count, Scalar).Into<FloatAttribute>("multiplier", AttributeDomain.Vertex);

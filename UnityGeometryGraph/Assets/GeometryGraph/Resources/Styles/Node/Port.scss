@@ -2,7 +2,7 @@ GraphFrameworkPort {
     &.input {
         margin-left: -12px;
     }
-    
+
     &.output {
         margin-right: -12px;
     }
@@ -10,7 +10,7 @@ GraphFrameworkPort {
     &.portType-Integer {
         --port-color: #CB3022;
     }
-    
+
     &.portType-Float {
         --port-color: #84E4E7;
     }
@@ -18,23 +18,23 @@ GraphFrameworkPort {
     &.portType-Vector {
         --port-color: #F6FF9A;
     }
-    
+
     &.portType-Boolean {
         --port-color: #9481E6;
     }
-    
+
     &.portType-Geometry {
         --port-color: #FFA300;
     }
-    
+
     &.portType-Collection {
         --port-color: #216BCB;
     }
-    
+
     &.portType-String {
         --port-color: #8DCD0D;
     }
-    
+
     &.portType-Curve {
         --port-color: #0AC778;
     }

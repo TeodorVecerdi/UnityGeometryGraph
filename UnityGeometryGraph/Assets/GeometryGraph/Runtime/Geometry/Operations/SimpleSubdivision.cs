@@ -21,18 +21,18 @@ namespace GeometryGraph.Runtime.Geometry {
 
         private static GeometryData Subdivide_Impl(GeometryData geometry) {
             if (!geometry.HasAttribute("position", AttributeDomain.Vertex)) return GeometryData.Empty;
-            
+
             Dictionary<int, (int, int)> edgeDict = new();
             Dictionary<int, int> midPointDict = new();
             List<float3> vertexPositions = geometry.GetAttribute<Vector3Attribute>("position", AttributeDomain.Vertex)!.ToList();
-            
+
             List<float2> uvsOriginal;
             if (geometry.HasAttribute("uv", AttributeDomain.FaceCorner))
                 uvsOriginal = geometry.GetAttribute<Vector2Attribute>("uv", AttributeDomain.FaceCorner)!.ToList();
             else
                 uvsOriginal = new float2[geometry.FaceCorners.Count].ToList();
             List<float2> uvs = new();
-            
+
             Vector3Attribute faceNormalsOriginal = geometry.GetAttribute<Vector3Attribute>("normal", AttributeDomain.Face)!;
             List<float3> faceNormals = new();
             IntAttribute materialIndicesOriginal = geometry.GetAttribute<IntAttribute>("material_index", AttributeDomain.Face)!;
@@ -80,7 +80,7 @@ namespace GeometryGraph.Runtime.Geometry {
             }
 
             int fcIdx = 0;
-            
+
             for (int i = 0; i < geometry.Faces.Count; i++) {
                 GeometryData.Face face = geometry.Faces[i];
                 (int vX, int vY, int vZ) = (face.VertA, face.VertB, face.VertC);
@@ -193,9 +193,9 @@ namespace GeometryGraph.Runtime.Geometry {
                     edgeAttribute.Item4.Add(edgeAttribute.Values[e_xz]);
                 }
             }
-            
+
             GeometryData subdivided = new(edges, faces, faceCorners, geometry.SubmeshCount, vertexPositions, faceNormals, materialIndices, shadeSmooth, uvs);
-            
+
             foreach ((string Name, AttributeType Type, List<object> Values) vertexAttribute in allVertexAttributes) {
                 subdivided.StoreAttribute(vertexAttribute.Values.Into(vertexAttribute.Name, vertexAttribute.Type, AttributeDomain.Vertex), AttributeDomain.Vertex);
             }
@@ -208,7 +208,7 @@ namespace GeometryGraph.Runtime.Geometry {
             foreach ((string Name, AttributeType Type, List<object> Values, List<object>) faceCornerAttribute in allFaceCornerAttributes) {
                 subdivided.StoreAttribute(faceCornerAttribute.Item4.Into(faceCornerAttribute.Name, faceCornerAttribute.Type, AttributeDomain.FaceCorner), AttributeDomain.FaceCorner);
             }
-            
+
             return subdivided;
         }
 
@@ -241,7 +241,7 @@ namespace GeometryGraph.Runtime.Geometry {
             } else if (edge3.Contains(x) && edge3.Contains(z)){
                 e3 = edge3.SelfIndex;
             }
-            
+
             Debug.Assert(e1 != -1, $"e1 != -1 ;; with x:{x} y:{y} z:{z} ;; with e0A:{edge1.VertA} e0B:{edge1.VertB} e1A:{edge2.VertA} e1B:{edge2.VertB} e2A:{edge3.VertA} e2B:{edge3.VertB}");
             Debug.Assert(e2 != -1, $"e2 != -1 ;; with x:{x} y:{y} z:{z} ;; with e0A:{edge1.VertA} e0B:{edge1.VertB} e1A:{edge2.VertA} e1B:{edge2.VertB} e2A:{edge3.VertA} e2B:{edge3.VertB}");
             Debug.Assert(e3 != -1, $"e3 != -1 ;; with x:{x} y:{y} z:{z} ;; with e0A:{edge1.VertA} e0B:{edge1.VertB} e1A:{edge2.VertA} e1B:{edge2.VertB} e2A:{edge3.VertA} e2B:{edge3.VertB}");
@@ -251,7 +251,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
         private static (int e0, int e1) GetSplitEdges(int v0, int v1, GeometryData.Edge edge, Dictionary<int, (int, int)> edgeDict) {
             Debug.Assert(edge.Contains(v0) && edge.Contains(v1), $"edge.Contains(v0) && edge.Contains(v1); [{edge.SelfIndex}]; {v0} & {v1}]");
-            
+
             if (VerticesInOrder(edge, v0, v1)) {
                 return edgeDict[edge.SelfIndex];
             }

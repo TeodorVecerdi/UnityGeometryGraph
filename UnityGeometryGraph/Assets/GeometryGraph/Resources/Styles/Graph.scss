@@ -153,21 +153,21 @@ FloatMapRangeField.map-range-field.map-range-field__float {
         flex-direction: row;
         align-items: center;
         flex-grow: 1;
-        
+
         & > Label.from-label, & > Label.to-label {
             margin-left: 3px;
             width: 32px;
             -unity-font-style: bold;
         }
-        
+
         & > FloatField {
             margin-left: 0;
-            
+
             & > Label {
                 padding-left: 0;
                 padding-right: 0;
             }
-            
+
             & > FloatInput#unity-text-input.unity-base-text-field__input {
                 min-width: 32px;
             }
@@ -191,7 +191,7 @@ Vector3Field.port-backing-field {
             margin-left: 8px;
             align-items: center;
             justify-content: flex-start;
-            
+
             & > FloatField {
                 margin-top: 0;
                 & > Label {

@@ -18,7 +18,7 @@ namespace GeometryGraph.Editor {
                     return;
                 }
             }
-            
+
             DuplicatedAssets.Add(assetName);
         }
 
@@ -42,8 +42,8 @@ namespace GeometryGraph.Editor {
                 UpdateRenamedAssetsTitle(GraphFrameworkAssetModificationProcessor.RenamedAssets);
                 GraphFrameworkAssetModificationProcessor.RenamedAssets.Clear();
             }
-            
-            
+
+
             if (importedAssets.Length > 0 && GraphFrameworkAssetModificationProcessor.DuplicatedAssets.Count > 0) {
                 foreach (string importedAsset in importedAssets) {
                     if (!GraphFrameworkAssetModificationProcessor.DuplicatedAssets.Contains(importedAsset)) continue;
@@ -74,7 +74,7 @@ namespace GeometryGraph.Editor {
                 string assetPath = AssetDatabase.GUIDToAssetPath(window.SelectedAssetGuid);
                 return deletedAssets.Contains(assetPath);
             });
-            
+
             foreach (GraphFrameworkEditorWindow window in affectedWindows) {
                 window.GraphDeleted();
             }

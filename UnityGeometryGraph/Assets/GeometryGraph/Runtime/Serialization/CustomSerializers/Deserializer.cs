@@ -34,14 +34,14 @@ namespace GeometryGraph.Runtime.Serialization {
             GradientMode mode = (GradientMode)data["m"].Value<int>();
             List<GradientColorKey> colorKeys = new();
             List<GradientAlphaKey> alphaKeys = new();
-            
+
             foreach (JObject keyData in data["c"] as JArray) {
                 Debug.Assert(keyData != null);
                 float time = keyData["t"].Value<float>();
                 Color color = Color(keyData["c"].Value<JArray>());
                 colorKeys.Add(new GradientColorKey(color, time));
             }
-            
+
             foreach (JObject keyData in data["a"] as JArray) {
                 Debug.Assert(keyData != null);
                 float time = keyData["t"].Value<float>();

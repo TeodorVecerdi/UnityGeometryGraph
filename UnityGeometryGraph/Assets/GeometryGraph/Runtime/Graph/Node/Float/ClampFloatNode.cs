@@ -29,18 +29,18 @@ namespace GeometryGraph.Runtime.Graph {
 
                 yield break;
             }
-            
+
             List<float> inputs = GetValues(InputPort, count, Input).ToList();
             List<float> mins = GetValues(MinPort, count, Min).ToList();
             List<float> maxs = GetValues(MaxPort, count, Max).ToList();
             results.Clear();
-            
+
             for (int i = 0; i < count; i++) {
                 float result = inputs[i].Clamped(mins[i], maxs[i]);
                 results.Add(result);
                 yield return result;
             }
-            
+
             resultsDirty = false;
         }
     }

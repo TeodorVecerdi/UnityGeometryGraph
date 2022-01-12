@@ -72,7 +72,7 @@ namespace GeometryGraph.Editor {
             (tolerancePort, toleranceField) = GraphFrameworkPort.CreateWithBackingField<FloatField, float>("Tolerance", PortType.Float, this, onDisconnect: (_, _) => RuntimeNode.UpdateTolerance(tolerance));
             (resultAttributePort, resultAttributeField) = GraphFrameworkPort.CreateWithBackingField<TextField, string>("Result", PortType.String, this, onDisconnect: (_, _) => RuntimeNode.UpdateResultAttribute(resultAttribute));
             resultPort = GraphFrameworkPort.Create("Geometry", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
-            
+
             operationDropdown = new EnumSelectionDropdown<CompareOperation>(operation, compareOperationTree);
             typeXDropdown = new EnumSelectionDropdown<CompareType>(typeX, compareTypeTree, "Type X");
             typeYDropdown = new EnumSelectionDropdown<CompareType>(typeY, compareTypeTree, "Type Y");
@@ -85,7 +85,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateOperation(operation);
                 OnOperationChanged();
             });
-            
+
             typeXDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == typeX) return;
 
@@ -94,7 +94,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateTypeX(typeX);
                 OnTypeChanged();
             });
-            
+
             typeYDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == typeY) return;
 
@@ -103,7 +103,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateTypeY(typeY);
                 OnTypeChanged();
             });
-            
+
             attributeXField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attributeX) return;
 
@@ -111,7 +111,7 @@ namespace GeometryGraph.Editor {
                 attributeX = evt.newValue;
                 RuntimeNode.UpdateAttributeX(attributeX);
             });
-            
+
             attributeYField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attributeY) return;
 
@@ -119,7 +119,7 @@ namespace GeometryGraph.Editor {
                 attributeY = evt.newValue;
                 RuntimeNode.UpdateAttributeY(attributeY);
             });
-            
+
             floatXField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - floatX) < Constants.FLOAT_TOLERANCE) return;
 
@@ -127,7 +127,7 @@ namespace GeometryGraph.Editor {
                 floatX = evt.newValue;
                 RuntimeNode.UpdateFloatX(floatX);
             });
-            
+
             floatYField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - floatY) < Constants.FLOAT_TOLERANCE) return;
 
@@ -135,7 +135,7 @@ namespace GeometryGraph.Editor {
                 floatY = evt.newValue;
                 RuntimeNode.UpdateFloatY(floatY);
             });
-            
+
             toleranceField.RegisterValueChangedCallback(evt => {
                 if (Math.Abs(evt.newValue - tolerance) < Constants.FLOAT_TOLERANCE) return;
 
@@ -143,7 +143,7 @@ namespace GeometryGraph.Editor {
                 tolerance = evt.newValue;
                 RuntimeNode.UpdateTolerance(tolerance);
             });
-            
+
             resultAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == resultAttribute) return;
 
@@ -151,23 +151,23 @@ namespace GeometryGraph.Editor {
                 resultAttribute = evt.newValue;
                 RuntimeNode.UpdateResultAttribute(resultAttribute);
             });
-            
+
             operationDropdown.SetValueWithoutNotify(operation);
             typeXDropdown.SetValueWithoutNotify(typeX);
             typeYDropdown.SetValueWithoutNotify(typeY);
             toleranceField.SetValueWithoutNotify(tolerance);
-            
+
             attributeXPort.Add(attributeXField);
             attributeYPort.Add(attributeYField);
             tolerancePort.Add(toleranceField);
             floatXPort.Add(floatXField);
             floatYPort.Add(floatYField);
             resultAttributePort.Add(resultAttributeField);
-            
+
             inputContainer.Add(operationDropdown);
             inputContainer.Add(typeXDropdown);
             inputContainer.Add(typeYDropdown);
-            
+
             AddPort(geometryPort);
             AddPort(attributeXPort);
             AddPort(attributeYPort);
@@ -197,7 +197,7 @@ namespace GeometryGraph.Editor {
                 attributeXPort.HideAndDisconnect();
                 floatXPort.Show();
             }
-            
+
             if (typeY == CompareType.Attribute) {
                 attributeYPort.Show();
                 floatYPort.HideAndDisconnect();
@@ -246,7 +246,7 @@ namespace GeometryGraph.Editor {
             operation = (CompareOperation) array.Value<int>(6);
             typeX = (CompareType) array.Value<int>(7);
             typeY = (CompareType) array.Value<int>(8);
-            
+
             attributeXField.SetValueWithoutNotify(attributeX);
             attributeYField.SetValueWithoutNotify(attributeY);
             floatXField.SetValueWithoutNotify(floatX);
@@ -256,7 +256,7 @@ namespace GeometryGraph.Editor {
             operationDropdown.SetValueWithoutNotify(operation);
             typeXDropdown.SetValueWithoutNotify(typeX);
             typeYDropdown.SetValueWithoutNotify(typeY);
-            
+
             RuntimeNode.UpdateAttributeX(attributeX);
             RuntimeNode.UpdateAttributeY(attributeY);
             RuntimeNode.UpdateFloatX(floatX);
@@ -266,7 +266,7 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateOperation(operation);
             RuntimeNode.UpdateTypeX(typeX);
             RuntimeNode.UpdateTypeY(typeY);
-            
+
             OnOperationChanged();
             OnTypeChanged();
 

@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
                 condition = evt.newValue;
                 RuntimeNode.UpdateCondition(condition);
             });
-            
+
             ifTrueField.RegisterValueChangedCallback(evt => {
                 float3 newValue = (float3)evt.newValue;
                 if (math.lengthsq(newValue - ifTrue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
@@ -48,7 +48,7 @@ namespace GeometryGraph.Editor {
                 ifTrue = newValue;
                 RuntimeNode.UpdateIfTrue(ifTrue);
             });
-            
+
             ifFalseField.RegisterValueChangedCallback(evt => {
                 float3 newValue = (float3)evt.newValue;
                 if (math.lengthsq(newValue - ifFalse) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
@@ -58,14 +58,14 @@ namespace GeometryGraph.Editor {
             });
 
             conditionPort.Add(conditionToggle);
-            
+
             AddPort(conditionPort);
             AddPort(ifTruePort);
             inputContainer.Add(ifTrueField);
             AddPort(ifFalsePort);
             inputContainer.Add(ifFalseField);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -89,19 +89,19 @@ namespace GeometryGraph.Editor {
 
         protected internal override void Deserialize(JObject data) {
             JArray array = data["d"] as JArray;
-            
+
             condition = array!.Value<int>(0) == 1;
             ifTrue = JsonConvert.DeserializeObject<float3>(array.Value<string>(1), float3Converter.Converter);
             ifFalse = JsonConvert.DeserializeObject<float3>(array.Value<string>(2), float3Converter.Converter);
-            
+
             conditionToggle.SetValueWithoutNotify(condition);
             ifTrueField.SetValueWithoutNotify(ifTrue);
             ifFalseField.SetValueWithoutNotify(ifFalse);
-            
+
             RuntimeNode.UpdateCondition(condition);
             RuntimeNode.UpdateIfTrue(ifTrue);
             RuntimeNode.UpdateIfFalse(ifFalse);
-            
+
             base.Deserialize(data);
         }
     }

@@ -82,7 +82,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
 
         public IEnumerable<T> Yield(Func<T, T> action) {
             action ??= AttributeActions.NoOp<T>();
-            
+
             foreach (T value in Values) {
                 yield return action(value);
             }
@@ -90,14 +90,14 @@ namespace GeometryGraph.Runtime.AttributeSystem {
 
         public IEnumerable<T> YieldWithAttribute<T0>(BaseAttribute<T0> other, Func<T, T0, T> action) {
             action ??= AttributeActions.NoOp<T, T0>();
-           
+
             if (other == null) {
                 foreach (T value in Values) {
                     yield return action(value, default);
                 }
                 yield break;
             }
-            
+
             int otherIndex = 0;
             foreach (T value in Values) {
                 yield return action(value, otherIndex >= other.Values.Count ? default : other[otherIndex]);
@@ -106,7 +106,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             }
 
             if (otherIndex >= other.Values.Count) yield break;
-            
+
             for (int i = otherIndex; i < other.Values.Count; i++) {
                 yield return action(default, other[i]);
             }
@@ -121,7 +121,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                 }
                 yield break;
             }
-            
+
             if (attribute0 == null && attribute1 != null) {
                 int index = 0;
                 foreach (T value in Values) {
@@ -137,7 +137,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
 
                 yield break;
             } 
-            
+
             if (attribute0 != null && attribute1 == null) {
                 int index = 0;
                 foreach (T value in Values) {
@@ -214,7 +214,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             List<object> valuesList = values.Convert(o => o).ToList();
             AttributeType type = attribute.Type;
             if (valuesList.Count > 0) type = AttributeConvert.GetType(valuesList[0]);
-            
+
             attribute.Fill(valuesList.Select(val => AttributeConvert.ConvertType<object>(val, type, attribute.Type)));
             return attribute;
         }
@@ -282,7 +282,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
 
         public static IEnumerable<T> YieldWithAttribute<T>(this IEnumerable<T> enumerable, AttributeType selfType, BaseAttribute other, Func<T, T, T> action) {
             action ??= AttributeActions.NoOp<T, T>();
-           
+
             if (other == null) {
                 foreach (T value in enumerable) {
                     yield return action(value, default);
@@ -299,7 +299,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
             }
 
             if (otherIndex >= other.Values.Count) yield break;
-            
+
             for (int i = otherIndex; i < other.Values.Count; i++) {
                 T otherValue = AttributeConvert.ConvertType<T>(other.Values[otherIndex], other.Type, selfType);
                 yield return action(default, otherValue);

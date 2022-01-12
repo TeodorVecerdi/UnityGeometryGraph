@@ -22,7 +22,7 @@ namespace GeometryGraph.Editor {
                     node.NodeData = root.ToString(Formatting.None);
                 }
             }
-            
+
             List<SerializedNode> remappedNodes = new();
             List<SerializedEdge> remappedEdges = new();
             graphFrameworkGraphView.GraphData.Paste(copyPasteData, remappedNodes, remappedEdges);

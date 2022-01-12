@@ -6,7 +6,7 @@ namespace GeometryGraph.Runtime.Curve {
     public static class CurvePrimitive {
         public static CurveData Line(int resolution, float3 start, float3 end) {
             resolution = resolution.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION);
-            
+
             LineCurve lineCurve = new(resolution, start, end);
             lineCurve.Generate();
             return lineCurve.ToCurveData();

@@ -100,15 +100,15 @@ namespace GeometryGraph.Editor {
 
             isFixed = array!.Value<int>(0) == 1;
             isUnscaled = array.Value<int>(1) == 1;
-            
+
             isFixedField.SetValueWithoutNotify(isFixed);
             isUnscaledField.SetValueWithoutNotify(isUnscaled);
-            
+
             RuntimeNode.UpdateIsFixed(isFixed);
             RuntimeNode.UpdateIsUnscaled(isUnscaled);
-            
+
             OnTimeTypeChanged();
-            
+
             base.Deserialize(data);
         }
     }

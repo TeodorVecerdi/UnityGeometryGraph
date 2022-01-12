@@ -20,7 +20,7 @@ namespace GeometryGraph.Editor {
                 Label labelElement = new Label(label).WithClasses("map-range-field-label");
                 Add(labelElement);
             }
-            
+
             VisualElement fromContainer = new VisualElement().WithClasses("container", "from-container");
             fromMinField = new FloatField("min");
             fromMaxField = new FloatField("max");
@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
             fromContainer.Add(fromLabel);
             fromContainer.Add(fromMinField);
             fromContainer.Add(fromMaxField);
-            
+
             VisualElement toContainer = new VisualElement().WithClasses("container", "to-container");
             toMinField = new FloatField("min");
             toMaxField = new FloatField("max");
@@ -36,12 +36,12 @@ namespace GeometryGraph.Editor {
             toContainer.Add(toLabel);
             toContainer.Add(toMinField);
             toContainer.Add(toMaxField);
-            
+
             Add(fromContainer);
             Add(toContainer);
             AddToClassList("map-range-field");
             AddToClassList("map-range-field__float");
-            
+
             fromMinField.SetValueWithoutNotify(0.0f);
             fromMaxField.SetValueWithoutNotify(1.0f);
             toMinField.SetValueWithoutNotify(0.0f);

@@ -80,7 +80,7 @@ namespace GeometryGraph.Runtime {
                 Debug.Log("Initializing exporter");
                 InitializeExporter();
             }
-            
+
             if (!initializedMeshFilter) {
                 Debug.Log("Initializing mesh filter");
                 InitializeMeshFilter();
@@ -106,7 +106,7 @@ namespace GeometryGraph.Runtime {
 
         private void InitializeMeshFilter() {
             if (meshFilter == null) return;
-            
+
             meshFilterMesh = new Mesh {
                 indexFormat = IndexFormat.UInt32,
                 name = "GeometryGraph Mesh"

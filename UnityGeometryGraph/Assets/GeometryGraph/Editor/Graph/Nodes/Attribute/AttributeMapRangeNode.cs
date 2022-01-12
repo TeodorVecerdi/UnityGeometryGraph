@@ -106,7 +106,7 @@ namespace GeometryGraph.Editor {
             (toMinVectorPort, toMinVectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("To Min", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateToMinVector(toMinVector));
             (toMaxVectorPort, toMaxVectorField) = GraphFrameworkPort.CreateWithBackingField<Vector3Field, Vector3>("To Max", PortType.Vector, this, showLabelOnField: false, onDisconnect: (_, _) => RuntimeNode.UpdateToMaxVector(toMaxVector));
             resultPort = GraphFrameworkPort.Create("Geometry", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
-            
+
             fromMinVectorField.AddClasses("inline", "inline-small");
             fromMinVectorPort.AddToClassList("inline-backing-field");
             fromMaxVectorField.AddClasses("inline", "inline-small");

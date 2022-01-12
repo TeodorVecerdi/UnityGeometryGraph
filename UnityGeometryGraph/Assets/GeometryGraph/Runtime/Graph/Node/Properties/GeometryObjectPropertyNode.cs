@@ -23,7 +23,7 @@ namespace GeometryGraph.Runtime.Graph {
             if ((Object)value != null) {
                 objectValue = (GeometryObject)value;
             }
-            
+
             return objectValue == null ? defaultValue.Clone() : objectValue.Geometry.Clone();
         }
 

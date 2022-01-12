@@ -65,7 +65,7 @@ namespace GeometryGraph.Editor {
                 domain = evt.newValue;
                 RuntimeNode.UpdateDomain(domain);
             });
-            
+
             typeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == type) return;
 
@@ -73,7 +73,7 @@ namespace GeometryGraph.Editor {
                 type = evt.newValue;
                 RuntimeNode.UpdateType(type);
             });
-            
+
             attributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == attribute) return;
 
@@ -81,7 +81,7 @@ namespace GeometryGraph.Editor {
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
             });
-            
+
             resultAttributeField.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == resultAttribute) return;
 
@@ -89,16 +89,16 @@ namespace GeometryGraph.Editor {
                 resultAttribute = evt.newValue;
                 RuntimeNode.UpdateResultAttribute(resultAttribute);
             });
-            
+
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
-            
+
             inputContainer.Add(domainDropdown);
             inputContainer.Add(typeDropdown);
-            
+
             attributePort.Add(attributeField);
             resultAttributePort.Add(resultAttributeField);
-            
+
             AddPort(geometryPort);
             AddPort(attributePort);
             AddPort(resultAttributePort);
@@ -131,17 +131,17 @@ namespace GeometryGraph.Editor {
             resultAttribute = array.Value<string>(1);
             domain = (TargetDomain) array.Value<int>(2);
             type = (TargetType) array.Value<int>(3);
-            
+
             attributeField.SetValueWithoutNotify(attribute);
             resultAttributeField.SetValueWithoutNotify(resultAttribute);
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
-            
+
             RuntimeNode.UpdateAttribute(attribute);
             RuntimeNode.UpdateResultAttribute(resultAttribute);
             RuntimeNode.UpdateDomain(domain);
             RuntimeNode.UpdateType(type);
-            
+
             base.Deserialize(data);
         }
     }

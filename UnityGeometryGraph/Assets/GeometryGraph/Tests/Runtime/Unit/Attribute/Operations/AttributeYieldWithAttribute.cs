@@ -16,7 +16,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             var attrA = new FloatAttribute("attrA", valuesA) { Domain = AttributeDomain.Vertex };
             var attrB = new FloatAttribute("attrB", valuesB) { Domain = AttributeDomain.Vertex };
             var result = attrA.YieldWithAttribute(attrB, null);
-            
+
             Assert.IsTrue(result.SequenceEqual(valuesA), "result.SequenceEqual(valuesA)");
         }
 
@@ -25,7 +25,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             var valuesA = Enumerable.Range(0, 100).Select(_ => Rand.Float);
             var attrA = new FloatAttribute("attrA", valuesA) { Domain = AttributeDomain.Vertex };
             var result = attrA.YieldWithAttribute(null, func);
-            
+
             // Since the default of float is 0 I expect all zeros
             Assert.IsTrue(result.SequenceEqual(Enumerable.Range(0, 100).Select(_ => 0f)), "result.SequenceEqual(Enumerable.Range(0, 100).Select(_ => 0f))");
         }
@@ -48,7 +48,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             var attrB = new FloatAttribute("attrB", valuesB) { Domain = AttributeDomain.Vertex };
             var expected = valuesA.Zip(valuesB, (f1, f2) => func(f1, f2));
             var result = attrA.YieldWithAttribute(attrB, func);
-            
+
             Assert.IsTrue(result.SequenceEqual(expected), "result.SequenceEqual(expected)");
         }
 
@@ -59,7 +59,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
 
             var attrB = new FloatAttribute("attrB", valuesB) { Domain = AttributeDomain.Vertex };
             var result = valuesA.YieldWithAttribute(AttributeType.Float, attrB, null);
-            
+
             Assert.IsTrue(result.SequenceEqual(valuesA), "result.SequenceEqual(valuesA)");
         }
 
@@ -67,7 +67,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
         public void IEnumerable_YieldWithAttributeOtherNull() {
             var valuesA = Enumerable.Range(0, 100).Select(_ => Rand.Float);
             var result = valuesA.YieldWithAttribute(AttributeType.Float, null, func);
-            
+
             // Since the default of float is 0 I expect all zeros
             Assert.IsTrue(result.SequenceEqual(Enumerable.Range(0, 100).Select(_ => 0f)), "result.SequenceEqual(Enumerable.Range(0, 100).Select(_ => 0f))");
         }
@@ -76,7 +76,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
         public void IEnumerable_YieldWithAttributeFuncAndOtherNull() {
             var valuesA = Enumerable.Range(0, 100).Select(_ => Rand.Float).ToList();
             var result = valuesA.YieldWithAttribute(AttributeType.Float, null, null);
-            
+
             Assert.IsTrue(result.SequenceEqual(valuesA), "result.SequenceEqual(valuesA)");
         }
 
@@ -88,7 +88,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             var attrB = new FloatAttribute("attrB", valuesB) { Domain = AttributeDomain.Vertex };
             var expected = valuesA.Zip(valuesB, (f1, f2) => func(f1, f2));
             var result = valuesA.YieldWithAttribute(AttributeType.Float, attrB, func);
-            
+
             Assert.IsTrue(result.SequenceEqual(expected), "result.SequenceEqual(expected)");
         }
     }

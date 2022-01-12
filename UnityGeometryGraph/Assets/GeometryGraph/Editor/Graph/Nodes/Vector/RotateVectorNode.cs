@@ -69,27 +69,27 @@ namespace GeometryGraph.Editor {
                 vector = evt.newValue;
                 RuntimeNode.UpdateVector(vector);
             });
-            
+
             centerField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change center value");
                 center = evt.newValue;
                 RuntimeNode.UpdateCenter(center);
             });
-            
+
             axisField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change axis value");
                 axis = evt.newValue;
                 RuntimeNode.UpdateAxis(axis);
             });
-            
+
             eulerAnglesField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change euler angles value");
                 eulerAngles = evt.newValue;
                 RuntimeNode.UpdateEulerAngles(eulerAngles);
             });
-            
+
             anglePort.Add(angleField);
-            
+
             inputContainer.Add(rotationTypeDropdown);
             AddPort(vectorPort);
             inputContainer.Add(vectorField);
@@ -101,7 +101,7 @@ namespace GeometryGraph.Editor {
             inputContainer.Add(eulerAnglesField);
             AddPort(anglePort);
             AddPort(resultPort);
-            
+
             OnRotationTypeChanged();
 
             Refresh();
@@ -149,7 +149,7 @@ namespace GeometryGraph.Editor {
             root["x"] = JsonConvert.SerializeObject(axis, float3Converter.Converter);
             root["e"] = JsonConvert.SerializeObject(eulerAngles, float3Converter.Converter);
             root["a"] = angle;
-            
+
             return root;
         }
 
@@ -160,23 +160,23 @@ namespace GeometryGraph.Editor {
             axis = JsonConvert.DeserializeObject<float3>(data.Value<string>("x")!, float3Converter.Converter);
             eulerAngles = JsonConvert.DeserializeObject<float3>(data.Value<string>("e")!, float3Converter.Converter);
             angle = data.Value<float>("a");
-            
+
             rotationTypeDropdown.SetValueWithoutNotify(rotationMode, 1);
             vectorField.SetValueWithoutNotify(vector);
             centerField.SetValueWithoutNotify(center);
             axisField.SetValueWithoutNotify(axis);
             eulerAnglesField.SetValueWithoutNotify(eulerAngles);
             angleField.SetValueWithoutNotify(angle);
-            
+
             RuntimeNode.UpdateMode(rotationMode);
             RuntimeNode.UpdateVector(vector);
             RuntimeNode.UpdateCenter(center);
             RuntimeNode.UpdateAxis(axis);
             RuntimeNode.UpdateEulerAngles(eulerAngles);
             RuntimeNode.UpdateAngle(angle);
-            
+
             OnRotationTypeChanged();
-            
+
             base.Deserialize(data);
         }
     }

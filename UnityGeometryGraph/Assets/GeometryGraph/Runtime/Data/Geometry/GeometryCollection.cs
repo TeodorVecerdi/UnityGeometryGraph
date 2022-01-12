@@ -20,7 +20,7 @@ namespace GeometryGraph.Runtime.Data {
         [Button]
         public override void Process() {
             int newHashCode = ComputeChildrenHashCode(transform);
-            
+
             if (ChildrenHashCode != newHashCode || Processed == null) {
                 children.Clear();
                 ChildrenHashCode = newHashCode;
@@ -51,7 +51,7 @@ namespace GeometryGraph.Runtime.Data {
                 filterLocalToRootLocalMatrix.GetColumn(1)
             );
             Mesh sourceMesh = filter.sharedMesh;
-            
+
             Mesh mesh = new();
             List<Vector3> vertices = sourceMesh.vertices.Select(vertex => (Vector3)(filterLocalToRootLocalMatrix * new Vector4(vertex.x, vertex.y, vertex.z, 1.0f))).ToList();
             List<Vector3> normals = sourceMesh.normals.Select(normal => (rotation * normal).normalized).ToList();
@@ -63,7 +63,7 @@ namespace GeometryGraph.Runtime.Data {
             for (int i = 0; i < mesh.subMeshCount; i++) {
                 mesh.SetTriangles(sourceMesh.GetTriangles(i), i);
             }
-            
+
             mesh.RecalculateBounds();
             return mesh;
         }

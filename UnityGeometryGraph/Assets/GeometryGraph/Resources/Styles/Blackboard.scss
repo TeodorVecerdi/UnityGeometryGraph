@@ -14,17 +14,17 @@ BlackboardRow .blackboardPropertyView {
     & > .rowView {
         flex-direction: row;
         padding: 2px 2px 2px 10px;
-    
+
         & > .rowViewControl {
-            
+
             &.unity-composite-field {
                 flex-direction: column;
             }
-            
+
             & > Label.unity-label {
                 min-width: 60px;
             }
-            
+
             flex: 1;
         }
     }

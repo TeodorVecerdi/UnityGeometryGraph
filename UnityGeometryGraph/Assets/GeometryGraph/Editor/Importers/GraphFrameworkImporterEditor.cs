@@ -37,7 +37,7 @@ namespace GeometryGraph.Editor {
                 return false;
 
             GraphFrameworkObject graphObject = GraphFrameworkUtility.FindOrLoadAtPath(assetPath);
-            
+
             if (string.IsNullOrEmpty(graphObject.AssetGuid)) {
                 graphObject.RecalculateAssetGuid(assetPath);
                 GraphFrameworkUtility.SaveGraph(graphObject, false);

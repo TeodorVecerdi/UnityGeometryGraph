@@ -40,7 +40,7 @@ namespace GeometryGraph.Editor {
                 size.x = newValue;
                 RuntimeNode.UpdateWidth(size.x);
             });
-            
+
             heightField.Min = 0.0f;
             heightField.RegisterValueChangedCallback(evt => {
                 float newValue = evt.newValue.MinClamped(0.0f);

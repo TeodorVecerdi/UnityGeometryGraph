@@ -94,9 +94,9 @@ namespace GeometryGraph.Runtime.Geometry {
                     sharedFaceCount++;
                 }
             }
-            
+
             ApplyMesh();
-            
+
             Debug.Log(sw.Elapsed.TotalMilliseconds);
         }
 
@@ -124,7 +124,7 @@ namespace GeometryGraph.Runtime.Geometry {
             var t1 = 1 + triangleOffset;
             var t2 = 2 + triangleOffset;
             var submesh = submeshAttr[faceIndex];
-            
+
             vertices.Add(v0);
             vertices.Add(v1);
             vertices.Add(v2);
@@ -137,7 +137,7 @@ namespace GeometryGraph.Runtime.Geometry {
             triangles[submesh].Add(t0);
             triangles[submesh].Add(t1);
             triangles[submesh].Add(t2);
-            
+
             return (t0, t1, t2);
         }
 
@@ -150,7 +150,7 @@ namespace GeometryGraph.Runtime.Geometry {
 
             mesh.Clear();
             mesh.subMeshCount = geometry.SubmeshCount;
-            
+
             vertices.Clear();
             normals.Clear();
             uvs.Clear();
@@ -159,14 +159,14 @@ namespace GeometryGraph.Runtime.Geometry {
             for (var i = 0; i < geometry.SubmeshCount; i++) {
                 triangles.Add(new List<int>());
             }
-            
+
             exportedFaces.Clear();
         }
 
         private int GetSharedFace(int faceIndex, int edgeIndex, float3 normal) {
             var edge = geometry.Edges[edgeIndex];
             var sharedFaceIndex = edge.FaceA != faceIndex ? edge.FaceA : edge.FaceB;
-            
+
             if (exportedFaces.Contains(sharedFaceIndex)) return -1;
             if (sharedFaceIndex != -1 && math_ext.angle(normalAttr[sharedFaceIndex], normal) < normalAngleThreshold) {
             // if (sharedFaceIndex != -1 && normalAttr[sharedFaceIndex].Equals( normal)) {
@@ -190,7 +190,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 otherVertexIndex = sharedFace.VertC;
                 otherFaceCornerIndex = sharedFace.FaceCornerC;
             }
-            
+
             var otherVertex = positionAttr[otherVertexIndex];
             var otherUV = uvAttr[otherFaceCornerIndex];
             var normal = !shadeSmoothAttr[sharedA]
@@ -201,7 +201,7 @@ namespace GeometryGraph.Runtime.Geometry {
             vertices.Add(otherVertex);
             normals.Add(normal);
             uvs.Add(otherUV);
-                    
+
             triangles[submesh].Add(triangle0);
             triangles[submesh].Add(triangle1);
             triangles[submesh].Add(triangle2);

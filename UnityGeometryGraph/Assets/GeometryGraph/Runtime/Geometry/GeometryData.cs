@@ -28,9 +28,9 @@ namespace GeometryGraph.Runtime.Geometry {
             faces = new List<Face>();
             faceCorners = new List<FaceCorner>();
             attributeManager = new AttributeManager(this);
-            
+
             FillBuiltinAttributes(new List<float3>(), new List<float2>(), new List<float3>(), new List<int>(), new List<bool>());
-            
+
             submeshCount = 0;
         }
 
@@ -48,13 +48,13 @@ namespace GeometryGraph.Runtime.Geometry {
             List<float2> uvsList = uvs is List<float2> uvList ? uvList : uvs.ToList();
             List<float3> faceNormalsList = faceNormals is List<float3> faceNormalList ? faceNormalList : faceNormals.ToList();
             List<bool> smoothShadedList = smoothShaded is List<bool> smoothShadeList ? smoothShadeList : smoothShaded.ToList();
-            
+
             if (submeshCount == -1) submeshCount = materialIndicesList.Max() + 1;
             this.submeshCount = submeshCount;
-            
+
             vertexPositionsList.ForEach(_ => vertices.Add(new Vertex()));
             FillElementMetadata();
-            
+
             FillBuiltinAttributes(vertexPositionsList, uvsList, faceNormalsList, materialIndicesList, smoothShadedList);
         }
 
@@ -96,7 +96,7 @@ namespace GeometryGraph.Runtime.Geometry {
             using IDisposable method = Profiler.ProfileMethod();
             // Face Corner Metadata ==> Backing Vertex
             FillFaceCornerMetadata();
-        
+
             // Vertex Metadata ==> Edges, Faces, FaceCorners
             FillVertexMetadata();
 
@@ -120,7 +120,7 @@ namespace GeometryGraph.Runtime.Geometry {
                 vertices[face.VertB].Faces.Add(i);
                 vertices[face.VertC].Faces.Add(i);
             }
-        
+
             // Face Corners
             for (int i = 0; i < faceCorners.Count; i++) {
                 FaceCorner fc = faceCorners[i];

@@ -28,7 +28,7 @@ namespace GeometryGraph.Editor {
             set {
                 propertyGuid = value;
                 Owner.EditorView.GraphObject.RuntimeGraph.AssignProperty(RuntimeNode, propertyGuid);
-                
+
                 if (property == null) return;
                 title = property.DisplayName;
                 Refresh();
@@ -38,7 +38,7 @@ namespace GeometryGraph.Editor {
         protected override void CreateNode() {
             propertyPort = GraphFrameworkPort.Create("Geometry", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
             AddPort(propertyPort);
-            
+
             Refresh();
         }
 

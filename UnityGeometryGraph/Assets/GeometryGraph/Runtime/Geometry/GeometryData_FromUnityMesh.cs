@@ -247,7 +247,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     duplicateVerticesMap[sortedKey].ForEach(i => existsMap[i] = sortedKey);
                 }
             }
-            
+
             // Copy actualMap to duplicateVerticesMap
             duplicateVerticesMap.Clear();
             foreach (KeyValuePair<int, HashSet<int>> pair in actualMap) {
@@ -378,7 +378,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     Debug.LogError($"Face at index {i} contains invalid vertices");
                 }
             }
-            
+
             // TODO/NOTE: maybe add checks for FaceCorners having vert idx and face idx in range, and for Faces having FaceCorners in range
         }
     }

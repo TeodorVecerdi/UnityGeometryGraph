@@ -36,13 +36,13 @@ namespace GeometryGraph.Runtime.Graph {
 
             List<float> values = GetValues(ValuePort, count, Value).ToList();
             results.Clear();
-            
+
             for (int i = 0; i < count; i++) {
                 float result = Curve.Evaluate(values[i]);
                 results.Add(result);
                 yield return result;
             }
-            
+
             resultsDirty = false;
         }
     }

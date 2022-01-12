@@ -67,7 +67,7 @@ namespace GeometryGraph.Editor {
                 start = newValue;
                 RuntimeNode.UpdateStart(start);
             });
-            
+
             controlField.RegisterValueChangedCallback(evt => {
                 float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(control)) return;
@@ -75,7 +75,7 @@ namespace GeometryGraph.Editor {
                 control = newValue;
                 RuntimeNode.UpdateControl(control);
             });
-            
+
             endField.RegisterValueChangedCallback(evt => {
                 float3 newValue = (float3)evt.newValue;
                 if (newValue.Equals(end)) return;
@@ -83,12 +83,12 @@ namespace GeometryGraph.Editor {
                 end = newValue;
                 RuntimeNode.UpdateEnd(end);
             });
-            
+
             pointsField.SetValueWithoutNotify(points);
             startField.SetValueWithoutNotify(start);
             controlField.SetValueWithoutNotify(control);
             endField.SetValueWithoutNotify(end);
-            
+
             pointsPort.Add(pointsField);
             closedPort.Add(closedToggle);
             AddPort(closedPort);
@@ -100,7 +100,7 @@ namespace GeometryGraph.Editor {
             AddPort(endPort);
             inputContainer.Add(endField);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -134,19 +134,19 @@ namespace GeometryGraph.Editor {
             start = JsonConvert.DeserializeObject<float3>(array!.Value<string>(2)!, float3Converter.Converter);
             control = JsonConvert.DeserializeObject<float3>(array!.Value<string>(3)!, float3Converter.Converter);
             end = JsonConvert.DeserializeObject<float3>(array!.Value<string>(4)!, float3Converter.Converter);
-            
+
             pointsField.SetValueWithoutNotify(points);
             closedToggle.SetValueWithoutNotify(closed);
             startField.SetValueWithoutNotify(start);
             controlField.SetValueWithoutNotify(control);
             endField.SetValueWithoutNotify(end);
-            
+
             RuntimeNode.UpdatePoints(points);
             RuntimeNode.UpdateIsClosed(closed);
             RuntimeNode.UpdateStart(start);
             RuntimeNode.UpdateControl(control);
             RuntimeNode.UpdateEnd(end);
-            
+
             base.Deserialize(data);
         }
     }

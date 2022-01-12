@@ -87,31 +87,31 @@ namespace GeometryGraph.Editor {
                 y = evt.newValue;
                 RuntimeNode.UpdateY(y);
             });
-            
+
             toleranceField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change tolerance");
                 tolerance = evt.newValue;
                 RuntimeNode.UpdateTolerance(tolerance);
             });
-            
+
             extraField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change extra");
                 extra = evt.newValue;
                 RuntimeNode.UpdateExtra(extra);
             });
-            
+
             xPort.Add(xField);
             yPort.Add(yField);
-            tolerancePort.Add(toleranceField); 
-            extraPort.Add(extraField); 
-            
+            tolerancePort.Add(toleranceField);
+            extraPort.Add(extraField);
+
             inputContainer.Add(operationDropdown);
             AddPort(xPort);
             AddPort(yPort);
             AddPort(tolerancePort);
             AddPort(extraPort);
             AddPort(resultPort);
-            
+
             OnOperationChanged();
 
             Refresh();
@@ -133,7 +133,7 @@ namespace GeometryGraph.Editor {
             root["y"] = y;
             root["t"] = tolerance;
             root["v"] = extra;
-            
+
             return root;
         }
 
@@ -142,7 +142,7 @@ namespace GeometryGraph.Editor {
             bool showExtra = operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Wrap;
             bool showY = !(operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.SquareRoot || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Absolute ||
                            operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Exponent || operation == GeometryGraph.Runtime.Graph.IntegerMathNode.IntegerMathNode_Operation.Sign);
-            
+
             if (showTolerance) {
                 tolerancePort.Show();
             } else {
@@ -220,13 +220,13 @@ namespace GeometryGraph.Editor {
             y = data.Value<int>("y");
             tolerance = data.Value<float>("t");
             extra = data.Value<int>("v");
-            
+
             operationDropdown.SetValueWithoutNotify(operation, 1);
             xField.SetValueWithoutNotify(x);
             yField.SetValueWithoutNotify(y);
             toleranceField.SetValueWithoutNotify(tolerance);
             extraField.SetValueWithoutNotify(extra);
-            
+
             RuntimeNode.UpdateOperation(operation);
             RuntimeNode.UpdateX(x);
             RuntimeNode.UpdateY(y);

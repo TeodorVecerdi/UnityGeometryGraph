@@ -70,7 +70,7 @@ namespace GeometryGraph.Editor {
 
             domainDropdown = new EnumSelectionDropdown<AttributeDomain>(domain, domainTree, "Domain");
             typeDropdown = new EnumSelectionDropdown<InputType>(type, typeTree, "Type");
-            
+
             domainDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == domain) return;
 
@@ -78,7 +78,7 @@ namespace GeometryGraph.Editor {
                 domain = evt.newValue;
                 RuntimeNode.UpdateTargetDomain(domain);
             });
-            
+
             typeDropdown.RegisterValueChangedCallback(evt => {
                 if (evt.newValue == type) return;
 
@@ -87,7 +87,7 @@ namespace GeometryGraph.Editor {
                 RuntimeNode.UpdateInputType(type);
                 OnTypeChanged();
             });
-            
+
             vectorField.RegisterValueChangedCallback(evt => {
                 if (math.distancesq(vector, evt.newValue) < Constants.FLOAT_TOLERANCE * Constants.FLOAT_TOLERANCE) return;
 
@@ -95,7 +95,7 @@ namespace GeometryGraph.Editor {
                 vector = evt.newValue;
                 RuntimeNode.UpdateVector(vector);
             });
-            
+
             attributeField.RegisterValueChangedCallback(evt => {
                 if (attribute == evt.newValue) return;
 
@@ -103,7 +103,7 @@ namespace GeometryGraph.Editor {
                 attribute = evt.newValue;
                 RuntimeNode.UpdateAttribute(attribute);
             });
-            
+
             xResultField.RegisterValueChangedCallback(evt => {
                 if (xResult == evt.newValue) return;
 
@@ -111,7 +111,7 @@ namespace GeometryGraph.Editor {
                 xResult = evt.newValue;
                 RuntimeNode.UpdateXResult(xResult);
             });
-            
+
             yResultField.RegisterValueChangedCallback(evt => {
                 if (yResult == evt.newValue) return;
 
@@ -119,7 +119,7 @@ namespace GeometryGraph.Editor {
                 yResult = evt.newValue;
                 RuntimeNode.UpdateYResult(yResult);
             });
-            
+
             zResultField.RegisterValueChangedCallback(evt => {
                 if (zResult == evt.newValue) return;
 
@@ -127,18 +127,18 @@ namespace GeometryGraph.Editor {
                 zResult = evt.newValue;
                 RuntimeNode.UpdateZResult(zResult);
             });
-            
+
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
-                
+
             attributePort.Add(attributeField);
             xResultPort.Add(xResultField);
             yResultPort.Add(yResultField);
             zResultPort.Add(zResultField);
-            
+
             inputContainer.Add(domainDropdown);
             inputContainer.Add(typeDropdown);
-            
+
             AddPort(geometryPort);
             AddPort(vectorPort);
             inputContainer.Add(vectorField);
@@ -195,7 +195,7 @@ namespace GeometryGraph.Editor {
             zResult = array.Value<string>(4);
             domain = (AttributeDomain)array.Value<int>(5);
             type = (InputType)array.Value<int>(6);
-            
+
             vectorField.SetValueWithoutNotify(vector);
             attributeField.SetValueWithoutNotify(attribute);
             xResultField.SetValueWithoutNotify(xResult);
@@ -203,7 +203,7 @@ namespace GeometryGraph.Editor {
             zResultField.SetValueWithoutNotify(zResult);
             domainDropdown.SetValueWithoutNotify(domain);
             typeDropdown.SetValueWithoutNotify(type);
-            
+
             RuntimeNode.UpdateVector(vector);
             RuntimeNode.UpdateAttribute(attribute);
             RuntimeNode.UpdateXResult(xResult);
@@ -211,9 +211,9 @@ namespace GeometryGraph.Editor {
             RuntimeNode.UpdateZResult(zResult);
             RuntimeNode.UpdateTargetDomain(domain);
             RuntimeNode.UpdateInputType(type);
-            
+
             OnTypeChanged();
-            
+
             base.Deserialize(data);
         }
     }

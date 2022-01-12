@@ -53,7 +53,7 @@ namespace GeometryGraph.Editor {
                 bool closed = DisplayDeletedFromDiskDialog();
                 if (closed) return;
             }
-            
+
             if (graphObject == null && selectedAssetGuid != null) {
                 Debug.LogError("graphObject == null && selectedAssetGuid != null");
                 string assetGuid = selectedAssetGuid;
@@ -231,7 +231,7 @@ namespace GeometryGraph.Editor {
             graphObject.GraphData.GraphVersion = GraphFrameworkVersion.Version.GetValue();
             graphObject.GraphPosition = new Vector3(editorView.GraphView.viewTransform.position.x, editorView.GraphView.viewTransform.position.y, editorView.GraphView.viewTransform.scale.x);
             GraphFrameworkUtility.SaveGraph(graphObject, false);
-            
+
             graphObject.OnAssetSaved();
             UpdateTitle();
         }

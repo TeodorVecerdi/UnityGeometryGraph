@@ -94,14 +94,14 @@ namespace GeometryGraph.Editor {
                 port.m_EdgeConnector = new EdgeConnector<Edge>(ownerNode.EdgeConnectorListener);
                 port.AddManipulator(port.m_EdgeConnector);
             }
-            
+
             port.AddStyleSheet("Styles/Node/Port");
             port.AddToClassList($"portType-{type}");
 
             port.Type = type;
             port.GUID = Guid.NewGuid().ToString();
             port.portName = name;
-            
+
             if(onConnect != null) port.OnConnect += onConnect;
             if(onDisconnect != null) port.OnDisconnect += onDisconnect;
 
@@ -114,7 +114,7 @@ namespace GeometryGraph.Editor {
                 color.value = Color.clear;
                 label.style.color = color;
             }
-            
+
             return port;
         }
 
@@ -139,18 +139,18 @@ namespace GeometryGraph.Editor {
 
             if(onConnect != null) port.OnConnect += onConnect;
             if(onDisconnect != null) port.OnDisconnect += onDisconnect;
-            
+
             field.visible = true;
             field.SetEnabled(true);
             field.RemoveFromClassList("d-none");
-            
+
             return (port, field);
         }
 
         private static void SetFieldVisible(GraphFrameworkPort port, bool visible) {
             port.field.SetEnabled(visible);
             port.fieldVisible = visible;
-            
+
             if(!port.portVisible) return;
 
             if (visible) {
@@ -166,7 +166,7 @@ namespace GeometryGraph.Editor {
             port.fieldVisible = visible;
 
             if(!port.portVisible) return;
-            
+
             if (visible) {
                 port.field.RemoveFromClassList("d-none");
                 port.m_ConnectorText.text = string.Empty;

@@ -52,7 +52,7 @@ namespace GeometryGraph.Editor {
 
         [JsonConstructor]
         private GraphFrameworkData() {
-            
+
         }
 
         public GraphFrameworkData(RuntimeGraphObject runtimeGraph) {
@@ -65,7 +65,7 @@ namespace GeometryGraph.Editor {
                 AreCategoriesEnabled = Owner.AreCategoriesEnabled;
                 GraphPosition = Owner.GraphPosition;
             }
-            
+
             serializedProperties.Clear();
             foreach (AbstractProperty property in properties) {
                 serializedProperties.Add(new SerializedProperty(property));
@@ -168,7 +168,7 @@ namespace GeometryGraph.Editor {
                 temp.AddRange(edges.Where(edge1 => edge1.OutputPort == edge.OutputPort));
                 temp.ForEach(RemoveEdge);
             }
-            
+
             edges.Add(edge);
             addedEdges.Add(edge);
         }
@@ -306,7 +306,7 @@ namespace GeometryGraph.Editor {
         }
 
         public void Load(RuntimeGraphObject runtimeGraph) {
-            if(RuntimeGraphData != null) runtimeGraph.Load(RuntimeGraphData); 
+            if(RuntimeGraphData != null) runtimeGraph.Load(RuntimeGraphData);
             RuntimeGraphData = runtimeGraph.RuntimeData;
         }
     }

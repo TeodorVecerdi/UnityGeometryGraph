@@ -49,7 +49,7 @@ namespace GeometryGraph.Editor {
             BlackboardField field = (BlackboardField) visualElement;
             AbstractProperty property = (AbstractProperty) field.userData;
             if (string.IsNullOrEmpty(newText) || newText == property.DisplayName) return;
-            
+
             editorView.GraphObject.RegisterCompleteObjectUndo("Edit Property Name");
             property.DisplayName = newText;
             editorView.GraphObject.GraphData.SanitizePropertyName(property);
@@ -84,7 +84,7 @@ namespace GeometryGraph.Editor {
         public void AddInputRow(AbstractProperty property, bool create = false, int index = -1) {
             if (inputRows.ContainsKey(property.GUID))
                 return;
-            
+
             if (create) {
                 editorView.GraphObject.GraphData.SanitizePropertyName(property);
             }
@@ -104,7 +104,7 @@ namespace GeometryGraph.Editor {
             pill.RegisterCallback<MouseEnterEvent>(evt => OnMouseHover(evt, property));
             pill.RegisterCallback<MouseLeaveEvent>(evt => OnMouseHover(evt, property));
             pill.RegisterCallback<DragUpdatedEvent>(OnDragUpdatedEvent);
-            
+
             field.Q<TextField>().RegisterCallback<BlurEvent>(_ => {
                 field.Focus();
             });

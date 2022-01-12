@@ -23,7 +23,7 @@ namespace GeometryGraph.Editor {
             });
             AddPort(valuePort);
             extensionContainer.Add(valueField);
-            
+
             Refresh();
         }
 
@@ -41,7 +41,7 @@ namespace GeometryGraph.Editor {
             value = data.Value<string>("v");
             valueField.SetValueWithoutNotify(value);
             RuntimeNode.UpdateValue(value);
-            
+
             base.Deserialize(data);
         }
     }

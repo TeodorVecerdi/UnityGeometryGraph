@@ -30,7 +30,7 @@ namespace GeometryGraph.Editor {
                 Debug.Log($"Could not find upgrading method [{from} -> {to}]");
                 return;
             }
-            
+
             UpgradeTo(next, graphObject);
             ConvertVersion(next, to, graphObject);
         }

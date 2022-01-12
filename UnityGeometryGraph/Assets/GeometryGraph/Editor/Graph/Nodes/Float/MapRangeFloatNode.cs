@@ -45,13 +45,13 @@ namespace GeometryGraph.Editor {
                 clamp = evt.newValue;
                 RuntimeNode.UpdateClamp(clamp);
             });
-            
+
             inputField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 inputValue = evt.newValue;
                 RuntimeNode.UpdateValue(inputValue);
             });
-            
+
             fromMinField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 fromMin = evt.newValue;
@@ -72,7 +72,7 @@ namespace GeometryGraph.Editor {
                 toMax = evt.newValue;
                 RuntimeNode.UpdateToMax(toMax);
             });
-            
+
             fromMinField.SetValueWithoutNotify(0.0f);
             fromMaxField.SetValueWithoutNotify(1.0f);
             toMinField.SetValueWithoutNotify(0.0f);
@@ -91,7 +91,7 @@ namespace GeometryGraph.Editor {
             AddPort(toMinPort);
             AddPort(toMaxPort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 
@@ -113,7 +113,7 @@ namespace GeometryGraph.Editor {
             root["F"] = fromMax;
             root["t"] = toMin;
             root["T"] = toMax;
-            
+
             return root;
         }
 
@@ -124,13 +124,13 @@ namespace GeometryGraph.Editor {
             fromMax = data.Value<float>("F");
             toMin = data.Value<float>("t");
             toMax = data.Value<float>("T");
-            
+
             inputField.SetValueWithoutNotify(inputValue);
             fromMinField.SetValueWithoutNotify(fromMin);
             fromMaxField.SetValueWithoutNotify(fromMax);
             toMinField.SetValueWithoutNotify(toMin);
             toMaxField.SetValueWithoutNotify(toMax);
-            
+
             RuntimeNode.UpdateClamp(clamp);
             RuntimeNode.UpdateValue(inputValue);
             RuntimeNode.UpdateFromMin(fromMin);

@@ -47,7 +47,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
             var binormal = new List<float3>();
 
             var sw = Stopwatch.StartNew();
-           
+
             for (var i = 0; i < toAlign.Points; i++) {
                 position.Add(math.mul(matrix, toAlign.Position[i].float4(1.0f)).xyz);
                 tangent.Add(math.mul(matrix, toAlign.Tangent[i].float4()).xyz);

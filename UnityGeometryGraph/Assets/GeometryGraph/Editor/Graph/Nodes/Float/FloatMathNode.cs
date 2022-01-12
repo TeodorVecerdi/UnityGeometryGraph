@@ -105,13 +105,13 @@ namespace GeometryGraph.Editor {
                 y = evt.newValue;
                 RuntimeNode.UpdateY(y);
             });
-            
+
             toleranceField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change tolerance");
                 tolerance = evt.newValue;
                 RuntimeNode.UpdateTolerance(tolerance);
             });
-            
+
             extraField.RegisterValueChangedCallback(evt => {
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change value");
                 extra = evt.newValue;
@@ -120,16 +120,16 @@ namespace GeometryGraph.Editor {
 
             xPort.Add(xField);
             yPort.Add(yField);
-            tolerancePort.Add(toleranceField); 
+            tolerancePort.Add(toleranceField);
             extraPort.Add(extraField);
-            
+
             inputContainer.Add(operationDropdown);
             AddPort(xPort);
             AddPort(yPort);
             AddPort(tolerancePort);
             AddPort(extraPort);
             AddPort(resultPort);
-            
+
             OnOperationChanged();
 
             Refresh();
@@ -151,7 +151,7 @@ namespace GeometryGraph.Editor {
             root["y"] = y;
             root["t"] = tolerance;
             root["v"] = extra;
-            
+
             return root;
         }
 
@@ -159,7 +159,7 @@ namespace GeometryGraph.Editor {
             bool showTolerance = operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Compare or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMinimum or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SmoothMaximum;
             bool showExtra = operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Wrap or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Lerp;
             bool showY = !(operation is GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.SquareRoot or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.InverseSquareRoot or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Absolute or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Exponent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sign or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Round or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Floor or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Ceil or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Truncate or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Fraction or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Sine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Cosine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Tangent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arcsine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arccosine or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.Arctangent or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToRadians or GeometryGraph.Runtime.Graph.FloatMathNode.FloatMathNode_Operation.ToDegrees);
-            
+
             if (showTolerance) {
                 tolerancePort.Show();
             } else {
@@ -255,13 +255,13 @@ namespace GeometryGraph.Editor {
             y = data.Value<float>("y");
             tolerance = data.Value<float>("t");
             extra = data.Value<float>("v");
-            
+
             operationDropdown.SetValueWithoutNotify(operation, 1);
             xField.SetValueWithoutNotify(x);
             yField.SetValueWithoutNotify(y);
             toleranceField.SetValueWithoutNotify(tolerance);
             extraField.SetValueWithoutNotify(extra);
-            
+
             RuntimeNode.UpdateOperation(operation);
             RuntimeNode.UpdateX(x);
             RuntimeNode.UpdateY(y);

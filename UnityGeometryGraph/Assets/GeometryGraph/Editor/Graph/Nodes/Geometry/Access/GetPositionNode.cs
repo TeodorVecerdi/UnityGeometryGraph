@@ -13,7 +13,7 @@ namespace GeometryGraph.Editor.Access {
         protected override void CreateNode() {
             geometryPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
             positionPort = GraphFrameworkPort.Create("Position", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
-            
+
             AddPort(geometryPort);
             AddPort(positionPort);
         }

@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
                 Debug.Log("ToMaxValueChanged: " + evt.newValue);
                 toMax = evt.newValue;
             });
-            
+
             inputContainer.Add(floatMapRangeField);
         }
 

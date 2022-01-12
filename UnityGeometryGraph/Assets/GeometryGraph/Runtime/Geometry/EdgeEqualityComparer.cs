@@ -18,7 +18,7 @@ namespace GeometryGraph.Runtime.Geometry {
         public override bool Equals(Edge first, Edge second) {
             if (first == null && second == null) return true;
             if (first == null || second == null) return false;
-            
+
             float3 edgeAVertA = vertices[first.VertA];
             float3 edgeAVertB = vertices[first.VertB];
             float3 edgeBVertA = vertices[second.VertA];
@@ -28,7 +28,7 @@ namespace GeometryGraph.Runtime.Geometry {
             bool checkB = edgeAVertA.Equals(edgeBVertB) && edgeAVertB.Equals(edgeBVertA);
 
             if (!checkA && !checkB) return false;
-            
+
             if (!duplicates.ContainsKey(first.SelfIndex))
                 duplicates[first.SelfIndex] = new List<int>();
             duplicates[first.SelfIndex].Add(second.SelfIndex);

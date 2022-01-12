@@ -13,10 +13,10 @@ namespace GeometryGraph.Editor {
         protected override void CreateNode() {
             aPort = GraphFrameworkPort.Create("Values", Direction.Input, Port.Capacity.Multi, PortType.Geometry, this);
             resultPort = GraphFrameworkPort.Create("Result", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
-            
+
             AddPort(aPort);
             AddPort(resultPort);
-            
+
             Refresh();
         }
 

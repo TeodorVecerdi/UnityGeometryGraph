@@ -33,7 +33,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
             renderTexture = new RenderTexture(Resolution, Resolution, 24);
             renderTexture.enableRandomWrite = true;
             renderTexture.Create();
-            
+
             Image.texture = renderTexture;
         }
 
@@ -49,29 +49,29 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         private void Run() {
             if (renderTexture == null)
                 Initialize();
-            
+
             var kernel = ComputeShader.FindKernel("CSMain");
             ComputeShader.SetTexture(kernel, "Result", renderTexture);
             ComputeShader.SetFloat("Resolution", Resolution);
-            
+
             ComputeShader.SetBool("DoSmooth", DoSmooth);
             ComputeShader.SetBool("DoSmoothMin", DoSmoothMin);
             ComputeShader.SetFloat("SmoothDistance", SmoothDistance);
             ComputeShader.SetInt("SmoothMinType", SmoothMinType);
-            
+
             ComputeShader.SetVector("CircleColor", CircleColor);
             ComputeShader.SetVector("BackgroundColor", BackgroundColor);
             ComputeShader.SetFloat("CirclePower", CirclePower);
             ComputeShader.SetFloat("CircleThreshold", CircleThreshold);
-            
+
             ComputeShader.SetFloat("CircleARadius", CircleARadius);
             ComputeShader.SetFloat("CircleACenterX", CircleACenter.x);
             ComputeShader.SetFloat("CircleACenterY", CircleACenter.y);
-            
+
             ComputeShader.SetFloat("CircleBRadius", CircleBRadius);
             ComputeShader.SetFloat("CircleBCenterX", CircleBCenter.x);
             ComputeShader.SetFloat("CircleBCenterY", CircleBCenter.y);
-            
+
             ComputeShader.Dispatch(kernel, Resolution / 8, Resolution / 8, 1);
         }
     }

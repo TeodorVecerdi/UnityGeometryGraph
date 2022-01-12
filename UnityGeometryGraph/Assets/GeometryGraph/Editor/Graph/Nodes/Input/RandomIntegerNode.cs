@@ -35,33 +35,33 @@ namespace GeometryGraph.Editor {
                 seed = evt.newValue;
                 RuntimeNode.UpdateSeed(seed);
             });
-            
+
             minField.RegisterValueChangedCallback(evt => {
                 if (min == evt.newValue) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change min value");
                 min = evt.newValue;
                 RuntimeNode.UpdateMin(min);
             });
-            
+
             maxField.RegisterValueChangedCallback(evt => {
                 if (max == evt.newValue) return;
                 Owner.EditorView.GraphObject.RegisterCompleteObjectUndo("Change max value");
                 max = evt.newValue;
                 RuntimeNode.UpdateMax(max);
             });
-            
+
             minField.SetValueWithoutNotify(0);
             maxField.SetValueWithoutNotify(100);
-            
+
             seedPort.Add(seedField);
             minPort.Add(minField);
             maxPort.Add(maxField);
-            
+
             AddPort(seedPort);
             AddPort(minPort);
             AddPort(maxPort);
             AddPort(valuePort);
-            
+
             Refresh();
         }
 
@@ -87,15 +87,15 @@ namespace GeometryGraph.Editor {
             seed = array.Value<int>(0);
             min = array.Value<int>(1);
             max = array.Value<int>(2);
-            
+
             seedField.SetValueWithoutNotify(seed);
             minField.SetValueWithoutNotify(min);
             maxField.SetValueWithoutNotify(max);
-            
+
             RuntimeNode.UpdateSeed(seed);
             RuntimeNode.UpdateMin(min);
             RuntimeNode.UpdateMax(max);
-            
+
             base.Deserialize(data);
         }
     }

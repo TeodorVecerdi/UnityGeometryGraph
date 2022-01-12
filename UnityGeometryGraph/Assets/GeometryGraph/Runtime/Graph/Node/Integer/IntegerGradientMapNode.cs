@@ -54,12 +54,12 @@ namespace GeometryGraph.Runtime.Graph {
 
                 yield break;
             }
-            
+
             List<int> values = GetValues(ValuePort, count, Value).ToList();
             List<int> mins = GetValues(MinPort, count, Min).ToList();
             List<int> maxs = GetValues(MaxPort, count, Max).ToList();
             results.Clear();
-            
+
             for(int i = 0; i < count; i++) {
                 RGBAlphaPair evaluated = Calculate(values[i], mins[i], maxs[i]);
                 results.Add(evaluated);
@@ -69,7 +69,7 @@ namespace GeometryGraph.Runtime.Graph {
                     yield return evaluated.Alpha;
                 }
             }
-            
+
             resultsDirty = false;
         }
 

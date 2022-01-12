@@ -14,16 +14,16 @@ namespace GeometryGraph.Editor {
 
         protected override void CreateNode() {
             inputPort = GraphFrameworkPort.Create("Geometry", Direction.Input, Port.Capacity.Single, PortType.Geometry, this);
-            
+
             minPort = GraphFrameworkPort.Create("Min", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
             maxPort = GraphFrameworkPort.Create("Max", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
             boundingBoxPort = GraphFrameworkPort.Create("Box", Direction.Output, Port.Capacity.Multi, PortType.Geometry, this);
-            
+
             AddPort(inputPort);
             AddPort(minPort);
             AddPort(maxPort);
             AddPort(boundingBoxPort);
-            
+
             Refresh();
         }
 

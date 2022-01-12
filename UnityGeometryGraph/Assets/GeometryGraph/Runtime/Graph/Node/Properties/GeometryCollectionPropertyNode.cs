@@ -22,7 +22,7 @@ namespace GeometryGraph.Runtime.Graph {
             GeometryCollection objectValue = null;
             object value = Property?.Value;
             if (value == null) return Array.Empty<GeometryData>();
-            
+
             if ((Object)value != null) {
                 objectValue = (GeometryCollection)value;
             }

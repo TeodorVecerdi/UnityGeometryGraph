@@ -79,7 +79,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
 
         private void OnDrawGizmos() {
             if((!ShowLines && !FillFaces) || a == null || b == null) return;
-            
+
             Handles.matrix = transform.localToWorldMatrix;
             Random.InitState(0);
             if (SmartJoin) {

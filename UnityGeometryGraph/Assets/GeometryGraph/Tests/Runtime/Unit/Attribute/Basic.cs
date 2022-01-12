@@ -33,7 +33,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute {
                                  .Into<Vector3Attribute>("attr", AttributeDomain.Vertex);
             var serialized = SerializedAttribute.Serialize(attr);
             var deserialized = SerializedAttribute.Deserialize(serialized);
-            
+
             Assert.AreEqual(attr.GetType(), deserialized.GetType(), "{0} == {1}", attr.GetType(), deserialized.GetType());
             Assert.AreEqual(attr.Type, deserialized.Type, "{0} == {1}", attr.Type, deserialized.Type);
             Assert.AreEqual(attr.Domain, deserialized.Domain, "{0} == {1}", attr.Domain, deserialized.Domain);
@@ -48,14 +48,14 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute {
             Assert.DoesNotThrow(() => {
                 clone = (BaseAttribute) attr.Clone();
             }, "clone = (BaseAttribute) attr.Clone()");
-            
+
             Assert.IsNotNull(clone, "clone != null");
 
             FloatAttribute typedClone = null;
             Assert.DoesNotThrow(() => {
                 typedClone = clone as FloatAttribute;
             });
-            
+
             Assert.IsNotNull(typedClone, "typedClone != null");
         }
 
@@ -63,7 +63,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute {
         public void AttributeCloneIsCorrect() {
             var attr = Enumerable.Range(0, 100).Select(_ => Rand.Float).Into<FloatAttribute>("attr", AttributeDomain.Vertex);
             var clone = (FloatAttribute)attr.Clone();
-            
+
             Assert.AreEqual(attr.Name, clone.Name, "attr.Name == clone.Name");
             Assert.AreEqual(attr.Type, clone.Type, "attr.Type == clone.Type");
             Assert.AreEqual(attr.Domain, clone.Domain, "attr.Domain == clone.Domain");

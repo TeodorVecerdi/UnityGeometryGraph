@@ -31,7 +31,7 @@ namespace GeometryGraph.Editor {
 
         public CopyPasteData(EditorView editorView, IEnumerable<SerializedNode> nodes, IEnumerable<SerializedEdge> edges, IEnumerable<AbstractProperty> properties, IEnumerable<AbstractProperty> metaProperties) {
             this.editorView = editorView;
-            
+
             foreach (SerializedNode node in nodes) {
                 AddNode(node);
                 foreach (SerializedEdge edge in GetAllEdgesForNode(node)) {
@@ -71,12 +71,12 @@ namespace GeometryGraph.Editor {
             foreach (SerializedNode node in nodes) {
                 serializedNodes.Add(node);
             }
-            
+
             serializedEdges = new List<SerializedEdge>();
             foreach (SerializedEdge edge in edges) {
                 serializedEdges.Add(edge);
             }
-            
+
             serializedProperties = new List<SerializedProperty>();
             foreach (AbstractProperty property in properties) {
                 serializedProperties.Add(new SerializedProperty(property));
