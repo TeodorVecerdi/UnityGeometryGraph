@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Attributes;
 using GeometryGraph.Runtime.Curve;
 using Unity.Mathematics;
+
+using IsClosedMode = GeometryGraph.Runtime.Graph.TransformCurveNode.TransformCurveNode_IsClosedMode;
 
 namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
@@ -28,7 +31,7 @@ namespace GeometryGraph.Runtime.Graph {
         [In] public float3 Translation { get; private set; }
         [In] public float3 Rotation { get; private set; }
         [In] public float3 Scale { get; private set; }
-        [Setting] public bool ChangeClosed { get; private set; }
+        [Setting] public IsClosedMode ClosedMode { get; private set; } = TransformCurveNode_IsClosedMode.Unchanged;
 
         [Out] public CurveData Result { get; private set; }
 
@@ -67,7 +70,22 @@ namespace GeometryGraph.Runtime.Graph {
                 binormal.Add(math.mul(matrixNormal, Input.Binormal[i].float4(1.0f)).xyz);
             }
 
-            Result = new CurveData(Input.Type, Input.Points, ChangeClosed ? IsClosed : Input.IsClosed, position, tangent, normal, binormal);
+            bool isClosed = ClosedMode switch {
+                TransformCurveNode_IsClosedMode.Unchanged => Input.IsClosed,
+                TransformCurveNode_IsClosedMode.Closed => true,
+                TransformCurveNode_IsClosedMode.Open => false,
+                TransformCurveNode_IsClosedMode.Variable => IsClosed,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            Result = new CurveData(Input.Type, Input.Points, isClosed, position, tangent, normal, binormal);
+        }
+
+        public enum TransformCurveNode_IsClosedMode {
+            Unchanged,
+            Closed,
+            Open,
+            Variable
         }
     }
 }
