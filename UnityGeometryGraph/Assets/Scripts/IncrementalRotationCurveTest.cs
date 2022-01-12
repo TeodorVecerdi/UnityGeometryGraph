@@ -13,7 +13,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         [Required] public ICurveProvider Circle;
         [Required] public CurveVisualizer VisualizerA;
         [Required] public CurveVisualizer VisualizerB;
-        
+
         [Title("Join Settings")]
         public bool ShowLines;
         public bool FillFaces;
@@ -24,7 +24,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         [Range(0.0f, 2.0f)] public float WiggleRoom = 0.0f;
         public bool AutoWiggleRoom;
         [Range(-2.0f, 32.0f)] public float AutoWiggleRoomDelta = 0.0f;
-        
+
         [Title("Settings")]
         [OnValueChanged(nameof(__OnIncrementalRotationOffsetChanged))]
         public float IncrementalRotationOffset;

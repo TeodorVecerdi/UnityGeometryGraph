@@ -14,11 +14,11 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             
             Assert.IsTrue(
                 boolAttribute.Zip(intAttribute, (boolean, integer) => (boolean, integer))
-                             .All(pair => pair.integer != 0 == pair.boolean), 
+                             .All(pair => pair.integer != 0 == pair.boolean),
                 "boolAttribute.Zip(intAttribute, (boolean, integer) => (boolean, integer)).All(pair => pair.integer != 0 == pair.boolean)"
             );
         }
-        
+
         [Test]
         public void IntegerToFloat() {
             var intAttribute = Enumerable.Range(0, 100).Select(_ => Rand.Range(-100, 100)).Into<IntAttribute>("src", AttributeDomain.Vertex);
@@ -28,11 +28,11 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             
             Assert.IsTrue(
                 floatAttribute.Zip(intAttribute, (@float, integer) => (@float, integer))
-                              .All(pair => pair.integer == (int)pair.@float), 
+                              .All(pair => pair.integer == (int)pair.@float),
                 "floatAttribute.Zip(intAttribute, (@float, integer) => (@float, integer)).All(pair => pair.integer == (int)pair.@float)"
             );
         }
-        
+
         [Test]
         public void IntegerToClampedFloat() {
             var intAttribute = Enumerable.Range(0, 100).Select(_ => Rand.Range(-100, 100)).Into<IntAttribute>("src", AttributeDomain.Vertex);
@@ -42,11 +42,11 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             
             Assert.IsTrue(
                 floatAttribute.Zip(intAttribute, (@float, integer) => (@float, integer))
-                              .All(pair => pair.integer > 1 ? pair.@float == 1.0f : pair.integer < 0 ? pair.@float == 0.0f : pair.@float == pair.integer), 
+                              .All(pair => pair.integer > 1 ? pair.@float == 1.0f : pair.integer < 0 ? pair.@float == 0.0f : pair.@float == pair.integer),
                 "floatAttribute.Zip(intAttribute, (@float, integer) => (@float, integer)).All(pair => pair.integer > 1 ? pair.@float == 1.0f : pair.integer < 0 ? pair.@float == 0.0f : pair.@float == pair.integer)"
             );
         }
-        
+
         [Test]
         public void IntegerToVector2() {
             var intAttribute = Enumerable.Range(0, 100).Select(_ => Rand.Range(-100, 100)).Into<IntAttribute>("src", AttributeDomain.Vertex);
@@ -56,11 +56,11 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             
             Assert.IsTrue(
                 vec2Attribute.Zip(intAttribute, (vec2, integer) => (vec2, integer))
-                             .All(pair => pair.vec2.x == pair.integer && pair.vec2.y == pair.integer), 
+                             .All(pair => pair.vec2.x == pair.integer && pair.vec2.y == pair.integer),
                 "floatAttribute.Zip(intAttribute, (@float, integer) => (@float, integer)).All(pair => pair.vec2.x == pair.integer && pair.vec2.y == pair.integer)"
             );
         }
-        
+
         [Test]
         public void IntegerToVector3() {
             var intAttribute = Enumerable.Range(0, 100).Select(_ => Rand.Range(-100, 100)).Into<IntAttribute>("src", AttributeDomain.Vertex);
@@ -70,7 +70,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
             
             Assert.IsTrue(
                 vec3Attribute.Zip(intAttribute, (vec3, integer) => (vec3, integer))
-                             .All(pair => pair.vec3.x == pair.integer && pair.vec3.y == pair.integer && pair.vec3.z == pair.integer), 
+                             .All(pair => pair.vec3.x == pair.integer && pair.vec3.y == pair.integer && pair.vec3.z == pair.integer),
                 "floatAttribute.Zip(intAttribute, (@float, integer) => (@float, integer)).All(pair => pair.vec3.x == pair.integer && pair.vec3.y == pair.integer && pair.vec3.z == pair.integer)"
             );
         }

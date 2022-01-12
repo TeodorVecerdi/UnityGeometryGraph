@@ -52,11 +52,11 @@ namespace GeometryGraph.Runtime.Geometry {
             for (var faceIndex = 0; faceIndex < geometry.Faces.Count; faceIndex++) {
                 if(exportedFaces.Contains(faceIndex)) continue;
                 exportedFaces.Add(faceIndex);
-                
+
                 var faceNormal = normalAttr[faceIndex];
                 var face = geometry.Faces[faceIndex];
-                
-                // Get shared faces' indices, -1 if no adjacent face or if normal doesn't match 
+
+                // Get shared faces' indices, -1 if no adjacent face or if normal doesn't match
                 var sharedA = GetSharedFace(faceIndex, face.EdgeA, faceNormal);
                 var sharedB = GetSharedFace(faceIndex, face.EdgeB, faceNormal);
                 var sharedC = GetSharedFace(faceIndex, face.EdgeC, faceNormal);
@@ -70,7 +70,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     normal1 = math.normalize(geometry.Vertices[face.VertB].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
                     normal2 = math.normalize(geometry.Vertices[face.VertC].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
                 }
-                
+
                 var (t0, t1, t2) = AddFace(faceIndex, normal0, normal1, normal2);
                 var triangleOffset = vertices.Count;
 
@@ -87,7 +87,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     triangleOffset++;
                     sharedFaceCount++;
                 }
-                
+
                 if (sharedC != -1) {
                     exportedFaces.Add(sharedC);
                     AddAdjacentFace(sharedC, face.VertC, face.VertA, triangleOffset, t0, t2);
@@ -193,7 +193,7 @@ namespace GeometryGraph.Runtime.Geometry {
             
             var otherVertex = positionAttr[otherVertexIndex];
             var otherUV = uvAttr[otherFaceCornerIndex];
-            var normal = !shadeSmoothAttr[sharedA] 
+            var normal = !shadeSmoothAttr[sharedA]
                 ? normalAttr[sharedA]
                 : math.normalize(geometry.Vertices[otherVertexIndex].Faces.Where(i => shadeSmoothAttr[i]).Select(i => normalAttr[i]).Aggregate((n1, n2) => n1 + n2));
 
@@ -206,7 +206,7 @@ namespace GeometryGraph.Runtime.Geometry {
             triangles[submesh].Add(triangle1);
             triangles[submesh].Add(triangle2);
         }
-        
+
         private void __OnStateUpdate_GeometrySource() {
             if(source == null) return;
             if (source != null && (Object)source == null) source = null;

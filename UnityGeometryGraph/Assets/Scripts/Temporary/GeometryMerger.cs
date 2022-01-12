@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Geometry {
-    
+
     public class GeometryMerger : MonoBehaviour, IGeometryProvider {
         [SerializeField] private List<GeometryImporter> importers;
         [SerializeField] private GeometryData geometryData;
@@ -14,7 +14,7 @@ namespace GeometryGraph.Runtime.Geometry {
             geometryData = GeometryData.Empty;
 
             foreach (var importer in importers) {
-                if(importer == null || importer.Geometry == null) continue; 
+                if(importer == null || importer.Geometry == null) continue;
                 GeometryData.Merge(geometryData, importer.Geometry);
             }
         }

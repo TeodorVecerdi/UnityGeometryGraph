@@ -29,7 +29,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             Assert.IsTrue(attribute.Name.Equals("attr", StringComparison.InvariantCulture), "'{0}'.Equals('attr', StringComparison.InvariantCulture)", attribute.Name);
             Assert.IsTrue(attribute.SequenceEqual(sourceAttribute), "attribute.SequenceEqual(sourceAttribute)");
         }
-        
+
         [Test]
         public void WithIEnumerable_IntoTAttribute() {
             var sourceValues = Enumerable.Range(0, 100).Select(_ => Rand.Float).ToList();
@@ -41,7 +41,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             Assert.AreSame(destAttribute2, destAttribute, "destAttribute2 == destAttribute");
             Assert.IsTrue(destAttribute2.SequenceEqual(sourceValues2), "destAttribute2.SequenceEqual(sourceValues2)");
         }
-        
+
         [Test]
         public void WithIEnumerable_IntoBaseAttribute() {
             var sourceValues = Enumerable.Range(0, 100).Select(_ => Rand.Float).ToList();
@@ -51,7 +51,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             var destAttribute2 = sourceValues2.Into((BaseAttribute)destAttribute);
             
             Assert.AreSame(destAttribute2, destAttribute, "destAttribute2 == destAttribute");
-            Assert.IsTrue(destAttribute2.Values.SequenceEqual(sourceValues2.Convert(input => (object)input)), 
+            Assert.IsTrue(destAttribute2.Values.SequenceEqual(sourceValues2.Convert(input => (object)input)),
                           "destAttribute2.SequenceEqual(sourceValues2.Convert(input => (object)input))");
         }
     }

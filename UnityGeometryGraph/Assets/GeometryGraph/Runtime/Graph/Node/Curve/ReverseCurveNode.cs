@@ -27,13 +27,13 @@ namespace GeometryGraph.Runtime.Graph {
             List<float3> newPosition = new();
             List<float3> newTangent = new();
             List<float3> newNormal = new();
-            
+
             for (int i = Input.Points - 1; i >= 0; --i) {
                 newPosition.Add(Input.Position[i]);
                 newTangent.Add(-Input.Tangent[i]);
                 newNormal.Add(-Input.Normal[i]);
             }
-            
+
             Result = new CurveData(Input.Type, Input.Points, Input.IsClosed, newPosition, newTangent, newNormal, new List<float3>(Input.Binormal));
         }
     }

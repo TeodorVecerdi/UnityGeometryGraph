@@ -15,7 +15,7 @@ namespace GeometryGraph.Editor {
             inputCurvePort = GraphFrameworkPort.Create("Curve", Direction.Input, Port.Capacity.Single, PortType.Curve, this);
             pointsPort = GraphFrameworkPort.Create("Points", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);
             isClosedPort = GraphFrameworkPort.Create("Is Closed", Direction.Output, Port.Capacity.Multi, PortType.Boolean, this);
-            
+
             AddPort(inputCurvePort);
             AddPort(pointsPort);
             AddPort(isClosedPort);

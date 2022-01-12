@@ -49,11 +49,11 @@ namespace GeometryGraph.Runtime.Geometry {
             for (var faceIndex = 0; faceIndex < geometry.Faces.Count; faceIndex++) {
                 if(exportedFaces.Contains(faceIndex)) continue;
                 exportedFaces.Add(faceIndex);
-                
+
                 var normal = normalAttr[faceIndex];
                 var face = geometry.Faces[faceIndex];
-                
-                // Get shared faces, -1 if no adjacent face or if normal doesn't match 
+
+                // Get shared faces, -1 if no adjacent face or if normal doesn't match
                 var sharedA = GetSharedFace(faceIndex, face.EdgeA, normal);
                 var sharedB = GetSharedFace(faceIndex, face.EdgeB, normal);
                 var sharedC = GetSharedFace(faceIndex, face.EdgeC, normal);
@@ -76,7 +76,7 @@ namespace GeometryGraph.Runtime.Geometry {
                     AddAdjacentFace(sharedB, geometry.Edges[face.EdgeB].VertA, geometry.Edges[face.EdgeB].VertB, triangleOffset, triB0, triB1, normal);
                     triangleOffset++;
                 }
-                
+
                 if (sharedC != -1) {
                     Debug.Log("Added C");
                     exportedFaces.Add(sharedC);

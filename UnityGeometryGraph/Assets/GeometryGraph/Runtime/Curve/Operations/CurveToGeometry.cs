@@ -55,7 +55,7 @@ namespace GeometryGraph.Runtime.Curve {
                           + (profile.Points - (curve.IsClosed ? 0 : 1)) * (curve.Points - 1)
                           + (closeCaps ? 2 * GetCapEdgeCount(profile) : 0)
                             // extra edges if the curve is closed
-                          + (2 * profile.Points - (profile.IsClosed ? 0 : 1)) * (curve.IsClosed ? 1 : 0); 
+                          + (2 * profile.Points - (profile.IsClosed ? 0 : 1)) * (curve.IsClosed ? 1 : 0);
 
             int faceCount = 2 * (profile.Points - (profile.IsClosed ? 0 : 1)) * (curve.Points - 1)
                           + (closeCaps ? 2 * GetCapFaceCount(profile) : 0)
@@ -85,7 +85,7 @@ namespace GeometryGraph.Runtime.Curve {
             List<bool> shadeSmooth;
             int capsFaceCount = 2 * GetCapFaceCount(profile);
             int submeshCount = closeCaps && settings.SeparateMaterialForCaps ? 2 : 1;
-            
+
             if (closeCaps && settings.SeparateMaterialForCaps) {
                 materialIndices = Enumerable.Repeat(0, faceCount - capsFaceCount).ToList();
                 for (int i = 0; i < capsFaceCount; i++) {
@@ -103,15 +103,15 @@ namespace GeometryGraph.Runtime.Curve {
             } else {
                 shadeSmooth = Enumerable.Repeat(settings.ShadeSmoothCurve, faceCount).ToList();
             }
-            
+
             List<float2> uvs = new();
             List<float3> vertexPositions = new();
             List<float3> faceNormals = new();
-            
+
             List<GeometryData.Edge> edges = new();
             List<GeometryData.Face> faces = new();
             List<GeometryData.FaceCorner> faceCorners = new();
-            
+
             float rotationOffset = settings.RotationOffset;
             float incrementalRotationOffset = settings.IncrementalRotationOffset;
 
@@ -422,7 +422,7 @@ namespace GeometryGraph.Runtime.Curve {
                 };
                 edges.Add(edge);
             }
-            
+
             List<float2> vertexUVs = new();
             float2 minUV = new(float.MaxValue, float.MaxValue);
             float2 maxUV = new(float.MinValue, float.MinValue);
@@ -545,7 +545,7 @@ namespace GeometryGraph.Runtime.Curve {
             int currentFaceOffset = faces.Count;
             int vertexStart = vertexPositions.Count - profile.Points;
             int edgeStart = edges.Count - profile.Points - profile.Points + 3;
-            
+
             List<float2> vertexUVs = new();
             float2 minUV = new(float.MaxValue, float.MaxValue);
             float2 maxUV = new(float.MinValue, float.MinValue);
@@ -558,7 +558,7 @@ namespace GeometryGraph.Runtime.Curve {
                 minUV = math.min(minUV, uv);
                 maxUV = math.max(maxUV, uv);
             }
-            
+
             if (uvType != CurveToGeometrySettings.CapUVType.WorldSpace) {
                 for (int i = 0; i < vertexUVs.Count; i++) {
                     switch (uvType) {
@@ -576,7 +576,7 @@ namespace GeometryGraph.Runtime.Curve {
                     }
                 }
             }
-            
+
             for (int i = 2; i <= profile.Points - 2; i++) {
                 GeometryData.Edge edge = new(vertexStart, vertexStart + i, edges.Count) {
                     FaceA = currentFaceOffset + i - 2,
@@ -584,7 +584,7 @@ namespace GeometryGraph.Runtime.Curve {
                 };
                 edges.Add(edge);
             }
-            
+
             // First face
             GeometryData.Face firstFace = new(
                 vertexStart + 2, vertexStart, vertexStart + 1,
@@ -610,7 +610,7 @@ namespace GeometryGraph.Runtime.Curve {
             edges[edgeStart + 1].FaceA = faces.Count - 1;
             if (profile.Points == 3)
                 edges[edgeStart + 2].FaceA = faces.Count - 1;
-            
+
             int capFaceCount = profile.Points - 2;
             for (int i = 1; i < capFaceCount - 1; i++) {
                 GeometryData.Face face = new(
@@ -635,7 +635,7 @@ namespace GeometryGraph.Runtime.Curve {
                 uvs.Add(vertexUVs[(vertexStart + i + 1).mod(profile.Points)]);
                 edges[edgeStart + i + 1].FaceA = faces.Count - 1;
             }
-            
+
             // Last face
             if (profile.Points > 3) {
                 GeometryData.Face lastFace = new(

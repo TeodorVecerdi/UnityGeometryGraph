@@ -15,11 +15,11 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
 
             Assert.IsTrue(
                 boolAttribute.Zip(vec2Attribute, (boolean, vec2) => (boolean, vec2))
-                             .All(pair => pair.boolean == (pair.vec2.x != 0.0f && pair.vec2.y != 0.0f)), 
+                             .All(pair => pair.boolean == (pair.vec2.x != 0.0f && pair.vec2.y != 0.0f)),
                 "boolAttribute.Zip(vec2Attribute, (boolean, vec2) => (boolean, vec2)).All(pair => pair.boolean == (pair.vec2.x != 0.0f && pair.vec2.y != 0.0f))"
             );
         }
-        
+
         [Test]
         public void Vector2ToInteger() {
             var vec2Attribute = Enumerable.Range(0, 100).Select(_ => new float2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f))).Into<Vector2Attribute>("src", AttributeDomain.Vertex);
@@ -29,11 +29,11 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
 
             Assert.IsTrue(
                 intAttribute.Zip(vec2Attribute, (integer, vec2) => (integer, vec2))
-                            .All(pair => pair.integer == (int)pair.vec2.x), 
+                            .All(pair => pair.integer == (int)pair.vec2.x),
                 "intAttribute.Zip(vec2Attribute, (integer, vec2) => (integer, vec2)).All(pair => pair.integer == (int)pair.vec2.x)"
             );
         }
-        
+
         [Test]
         public void Vector2ToFloat() {
             var vec2Attribute = Enumerable.Range(0, 100).Select(_ => new float2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f))).Into<Vector2Attribute>("src", AttributeDomain.Vertex);
@@ -43,11 +43,11 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
 
             Assert.IsTrue(
                 floatAttribute.Zip(vec2Attribute, (@float, vec2) => (@float, vec2))
-                              .All(pair => pair.@float == pair.vec2.x), 
+                              .All(pair => pair.@float == pair.vec2.x),
                 "floatAttribute.Zip(vec2Attribute, (@float, vec2) => (@float, vec2)).All(pair => pair.@float == pair.vec2.x)"
             );
         }
-        
+
         [Test]
         public void Vector2ToClampedFloat() {
             var vec2Attribute = Enumerable.Range(0, 100).Select(_ => new float2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f))).Into<Vector2Attribute>("src", AttributeDomain.Vertex);
@@ -57,11 +57,11 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
 
             Assert.IsTrue(
                 clampedFloatAttribute.Zip(vec2Attribute, (@float, vec2) => (@float, vec2))
-                                     .All(pair => pair.vec2.x < 0.0f ? pair.@float == 0.0f : pair.vec2.x > 1.0f ? pair.@float == 1.0f : pair.@float == pair.vec2.x), 
+                                     .All(pair => pair.vec2.x < 0.0f ? pair.@float == 0.0f : pair.vec2.x > 1.0f ? pair.@float == 1.0f : pair.@float == pair.vec2.x),
                 "clampedFloatAttribute.Zip(vec2Attribute, (@float, vec2) => (@float, vec2)).All(pair => pair.vec2.x < 0.0f ? pair.@float == 0.0f : pair.vec2.x > 1.0f ? pair.@float == 1.0f : pair.@float == pair.vec2.x)"
             );
         }
-        
+
         [Test]
         public void Vector2ToVector3() {
             var vec2Attribute = Enumerable.Range(0, 100).Select(_ => new float2(Rand.Range(-100f, 100f), Rand.Range(-100f, 100f))).Into<Vector2Attribute>("src", AttributeDomain.Vertex);
@@ -71,7 +71,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.TypeConversion {
 
             Assert.IsTrue(
                 vec3Attribute.Zip(vec2Attribute, (vec3, vec2) => (vec3, vec2))
-                             .All(pair => pair.vec3.xy.Equals(pair.vec2) && pair.vec3.z == 0), 
+                             .All(pair => pair.vec3.xy.Equals(pair.vec2) && pair.vec3.z == 0),
                 "vec3Attribute.Zip(vec2Attribute, (vec3, vec2) => (vec3, vec2)).All(pair => pair.vec3.xy.Equals(pair.vec2) && pair.vec3.z == 0)"
             );
         }

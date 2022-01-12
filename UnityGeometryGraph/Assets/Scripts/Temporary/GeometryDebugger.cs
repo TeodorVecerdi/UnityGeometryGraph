@@ -13,13 +13,13 @@ namespace GeometryGraph.Runtime.Geometry {
         [SerializeField] private ElementGizmoType gizmoType;
         [SerializeField] private float handleSize = 0.1f;
         [SerializeField] private float faceDistanceOffset = 0.015f;
-        
+
         [ShowIf("@gizmoType == ElementGizmoType.Faces || gizmoType == ElementGizmoType.FacesByMaterial || gizmoType == ElementGizmoType.FacesByShadeSmooth")]
         [SerializeField] private bool showFaceNormals;
-        
+
         [ShowIf("@gizmoType != ElementGizmoType.None")]
         [SerializeField] private bool showByElement;
-    
+
         [SerializeField, ShowIf("@showByElement && gizmoType != ElementGizmoType.None"), MinValue(0), MaxValue(nameof(__GetMaxIndex))]
         [InlineButton("@((PropertyValueEntry<int>)$property.ValueEntry).SmartValue += 1", "+")]
         [InlineButton("@((PropertyValueEntry<int>)$property.ValueEntry).SmartValue -= 1", "-")]
@@ -50,16 +50,16 @@ namespace GeometryGraph.Runtime.Geometry {
         private void OnDrawGizmosSelected() {
 #if UNITY_EDITOR
             if (gizmoType == ElementGizmoType.None || source == null || !(Object)source || data == null) return;
-        
+
             UnityEditor.Handles.matrix = Gizmos.matrix = source.LocalToWorldMatrix;
             var zTest = UnityEditor.Handles.zTest;
             UnityEditor.Handles.zTest = CompareFunction.LessEqual;
             Random.InitState(0);
-        
+
             if(showByElement) index = index.Clamped(0, __GetMaxIndex());
 
             var vertices = data.GetAttribute<Vector3Attribute>("position");
-        
+
             if (gizmoType == ElementGizmoType.Vertices) {
                 if (showByElement) {
                     var size = handleSize * UnityEditor.HandleUtility.GetHandleSize(vertices[index]);
@@ -77,7 +77,7 @@ namespace GeometryGraph.Runtime.Geometry {
             } else if (gizmoType is ElementGizmoType.Edges or ElementGizmoType.EdgeAdjacentFaces) {
                 var dist = faceDistanceOffset * UnityEditor.HandleUtility.GetHandleSize(transform.position);
                 var faceNormals = data.GetAttribute<Vector3Attribute>("normal");
-                
+
                 if (showByElement) {
                     var edge = data.Edges[index];
                     var v0 = vertices[edge.VertA];
@@ -91,19 +91,19 @@ namespace GeometryGraph.Runtime.Geometry {
                             var colorA = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                             Gizmos.color = UnityEditor.Handles.color = color;
                             var face = data.Faces[edge.FaceA];
-                            
+
                             var normal = faceNormals[edge.FaceA];
                             var vf0 = vertices[face.VertA] + normal * dist;
                             var vf1 = vertices[face.VertB] + normal * dist;
                             var vf2 = vertices[face.VertC] + normal * dist;
                             Handles.DrawAAConvexPolygon(vf0, vf1, vf2);
                         }
-                        
+
                         if (edge.FaceB != -1) {
                             var colorB = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                             Gizmos.color = UnityEditor.Handles.color = color;
                             var face = data.Faces[edge.FaceB];
-                            
+
                             var normal = faceNormals[edge.FaceB];
                             var vf0 = vertices[face.VertA] + normal * dist;
                             var vf1 = vertices[face.VertB] + normal * dist;
@@ -118,25 +118,25 @@ namespace GeometryGraph.Runtime.Geometry {
                         var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                         Gizmos.color = UnityEditor.Handles.color = color;
                         UnityEditor.Handles.DrawAAPolyLine(4.0f, v0, v1);
-                        
+
                         if (gizmoType is ElementGizmoType.EdgeAdjacentFaces) {
                             if (edge.FaceA != -1) {
                                 var colorA = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                                 Gizmos.color = UnityEditor.Handles.color = colorA;
                                 var face = data.Faces[edge.FaceA];
-                            
+
                                 var normal = faceNormals[edge.FaceA];
                                 var vf0 = vertices[face.VertA] + normal * dist;
                                 var vf1 = vertices[face.VertB] + normal * dist;
                                 var vf2 = vertices[face.VertC] + normal * dist;
                                 Handles.DrawAAConvexPolygon(vf0, vf1, vf2);
                             }
-                        
+
                             if (edge.FaceB != -1) {
                                 var colorB = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                                 Gizmos.color = UnityEditor.Handles.color = colorB;
                                 var face = data.Faces[edge.FaceB];
-                            
+
                                 var normal = faceNormals[edge.FaceB];
                                 var vf0 = vertices[face.VertA] + normal * dist;
                                 var vf1 = vertices[face.VertB] + normal * dist;
@@ -171,9 +171,9 @@ namespace GeometryGraph.Runtime.Geometry {
                     } else if (gizmoType == ElementGizmoType.FacesByMaterial) {
                         Gizmos.color = UnityEditor.Handles.color = colors[faceMaterials[index]];
                     } else if (gizmoType == ElementGizmoType.FacesByShadeSmooth) {
-                        Gizmos.color = UnityEditor.Handles.color = colors[faceShadeSmooth[index] ? 1 : 0]; 
+                        Gizmos.color = UnityEditor.Handles.color = colors[faceShadeSmooth[index] ? 1 : 0];
                     }
-                    
+
                     UnityEditor.Handles.DrawAAConvexPolygon(v0, v1, v2);
 
                     if (showFaceNormals) {
@@ -188,15 +188,15 @@ namespace GeometryGraph.Runtime.Geometry {
                         var v0 = vertices[face.VertA] + normal * dist;
                         var v1 = vertices[face.VertB] + normal * dist;
                         var v2 = vertices[face.VertC] + normal * dist;
-                       
+
                         if (gizmoType == ElementGizmoType.Faces) {
                             Gizmos.color = UnityEditor.Handles.color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                         } else if (gizmoType == ElementGizmoType.FacesByMaterial) {
                             Gizmos.color = UnityEditor.Handles.color = colors[faceMaterials[i]];
                         } else if (gizmoType == ElementGizmoType.FacesByShadeSmooth) {
-                            Gizmos.color = UnityEditor.Handles.color = colors[faceShadeSmooth[i] ? 1 : 0]; 
+                            Gizmos.color = UnityEditor.Handles.color = colors[faceShadeSmooth[i] ? 1 : 0];
                         }
-                        
+
                         UnityEditor.Handles.DrawAAConvexPolygon(v0, v1, v2);
                     }
 
@@ -216,19 +216,19 @@ namespace GeometryGraph.Runtime.Geometry {
             } else if (gizmoType == ElementGizmoType.FaceEdges) {
                 if (showByElement) {
                     var face = data.Faces[index];
-                
+
                     var e0v0 = vertices[data.Edges[face.EdgeA].VertA];
                     var e0v1 = vertices[data.Edges[face.EdgeA].VertB];
                     var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                     Gizmos.color = UnityEditor.Handles.color = color;
                     UnityEditor.Handles.DrawAAPolyLine(4.0f, e0v0, e0v1);
-                
+
                     var e1v0 = vertices[data.Edges[face.EdgeB].VertA];
                     var e1v1 = vertices[data.Edges[face.EdgeB].VertB];
                     color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                     Gizmos.color = UnityEditor.Handles.color = color;
                     UnityEditor.Handles.DrawAAPolyLine(4.0f, e1v0, e1v1);
-                
+
                     var e2v0 = vertices[data.Edges[face.EdgeC].VertA];
                     var e2v1 = vertices[data.Edges[face.EdgeC].VertB];
                     color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
@@ -241,13 +241,13 @@ namespace GeometryGraph.Runtime.Geometry {
                         var color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                         Gizmos.color = UnityEditor.Handles.color = color;
                         UnityEditor.Handles.DrawAAPolyLine(4.0f, e0v0, e0v1);
-                
+
                         var e1v0 = vertices[data.Edges[face.EdgeB].VertA];
                         var e1v1 = vertices[data.Edges[face.EdgeB].VertB];
                         color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
                         Gizmos.color = UnityEditor.Handles.color = color;
                         UnityEditor.Handles.DrawAAPolyLine(4.0f, e1v0, e1v1);
-                
+
                         var e2v0 = vertices[data.Edges[face.EdgeC].VertA];
                         var e2v1 = vertices[data.Edges[face.EdgeC].VertB];
                         color = Random.ColorHSV(0f, 1f, 0.5f, 1f, .75f, 1f);
@@ -258,14 +258,14 @@ namespace GeometryGraph.Runtime.Geometry {
             } else if (gizmoType == ElementGizmoType.FaceFaceCorners) {
                 if (showByElement) {
                     var face = data.Faces[index];
-                
+
                     var fc0 = vertices[data.FaceCorners[face.FaceCornerA].Vert];
                     var fc1 = vertices[data.FaceCorners[face.FaceCornerB].Vert];
                     var fc2 = vertices[data.FaceCorners[face.FaceCornerC].Vert];
                     Gizmos.color = UnityEditor.Handles.color = Color.red;
                     var size = handleSize * UnityEditor.HandleUtility.GetHandleSize(fc0);
                     Gizmos.DrawSphere(fc0, size);
-                
+
                     Gizmos.color = UnityEditor.Handles.color = Color.green;
                     size = handleSize * UnityEditor.HandleUtility.GetHandleSize(fc1);
                     Gizmos.DrawSphere(fc1, size);

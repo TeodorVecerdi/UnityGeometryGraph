@@ -8,7 +8,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         public ComputeShader ComputeShader;
         public RawImage Image;
         public int Resolution = 1024;
-        
+
         [OnValueChanged(nameof(Run))] public bool DoSmooth;
         [OnValueChanged(nameof(Run))] public bool DoSmoothMin;
         [OnValueChanged(nameof(Run))] public float SmoothDistance;

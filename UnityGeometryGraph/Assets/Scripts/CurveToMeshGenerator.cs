@@ -18,7 +18,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         public float RotationOffset;
         public float IncrementalRotationOffset;
         [EnumToggleButtons] public CurveToGeometrySettings.CapUVType CapUVType = CurveToGeometrySettings.CapUVType.WorldSpace;
-        
+
         public GeometryData Geometry;
 
         [Button]
@@ -27,7 +27,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
             Geometry = CurveToGeometry.WithProfile(Curve.Curve, Profile.Curve, new CurveToGeometrySettings(CloseCaps, SeparateMaterialForCaps, ShadeSmoothCurve, ShadeSmoothCaps, RotationOffset, IncrementalRotationOffset, CapUVType));
             Exporter.Export(Geometry, Mesh);
         }
-        
+
         private void InitializeMesh() {
             Mesh = new Mesh {
                 name = "Generated Mesh",

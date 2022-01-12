@@ -31,7 +31,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             Assert.IsTrue(attribute.Name.Equals("attr", StringComparison.InvariantCulture), "'{0}'.Equals('attr', StringComparison.InvariantCulture)", attribute.Name);
             Assert.IsTrue(attribute.SequenceEqual(expected), "attribute.SequenceEqual(expected)");
         }
-        
+
         [Test]
         public void WithIEnumerable_IntoTAttribute() {
             var sourceValues = Enumerable.Range(0, 100).Select(_ => Rand.Float);
@@ -44,7 +44,7 @@ namespace GeometryGraph.Tests.Runtime.Unit.Attribute.Operations {
             Assert.AreSame(attr, destAttr, "attr == destAttr");
             Assert.IsTrue(attr.SequenceEqual(expected), "attr.SequenceEqual(expected)");
         }
-        
+
         [Test]
         public void WithIEnumerable_IntoBaseAttribute() {
             var sourceValues = Enumerable.Range(0, 100).Select(_ => Rand.Float);

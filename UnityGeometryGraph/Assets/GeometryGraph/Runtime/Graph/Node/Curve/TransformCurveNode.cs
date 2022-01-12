@@ -46,7 +46,7 @@ namespace GeometryGraph.Runtime.Graph {
                 Result = null;
                 return;
             }
-            
+
             List<float3> translation = GetValues(TranslationPort, Input.Points, Translation).ToList();
             List<float3> rotation = GetValues(RotationPort, Input.Points, Rotation).ToList();
             List<float3> scale = GetValues(ScalePort, Input.Points, Scale).ToList();

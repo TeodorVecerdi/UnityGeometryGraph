@@ -14,9 +14,9 @@ namespace GeometryGraph.Editor {
         /// <inheritdoc cref="DisplayNameString"/>
         public static string DisplayNameEnum(object enumValue) {
             Type enumType = enumValue.GetType();
-            
+
             if (displayNameOverrides.ContainsKey(enumType) && displayNameOverrides[enumType].ContainsKey(ToUInt64(enumValue))) return displayNameOverrides[enumType][ToUInt64(enumValue)];
-            
+
             return DisplayNameString(Enum.GetName(enumType, enumValue));
         }
 
@@ -54,7 +54,7 @@ namespace GeometryGraph.Editor {
             Type enumType = typeof(Enum);
             List<Type> allEnumTypes = typeof(RandomUtilities).Assembly.GetTypes().Where(type => type.IsSubclassOf(enumType))
                                                              .Union(typeof(RuntimeGraphObject).Assembly.GetTypes().Where(type => type.IsSubclassOf(enumType))).ToList();
-            
+
             foreach (Type type in allEnumTypes) {
                 FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                 foreach (FieldInfo field in fields) {

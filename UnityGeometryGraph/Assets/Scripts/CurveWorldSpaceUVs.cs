@@ -10,7 +10,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
         [Required] public ICurveProvider Curve;
         [Required] public ICurveProvider Profile;
         [Required] public CurveVisualizer Visualizer;
-        
+
         [Space]
         public bool OffsetUVs;
         public bool NormalizeUVs;
@@ -57,23 +57,23 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
             for (var i = 0; i < aligned.Position.Count; i++) {
                 float3 vertex = aligned.Position[i];
                 vertices.Add(vertex);
-                
+
                 float uvX = math.dot(vertex, Curve.Curve.Normal[0]); // right vector
                 float uvY = math.dot(vertex, Curve.Curve.Binormal[0]); // forward vector
                 if (EndingCap) {
                     uvX = math.dot(vertex, -Curve.Curve.Normal[Curve.Curve.Points - 1]); // right vector
                     uvY = math.dot(vertex, Curve.Curve.Binormal[Curve.Curve.Points - 1]); // forward vector
                 }
-                
+
                 float2 uv = new float2(uvX, uvY);
                 uvs.Add(uv);
-                
+
                 minUV = math.min(minUV, uv);
                 maxUV = math.max(maxUV, uv);
             }
             
             for (var i = 0; i < uvs.Count; i++) {
-                if (NormalizeUVs) { 
+                if (NormalizeUVs) {
                     float2 currentUV = uvs[i];
                     float2 normalizedUV = (currentUV - minUV) / (maxUV - minUV);
                     uvs[i] = normalizedUV;
@@ -128,7 +128,7 @@ namespace GeometryGraph.Runtime.Curve.TEMP {
             mesh.RecalculateTangents();
             mesh.RecalculateBounds();
         }
-        
+
         private static CurveData AlignCurve(CurveData alignOn, CurveData toAlign, int index, float rotationOffset) {
             var rotation = float4x4.RotateY(math.radians(rotationOffset));
             var align = new float4x4(alignOn.Normal[index].float4(), alignOn.Tangent[index].float4(), alignOn.Binormal[index].float4(), alignOn.Position[index].float4(1.0f));
