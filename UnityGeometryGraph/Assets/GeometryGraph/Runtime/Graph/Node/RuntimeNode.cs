@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -70,12 +71,37 @@ namespace GeometryGraph.Runtime.Graph {
 
             if (PortTypeUtility.IsUnmanagedType(outputPort.Type)) {
                 if (value is T tValueUnmanaged) return tValueUnmanaged;
-            } else {
-                T tValue = (T)value;
-                if (tValue != null) return tValue;
+                return (T)PortValueConverter.Convert(value, outputPort.Type, connection.Input.Type);
             }
 
-            return (T)PortValueConverter.Convert(value, outputPort.Type, connection.Input.Type);
+            try {
+                T tValue = (T)value;
+                if (tValue != null) return tValue;
+            } catch (InvalidCastException) {
+                Debug.LogError($"GetValue: Invalid Cast from {value.GetType()} to {typeof(T)}.\nNode {connection.Input.Node.GetType()} requested from node {connection.Output.Node.GetType()}.");
+                /*
+                connection.Input.Connections.Remove(connection);
+                connection.Input.Node.NotifyConnectionRemoved(connection, connection.Input);
+                connection.Output.Connections.Remove(connection);
+                connection.Output.Node.NotifyConnectionRemoved(connection, connection.Output);
+                */
+
+                return defaultValue;
+            }
+
+            try {
+                return (T)PortValueConverter.Convert(value, outputPort.Type, connection.Input.Type);
+            } catch (InvalidCastException) {
+                Debug.LogError($"GetValue: Invalid Cast from {value.GetType()} to {typeof(T)}.\nNode {connection.Input.Node.GetType()} requested from node {connection.Output.Node.GetType()}.");
+                /*
+                connection.Input.Connections.Remove(connection);
+                connection.Input.Node.NotifyConnectionRemoved(connection, connection.Input);
+                connection.Output.Connections.Remove(connection);
+                connection.Output.Node.NotifyConnectionRemoved(connection, connection.Output);
+                */
+
+                return defaultValue;
+            }
         }
 
         protected T GetValue<T>(RuntimePort port, T defaultValue) {

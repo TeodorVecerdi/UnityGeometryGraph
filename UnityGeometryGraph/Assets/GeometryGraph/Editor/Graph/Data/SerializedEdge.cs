@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace GeometryGraph.Editor {
@@ -20,9 +21,14 @@ namespace GeometryGraph.Editor {
             EditorView = editorView;
             AbstractNode inputNode = editorView.GraphView.nodes.First(node => node.viewDataKey == Input) as AbstractNode;
             AbstractNode outputNode = editorView.GraphView.nodes.First(node => node.viewDataKey == Output) as AbstractNode;
-            Port inputPort = inputNode.Owner.GuidPortDictionary[InputPort];
-            Port outputPort = outputNode.Owner.GuidPortDictionary[OutputPort];
-            Edge = inputPort.ConnectTo(outputPort);
+            try {
+                Port inputPort = inputNode.Owner.GuidPortDictionary[InputPort];
+                Port outputPort = outputNode.Owner.GuidPortDictionary[OutputPort];
+                Edge = inputPort.ConnectTo(outputPort);
+            } catch (Exception e) {
+                Debug.LogException(e);
+                return;
+            }
             Edge.userData = this;
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Graph;
 using UnityCommons;
@@ -219,24 +220,32 @@ namespace GeometryGraph.Editor {
                     graphView.GraphOutputNode = outputNode;
                 }
             });
+            List<SerializedEdge> edgesToRemove = new();
             GraphObject.GraphData.Edges.ForEach(edge => {
                 AbstractNode outputNode = GraphView.nodes.First(node => node.viewDataKey == edge.Output) as AbstractNode;
                 AbstractNode inputNode = GraphView.nodes.First(node => node.viewDataKey == edge.Input) as AbstractNode;
-                GraphFrameworkPort outputPort = (GraphFrameworkPort)outputNode.Owner.GuidPortDictionary[edge.OutputPort];
-                GraphFrameworkPort inputPort = (GraphFrameworkPort)inputNode.Owner.GuidPortDictionary[edge.InputPort];
+                try {
+                    GraphFrameworkPort outputPort = (GraphFrameworkPort)outputNode.Owner.GuidPortDictionary[edge.OutputPort];
+                    GraphFrameworkPort inputPort = (GraphFrameworkPort)inputNode.Owner.GuidPortDictionary[edge.InputPort];
+                    if (inputPort != null && outputPort != null) {
+                        RuntimePort runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
+                        RuntimePort runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
+                        Connection connection = new() { Output = runtimeOutput, Input = runtimeInput };
+                        runtimeOutput.Node.NotifyConnectionCreated(connection, runtimeOutput);
+                        runtimeInput.Node.NotifyConnectionCreated(connection, runtimeInput);
+                    } else {
+                        Debug.Log("Edge ports were null");
+                    }
 
-                if (inputPort != null && outputPort != null) {
-                    RuntimePort runtimeOutput = outputPort.node.RuntimePortDictionary[outputPort];
-                    RuntimePort runtimeInput = inputPort.node.RuntimePortDictionary[inputPort];
-                    Connection connection = new() { Output = runtimeOutput, Input = runtimeInput };
-                    runtimeOutput.Node.NotifyConnectionCreated(connection, runtimeOutput);
-                    runtimeInput.Node.NotifyConnectionCreated(connection, runtimeInput);
-                } else {
-                    Debug.Log("Edge ports were null");
+                } catch (Exception e) {
+                    Debug.LogException(e);
+                    edgesToRemove.Add(edge);
+                    return;
                 }
 
                 AddEdge(edge);
             });
+            edgesToRemove.ForEach(edge => GraphObject.GraphData.RemoveEdge(edge));
 
             // Refresh expanded state
             GraphObject.GraphData.Nodes.ForEach(node => {
