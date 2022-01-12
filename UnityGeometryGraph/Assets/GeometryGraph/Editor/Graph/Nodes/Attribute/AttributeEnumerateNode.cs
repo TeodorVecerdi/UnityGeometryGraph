@@ -20,6 +20,8 @@ namespace GeometryGraph.Editor {
         private GraphFrameworkPort integerPort;
         private GraphFrameworkPort vectorPort;
         private GraphFrameworkPort booleanPort;
+        private GraphFrameworkPort indexPort;
+        private GraphFrameworkPort countPort;
 
         private TextField attributeField;
         private EnumSelectionDropdown<TargetDomain> domainDropdown;
@@ -54,6 +56,8 @@ namespace GeometryGraph.Editor {
             integerPort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);
             vectorPort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Vector, this);
             booleanPort = GraphFrameworkPort.Create("Value", Direction.Output, Port.Capacity.Multi, PortType.Boolean, this);
+            indexPort = GraphFrameworkPort.Create("Index", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);
+            countPort = GraphFrameworkPort.Create("Count", Direction.Output, Port.Capacity.Multi, PortType.Integer, this);
 
             domainDropdown = new EnumSelectionDropdown<TargetDomain>(domain, domainTree, "Domain");
             typeDropdown = new EnumSelectionDropdown<TargetType>(type, typeTree);
@@ -97,6 +101,8 @@ namespace GeometryGraph.Editor {
             AddPort(integerPort);
             AddPort(vectorPort);
             AddPort(booleanPort);
+            AddPort(indexPort);
+            AddPort(countPort);
             
             OnTypeChanged();
         }
@@ -138,6 +144,8 @@ namespace GeometryGraph.Editor {
             BindPort(integerPort, RuntimeNode.IntegerPort);
             BindPort(vectorPort, RuntimeNode.VectorPort);
             BindPort(booleanPort, RuntimeNode.BooleanPort);
+            BindPort(indexPort, RuntimeNode.IndexPort);
+            BindPort(countPort, RuntimeNode.CountPort);
         }
 
         protected internal override JObject Serialize() {
