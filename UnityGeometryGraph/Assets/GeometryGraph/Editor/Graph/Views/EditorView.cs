@@ -245,7 +245,7 @@ namespace GeometryGraph.Editor {
 
                 AddEdge(edge);
             });
-            edgesToRemove.ForEach(edge => GraphObject.GraphData.RemoveEdge(edge));
+            // edgesToRemove.ForEach(edge => GraphObject.GraphData.RemoveEdge(edge));
 
             // Refresh expanded state
             GraphObject.GraphData.Nodes.ForEach(node => {
