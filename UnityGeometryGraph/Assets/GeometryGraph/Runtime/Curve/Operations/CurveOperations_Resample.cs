@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityCommons;
 using UnityEngine;
@@ -8,6 +9,11 @@ namespace GeometryGraph.Runtime.Curve {
         public static CurveData ResampleCurveByDistance(CurveData originalCurve, float distance) {
             distance = distance.MinClamped(0.001f);
             float curveLength = CalculateLength(originalCurve);
+
+            if (curveLength <= distance || math.abs(curveLength) < Constants.FLOAT_TOLERANCE) {
+                return CurveData.Empty;
+            }
+
             int resamplePoints = (Mathf.FloorToInt(curveLength / distance) - (originalCurve.IsClosed ? 0 : 1)).Clamped(CurveTypeUtilities.MinPoints(originalCurve.Type), Constants.MAX_CURVE_RESOLUTION);
             float resampleDistance = curveLength / (resamplePoints - (originalCurve.IsClosed ? 0 : 1));
 
@@ -16,7 +22,17 @@ namespace GeometryGraph.Runtime.Curve {
 
         public static CurveData ResampleCurveByPoints(CurveData originalCurve, int resamplePoints) {
             resamplePoints = resamplePoints.Clamped(CurveTypeUtilities.MinPoints(originalCurve.Type), Constants.MAX_CURVE_RESOLUTION);
-            float resampleDistance = CalculateLength(originalCurve) / (resamplePoints - (originalCurve.IsClosed ? 0 : 1));
+            float curveLength = CalculateLength(originalCurve);
+
+            if (math.abs(curveLength) < Constants.FLOAT_TOLERANCE) {
+                return CurveData.Empty;
+            }
+
+            float resampleDistance = curveLength / (resamplePoints - (originalCurve.IsClosed ? 0 : 1));
+
+            if (curveLength <= resampleDistance) {
+                return CurveData.Empty;
+            }
 
             return ResampleCurveCommon(originalCurve, resamplePoints, resampleDistance);
         }

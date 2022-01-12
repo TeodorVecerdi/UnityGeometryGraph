@@ -83,9 +83,9 @@ namespace GeometryGraph.Runtime.Testing {
         [Button]
         private void Resample() {
             if (resampleUsingPointCount) {
-                ResampleUsingPoints();
+                resampled = CurveOperations.ResampleCurveByPoints(curve, resamplePointCount);
             } else {
-                ResampleUsingDistance();
+                resampled = CurveOperations.ResampleCurveByDistance(curve, resampleDistance);
             }
 
             if (resampled != null && resampledVisualizer != null) {
