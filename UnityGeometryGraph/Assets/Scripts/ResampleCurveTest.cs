@@ -163,12 +163,11 @@ namespace GeometryGraph.Runtime.Testing {
                     float totalDistanceWithoutLast = distances[^1] - distance;
                     float newCurrentDistance = currentDistance - totalDistanceWithoutLast;
 
-                    float3 position = curve.Position[^1] + (newCurrentDistance / distance) * (curve.Position[0] - curve.Position[^1]);
-                    float t = math_ext.inverse_lerp_clamped(curve.Position[^1], curve.Position[0], position);
-
+                    float t = newCurrentDistance / distance;
+                    float3 position = math.lerp(curve.Position[^1], curve.Position[0], t);
                     float3 tangent = math.lerp(curve.Tangent[^1], curve.Tangent[0], t);
                     float3 normal = math.lerp(curve.Normal[^1], curve.Normal[0], t);
-                    float3 binormal = math.cross(tangent, normal);
+                    float3 binormal = math.lerp(curve.Binormal[^1], curve.Binormal[0], t);
 
                     positions.Add(position);
                     tangents.Add(tangent);
@@ -178,9 +177,8 @@ namespace GeometryGraph.Runtime.Testing {
                     float3 start = curve.Position[closestPointIndex];
                     float3 end = curve.Position[closestPointIndex + 1];
 
-                    float3 position = start + (currentDistance - distances[closestPointIndex]) / (distances[closestPointIndex + 1] - distances[closestPointIndex]) * (end - start);
-                    float t = math_ext.inverse_lerp_clamped(start, end, position);
-
+                    float t = (currentDistance - distances[closestPointIndex]) / (distances[closestPointIndex + 1] - distances[closestPointIndex]);
+                    float3 position = math.lerp(start, end, t);
                     float3 tangent = math.lerp(curve.Tangent[closestPointIndex], curve.Tangent[closestPointIndex + 1], t);
                     float3 normal = math.lerp(curve.Normal[closestPointIndex], curve.Normal[closestPointIndex + 1], t);
                     float3 binormal = math.lerp(curve.Binormal[closestPointIndex], curve.Binormal[closestPointIndex + 1], t);
@@ -226,12 +224,11 @@ namespace GeometryGraph.Runtime.Testing {
                     float totalDistanceWithoutLast = distances[^1] - distance;
                     float newCurrentDistance = currentDistance - totalDistanceWithoutLast;
 
-                    float3 position = curve.Position[^1] + (newCurrentDistance / distance) * (curve.Position[0] - curve.Position[^1]);
-                    float t = math_ext.inverse_lerp_clamped(curve.Position[^1], curve.Position[0], position);
-
+                    float t = newCurrentDistance / distance;
+                    float3 position = math.lerp(curve.Position[^1], curve.Position[0], t);
                     float3 tangent = math.lerp(curve.Tangent[^1], curve.Tangent[0], t);
                     float3 normal = math.lerp(curve.Normal[^1], curve.Normal[0], t);
-                    float3 binormal = math.cross(tangent, normal);
+                    float3 binormal = math.lerp(curve.Binormal[^1], curve.Binormal[0], t);
 
                     positions.Add(position);
                     tangents.Add(tangent);
@@ -241,9 +238,8 @@ namespace GeometryGraph.Runtime.Testing {
                     float3 start = curve.Position[closestPointIndex];
                     float3 end = curve.Position[closestPointIndex + 1];
 
-                    float3 position = start + (currentDistance - distances[closestPointIndex]) / (distances[closestPointIndex + 1] - distances[closestPointIndex]) * (end - start);
-                    float t = math_ext.inverse_lerp_clamped(start, end, position);
-
+                    float t = (currentDistance - distances[closestPointIndex]) / (distances[closestPointIndex + 1] - distances[closestPointIndex]);
+                    float3 position = math.lerp(start, end, t);
                     float3 tangent = math.lerp(curve.Tangent[closestPointIndex], curve.Tangent[closestPointIndex + 1], t);
                     float3 normal = math.lerp(curve.Normal[closestPointIndex], curve.Normal[closestPointIndex + 1], t);
                     float3 binormal = math.lerp(curve.Binormal[closestPointIndex], curve.Binormal[closestPointIndex + 1], t);
