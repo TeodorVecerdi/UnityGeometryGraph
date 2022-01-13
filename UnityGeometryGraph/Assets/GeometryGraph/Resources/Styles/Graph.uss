@@ -122,11 +122,10 @@ BooleanSelectionToggle.boolean-selection-toggle .toggle-button.last {
     Region: Boolean Selection Toggle
 */
 BooleanToggle.boolean-toggle {
-  flex-direction: row;
-  align-items: center;
-  padding: 3px;
-  margin-top: 0;
-  margin-bottom: 0;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 1px 3px;
+  height: 22px;
 }
 BooleanToggle.boolean-toggle .toggle-button {
   margin: 0;
