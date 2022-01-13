@@ -27,6 +27,7 @@
     Toggle.unity-toggle, ClampedIntegerField, ClampedFloatField, EnumField,
     Vector3Field.port-backing-field, EnumSelectionDropdown.enum-selection-dropdown,
     EnumSelectionToggle.enum-selection-toggle, CurveField.unity-curve-field,
+    BooleanSelectionToggle.boolean-selection-toggle,
     VisualElement.gradient-container {
         display: none;
     }
@@ -88,6 +89,73 @@ EnumSelectionToggle.enum-selection-toggle {
         &.last {
             border-top-right-radius: 3px;
             border-bottom-right-radius: 3px;
+        }
+    }
+}
+
+/* 
+    Region: Boolean Selection Toggle
+*/
+BooleanSelectionToggle.boolean-selection-toggle {
+    flex-direction: row;
+    align-items: center;
+    padding: 3px;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    Label {
+        margin-left: 6px;
+    }
+
+    .toggle-button {
+        margin: 0;
+        height: 20px;
+        border-radius: 0;
+        border-left-width: 0;
+        flex-shrink: 1;
+        flex-grow: 1;
+        flex-basis: 0;
+
+        &.selected {
+            background-color: #216bcb;
+        }
+
+        &.first {
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+            border-left-width: 1px;
+        }
+
+        &.last {
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+            padding-left: 7px;
+            padding-right: 7px;
+        }
+    }
+}
+
+/* 
+    Region: Boolean Selection Toggle
+*/
+BooleanToggle.boolean-toggle {
+    flex-direction: row;
+    align-items: center;
+    padding: 3px;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    .toggle-button {
+        margin: 0;
+        height: 20px;
+        flex-shrink: 1;
+        flex-grow: 1;
+        flex-basis: 0;
+        border-radius: 3px;
+        border-left-width: 1px;
+
+        &.selected {
+            background-color: #216bcb;
         }
     }
 }

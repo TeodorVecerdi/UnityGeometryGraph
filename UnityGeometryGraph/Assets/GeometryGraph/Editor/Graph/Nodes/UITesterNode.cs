@@ -11,10 +11,8 @@ namespace GeometryGraph.Editor {
         private float toMin = 0.0f;
         private float toMax = 1.0f;
 
-        private FloatMapRangeField floatMapRangeField;
-
         protected override void CreateNode() {
-            floatMapRangeField = new FloatMapRangeField("Label", fromMin, fromMax, toMin, toMax);
+            FloatMapRangeField floatMapRangeField = new FloatMapRangeField("Label", fromMin, fromMax, toMin, toMax);
             floatMapRangeField.RegisterFromMinValueChanged(evt => {
                 Debug.Log("FromMinValueChanged: " + evt.newValue);
                 fromMin = evt.newValue;
@@ -33,6 +31,18 @@ namespace GeometryGraph.Editor {
             });
 
             inputContainer.Add(floatMapRangeField);
+
+            BooleanSelectionToggle booleanSelectionToggleA = new (true);
+            BooleanSelectionToggle booleanSelectionToggleB = new (false, "Yes", "No");
+            BooleanSelectionToggle booleanSelectionToggleC = new (true, "Yes", "No", "Label");
+            inputContainer.Add(booleanSelectionToggleA);
+            inputContainer.Add(booleanSelectionToggleB);
+            inputContainer.Add(booleanSelectionToggleC);
+
+            BooleanToggle booleanToggleA = new (true, "Label (On)", "Label (Off)");
+            BooleanToggle booleanToggleB = new (false, "Label");
+            inputContainer.Add(booleanToggleA);
+            inputContainer.Add(booleanToggleB);
         }
 
         protected override void BindPorts() {}
