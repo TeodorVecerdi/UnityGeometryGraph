@@ -40,13 +40,13 @@ namespace GeometryGraph.Runtime.Graph {
 
         protected override void OnConnectionRemoved(Connection connection, RuntimePort port) {
             if (port != InputPort) return;
-            Result = null;
+            Result = CurveData.Empty;
         }
 
         [CalculatesProperty(nameof(Result))]
         private void CalculateResult() {
             if (Input == null) {
-                Result = null;
+                Result = CurveData.Empty;
                 return;
             }
 
