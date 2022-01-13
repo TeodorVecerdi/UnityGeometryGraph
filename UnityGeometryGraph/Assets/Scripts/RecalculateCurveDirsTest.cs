@@ -21,9 +21,9 @@ namespace GeometryGraph.Runtime.Testing {
         [SerializeField, OnValueChanged(nameof(GenerateCurve))]
         private Transformation transformation = Transformation.None;
         [SerializeField, OnValueChanged(nameof(GenerateCurve)), ShowIf("@transformation == Transformation.Circle")]
-        private bool closeCircle = true;
-        [SerializeField, OnValueChanged(nameof(GenerateCurve)), ShowIf("@transformation == Transformation.Circle")]
         private float circleRadius = 1.0f;
+        [SerializeField, OnValueChanged(nameof(GenerateCurve)), ShowIf("@transformation != Transformation.None")]
+        private bool closeTransformedCurve = true;
         [SerializeField, OnValueChanged(nameof(GenerateCurve)), ShowIf("@transformation == Transformation.CompoundQuadKnot")]
         private float compoundQuadMultiplier = 1.0f;
 
@@ -122,7 +122,7 @@ namespace GeometryGraph.Runtime.Testing {
                     List<float3> tangent = curve.Tangent.ToList();
                     List<float3> normal = curve.Normal.ToList();
                     List<float3> binormal = curve.Binormal.ToList();
-                    return new CurveData(curve.Type, position.Count, closeCircle, position, tangent, normal, binormal);
+                    return new CurveData(curve.Type, position.Count, closeTransformedCurve, position, tangent, normal, binormal);
                 }
                 case Transformation.TrefoilKnot: {
                     List<float3> position = curve.Position.ToList();
@@ -139,7 +139,7 @@ namespace GeometryGraph.Runtime.Testing {
                     List<float3> tangent = curve.Tangent.ToList();
                     List<float3> normal = curve.Normal.ToList();
                     List<float3> binormal = curve.Binormal.ToList();
-                    return new CurveData(curve.Type, position.Count, closeCircle, position, tangent, normal, binormal);
+                    return new CurveData(curve.Type, position.Count, closeTransformedCurve, position, tangent, normal, binormal);
                 }
                 case Transformation.TorusKnot: {
                     List<float3> position = curve.Position.ToList();
@@ -156,7 +156,7 @@ namespace GeometryGraph.Runtime.Testing {
                     List<float3> tangent = curve.Tangent.ToList();
                     List<float3> normal = curve.Normal.ToList();
                     List<float3> binormal = curve.Binormal.ToList();
-                    return new CurveData(curve.Type, position.Count, closeCircle, position, tangent, normal, binormal);
+                    return new CurveData(curve.Type, position.Count, closeTransformedCurve, position, tangent, normal, binormal);
                 }
                 case Transformation.CinquefoilKnot: {
                     List<float3> position = curve.Position.ToList();
@@ -173,7 +173,7 @@ namespace GeometryGraph.Runtime.Testing {
                     List<float3> tangent = curve.Tangent.ToList();
                     List<float3> normal = curve.Normal.ToList();
                     List<float3> binormal = curve.Binormal.ToList();
-                    return new CurveData(curve.Type, position.Count, closeCircle, position, tangent, normal, binormal);
+                    return new CurveData(curve.Type, position.Count, closeTransformedCurve, position, tangent, normal, binormal);
                 }
                 case Transformation.CompoundQuadKnot: {
                     List<float3> position = curve.Position.ToList();
@@ -190,7 +190,7 @@ namespace GeometryGraph.Runtime.Testing {
                     List<float3> tangent = curve.Tangent.ToList();
                     List<float3> normal = curve.Normal.ToList();
                     List<float3> binormal = curve.Binormal.ToList();
-                    return new CurveData(curve.Type, position.Count, closeCircle, position, tangent, normal, binormal);
+                    return new CurveData(curve.Type, position.Count, closeTransformedCurve, position, tangent, normal, binormal);
                 }
                 default: throw new ArgumentOutOfRangeException();
             }

@@ -2024,8 +2024,8 @@ MonoBehaviour:
     y: 0
     z: 0
   transformation: 5
-  closeCircle: 1
   circleRadius: 1
+  closeTransformedCurve: 1
   compoundQuadMultiplier: 4
   autoRecalculate: 1
   visualizer: {fileID: 2013760508}
@@ -8265,12 +8265,12 @@ MonoBehaviour:
   PointSize: 0.02
   PointColor: {r: 0.98039216, g: 0.8732579, b: 0.058823533, a: 1}
   ShowDirectionVectors: 1
-  DirectionVectorLength: 0.2
+  DirectionVectorLength: 0.25
   DirectionVectorWidth: 4
   DirectionTangentColor: {r: 0, g: 0, b: 1, a: 1}
   DirectionNormalColor: {r: 1, g: 0, b: 0, a: 1}
   DirectionBinormalColor: {r: 0, g: 1, b: 0, a: 1}
-  Enabled: 0
+  Enabled: 1
 --- !u!1 &1923358219
 GameObject:
   m_ObjectHideFlags: 0
