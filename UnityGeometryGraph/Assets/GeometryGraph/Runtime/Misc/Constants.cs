@@ -20,6 +20,8 @@
         public const int MIN_BEZIER_CURVE_RESOLUTION = 1;
         public const int MIN_HELIX_CURVE_RESOLUTION = 1;
 
+        public const int MAX_SOLIDIFY_CURVE_RESOLUTION = 128;
+
         public const float MIN_CIRCULAR_CURVE_RADIUS = 0.01f;
 
         public const int MAX_NOISE_OCTAVES = 16;
