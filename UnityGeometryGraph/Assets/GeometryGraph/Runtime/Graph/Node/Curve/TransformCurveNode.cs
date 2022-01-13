@@ -62,12 +62,11 @@ namespace GeometryGraph.Runtime.Graph {
             for (int i = 0; i < Input.Points; i++) {
                 quaternion rotationQuat = quaternion.Euler(math.radians(rotation[i]));
                 float4x4 matrix = float4x4.TRS(translation[i], rotationQuat, scale[i]);
-                float4x4 matrixNormal = float4x4.TRS(float3.zero, rotationQuat, scale[i]);
 
                 position.Add(math.mul(matrix, Input.Position[i].float4(1.0f)).xyz);
-                tangent.Add(math.mul(matrixNormal, Input.Tangent[i].float4(1.0f)).xyz);
-                normal.Add(math.mul(matrixNormal, Input.Normal[i].float4(1.0f)).xyz);
-                binormal.Add(math.mul(matrixNormal, Input.Binormal[i].float4(1.0f)).xyz);
+                tangent.Add(math.mul(matrix, Input.Tangent[i].float4()).xyz);
+                normal.Add(math.mul(matrix, Input.Normal[i].float4()).xyz);
+                binormal.Add(math.mul(matrix, Input.Binormal[i].float4()).xyz);
             }
 
             bool isClosed = ClosedMode switch {
