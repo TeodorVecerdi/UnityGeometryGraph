@@ -32,10 +32,8 @@ namespace GeometryGraph.Runtime {
         [SerializeField] private bool realtimeEvaluationAsync;
 
         // Exporter fields
-        private bool initializedExporter;
-        private MeshPool meshPool;
         private readonly GeometryExporter exporter = new();
-        private readonly BakedInstancedGeometry bakedInstancedGeometry = new();
+        [SerializeField] private BakedInstancedGeometry bakedInstancedGeometry = new();
         [SerializeField] private bool initializedMeshFilter;
         [SerializeField] private Mesh meshFilterMesh;
 
@@ -76,11 +74,6 @@ namespace GeometryGraph.Runtime {
             geometryData = evaluationResult.GeometryData;
             instancedGeometryData = evaluationResult.InstancedGeometryData;
 
-            if (!initializedExporter) {
-                Debug.Log("Initializing exporter");
-                InitializeExporter();
-            }
-
             if (!initializedMeshFilter) {
                 Debug.Log("Initializing mesh filter");
                 InitializeMeshFilter();
@@ -96,12 +89,6 @@ namespace GeometryGraph.Runtime {
             } else {
                 instancedGeometryHashCode = 0;
             }
-        }
-
-        private void InitializeExporter() {
-            meshPool?.Cleanup();
-            meshPool = new MeshPool(IndexFormat.UInt32);
-            initializedExporter = true;
         }
 
         private void InitializeMeshFilter() {
@@ -126,9 +113,32 @@ namespace GeometryGraph.Runtime {
 
             if (!sameGeometry) {
                 foreach (Mesh mesh in bakedInstancedGeometry.Meshes) {
-                    meshPool.Return(mesh);
+                    mesh.Clear();
                 }
-                bakedInstancedGeometry.Meshes.Clear();
+
+                if (bakedInstancedGeometry.Meshes.Count > instancedGeometryData.GeometryCount) {
+                    int toRemove = bakedInstancedGeometry.Meshes.Count - instancedGeometryData.GeometryCount;
+                    for (int i = 0; i < toRemove; i++) {
+#if UNITY_EDITOR
+                        if (!Application.isPlaying) DestroyImmediate(bakedInstancedGeometry.Meshes[i]);
+                        else Destroy(bakedInstancedGeometry.Meshes[i]);
+#else
+                        Destroy(bakedInstancedGeometry.Meshes[i]);
+#endif
+                    }
+
+                    bakedInstancedGeometry.Meshes.RemoveRange(instancedGeometryData.GeometryCount, toRemove);
+                } else if (bakedInstancedGeometry.Meshes.Count < instancedGeometryData.GeometryCount) {
+                    int toAdd = instancedGeometryData.GeometryCount - bakedInstancedGeometry.Meshes.Count;
+                    for (int i = 0; i < toAdd; i++) {
+                        Mesh mesh = new Mesh {
+                            indexFormat = IndexFormat.UInt32,
+                            name = "GeometryGraph Instanced Mesh"
+                        };
+                        mesh.MarkDynamic();
+                        bakedInstancedGeometry.Meshes.Add(mesh);
+                    }
+                }
             }
             bakedInstancedGeometry.Matrices.Clear();
 
@@ -136,9 +146,8 @@ namespace GeometryGraph.Runtime {
                 GeometryData geometry = instancedGeometryData.Geometry(i);
 
                 if (!sameGeometry) {
-                    Mesh mesh = meshPool.Get();
+                    Mesh mesh = bakedInstancedGeometry.Meshes[i];
                     exporter.Export(geometry, mesh);
-                    bakedInstancedGeometry.Meshes.Add(mesh);
                 }
 
                 Matrix4x4[] matrices = instancedGeometryData

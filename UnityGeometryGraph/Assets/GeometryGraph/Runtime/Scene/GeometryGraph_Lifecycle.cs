@@ -23,10 +23,6 @@ namespace GeometryGraph.Runtime {
             RenderInstances();
         }
 
-        private void OnDestroy() {
-            meshPool?.Cleanup();
-        }
-
         internal void RenderInstances() {
             if (instancedGeometryData is not { GeometryCount: not 0 }) {
                 return;
@@ -39,6 +35,11 @@ namespace GeometryGraph.Runtime {
             }
 
             int geometryCount = instancedGeometryData.GeometryCount;
+            if (bakedInstancedGeometry.Meshes.Count < geometryCount) {
+                Debug.LogError($"GeometryGraph: Instanced geometry count ({geometryCount}) is greater than the number of baked meshes ({bakedInstancedGeometry.Meshes.Count}).");
+                return;
+            }
+
             for(int i = 0; i < geometryCount; i++) {
                 GeometryData geometry = instancedGeometryData.Geometry(i);
                 Mesh mesh = bakedInstancedGeometry.Meshes[i];
