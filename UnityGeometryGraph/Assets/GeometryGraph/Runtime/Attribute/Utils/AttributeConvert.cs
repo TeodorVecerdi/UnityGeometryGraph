@@ -166,7 +166,7 @@ namespace GeometryGraph.Runtime.AttributeSystem {
                 AttributeType.ClampedFloat => Average(values.Convert(o => (float)o)).Clamped01(),
                 AttributeType.Vector2 => Average(values.Convert(o => (float2)o)),
                 AttributeType.Vector3 => Average(values.Convert(o => (float3)o)),
-                AttributeType.Invalid => MiscUtilities.CallThenReturn(() => Debug.LogError("Invalid attribute type."), 0.0f),
+                AttributeType.Invalid => Utils.CallThenReturn(() => Debug.LogError("Invalid attribute type."), 0.0f),
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
         }
