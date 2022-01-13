@@ -22,13 +22,11 @@ namespace GeometryGraph.Runtime.Graph {
 
         [CalculatesProperty(nameof(Curve))]
         private void CalculateResult() {
-            if (RuntimeGraphObjectData.IsDuringSerialization) {
-                Debug.LogWarning("Attempting to generate curve during serialization. Aborting.");
-                Curve = CurveData.Empty;
-                return;
-            }
-
-            Curve = CurvePrimitive.Circle(Points.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION), Radius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS));
+            Curve = Utils.IfNotSerializing(
+                () => CurvePrimitive.Circle(
+                    Points.Clamped(Constants.MIN_CIRCLE_CURVE_RESOLUTION, Constants.MAX_CURVE_RESOLUTION),
+                    Radius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS)
+                ), "CurvePrimitive.Circle", CurveData.Empty);
         }
     }
 }

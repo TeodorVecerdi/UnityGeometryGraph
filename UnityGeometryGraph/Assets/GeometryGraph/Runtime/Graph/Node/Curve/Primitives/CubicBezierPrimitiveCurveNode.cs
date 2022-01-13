@@ -25,13 +25,11 @@ namespace GeometryGraph.Runtime.Graph {
 
         [CalculatesProperty(nameof(Curve))]
         private void CalculateResult() {
-            if (RuntimeGraphObjectData.IsDuringSerialization) {
-                Debug.LogWarning("Attempting to generate curve during serialization. Aborting.");
-                Curve = CurveData.Empty;
-                return;
-            }
-
-            Curve = CurvePrimitive.CubicBezier(Points.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1) - 1, IsClosed, Start, ControlA, ControlB, End);
+            Curve = Utils.IfNotSerializing(
+                () => CurvePrimitive.CubicBezier(
+                    Points.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1) - 1,
+                    IsClosed, Start, ControlA, ControlB, End
+                ), "CurvePrimitive.CubicBezier", CurveData.Empty);
         }
     }
 }

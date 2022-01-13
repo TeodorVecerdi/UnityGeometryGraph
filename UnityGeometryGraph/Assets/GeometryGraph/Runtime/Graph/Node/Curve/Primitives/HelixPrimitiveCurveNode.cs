@@ -25,13 +25,13 @@ namespace GeometryGraph.Runtime.Graph {
 
         [CalculatesProperty(nameof(Curve))]
         private void CalculateResult() {
-            if (RuntimeGraphObjectData.IsDuringSerialization) {
-                Debug.LogWarning("Attempting to generate curve during serialization. Aborting.");
-                Curve = CurveData.Empty;
-                return;
-            }
-
-            Curve = CurvePrimitive.Helix(Points.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1) - 1, Rotations, Pitch, TopRadius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS), BottomRadius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS));
+            Curve = Utils.IfNotSerializing(
+                () => CurvePrimitive.Helix(
+                    Points.Clamped(Constants.MIN_LINE_CURVE_RESOLUTION + 1, Constants.MAX_CURVE_RESOLUTION + 1) - 1,
+                    Rotations, Pitch,
+                    TopRadius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS),
+                    BottomRadius.MinClamped(Constants.MIN_CIRCULAR_CURVE_RADIUS)),
+                "CurvePrimitive.Helix", CurveData.Empty);
         }
     }
 }
