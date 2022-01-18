@@ -1,19 +1,18 @@
 ﻿using System;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace GeometryGraph.Runtime {
     public static class Utils {
         public static T CallThenReturn<T>([NotNull] Action action, T value) {
-            Assert.IsNotNull(action);
             action();
             return value;
         }
 
+        private const bool k_DisplayDebugMessages = true;
         public static T IfNotSerializing<T>([NotNull] Func<T> func, string display, T defaultValue = default) {
             if (RuntimeGraphObjectData.IsDuringSerialization) {
-                Debug.LogWarning($"`<b>{display}</b>` is not allowed during serialization");
+                if (k_DisplayDebugMessages) Debug.LogWarning($"`<b>{display}</b>` is not allowed during serialization");
                 return defaultValue;
             }
 

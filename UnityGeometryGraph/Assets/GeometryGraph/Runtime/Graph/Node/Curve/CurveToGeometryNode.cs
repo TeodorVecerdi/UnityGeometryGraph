@@ -58,17 +58,15 @@ namespace GeometryGraph.Runtime.Graph {
                 return;
             }
 
-            if (RuntimeGraphObjectData.IsDuringSerialization) {
-                DebugUtility.Log("Attempting to generate geometry from curve during serialization. Aborting.");
-                Result = null;
-                return;
-            }
-
-            DebugUtility.Log("Generated mesh with profile");
-
-            Result = CurveToGeometry.WithProfile(
-                Source, Profile,
-                new CurveToGeometrySettings(CloseCaps, SeparateMaterialForCaps, ShadeSmoothCurve, ShadeSmoothCaps, RotationOffset, IncrementalRotationOffset, CapUVType));
+            Result = Utils.IfNotSerializing(
+                () => {
+                    DebugUtility.Log("Generated mesh with profile");
+                    return CurveToGeometry.WithProfile(
+                        Source, Profile, new CurveToGeometrySettings(
+                            CloseCaps, SeparateMaterialForCaps, ShadeSmoothCurve, ShadeSmoothCaps,
+                            RotationOffset, IncrementalRotationOffset, CapUVType)
+                    );
+                }, "CurveToGeometry.WithProfile", GeometryData.Empty);
         }
     }
 }

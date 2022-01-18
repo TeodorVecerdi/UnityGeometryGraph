@@ -37,45 +37,37 @@ namespace GeometryGraph.Runtime.Graph {
 
         [GetterMethod(nameof(Result), Inline = true)]
         private float GetResult() {
-            if (RuntimeGraphObjectData.IsDuringSerialization) {
-                Debug.LogWarning("Attempting to calculate noise during serialization. Aborting.");
-                return 0.0f;
-            }
-
-            float3 position = Position;
-            return Noise.Simplex3(
-                ref position,
-                Scale,
-                Octaves.Clamped(1, Constants.MAX_NOISE_OCTAVES),
-                Lacunarity.MinClamped(0.001f),
-                Persistence.MinClamped(0.001f)
-            );
+            return Utils.IfNotSerializing(() => {
+                float3 position = Position;
+                return Noise.Simplex3(
+                    ref position,
+                    Scale,
+                    Octaves.Clamped(1, Constants.MAX_NOISE_OCTAVES),
+                    Lacunarity.MinClamped(0.001f),
+                    Persistence.MinClamped(0.001f)
+                );
+            }, "Noise.Simplex3");
         }
 
         [GetterMethod(nameof(ResultVector), Inline = true)]
         private float3 GetResultVector() {
-            if (RuntimeGraphObjectData.IsDuringSerialization) {
-                Debug.LogWarning("Attempting to calculate noise during serialization. Aborting.");
-                return float3.zero;
-            }
-
-            float3 position = Position;
-            Noise.Simplex3X3(
-                ref position,
-                out float3 noise,
-                Scale,
-                Octaves.Clamped(1, Constants.MAX_NOISE_OCTAVES),
-                Lacunarity.MinClamped(0.001f),
-                Persistence.MinClamped(0.001f)
-            );
-            return noise;
+            return Utils.IfNotSerializing(() => {
+                float3 position = Position;
+                Noise.Simplex3X3(
+                    ref position,
+                    out float3 noise,
+                    Scale,
+                    Octaves.Clamped(1, Constants.MAX_NOISE_OCTAVES),
+                    Lacunarity.MinClamped(0.001f),
+                    Persistence.MinClamped(0.001f)
+                );
+                return noise;
+            }, "Noise.Simplex3");
         }
 
         public override IEnumerable<object> GetValuesForPort(RuntimePort port, int count) {
             if (count <= 0) yield break;
-            if (RuntimeGraphObjectData.IsDuringSerialization) {
-                Debug.LogWarning("Attempting to calculate noise during serialization. Aborting.");
-
+            if (Utils.IfNotSerializing(() => false, "Noise.Simplex3(x3)", true)) {
                 if (port == ResultPort) {
                     for (int i = 0; i < count; i++) {
                         yield return 0.0f;
