@@ -32,11 +32,11 @@ namespace GeometryGraph.Runtime.Graph {
 
         internal void OnPropertyAdded(Property property) {
             if (RuntimeData.Properties.Any(p => p.Guid == property.Guid)) {
-                Debug.Log($"Property already exists: `{property.Guid}`");
+                // Debug.Log($"Property already exists: `{property.Guid}`");
                 return;
             }
 
-            Debug.Log($"Adding property: `{property.Guid}`");
+            // Debug.Log($"Adding property: `{property.Guid}`");
             RuntimeData.Properties.Add(property);
 
 #if UNITY_EDITOR
@@ -53,7 +53,7 @@ namespace GeometryGraph.Runtime.Graph {
                 Debug.Log($"Property not removed: `{propertyGuid}`");
                 return;
             }
-            Debug.Log($"Removed property: `{propertyGuid}`");
+            // Debug.Log($"Removed property: `{propertyGuid}`");
 #if UNITY_EDITOR
             GeometryGraph graph;
             if (UnityEditor.Selection.activeGameObject == null || (graph = UnityEditor.Selection.activeGameObject.GetComponent<GeometryGraph>()) == null) return;
@@ -91,14 +91,14 @@ namespace GeometryGraph.Runtime.Graph {
         }
 
         internal void OnNodeAdded(RuntimeNode node) {
-            Debug.Log($"Adding node: `{node.Guid}`");
+            // Debug.Log($"Adding node: `{node.Guid}`");
             RuntimeData.Nodes.Add(node);
             if (node is OutputNode outputNode) RuntimeData.OutputNode = outputNode;
             // RuntimeData.OnBeforeSerialize();
         }
 
         internal void OnNodeRemoved(RuntimeNode node) {
-            Debug.Log($"Removing node: `{node.Guid}`");
+            // Debug.Log($"Removing node: `{node.Guid}`");
             RuntimeData.Nodes.RemoveAll(n => n.Guid == node.Guid);
             if (node is OutputNode) RuntimeData.OutputNode = null;
             // RuntimeData.OnBeforeSerialize();

@@ -51,7 +51,23 @@ namespace GeometryGraph.Editor {
             }
         }
 
-        [MenuItem("Geometry Graph/Delete negative instances", priority = 103)]
+        [MenuItem("Geometry Graph/Delete all instances (+RGO)", priority = 103)]
+        public static void DeleteAllInstances() {
+            GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
+            Debug.Log(instances.Length);
+            foreach (GraphFrameworkObject graphFrameworkObject in instances) {
+                Debug.Log($"{graphFrameworkObject.name}:{graphFrameworkObject.GetInstanceID()}");
+                Object.DestroyImmediate(graphFrameworkObject, true);
+            }
+
+            RuntimeGraphObject[] runtimeGraphObjects = Resources.FindObjectsOfTypeAll<RuntimeGraphObject>();
+            foreach (RuntimeGraphObject runtimeGraphObject in runtimeGraphObjects) {
+                Debug.Log($"Delete: {runtimeGraphObject.GetInstanceID()}");
+                Object.DestroyImmediate(runtimeGraphObject, true);
+            }
+        }
+
+        [MenuItem("Geometry Graph/Delete negative instances", priority = 104)]
         public static void DeleteNegativeGFOInstances() {
             GraphFrameworkObject[] instances = Resources.FindObjectsOfTypeAll<GraphFrameworkObject>();
             foreach (GraphFrameworkObject graphFrameworkObject in instances) {

@@ -8,7 +8,7 @@ namespace GeometryGraph.Runtime.Graph {
     [GenerateRuntimeNode]
     public partial class SetCurvePositionNode {
         [In(
-            DefaultValue = "(CurveData)null",
+            DefaultValue = "CurveData.Empty",
             GetValueCode = "{self} = GetValue(connection, {default})",
             UpdateValueCode = ""
         )]
