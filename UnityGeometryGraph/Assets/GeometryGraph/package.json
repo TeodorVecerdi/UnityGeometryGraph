@@ -1,14 +1,15 @@
 {
-  "name": "dev.vecerdi.geometry-graph",
-  "version": "1.0.0",
+  "name": "dev.vecerdi.geometry_graph",
+  "version": "0.1.0",
   "displayName": "Geometry Graph",
-  "description": "TODO",
+  "description": "Geometry Graph is a node-based editor tool for procedurally generating geometry.",
   "unity": "2021.1",
   "keywords": [
     "node-based",
     "editor-tool",
     "geometry",
     "visual-scripting",
+    "graph",
     "geometry-graph",
     "procedural",
     "procedural-geometry"
