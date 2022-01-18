@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using GeometryGraph.Runtime.Graph;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime {
@@ -14,7 +13,7 @@ namespace GeometryGraph.Runtime {
 
         [SerializeField] public string Guid;
 
-        [NonSerialized, ShowInInspector] public List<RuntimeNode> Nodes = new();
+        [NonSerialized] public List<RuntimeNode> Nodes = new();
         [NonSerialized] public OutputNode OutputNode;
         [SerializeField] public List<Connection> Connections = new();
         [SerializeField] public List<Property> Properties = new();

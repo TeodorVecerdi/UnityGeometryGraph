@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Geometry;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Data {
     public class GeometryCollection : GameObjectProcessor<GeometryData, List<GeometryData>>, IGeometryProvider {
-        [SerializeField, ShowIf("@"+ nameof(objects) + " != null && "+ nameof(objects) + ".Count > 0"), MinValue(0), MaxValue(nameof(__GetMaxIndex))]
-        [InlineButton("@__ChangeIndex(1)", "+")]
-        [InlineButton("@__ChangeIndex(-1)", "-")]
+        [SerializeField, Min(0)]
         private int index;
 
         [SerializeField] private List<GeometryData> objects;
@@ -17,7 +14,6 @@ namespace GeometryGraph.Runtime.Data {
 
         public List<GeometryData> Collection => objects;
 
-        [Button]
         public override void Process() {
             int newHashCode = ComputeChildrenHashCode(transform);
 

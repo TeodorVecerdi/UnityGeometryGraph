@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Geometry;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GeometryGraph.Runtime.Data {
@@ -9,14 +8,12 @@ namespace GeometryGraph.Runtime.Data {
         [SerializeField] private GeometryData geometry;
         protected override GeometryData Processed { get => geometry; set => geometry = value; }
 
-        [ShowInInspector] public int Hash => ChildrenHashCode;
+        public int Hash => ChildrenHashCode;
 
-        [Button]
         private void ProcessData() {
             Process();
         }
 
-        [Button]
         private void ResetHash() {
             ChildrenHashCode = 0;
         }
