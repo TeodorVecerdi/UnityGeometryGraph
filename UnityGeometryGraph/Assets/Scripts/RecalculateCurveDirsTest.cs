@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GeometryGraph.Runtime.Curve;
-using GeometryGraph.Runtime.Curve.TEMP;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;

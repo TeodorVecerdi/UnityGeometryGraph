@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using GeometryGraph.Runtime.Data;
+using GeometryGraph.Runtime.Geometry;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Geometry {
+namespace GeometryGraph.Runtime.Testing {
 
     public class GeometryMerger : MonoBehaviour, IGeometryProvider {
         [SerializeField] private List<GeometryImporter> importers;

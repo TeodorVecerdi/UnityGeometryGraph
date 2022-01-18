@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
 using GeometryGraph.Runtime.Data;
+using GeometryGraph.Runtime.Geometry;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace GeometryGraph.Runtime.Geometry {
+namespace GeometryGraph.Runtime.Testing {
     public class GeometryImporter : MonoBehaviour, IGeometryProvider {
         [SerializeField] private MeshFilter geometrySource;
         [SerializeField] private GeometryData geometryData;

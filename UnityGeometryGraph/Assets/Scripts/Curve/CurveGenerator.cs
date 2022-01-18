@@ -1,8 +1,9 @@
 ﻿using System;
+using GeometryGraph.Runtime.Curve;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Curve.TEMP {
+namespace GeometryGraph.Runtime.Testing {
 
     public class CurveGenerator : MonoBehaviour, ICurveProvider {
         public CurveType Type;

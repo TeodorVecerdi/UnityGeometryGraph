@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GeometryGraph.Runtime.Curve.TEMP {
+namespace GeometryGraph.Runtime.Testing {
     public class TestMetaballCompute : MonoBehaviour {
         public ComputeShader ComputeShader;
         public RawImage Image;

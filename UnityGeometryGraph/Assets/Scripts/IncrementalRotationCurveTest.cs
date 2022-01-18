@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GeometryGraph.Runtime.Curve;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityCommons;
@@ -7,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace GeometryGraph.Runtime.Curve.TEMP {
+namespace GeometryGraph.Runtime.Testing {
     public class IncrementalRotationCurveTest : SerializedMonoBehaviour {
         [Title("References")]
         [Required] public ICurveProvider Circle;

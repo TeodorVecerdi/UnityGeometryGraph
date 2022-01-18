@@ -1,9 +1,10 @@
-﻿using GeometryGraph.Runtime.Geometry;
+﻿using GeometryGraph.Runtime.Curve;
+using GeometryGraph.Runtime.Geometry;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace GeometryGraph.Runtime.Curve.TEMP {
+namespace GeometryGraph.Runtime.Testing {
     public class CurveToMeshGenerator : SerializedMonoBehaviour {
         [Required] public ICurveProvider Curve;
         [Required] public ICurveProvider Profile;

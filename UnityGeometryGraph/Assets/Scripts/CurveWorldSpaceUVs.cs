@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using GeometryGraph.Runtime.Curve;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Curve.TEMP {
+namespace GeometryGraph.Runtime.Testing {
     [RequireComponent(typeof(MeshFilter), typeof(CurveVisualizer))]
     public class CurveWorldSpaceUVs : SerializedMonoBehaviour {
         [Required] public ICurveProvider Curve;

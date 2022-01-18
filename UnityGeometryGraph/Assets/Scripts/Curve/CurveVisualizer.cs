@@ -1,10 +1,11 @@
 ﻿using System.Linq;
+using GeometryGraph.Runtime.Curve;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Curve.TEMP {
+namespace GeometryGraph.Runtime.Testing {
     public class CurveVisualizer : MonoBehaviour {
         public bool ShowSpline = true;
         [ShowIf(nameof(ShowSpline))] public float SplineWidth = 2.0f;

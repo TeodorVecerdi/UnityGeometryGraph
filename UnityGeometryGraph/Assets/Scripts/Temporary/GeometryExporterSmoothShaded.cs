@@ -3,12 +3,13 @@ using System.Diagnostics;
 using System.Linq;
 using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Data;
+using GeometryGraph.Runtime.Geometry;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace GeometryGraph.Runtime.Geometry {
+namespace GeometryGraph.Runtime.Testing {
     public class GeometryExporterSmoothShaded : SerializedMonoBehaviour {
         [SerializeField] private MeshFilter target;
         [SerializeField, OnStateUpdate(nameof(__OnStateUpdate_GeometrySource))] private IGeometryProvider source;

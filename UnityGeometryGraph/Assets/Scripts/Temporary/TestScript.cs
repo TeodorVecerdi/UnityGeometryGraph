@@ -1,9 +1,10 @@
 ﻿using GeometryGraph.Runtime.Data;
+using GeometryGraph.Runtime.Geometry;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace GeometryGraph.Runtime.Geometry {
+namespace GeometryGraph.Runtime.Testing {
     public class TestScript : SerializedMonoBehaviour, IGeometryProvider {
         public MeshFilter MeshFilter;
         public Mesh Mesh;

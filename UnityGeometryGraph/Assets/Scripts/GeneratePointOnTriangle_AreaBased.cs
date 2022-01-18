@@ -4,7 +4,7 @@ using UnityCommons;
 using UnityEditor;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Curve.TEMP {
+namespace GeometryGraph.Runtime.Testing {
     public class GeneratePointOnTriangle_AreaBased : MonoBehaviour {
         [SerializeField, OnValueChanged(nameof(Generate))] private float multiplier = 1.0f;
         [SerializeField, OnValueChanged(nameof(UpdatePoints))] private Vector3 p0;

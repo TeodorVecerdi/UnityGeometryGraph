@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Curve.TEMP {
+namespace GeometryGraph.Runtime.Testing {
     [ExecuteAlways]
     public class TestRealtimeGenerator : MonoBehaviour {
         [Required] public GeometryGraph GeometryGraph;

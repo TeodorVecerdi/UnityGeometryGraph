@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using GeometryGraph.Runtime.AttributeSystem;
 using GeometryGraph.Runtime.Data;
+using GeometryGraph.Runtime.Geometry;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Geometry {
+namespace GeometryGraph.Runtime.Testing {
     public class GeometryExporterBasic : SerializedMonoBehaviour {
         [SerializeField] private MeshFilter target;
         [SerializeField] private IGeometryProvider source;

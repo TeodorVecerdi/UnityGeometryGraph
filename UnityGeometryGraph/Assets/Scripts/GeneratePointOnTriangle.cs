@@ -1,10 +1,9 @@
-﻿using System;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityCommons;
 using UnityEditor;
 using UnityEngine;
 
-namespace GeometryGraph.Runtime.Curve.TEMP {
+namespace GeometryGraph.Runtime.Testing {
     public class GeneratePointOnTriangle : MonoBehaviour {
         [SerializeField] private bool manual;
         [SerializeField, OnValueChanged(nameof(CalculatePoint)), EnableIf(nameof(manual))] private float a;
