@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 4890085278179872738, guid: dedaea2d0afc3c14bb58f9af696d59f1, type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: e9aed17ec250c7144aa80aa5a5cf1d9d, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -553,8 +553,8 @@ Mesh:
       m_BitSize: 0
     m_UVInfo: 0
   m_LocalAABB:
-    m_Center: {x: -0.0006636381, y: 0.46972096, z: 0.00003862381}
-    m_Extent: {x: 2.8335447, y: 2.629201, z: 1.0994345}
+    m_Center: {x: 0.00000047683716, y: 0, z: 0.000062048435}
+    m_Extent: {x: 4.109679, y: 4.1096787, z: 0.95166856}
   m_MeshUsageFlags: 0
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
@@ -929,7 +929,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: 232ad2b31ca8eba45991a078468618ad, type: 2}
+  sharedProfile: {fileID: 11400000, guid: f50b2a3757f04b648a98ef02932f64f2, type: 2}
 --- !u!4 &1160234427
 Transform:
   m_ObjectHideFlags: 0
@@ -1179,51 +1179,12 @@ MonoBehaviour:
   sceneData:
     propertyData:
       keys:
-      - 420d39f6-510b-401a-82db-d759a2e5015a
-      - 629952e5-5919-40da-8239-6e18eae3797c
-      - f7a0b2ba-330e-4772-811a-7649ed358fc6
       - 61e06f1e-cd1c-43e8-ab30-533fbebbfbbf
+      - f7a0b2ba-330e-4772-811a-7649ed358fc6
+      - 629952e5-5919-40da-8239-6e18eae3797c
+      - 420d39f6-510b-401a-82db-d759a2e5015a
       - 0f5a3d45-6ce8-4152-8567-379b66edd5ea
       values:
-      - ObjectValue: {fileID: 0}
-        CollectionValue: {fileID: 0}
-        IntValue: 1
-        FloatValue: 0
-        VectorValue: {x: 0, y: 0, z: 0}
-        StringValue: 
-        DefaultObjectValue: {fileID: 0}
-        DefaultCollectionValue: {fileID: 0}
-        DefaultIntValue: 0
-        DefaultFloatValue: 0
-        DefaultVectorValue: {x: 0, y: 0, z: 0}
-        DefaultStringValue: 
-        PropertyType: 2
-      - ObjectValue: {fileID: 0}
-        CollectionValue: {fileID: 0}
-        IntValue: 0
-        FloatValue: 0.1
-        VectorValue: {x: 0, y: 0, z: 0}
-        StringValue: 
-        DefaultObjectValue: {fileID: 0}
-        DefaultCollectionValue: {fileID: 0}
-        DefaultIntValue: 0
-        DefaultFloatValue: 0.1
-        DefaultVectorValue: {x: 0, y: 0, z: 0}
-        DefaultStringValue: 
-        PropertyType: 3
-      - ObjectValue: {fileID: 0}
-        CollectionValue: {fileID: 0}
-        IntValue: 4
-        FloatValue: 0
-        VectorValue: {x: 0, y: 0, z: 0}
-        StringValue: 
-        DefaultObjectValue: {fileID: 0}
-        DefaultCollectionValue: {fileID: 0}
-        DefaultIntValue: 4
-        DefaultFloatValue: 0
-        DefaultVectorValue: {x: 0, y: 0, z: 0}
-        DefaultStringValue: 
-        PropertyType: 2
       - ObjectValue: {fileID: 0}
         CollectionValue: {fileID: 0}
         IntValue: 64
@@ -1239,8 +1200,47 @@ MonoBehaviour:
         PropertyType: 2
       - ObjectValue: {fileID: 0}
         CollectionValue: {fileID: 0}
+        IntValue: 4
+        FloatValue: 0
+        VectorValue: {x: 0, y: 0, z: 0}
+        StringValue: 
+        DefaultObjectValue: {fileID: 0}
+        DefaultCollectionValue: {fileID: 0}
+        DefaultIntValue: 4
+        DefaultFloatValue: 0
+        DefaultVectorValue: {x: 0, y: 0, z: 0}
+        DefaultStringValue: 
+        PropertyType: 2
+      - ObjectValue: {fileID: 0}
+        CollectionValue: {fileID: 0}
         IntValue: 0
-        FloatValue: 1
+        FloatValue: 0.25
+        VectorValue: {x: 0, y: 0, z: 0}
+        StringValue: 
+        DefaultObjectValue: {fileID: 0}
+        DefaultCollectionValue: {fileID: 0}
+        DefaultIntValue: 0
+        DefaultFloatValue: 0.1
+        DefaultVectorValue: {x: 0, y: 0, z: 0}
+        DefaultStringValue: 
+        PropertyType: 3
+      - ObjectValue: {fileID: 0}
+        CollectionValue: {fileID: 0}
+        IntValue: 0
+        FloatValue: 0
+        VectorValue: {x: 0, y: 0, z: 0}
+        StringValue: 
+        DefaultObjectValue: {fileID: 0}
+        DefaultCollectionValue: {fileID: 0}
+        DefaultIntValue: 0
+        DefaultFloatValue: 0
+        DefaultVectorValue: {x: 0, y: 0, z: 0}
+        DefaultStringValue: 
+        PropertyType: 2
+      - ObjectValue: {fileID: 0}
+        CollectionValue: {fileID: 0}
+        IntValue: 0
+        FloatValue: 4
         VectorValue: {x: 0, y: 0, z: 0}
         StringValue: 
         DefaultObjectValue: {fileID: 0}
@@ -1252,29 +1252,29 @@ MonoBehaviour:
         PropertyType: 3
     referenceToGuidDictionary:
       keys:
-      - Integer_C1A136AA
-      - Float_6BFFAD4C
-      - Integer_21FCD18E
       - Integer_F4F1051D
+      - Integer_21FCD18E
+      - Float_6BFFAD4C
+      - Integer_C1A136AA
       - Float_DBAE4919
       values:
-      - 420d39f6-510b-401a-82db-d759a2e5015a
-      - 629952e5-5919-40da-8239-6e18eae3797c
-      - f7a0b2ba-330e-4772-811a-7649ed358fc6
       - 61e06f1e-cd1c-43e8-ab30-533fbebbfbbf
+      - f7a0b2ba-330e-4772-811a-7649ed358fc6
+      - 629952e5-5919-40da-8239-6e18eae3797c
+      - 420d39f6-510b-401a-82db-d759a2e5015a
       - 0f5a3d45-6ce8-4152-8567-379b66edd5ea
     guidToReferenceDictionary:
       keys:
-      - 420d39f6-510b-401a-82db-d759a2e5015a
-      - 629952e5-5919-40da-8239-6e18eae3797c
-      - f7a0b2ba-330e-4772-811a-7649ed358fc6
       - 61e06f1e-cd1c-43e8-ab30-533fbebbfbbf
+      - f7a0b2ba-330e-4772-811a-7649ed358fc6
+      - 629952e5-5919-40da-8239-6e18eae3797c
+      - 420d39f6-510b-401a-82db-d759a2e5015a
       - 0f5a3d45-6ce8-4152-8567-379b66edd5ea
       values:
-      - Integer_C1A136AA
-      - Float_6BFFAD4C
-      - Integer_21FCD18E
       - Integer_F4F1051D
+      - Integer_21FCD18E
+      - Float_6BFFAD4C
+      - Integer_C1A136AA
       - Float_DBAE4919
     propertyHashCode: -88503849
   curveVisualizerSettings:
@@ -1767,5 +1767,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GeometryGraph: {fileID: 1960325717}
   Enabled: 1
-  UpdateGraph: 0
+  UpdateGraph: 1
   DrawInstances: 1
