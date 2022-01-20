@@ -161,7 +161,7 @@ namespace GeometryGraph.Runtime.Geometry {
             bool eqNegZ = Math.Abs(faceNormal.z) > Constants.FLOAT_TOLERANCE && Math.Abs(faceNormal.z + calculatedNormal.z) < Constants.FLOAT_TOLERANCE;
 
             if (eqNegX || eqNegY || eqNegZ) {
-                Debug.Log("flipped face");
+                // Debug.Log("flipped face");
                 triangles[submesh].Add(t1);
                 triangles[submesh].Add(t0);
                 triangles[submesh].Add(t2);
@@ -220,7 +220,7 @@ namespace GeometryGraph.Runtime.Geometry {
             bool eqNegZ = Math.Abs(sharedFaceNormal.z) > Constants.FLOAT_TOLERANCE && Math.Abs(sharedFaceNormal.z + calculatedNormal.z) < Constants.FLOAT_TOLERANCE;
 
             if (eqNegX || eqNegY || eqNegZ) {
-                Debug.Log("flipped face");
+                // Debug.Log("flipped face");
                 triangles[submesh].Add(triangle1);
                 triangles[submesh].Add(triangle0);
                 triangles[submesh].Add(triangle2);
