@@ -91,7 +91,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Metallic: 0.842
+    - _Metallic: 0.716
     - _Noise_Contribution: 0.8
     - _Noise_Scale: 0.85
     - _OcclusionStrength: 1
@@ -99,7 +99,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.488
+    - _Smoothness: 0.462
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -113,9 +113,10 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Dark_Color: {r: 0.1031703, g: 0.091224626, b: 0.4716981, a: 1}
+    - _Dark_Color: {r: 0.02080982, g: 0, b: 0.9137255, a: 1}
+    - _Emission: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Light_Color: {r: 0.61960787, g: 0.7338381, b: 0.9372549, a: 1}
+    - _Light_Color: {r: 0.6745283, g: 0.90407056, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &8911270335974358501

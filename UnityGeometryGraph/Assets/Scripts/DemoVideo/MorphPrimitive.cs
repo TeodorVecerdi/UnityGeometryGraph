@@ -32,7 +32,7 @@ namespace GeometryGraph.Runtime.Testing {
         [SerializeField, HideInInspector] private Vector3Attribute normalsUp;
 
         [Button]
-        private void Initialize() {
+        public void Initialize() {
             cubeReference = SimpleSubdivision.Subdivide(GeometryPrimitive.Cube(float3_ext.one), 3);
             InitializeAttributes();
 
